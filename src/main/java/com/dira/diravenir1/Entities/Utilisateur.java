@@ -25,4 +25,8 @@ public class Utilisateur {
     private String email;
     private String telephone;
     private String languePreferee;
+    @ManyToOne
+    @JoinColumn(name = "filiere_id")
+    private Filiere filiere;
+
 }
