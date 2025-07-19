@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tu peux ajouter tes styles custom ici si besoin */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: theme('colors.light');
+}
