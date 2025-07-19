@@ -1,6 +1,5 @@
-package com.dira.diravenir1.service;
+package com.dira.diravenir1.impl;
 import org.springframework.stereotype.Service;
-import com.dira.diravenir1.Entities.Role;
 
 import com.dira.diravenir1.Entities.Conseiller;
 import com.dira.diravenir1.Repository.ConseillerRepository;

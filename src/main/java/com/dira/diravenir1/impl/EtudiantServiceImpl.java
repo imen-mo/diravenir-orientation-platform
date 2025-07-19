@@ -1,4 +1,4 @@
-package com.dira.diravenir1.service;
+package com.dira.diravenir1.impl;
 
 import com.dira.diravenir1.dto.EtudiantDTO;
 import com.dira.diravenir1.Entities.Candidature;

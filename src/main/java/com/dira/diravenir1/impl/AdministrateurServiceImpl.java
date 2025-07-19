@@ -1,4 +1,4 @@
-package com.dira.diravenir1.service;
+package com.dira.diravenir1.impl;
 
 import com.dira.diravenir1.dto.AdministrateurDTO;
 import com.dira.diravenir1.Entities.Administrateur;
