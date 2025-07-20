@@ -1,17 +1,19 @@
-import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Header from "./components/Header";
+import Home from "./pages/Home";
+import Tests from "./pages/Tests";
+import Etudiants from "./pages/Etudiants";
 
 function App() {
     return (
-        <div className="min-h-screen bg-light flex items-center justify-center">
-            <div className="text-center p-8 bg-white shadow-lg rounded-lg">
-                <h1 className="text-4xl font-bold text-primary mb-4">
-                    Bienvenue sur Diravenir
-                </h1>
-                <p className="text-secondary text-lg">
-                    Plateforme d'orientation scolaire
-                </p>
-            </div>
-        </div>
+        <Router>
+            <Header />
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/tests" element={<Tests />} />
+                <Route path="/etudiants" element={<Etudiants />} />
+            </Routes>
+        </Router>
     );
 }
 
