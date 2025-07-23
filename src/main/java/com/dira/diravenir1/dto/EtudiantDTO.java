@@ -8,16 +8,17 @@ import java.util.List;
 @Data
 public class EtudiantDTO {
     private Long id;
-    private String nom;
-    private String prenom;
-    private LocalDate dateNaissance;
-    private String email;
-    private String telephone;
-    private String languePreferee;
-
     private String niveauEtude;
-    private String domaine;
+    private String specialite;
+    private String pays;
     private String ville;
-
-    private List<Long> candidaturesIds;
+    private String adresse;
+    private String situation;
+    private String nationalite;
+    private String genre;
+    private String etablissement;
+    private String anneeEtude;
+    private String domaine;
+    private Long administrateurId; // Pour associer à un administrateur
+    private List<String> historiqueRecherche;
 }

@@ -1,15 +1,16 @@
 package com.dira.diravenir1.impl;
 
-import com.dira.diravenir1.dto.EtudiantDTO;
-import com.dira.diravenir1.Entities.Candidature;
+import com.dira.diravenir1.Entities.Administrateur;
 import com.dira.diravenir1.Entities.Etudiant;
+import com.dira.diravenir1.Repository.AdministrateurRepository;
 import com.dira.diravenir1.Repository.EtudiantRepository;
+import com.dira.diravenir1.dto.EtudiantDTO;
 import com.dira.diravenir1.service.EtudiantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,69 +18,114 @@ import java.util.stream.Collectors;
 public class EtudiantServiceImpl implements EtudiantService {
 
     private final EtudiantRepository etudiantRepository;
+    private final AdministrateurRepository administrateurRepository;
 
-    @Override
-    public EtudiantDTO createEtudiant(EtudiantDTO dto) {
-        Etudiant etudiant = fromDTO(dto);
-        return toDTO(etudiantRepository.save(etudiant));
+    private EtudiantDTO toDto(Etudiant e) {
+        EtudiantDTO dto = new EtudiantDTO();
+        dto.setId(e.getId());
+        dto.setNiveauEtude(e.getNiveauEtude());
+        dto.setSpecialite(e.getSpecialite());
+        dto.setPays(e.getPays());
+        dto.setVille(e.getVille());
+        dto.setAdresse(e.getAdresse());
+        dto.setSituation(e.getSituation());
+        dto.setNationalite(e.getNationalite());
+        dto.setGenre(e.getGenre());
+        dto.setEtablissement(e.getEtablissement());
+        dto.setAnneeEtude(e.getAnneeEtude());
+        dto.setDomaine(e.getDomaine());
+        dto.setHistoriqueRecherche(e.getHistoriqueRecherche());
+        if (e.getAdministrateur() != null) {
+            dto.setAdministrateurId(e.getAdministrateur().getId());
+        }
+        return dto;
+    }
+
+    private Etudiant fromDto(EtudiantDTO dto) {
+        Etudiant e = new Etudiant();
+        e.setId(dto.getId());
+        e.setNiveauEtude(dto.getNiveauEtude());
+        e.setSpecialite(dto.getSpecialite());
+        e.setPays(dto.getPays());
+        e.setVille(dto.getVille());
+        e.setAdresse(dto.getAdresse());
+        e.setSituation(dto.getSituation());
+        e.setNationalite(dto.getNationalite());
+        e.setGenre(dto.getGenre());
+        e.setEtablissement(dto.getEtablissement());
+        e.setAnneeEtude(dto.getAnneeEtude());
+        e.setDomaine(dto.getDomaine());
+        e.setHistoriqueRecherche(dto.getHistoriqueRecherche());
+        if (dto.getAdministrateurId() != null) {
+            Administrateur admin = administrateurRepository.findById(dto.getAdministrateurId())
+                    .orElse(null);
+            e.setAdministrateur(admin);
+        }
+        return e;
     }
 
     @Override
+    public EtudiantDTO createEtudiant(EtudiantDTO dto) {
+        Etudiant e = fromDto(dto);
+        return toDto(etudiantRepository.save(e));
+    }
+
+    @Override
+    public List<EtudiantDTO> getAllEtudiants() {
+        return etudiantRepository.findAll()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public EtudiantDTO getEtudiantById(Long id) {
+        return etudiantRepository.findById(id)
+                .map(this::toDto)
+                .orElseThrow(() -> new RuntimeException("Etudiant non trouvé"));
+    }
+
+    @Override
+    @Transactional
     public EtudiantDTO updateEtudiant(Long id, EtudiantDTO dto) {
-        Optional<Etudiant> optionalEtudiant = etudiantRepository.findById(id);
-        if (optionalEtudiant.isPresent()) {
-            Etudiant etudiant = fromDTO(dto);
-            etudiant.setId(id);
-            return toDTO(etudiantRepository.save(etudiant));
+        Etudiant existingEtudiant = etudiantRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Etudiant non trouvé"));
+
+        // Met à jour les champs simples
+        existingEtudiant.setNiveauEtude(dto.getNiveauEtude());
+        existingEtudiant.setSpecialite(dto.getSpecialite());
+        existingEtudiant.setPays(dto.getPays());
+        existingEtudiant.setVille(dto.getVille());
+        existingEtudiant.setAdresse(dto.getAdresse());
+        existingEtudiant.setSituation(dto.getSituation());
+        existingEtudiant.setNationalite(dto.getNationalite());
+        existingEtudiant.setGenre(dto.getGenre());
+        existingEtudiant.setEtablissement(dto.getEtablissement());
+        existingEtudiant.setAnneeEtude(dto.getAnneeEtude());
+        existingEtudiant.setDomaine(dto.getDomaine());
+        existingEtudiant.setHistoriqueRecherche(dto.getHistoriqueRecherche());
+
+        // Mise à jour de l’administrateur si présent
+        if (dto.getAdministrateurId() != null) {
+            Administrateur admin = administrateurRepository.findById(dto.getAdministrateurId())
+                    .orElse(null);
+            existingEtudiant.setAdministrateur(admin);
+        } else {
+            existingEtudiant.setAdministrateur(null);
         }
-        return null;
+
+        // Mise à jour des candidatures —
+        // Attention : ici on suppose que DTO ne contient pas la liste des candidatures,
+        // sinon il faudrait gérer la collection de candidatures explicitement
+        // (à adapter si tu as un DTO avec candidatures)
+        // Sinon ne rien faire sur candidatures ici
+
+        // Sauvegarde et retourne le DTO mis à jour
+        return toDto(etudiantRepository.save(existingEtudiant));
     }
 
     @Override
     public void deleteEtudiant(Long id) {
         etudiantRepository.deleteById(id);
-    }
-
-    @Override
-    public EtudiantDTO getEtudiantById(Long id) {
-        return etudiantRepository.findById(id).map(this::toDTO).orElse(null);
-    }
-
-    @Override
-    public List<EtudiantDTO> getAllEtudiants() {
-        return etudiantRepository.findAll().stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    private EtudiantDTO toDTO(Etudiant e) {
-        EtudiantDTO dto = new EtudiantDTO();
-        dto.setId(e.getId());
-        dto.setNom(e.getNom());
-        dto.setPrenom(e.getPrenom());
-        dto.setDateNaissance(e.getDateNaissance());
-        dto.setEmail(e.getEmail());
-        dto.setTelephone(e.getTelephone());
-        dto.setLanguePreferee(e.getLanguePreferee());
-        dto.setNiveauEtude(e.getNiveauEtude());
-        dto.setDomaine(e.getDomaine());
-        dto.setVille(e.getVille());
-        dto.setCandidaturesIds(e.getCandidatures().stream().map(Candidature::getId).collect(Collectors.toList()));
-        return dto;
-    }
-
-    private Etudiant fromDTO(EtudiantDTO dto) {
-        Etudiant e = new Etudiant();
-        e.setId(dto.getId());
-        e.setNom(dto.getNom());
-        e.setPrenom(dto.getPrenom());
-        e.setDateNaissance(dto.getDateNaissance());
-        e.setEmail(dto.getEmail());
-        e.setTelephone(dto.getTelephone());
-        e.setLanguePreferee(dto.getLanguePreferee());
-        e.setNiveauEtude(dto.getNiveauEtude());
-        e.setDomaine(dto.getDomaine());
-        e.setVille(dto.getVille());
-        return e;
     }
 }

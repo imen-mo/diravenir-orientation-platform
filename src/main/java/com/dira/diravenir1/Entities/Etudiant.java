@@ -36,6 +36,16 @@ public class Etudiant extends Utilisateur {
     @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Candidature> candidatures;
 
+    public List<Candidature> getCandidature() {
+        return candidatures;
+    }
+
+    // Setter
+    public void setCandidature(List<Candidature> Candidature) {
+        this.candidatures = candidatures;
+    }
+
+
     // 💼 Historique de recherche (optionnel - liste de chaînes ou d’entités selon le diagramme)
     @ElementCollection
     private List<String> historiqueRecherche = new ArrayList<>();
