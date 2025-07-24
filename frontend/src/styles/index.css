@@ -1,0 +1,11 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background-color: #fff;
+    color: #3c3054; /* Couleur texte principale */
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}

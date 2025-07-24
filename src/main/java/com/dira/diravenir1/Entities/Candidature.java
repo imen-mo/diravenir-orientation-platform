@@ -26,6 +26,7 @@ public class Candidature {
     @JoinColumn(name = "etudiant_id")
     private Etudiant etudiant;
 
+    private String programme;
 
     // Getters et setters
 
@@ -82,7 +83,17 @@ public class Candidature {
     public void addDocument(Document document) {
         documents.add(document);
         document.setCandidature(this);
+
     }
+
+    public String getProgramme() {
+        return programme;
+    }
+
+    public void setProgramme(String programme) {
+        this.programme = programme;
+    }
+
 
     public void removeDocument(Document document) {
         documents.remove(document);

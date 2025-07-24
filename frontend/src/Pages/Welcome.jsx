@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./welcome.css";
-import logo from "../assets/diravenir-logo.png"; // adapte le chemin si besoin
+import logo from "../assets/logo.png"; // adapte le chemin si besoin
 
 const Welcome = () => {
     return (

@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../assets/diravenir-logo.png"; // Assure-toi que le chemin est correct
+import logo from "../assets/logo.png"; // Assure-toi que le chemin est correct
 
 export default function Header() {
     return (
