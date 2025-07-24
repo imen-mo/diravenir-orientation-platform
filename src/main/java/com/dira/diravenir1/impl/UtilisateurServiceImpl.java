@@ -25,6 +25,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
     @Override
     public List<UtilisateurDTO> getAll() {
         return utilisateurRepository.findAll()
@@ -58,6 +59,11 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         // TODO : compléter avec d'autres champs si nécessaire
 
         utilisateurRepository.save(utilisateur);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return false;
     }
 
     // Méthode de conversion Entity -> DTO
