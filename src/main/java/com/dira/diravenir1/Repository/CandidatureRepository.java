@@ -6,9 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CandidatureRepository extends JpaRepository<Candidature, Long> {
-    // Vous pouvez ajouter des méthodes de requête personnalisées ici si nécessaire.
-    // Par exemple :
-    // List<Candidature> findByEtudiantId(Long etudiantId);
-    // List<Candidature> findByOffreId(Long offreId);
-    // Optional<Candidature> findByEtudiantIdAndOffreId(Long etudiantId, Long offreId);
+
 }
