@@ -66,6 +66,37 @@ public class AdministrateurServiceImpl implements AdministrateurService {
     }
 
     @Override
+    public AdministrateurDTO updateAdministrateur(AdministrateurDTO dto) {
+        // Chercher l’administrateur existant
+        Administrateur admin = administrateurRepository.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("Administrateur introuvable avec id " + dto.getId()));
+
+        // Mettre à jour les champs
+        admin.setNom(dto.getNom());
+        admin.setPrenom(dto.getPrenom());
+        admin.setEmail(dto.getEmail());
+        admin.setRole(dto.getRole());
+        admin.setFonctions(dto.getFonctions());
+        admin.setGereCompte(dto.getGereCompte());
+        admin.setGereEtudiants(dto.getGereEtudiants());
+
+        // Sauvegarder
+        Administrateur updated = administrateurRepository.save(admin);
+
+        // Retourner DTO mis à jour
+        return AdministrateurDTO.builder()
+                .id(updated.getId())
+                .nom(updated.getNom())
+                .prenom(updated.getPrenom())
+                .email(updated.getEmail())
+                .role(updated.getRole())
+                .fonctions(updated.getFonctions())
+                .gereCompte(updated.getGereCompte())
+                .gereEtudiants(updated.getGereEtudiants())
+                .build();
+    }
+
+    @Override
     public void deleteAdministrateur(Long id) {
         administrateurRepository.deleteById(id);
     }

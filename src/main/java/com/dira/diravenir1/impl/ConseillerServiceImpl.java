@@ -1,14 +1,12 @@
 package com.dira.diravenir1.impl;
-import org.springframework.stereotype.Service;
+import com.dira.diravenir1.exception.ResourceNotFoundException;
 
+import org.springframework.stereotype.Service;
 import com.dira.diravenir1.Entities.Conseiller;
 import com.dira.diravenir1.Repository.ConseillerRepository;
 import com.dira.diravenir1.service.ConseillerService;
 import com.dira.diravenir1.dto.ConseillerDTO;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +18,10 @@ public class ConseillerServiceImpl implements ConseillerService {
 
     @Override
     public List<ConseillerDTO> getAll() {
-        return conseillerRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
+        return conseillerRepository.findAll()
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -30,8 +31,7 @@ public class ConseillerServiceImpl implements ConseillerService {
         conseiller.setPrenom(dto.getPrenom());
         conseiller.setEmail(dto.getEmail());
         conseiller.setMotDePasse(dto.getMotDePasse());
-        conseiller.setRole(dto.getRole());         // ✅ Correct
-// si `role` est String dans la classe Utilisateur
+        conseiller.setRole(dto.getRole());
         conseiller.setSpecialite(dto.getSpecialite());
         conseiller.setBureau(dto.getBureau());
         conseiller.setTelephoneBureau(dto.getTelephoneBureau());
@@ -40,6 +40,13 @@ public class ConseillerServiceImpl implements ConseillerService {
         conseiller = conseillerRepository.save(conseiller);
         dto.setId(conseiller.getId());
         return dto;
+    }
+
+    @Override
+    public ConseillerDTO getById(Long id) {
+        Conseiller conseiller = conseillerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Conseiller non trouvé avec l'id : " + id));
+        return mapToDTO(conseiller);
     }
 
     private ConseillerDTO mapToDTO(Conseiller conseiller) {
@@ -56,4 +63,32 @@ public class ConseillerServiceImpl implements ConseillerService {
                 conseiller.getDisponibilite()
         );
     }
+    @Override
+    public ConseillerDTO update(Long id, ConseillerDTO dto) {
+        Conseiller existing = conseillerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Conseiller non trouvé avec l'id : " + id));
+
+        existing.setNom(dto.getNom());
+        existing.setPrenom(dto.getPrenom());
+        existing.setEmail(dto.getEmail());
+        existing.setMotDePasse(dto.getMotDePasse());
+        existing.setRole(dto.getRole());
+        existing.setSpecialite(dto.getSpecialite());
+        existing.setBureau(dto.getBureau());
+        existing.setTelephoneBureau(dto.getTelephoneBureau());
+        existing.setDisponibilite(dto.getDisponibilite());
+
+        existing = conseillerRepository.save(existing);
+        return mapToDTO(existing);
+    }
+    @Override
+    public void deleteById(Long id) {
+        Conseiller conseiller = conseillerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Conseiller non trouvé avec l'id " + id));
+
+        conseillerRepository.delete(conseiller);
+    }
+
+
+
 }

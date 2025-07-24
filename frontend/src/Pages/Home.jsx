@@ -1,20 +1,36 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/Home.css";
+import logo from "../assets/diravenir-logo.png";
 
-export default function Home() {
+
+const Home = () => {
+    const navigate = useNavigate();
+
     return (
-        <div className="bg-[#4B2B5F] min-h-screen flex flex-col items-center justify-center text-[#FDFDFD] px-4">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-center">
-                Bienvenue sur Diravenir
-            </h1>
-            <p className="text-lg md:text-xl mb-8 max-w-2xl text-center">
-                Une plateforme dédiée à l’orientation scolaire pour guider les étudiants vers leur avenir.
-            </p>
-            <a
-                href="#"
-                className="bg-[#F7C948] hover:bg-[#FFE082] text-[#4B2B5F] font-semibold py-2 px-6 rounded-full shadow-md transition duration-300"
-            >
-                Commencer le Test
-            </a>
+        <div className="home-container">
+            <header className="home-header">
+                <img src={logo} alt="DirAvenir Logo" className="logo" />
+                <h1>Bienvenue sur DirAvenir</h1>
+                <p className="slogan">Votre avenir commence ici !</p>
+            </header>
+
+            <div className="hero-section" style={{ backgroundImage: `url(${headerImage})` }}>
+                <div className="overlay">
+                    <h2>Explorez nos services</h2>
+                    <div className="button-group">
+                        <button onClick={() => navigate("/filieres-postes")}>Filières & Postes</button>
+                        <button onClick={() => navigate("/tests")}>Passer un Test</button>
+                        <button onClick={() => navigate("/etudiants")}>Espace Étudiant</button>
+                    </div>
+                </div>
+            </div>
+
+            <footer className="footer">
+                &copy; 2025 DirAvenir | Tous droits réservés
+            </footer>
         </div>
     );
-}
+};
+
+export default Home;

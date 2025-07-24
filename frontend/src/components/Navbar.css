@@ -1,0 +1,26 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+}
+
+.logo {
+    height: 60px;
+}
+
+.nav-buttons a {
+    margin-left: 20px;
+    color: #000;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: background 0.3s ease;
+}
+
+.nav-buttons a:hover {
+    background-color: #F7C948;
+}

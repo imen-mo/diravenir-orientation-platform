@@ -8,5 +8,8 @@ public interface AdministrateurService {
     AdministrateurDTO createAdministrateur(AdministrateurDTO dto);
     List<AdministrateurDTO> getAllAdministrateurs();
     AdministrateurDTO getAdministrateurById(Long id);
+    AdministrateurDTO updateAdministrateur(AdministrateurDTO dto);
+
     void deleteAdministrateur(Long id);
+
 }

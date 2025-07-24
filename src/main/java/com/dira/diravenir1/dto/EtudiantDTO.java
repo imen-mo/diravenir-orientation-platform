@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class EtudiantDTO {
     private Long id;
+<<<<<<< HEAD
     private String nom;
     private String prenom;
     private LocalDate dateNaissance;
@@ -18,6 +19,8 @@ public class EtudiantDTO {
     private String telephone;
     private String languePreferee;
     private String motDePasse;
+=======
+>>>>>>> d86042f8070b78afa979b2736cbba471d0f52c00
     private String niveauEtude;
     private String specialite;
     private String pays;
@@ -29,5 +32,10 @@ public class EtudiantDTO {
     private String etablissement;
     private String anneeEtude;
     private String domaine;
+<<<<<<< HEAD
     private List<Long> candidaturesIds;
+=======
+    private Long administrateurId; // Pour associer à un administrateur
+    private List<String> historiqueRecherche;
+>>>>>>> d86042f8070b78afa979b2736cbba471d0f52c00
 }

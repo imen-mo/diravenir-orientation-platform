@@ -10,4 +10,5 @@ public interface EtudiantService {
     void deleteEtudiant(Long id);
     EtudiantDTO getEtudiantById(Long id);
     List<EtudiantDTO> getAllEtudiants();
+
 }

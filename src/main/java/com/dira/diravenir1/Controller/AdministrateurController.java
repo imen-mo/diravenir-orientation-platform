@@ -23,4 +23,15 @@ public class AdministrateurController {
     public AdministrateurDTO create(@RequestBody AdministrateurDTO dto) {
         return service.createAdministrateur(dto);
     }
+
+    @PutMapping("/{id}")
+    public AdministrateurDTO update(@PathVariable Long id, @RequestBody AdministrateurDTO dto) {
+        dto.setId(id);
+        return service.updateAdministrateur(dto);
+    }
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        service.deleteAdministrateur(id);
+    }
+
 }
