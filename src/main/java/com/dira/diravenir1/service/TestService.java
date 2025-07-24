@@ -1,4 +1,4 @@
-package com.dira.diravenir1.Service;
+package com.dira.diravenir1.service;
 
 import com.dira.diravenir1.dto.TestDTO;
 

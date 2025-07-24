@@ -2,7 +2,7 @@ package com.dira.diravenir1.impl;
 
 import com.dira.diravenir1.Entities.Test;
 import com.dira.diravenir1.Repository.TestRepository;
-import com.dira.diravenir1.Service.TestService;
+import com.dira.diravenir1.service.TestService;
 import com.dira.diravenir1.dto.TestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

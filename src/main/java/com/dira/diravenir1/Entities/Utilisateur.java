@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +18,7 @@ public class Utilisateur {
     private String motDePasse;
 
     @Enumerated(EnumType.STRING)
-    private Role role;  // <--- ici, Role au lieu de String
+    private Role role;
 
     private String nom;
     private String prenom;
@@ -25,8 +26,8 @@ public class Utilisateur {
     private String email;
     private String telephone;
     private String languePreferee;
+
     @ManyToOne
     @JoinColumn(name = "filiere_id")
     private Filiere filiere;
-
 }

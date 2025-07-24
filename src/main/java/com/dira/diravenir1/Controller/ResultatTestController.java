@@ -1,7 +1,7 @@
 package com.dira.diravenir1.Controller;
 
 import com.dira.diravenir1.dto.ResultatTestDTO;
-import com.dira.diravenir1.Service.ResultatTestService;
+import com.dira.diravenir1.service.ResultatTestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

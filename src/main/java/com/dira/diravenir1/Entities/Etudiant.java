@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "etudiant")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)  // Pour Lombok, prend en compte l'héritage
 public class Etudiant extends Utilisateur {
 
     private String niveauEtude;
@@ -33,18 +35,18 @@ public class Etudiant extends Utilisateur {
     private String anneeEtude;
 
     private String domaine;
-    @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Candidature> candidatures;
 
-    // 💼 Historique de recherche (optionnel - liste de chaînes ou d’entités selon le diagramme)
+    @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Candidature> candidatures = new ArrayList<>();
+
     @ElementCollection
+    @CollectionTable(name = "etudiant_historique_recherche", joinColumns = @JoinColumn(name = "etudiant_id"))
+    @Column(name = "recherche")
     private List<String> historiqueRecherche = new ArrayList<>();
 
-    // 📄 Historique de candidatures (relation avec Candidature si tu en as une entité)
-    @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL)
-    private List<Candidature> historiqueCandidature = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "administrateur_id")
-    private Administrateur administrateur; // Clé étrangère vers l'administrateur
-}
+    private Administrateur administrateur;
 
+
+}

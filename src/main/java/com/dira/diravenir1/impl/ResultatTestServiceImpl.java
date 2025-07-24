@@ -2,7 +2,7 @@ package com.dira.diravenir1.impl;
 
 import com.dira.diravenir1.Entities.ResultatTest;
 import com.dira.diravenir1.dto.ResultatTestDTO;
-import com.dira.diravenir1.Service.ResultatTestService;
+import com.dira.diravenir1.service.ResultatTestService;
 import com.dira.diravenir1.Repository.ResultatTestRepository;
 import com.dira.diravenir1.Repository.TestRepository;
 import com.dira.diravenir1.Repository.EtudiantRepository;
