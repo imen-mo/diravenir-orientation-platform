@@ -1,91 +1,49 @@
 package com.dira.diravenir1.Entities;
 
 import jakarta.persistence.*;
-import java.util.Date;
+import lombok.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Candidature {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.DATE)
-    private Date dateSoumission;
+    private String dateSoumission;
 
     private String statut;
+
     private String suivi;
-    private String programme; // Ajouté
+
+    private String programme;
 
     @OneToMany(mappedBy = "candidature", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude // Pour éviter récursion infinie dans toString
+    @EqualsAndHashCode.Exclude // Pareil pour equals et hashCode
     private List<Document> documents = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "etudiant_id")
+    @JoinColumn(name = "etudiant_id", nullable = false)
     private Etudiant etudiant;
 
-    // Getters et Setters
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDateSoumission() {
-        return dateSoumission;
-    }
-
-    public void setDateSoumission(String dateSoumission) {
-        this.dateSoumission = dateSoumission;
-    }
-
-    public String getStatut() {
-        return statut;
-    }
-
-    public void setStatut(String statut) {
+    // Ajout d'un constructeur personnalisé sans 'id' ni 'documents' (optionnel, plus lisible)
+    @Builder
+    public Candidature(LocalDate dateSoumission, String statut, String suivi, String programme, Etudiant etudiant) {
+        this.dateSoumission = String.valueOf(dateSoumission);
         this.statut = statut;
-    }
-
-    public String getSuivi() {
-        return suivi;
-    }
-
-    public void setSuivi(String suivi) {
         this.suivi = suivi;
-    }
-
-    public String getProgramme() {
-        return programme;
-    }
-
-    public void setProgramme(String programme) {
         this.programme = programme;
-    }
-
-    public List<Document> getDocuments() {
-        return documents;
-    }
-
-    public void setDocuments(List<Document> documents) {
-        this.documents = documents;
-    }
-
-    public Etudiant getEtudiant() {
-        return etudiant;
-    }
-
-    public void setEtudiant(Etudiant etudiant) {
         this.etudiant = etudiant;
     }
 
-    // Méthodes utilitaires pour gérer la relation bidirectionnelle
-
+    // Méthodes utilitaires pour gérer la relation bidirectionnelle avec Document
     public void addDocument(Document document) {
         documents.add(document);
         document.setCandidature(this);
