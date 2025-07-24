@@ -1,12 +1,9 @@
-import React from 'react';
-import Test1 from './Test1';
+package com.dira.diravenir1.Repository;
 
-function App() {
-    return (
-            <div className="App">
-            <Test1 />
-            </div>
-  );
+import com.dira.diravenir1.Entities.Candidature;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface CandidatureRepository extends JpaRepository<Candidature, Long> {
 }
-
-export default App;
