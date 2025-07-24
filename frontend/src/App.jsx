@@ -1,8 +1,13 @@
 import React from "react";
-import SignUp from "./Pages/SignUp.jsx";
+import Universites from "./Pages/Universites";
+import SignIn from "./pages/SignIn.jsx";
 
 function App() {
-    return <SignUp />;
+    return (
+        <div>
+            <SignIn />
+        </div>
+    );
 }
 
 export default App;

@@ -36,7 +36,6 @@ public class Etudiant extends Utilisateur {
 
     private String domaine;
 
-
     @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Candidature> candidatures = new ArrayList<>();
 
