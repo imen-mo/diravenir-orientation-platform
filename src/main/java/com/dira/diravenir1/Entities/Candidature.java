@@ -16,8 +16,8 @@ public class Candidature {
     private Date dateSoumission;
 
     private String statut;
-
     private String suivi;
+    private String programme; // Ajouté
 
     @OneToMany(mappedBy = "candidature", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> documents = new ArrayList<>();
@@ -26,8 +26,7 @@ public class Candidature {
     @JoinColumn(name = "etudiant_id")
     private Etudiant etudiant;
 
-
-    // Getters et setters
+    // Getters et Setters
 
     public Long getId() {
         return id;
@@ -37,11 +36,11 @@ public class Candidature {
         this.id = id;
     }
 
-    public Date getDateSoumission() {
+    public String getDateSoumission() {
         return dateSoumission;
     }
 
-    public void setDateSoumission(Date dateSoumission) {
+    public void setDateSoumission(String dateSoumission) {
         this.dateSoumission = dateSoumission;
     }
 
@@ -59,6 +58,14 @@ public class Candidature {
 
     public void setSuivi(String suivi) {
         this.suivi = suivi;
+    }
+
+    public String getProgramme() {
+        return programme;
+    }
+
+    public void setProgramme(String programme) {
+        this.programme = programme;
     }
 
     public List<Document> getDocuments() {

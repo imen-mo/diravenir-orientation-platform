@@ -12,7 +12,6 @@ public class CandidatureMapper {
         dto.setStatut(candidature.getStatut());
         dto.setDateSoumission(candidature.getDateSoumission());
         dto.setProgramme(candidature.getProgramme());
-        // Ajoute les autres champs nécessaires
         return dto;
     }
     public Candidature toEntity(CandidatureDTO dto) {
