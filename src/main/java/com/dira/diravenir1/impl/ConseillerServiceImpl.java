@@ -30,7 +30,7 @@ public class ConseillerServiceImpl implements ConseillerService {
         conseiller.setNom(dto.getNom());
         conseiller.setPrenom(dto.getPrenom());
         conseiller.setEmail(dto.getEmail());
-        conseiller.setMotDePasse(dto.getMotDePasse());
+        conseiller.setPassword(dto.getMotDePasse());
         conseiller.setRole(dto.getRole());
         conseiller.setSpecialite(dto.getSpecialite());
         conseiller.setBureau(dto.getBureau());
@@ -55,7 +55,7 @@ public class ConseillerServiceImpl implements ConseillerService {
                 conseiller.getNom(),
                 conseiller.getPrenom(),
                 conseiller.getEmail(),
-                conseiller.getMotDePasse(),
+                conseiller.getPassword(),
                 conseiller.getRole(),
                 conseiller.getSpecialite(),
                 conseiller.getBureau(),
@@ -71,7 +71,7 @@ public class ConseillerServiceImpl implements ConseillerService {
         existing.setNom(dto.getNom());
         existing.setPrenom(dto.getPrenom());
         existing.setEmail(dto.getEmail());
-        existing.setMotDePasse(dto.getMotDePasse());
+        existing.setPassword(dto.getMotDePasse());
         existing.setRole(dto.getRole());
         existing.setSpecialite(dto.getSpecialite());
         existing.setBureau(dto.getBureau());

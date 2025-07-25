@@ -12,7 +12,7 @@ public class EtudiantMapper {
         dto.setNom(etudiant.getNom());
         dto.setPrenom(etudiant.getPrenom());
         dto.setEmail(etudiant.getEmail());
-        dto.setMotDePasse(etudiant.getMotDePasse());
+        dto.setMotDePasse(etudiant.getPassword());
         dto.setNiveauEtude(etudiant.getNiveauEtude());
         dto.setSpecialite(etudiant.getSpecialite());
         dto.setPays(etudiant.getPays());
@@ -33,7 +33,7 @@ public class EtudiantMapper {
         etudiant.setNom(dto.getNom());
         etudiant.setPrenom(dto.getPrenom());
         etudiant.setEmail(dto.getEmail());
-        etudiant.setMotDePasse(dto.getMotDePasse());
+        etudiant.setPassword(dto.getMotDePasse());
         etudiant.setNiveauEtude(dto.getNiveauEtude());
         etudiant.setSpecialite(dto.getSpecialite());
         etudiant.setPays(dto.getPays());

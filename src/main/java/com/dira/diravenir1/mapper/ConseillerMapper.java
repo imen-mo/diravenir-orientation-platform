@@ -12,7 +12,7 @@ public class ConseillerMapper {
         dto.setNom(conseiller.getNom());
         dto.setPrenom(conseiller.getPrenom());
         dto.setEmail(conseiller.getEmail());
-        dto.setMotDePasse(conseiller.getMotDePasse());
+        dto.setMotDePasse(conseiller.getPassword());
         dto.setRole(conseiller.getRole());
         dto.setSpecialite(conseiller.getSpecialite());
         dto.setBureau(conseiller.getBureau());
@@ -26,7 +26,7 @@ public class ConseillerMapper {
         conseiller.setNom(dto.getNom());
         conseiller.setPrenom(dto.getPrenom());
         conseiller.setEmail(dto.getEmail());
-        conseiller.setMotDePasse(dto.getMotDePasse());
+        conseiller.setPassword(dto.getMotDePasse());
         conseiller.setRole(dto.getRole());
         conseiller.setSpecialite(dto.getSpecialite());
         conseiller.setBureau(dto.getBureau());

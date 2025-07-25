@@ -51,7 +51,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         utilisateur.setEmail(request.getEmail());
 
         // Encodage du mot de passe
-        utilisateur.setMotDePasse(passwordEncoder.encode(request.getMotDePasse()));
+        utilisateur.setPassword(passwordEncoder.encode(request.getMotDePasse()));
 
         // Par défaut, rôle USER (à ajuster selon ton Enum Role)
         utilisateur.setRole(Role.USER);
@@ -73,7 +73,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         dto.setNom(utilisateur.getNom());
         dto.setPrenom(utilisateur.getPrenom());
         dto.setEmail(utilisateur.getEmail());
-        dto.setMotDePasse(utilisateur.getMotDePasse());
+        dto.setMotDePasse(utilisateur.getPassword());
         dto.setRole(utilisateur.getRole());
         return dto;
     }
@@ -85,7 +85,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         utilisateur.setNom(dto.getNom());
         utilisateur.setPrenom(dto.getPrenom());
         utilisateur.setEmail(dto.getEmail());
-        utilisateur.setMotDePasse(dto.getMotDePasse());
+        utilisateur.setPassword(dto.getMotDePasse());
         utilisateur.setRole(dto.getRole());
         return utilisateur;
 }

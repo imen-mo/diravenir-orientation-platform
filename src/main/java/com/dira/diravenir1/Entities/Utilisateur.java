@@ -15,7 +15,7 @@ public class Utilisateur {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String motDePasse;
+    private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -26,6 +26,7 @@ public class Utilisateur {
     private String email;
     private String telephone;
     private String languePreferee;
+
 
     @ManyToOne
     @JoinColumn(name = "filiere_id")

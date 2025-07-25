@@ -12,7 +12,7 @@ public class UtilisateurMapper {
         dto.setNom(utilisateur.getNom());
         dto.setPrenom(utilisateur.getPrenom());
         dto.setEmail(utilisateur.getEmail());
-        dto.setMotDePasse(utilisateur.getMotDePasse());
+        dto.setMotDePasse(utilisateur.getPassword());
         dto.setRole(utilisateur.getRole());
         return dto;
     }
@@ -22,7 +22,7 @@ public class UtilisateurMapper {
         utilisateur.setNom(dto.getNom());
         utilisateur.setPrenom(dto.getPrenom());
         utilisateur.setEmail(dto.getEmail());
-        utilisateur.setMotDePasse(dto.getMotDePasse());
+        utilisateur.setPassword(dto.getMotDePasse());
         utilisateur.setRole(dto.getRole());
         return utilisateur;
     }
