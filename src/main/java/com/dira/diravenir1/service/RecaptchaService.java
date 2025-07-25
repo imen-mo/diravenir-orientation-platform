@@ -1,25 +1,38 @@
 package com.dira.diravenir1.service;
 
-
+import com.dira.diravenir1.payload.GoogleResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import java.util.Map;
 
 @Service
 public class RecaptchaService {
 
     @Value("${google.recaptcha.secret}")
-    private String secret;
+    private String recaptchaSecret;
 
-    @Value("${google.recaptcha.url}")
-    private String verifyUrl;
+    private static final String GOOGLE_RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
 
-    public boolean verify(String response) {
+    public boolean verify(String recaptchaToken) {
         RestTemplate restTemplate = new RestTemplate();
-        Map<String, Object> responseMap = restTemplate.postForObject(
-                verifyUrl + "?secret=" + secret + "&response=" + response,
-                null, Map.class);
-        return (Boolean) responseMap.get("success");
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("secret", recaptchaSecret);
+        params.add("response", recaptchaToken);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+
+        ResponseEntity<GoogleResponse> response = restTemplate.postForEntity(
+                GOOGLE_RECAPTCHA_VERIFY_URL, request, GoogleResponse.class);
+
+        GoogleResponse googleResponse = response.getBody();
+
+        return googleResponse != null && googleResponse.isSuccess();
     }
 }

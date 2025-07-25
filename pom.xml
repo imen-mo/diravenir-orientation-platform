@@ -98,6 +98,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- ✅ Validation API (Jakarta Bean Validation) -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
         <!-- 🧪 Tests -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -131,7 +138,6 @@
         </plugins>
     </build>
 
-    <!-- 🔁 Ajoute ce bloc si ton IntelliJ a du mal à récupérer la dépendance -->
     <repositories>
         <repository>
             <id>central</id>
