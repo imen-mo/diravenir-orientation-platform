@@ -1,5 +1,4 @@
 package com.dira.diravenir1.Controller;
-import org.springframework.security.core.AuthenticationException;
 
 import com.dira.diravenir1.payload.LoginRequest;
 import com.dira.diravenir1.payload.SignupRequest;
@@ -16,11 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -36,34 +34,60 @@ public class AuthController {
     private final LoginAttemptService loginAttemptService;
     private final AuthenticationManager authenticationManager;
 
-    // ... tes méthodes signup et refreshToken inchangées
+    /**
+     * Inscription (signup)
+     */
+    @PostMapping("/signup")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest request) {
+        try {
+            utilisateurService.registerUser(request); // à adapter selon ta logique métier
+            return ResponseEntity.ok("Utilisateur enregistré avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erreur d'inscription : " + e.getMessage());
+        }
+    }
 
     /**
-     * Connexion (signin) avec journalisation IP en cas d’échec
+     * Connexion (signin)
      */
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest request, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
+        
+        // Vérifier si l'IP est bloquée
+        if (loginAttemptService.isBlocked(ip)) {
+            logger.warn("🚫 TENTATIVE DE CONNEXION BLOQUÉE - IP: {} | Compte bloqué temporairement", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body("Trop de tentatives échouées. Compte temporairement bloqué.");
+        }
+        
         try {
-            // 1. Authentifier
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
             );
 
-            // 2. Ajouter au contexte de sécurité
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            // 3. Extraire le username et générer le token JWT
             String username = authentication.getName();
             String jwt = jwtService.generateToken(username);
 
-            // 4. Retourner le token
+            // Connexion réussie - réinitialiser les tentatives
+            loginAttemptService.loginSucceeded(ip);
+
             return ResponseEntity.ok(new JwtResponse(jwt));
 
         } catch (AuthenticationException ex) {
-            // Log de l'IP en cas de tentative de connexion échouée
-            logger.warn("Tentative de connexion échouée depuis IP: " + ip);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou mot de passe incorrect");
+            // Connexion échouée - incrémenter les tentatives
+            loginAttemptService.loginFailed(ip);
+            
+            int attempts = loginAttemptService.getAttempts(ip);
+            int remainingAttempts = 5 - attempts;
+            
+            String errorMessage = remainingAttempts > 0 ? 
+                String.format("Email ou mot de passe incorrect. Tentatives restantes: %d", remainingAttempts) :
+                "Trop de tentatives échouées. Compte temporairement bloqué.";
+                
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
         }
     }
 }

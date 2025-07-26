@@ -63,7 +63,44 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Override
     public boolean existsByEmail(String email) {
-        return false;
+        return utilisateurRepository.findByEmail(email).isPresent();
+    }
+
+    @Override
+    public void registerUser(SignupRequest request) {
+        // Validation des mots de passe
+        if (!request.isPasswordConfirmed()) {
+            throw new RuntimeException("Les mots de passe ne correspondent pas");
+        }
+
+        // Validation email
+        if (!isValidEmail(request.getEmail())) {
+            throw new RuntimeException("Format d'email invalide");
+        }
+
+        // Validation mot de passe fort
+        if (!isStrongPassword(request.getMotDePasse())) {
+            throw new RuntimeException("Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial");
+        }
+
+        // Vérifier si l'email existe déjà
+        if (utilisateurRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("Un utilisateur avec cet email existe déjà");
+        }
+
+        Utilisateur utilisateur = new Utilisateur();
+        
+        // Remplir seulement les champs essentiels
+        utilisateur.setNom(request.getNom());
+        utilisateur.setEmail(request.getEmail());
+        
+        // Encodage du mot de passe
+        utilisateur.setPassword(passwordEncoder.encode(request.getMotDePasse()));
+        
+        // Par défaut, rôle USER
+        utilisateur.setRole(Role.USER);
+
+        utilisateurRepository.save(utilisateur);
     }
 
     // Méthode de conversion Entity -> DTO
@@ -89,4 +126,24 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         utilisateur.setRole(dto.getRole());
         return utilisateur;
 }
+
+    // Validation email
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return email != null && email.matches(emailRegex);
+    }
+
+    // Validation mot de passe fort
+    private boolean isStrongPassword(String password) {
+        if (password == null || password.length() < 8) {
+            return false;
+        }
+        
+        boolean hasUpperCase = password.matches(".*[A-Z].*");
+        boolean hasLowerCase = password.matches(".*[a-z].*");
+        boolean hasDigit = password.matches(".*\\d.*");
+        boolean hasSpecialChar = password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*");
+        
+        return hasUpperCase && hasLowerCase && hasDigit && hasSpecialChar;
+    }
 }

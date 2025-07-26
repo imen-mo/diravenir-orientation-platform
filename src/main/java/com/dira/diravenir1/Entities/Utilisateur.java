@@ -18,6 +18,7 @@ public class Utilisateur {
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 50)  // Augmenter la taille pour éviter la troncature
     private Role role;
 
     private String nom;

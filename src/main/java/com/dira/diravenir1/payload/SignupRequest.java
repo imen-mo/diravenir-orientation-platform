@@ -20,5 +20,5 @@ public class SignupRequest {
     // Bonus : sécurité renforcée côté backend
     public boolean isPasswordConfirmed() {
         return motDePasse != null && motDePasse.equals(confirmPassword);
-}
+    }
 }

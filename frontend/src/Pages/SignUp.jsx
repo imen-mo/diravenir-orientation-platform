@@ -1,17 +1,65 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "../Pages/SignUp.css";
-
+import API from "../services/api";
 import illustration from "../assets/illustration.png";
 import logo from "../assets/logo.png";
 
 export default function SignUp() {
+    const [formData, setFormData] = useState({
+        email: "",
+        motDePasse: "",
+        confirmPassword: "",
+        nom: ""
+    });
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const [newsletterEmail, setNewsletterEmail] = useState("");
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError("");
+        setLoading(true);
+
+        // Validation côté client
+        if (formData.motDePasse !== formData.confirmPassword) {
+            setError("Les mots de passe ne correspondent pas");
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const response = await API.post("/auth/signup", {
+                email: formData.email,
+                motDePasse: formData.motDePasse,
+                confirmPassword: formData.confirmPassword,
+                nom: formData.nom
+            });
+
+            alert("Compte créé avec succès ! Vous pouvez maintenant vous connecter.");
+            window.location.href = "/signin";
+        } catch (err) {
+            setError(
+                err.response?.data || "Erreur lors de l'inscription. Veuillez réessayer."
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleNewsletterSubmit = (e) => {
         e.preventDefault();
         if (newsletterEmail.trim()) {
             alert(`Thank you for subscribing: ${newsletterEmail}`);
-            setNewsletterEmail(""); // Reset field
+            setNewsletterEmail("");
         }
     };
 
@@ -21,18 +69,17 @@ export default function SignUp() {
             <header className="navbar">
                 <img src={logo} alt="DiraVenir" className="logo" />
                 <nav className="nav-links">
-                    <a href="/">Home</a>
-                    <a href="/course-selector" className="active">Course Selector</a>
-                    <a href="/courses">Courses</a>
-                    <a href="/faq">FAQ</a>
-                    <a href="/contact">Contact</a>
-                    <a href="/about">About US</a>
+                    <Link to="/">Home</Link>
+                    <Link to="/course-selector" className="active">Course Selector</Link>
+                    <Link to="/courses">Courses</Link>
+                    <Link to="/faq">FAQ</Link>
+                    <Link to="/contact">Contact</Link>
+                    <Link to="/about">About US</Link>
                 </nav>
                 <div className="nav-buttons">
-                    <a href="/login" className="btn-login">Log In</a>
-                    <a href="/signup" className="btn-create">Create Account</a>
+                    <Link to="/signin" className="btn-login">Log In</Link>
+                    <Link to="/signup" className="btn-create">Create Account</Link>
                 </div>
-
             </header>
 
             {/* Main content */}
@@ -42,15 +89,51 @@ export default function SignUp() {
                     <h1>
                         Create <span className="highlight">Account</span>
                     </h1>
-                    <form>
-                        <input type="email" placeholder="Email Address" required />
-                        <input type="password" placeholder="Password" required />
-                        <input type="password" placeholder="Confirm Password" required />
+                    <form onSubmit={handleSubmit}>
+                        <input
+                            type="text"
+                            name="nom"
+                            placeholder="Nom *"
+                            value={formData.nom}
+                            onChange={handleInputChange}
+                            required
+                        />
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Email Address *"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            required
+                        />
+                        <input
+                            type="password"
+                            name="motDePasse"
+                            placeholder="Password *"
+                            value={formData.motDePasse}
+                            onChange={handleInputChange}
+                            required
+                        />
+                        <input
+                            type="password"
+                            name="confirmPassword"
+                            placeholder="Confirm Password *"
+                            value={formData.confirmPassword}
+                            onChange={handleInputChange}
+                            required
+                        />
                         <label>
                             <input type="checkbox" /> Remember Me
                         </label>
-                        <button type="submit" className="btn-create-account">
-                            Create Account
+                        {error && (
+                            <div style={{ color: "red", marginBottom: 10 }}>{error}</div>
+                        )}
+                        <button 
+                            type="submit" 
+                            className="btn-create-account"
+                            disabled={loading}
+                        >
+                            {loading ? "Création..." : "Create Account"}
                         </button>
                     </form>
 
@@ -74,7 +157,7 @@ export default function SignUp() {
                     <p>
                         Diravenir est une plateforme web qui accompagne les étudiants dans
                         leur orientation scolaire et leurs démarches de candidature au
-                        Maroc et à l’étranger. Elle se distingue par une approche
+                        Maroc et à l'étranger. Elle se distingue par une approche
                         personnalisée basée sur des tests, des recommandations et un suivi
                         avant toute demande.
                     </p>
@@ -105,12 +188,12 @@ export default function SignUp() {
                         Quick <span className="highlight">Links</span>
                     </h3>
                     <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/our-story">Our Story</a></li>
-                        <li><a href="/best-courses">Best Courses</a></li>
-                        <li><a href="/faqs">Your FAQ's</a></li>
-                        <li><a href="/cancellation">Cancellation & Refunds</a></li>
-                        <li><a href="/contact">Contact US</a></li>
+                        <li><Link to="/">Home</Link></li>
+                        <li><Link to="/our-story">Our Story</Link></li>
+                        <li><Link to="/best-courses">Best Courses</Link></li>
+                        <li><Link to="/faqs">Your FAQ's</Link></li>
+                        <li><Link to="/cancellation">Cancellation & Refunds</Link></li>
+                        <li><Link to="/contact">Contact US</Link></li>
                     </ul>
                 </div>
 

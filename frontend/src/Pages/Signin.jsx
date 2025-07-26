@@ -1,10 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "../Pages/SignIn.css";
 import logo from "../assets/logo.png";
 import illustration from "../assets/illustration.jpg";
 import { motion } from "framer-motion";
+import API from "../services/api";
 
 export default function SignIn() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError("");
+        setLoading(true);
+        try {
+            const response = await API.post("/auth/signin", {
+                email,
+                password,
+            });
+            // Stocker le token JWT dans le localStorage (ou autre)
+            localStorage.setItem("token", response.data.token || response.data.jwt || response.data);
+            // Rediriger ou afficher un message de succès
+            window.location.href = "/"; // À adapter selon votre logique
+        } catch (err) {
+            setError(
+                err.response?.data || "Erreur lors de la connexion. Veuillez réessayer."
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <motion.div
             className="home-container"
@@ -21,26 +50,30 @@ export default function SignIn() {
             >
                 <img src={logo} alt="DiraVenir" className="logo" />
                 <nav className="nav-links">
-                    <a href="/">Home</a>
-                    <a href="/course-selector" className="active">Course Selector</a>
-                    <a href="/courses">Courses</a>
-                    <a href="/faq">FAQ</a>
-                    <a href="/contact">Contact</a>
-                    <a href="/about">About US</a>
+                    <Link to="/">Home</Link>
+                    <Link to="/course-selector" className="active">Course Selector</Link>
+                    <Link to="/courses">Courses</Link>
+                    <Link to="/faq">FAQ</Link>
+                    <Link to="/contact">Contact</Link>
+                    <Link to="/about">About US</Link>
                 </nav>
                 <div className="nav-buttons">
-                    <motion.button
-                        className="btn-login"
-                        whileHover={{ scale: 1.1 }}
-                    >
-                        Log In
-                    </motion.button>
-                    <motion.button
-                        className="btn-create"
-                        whileHover={{ scale: 1.1 }}
-                    >
-                        Create Account
-                    </motion.button>
+                    <Link to="/signin">
+                        <motion.button
+                            className="btn-login"
+                            whileHover={{ scale: 1.1 }}
+                        >
+                            Log In
+                        </motion.button>
+                    </Link>
+                    <Link to="/signup">
+                        <motion.button
+                            className="btn-create"
+                            whileHover={{ scale: 1.1 }}
+                        >
+                            Create Account
+                        </motion.button>
+                    </Link>
                 </div>
             </motion.header>
 
@@ -56,19 +89,35 @@ export default function SignIn() {
                     <h1>
                         Sign <span className="highlight">In</span>
                     </h1>
-                    <form>
-                        <input type="email" placeholder="Email Address" required />
-                        <input type="password" placeholder="Password" required />
+                    <form onSubmit={handleSubmit}>
+                        <input
+                            type="email"
+                            placeholder="Email Address"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                            required
+                        />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                            required
+                        />
                         <label>
                             <input type="checkbox" /> Remember Me
                         </label>
+                        {error && (
+                            <div style={{ color: "red", marginBottom: 10 }}>{error}</div>
+                        )}
                         <motion.button
                             type="submit"
                             className="btn-create-account"
                             whileTap={{ scale: 0.95 }}
                             whileHover={{ backgroundColor: "#ffb700" }}
+                            disabled={loading}
                         >
-                            Log In
+                            {loading ? "Connexion..." : "Log In"}
                         </motion.button>
                     </form>
 
@@ -102,7 +151,7 @@ export default function SignIn() {
                     <p>
                         Diravenir est une plateforme web qui accompagne les étudiants dans
                         leur orientation scolaire et leurs démarches de candidature au
-                        Maroc et à l’étranger.
+                        Maroc et à l'étranger.
                     </p>
                     <div className="newsletter">
                         <label>Subscribe Our Newsletter</label>
@@ -120,12 +169,12 @@ export default function SignIn() {
                         Quick <span className="highlight">Links</span>
                     </h3>
                     <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/our-story">Our Story</a></li>
-                        <li><a href="/best-courses">Best Courses</a></li>
-                        <li><a href="/faqs">Your FAQ's</a></li>
-                        <li><a href="/cancellation">Cancellation & Refunds</a></li>
-                        <li><a href="/contact">Contact US</a></li>
+                        <li><Link to="/">Home</Link></li>
+                        <li><Link to="/our-story">Our Story</Link></li>
+                        <li><Link to="/best-courses">Best Courses</Link></li>
+                        <li><Link to="/faqs">Your FAQ's</Link></li>
+                        <li><Link to="/cancellation">Cancellation & Refunds</Link></li>
+                        <li><Link to="/contact">Contact US</Link></li>
                     </ul>
                 </div>
 

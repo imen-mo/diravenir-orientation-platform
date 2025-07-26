@@ -89,7 +89,8 @@
 }
 
 .form-section input[type="email"],
-.form-section input[type="password"] {
+.form-section input[type="password"],
+.form-section input[type="text"] {
     width: 100%;
     margin-bottom: 20px;
     border: none;
@@ -97,6 +98,17 @@
     padding: 8px 0;
     font-size: 14px;
     outline: none;
+}
+
+/* Style pour les champs requis */
+.form-section input[required] {
+    border-bottom-color: #ffb700;
+}
+
+/* Animation pour les champs au focus */
+.form-section input:focus {
+    border-bottom-color: #ffb700;
+    transition: border-bottom-color 0.3s ease;
 }
 
 .form-section label {
