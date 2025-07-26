@@ -1,6 +1,6 @@
 import React from "react";
 import "../Pages/SignIn.css";
-import logo from "../assets/diravenir-logo.png";
+import logo from "../assets/logo.png";
 import illustration from "../assets/illustration.jpg";
 import { motion } from "framer-motion";
 

@@ -14,6 +14,7 @@ public class RecaptchaService {
     @Value("${google.recaptcha.secret}")
     private String recaptchaSecret;
 
+
     private static final String GOOGLE_RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
 
     public boolean verify(String recaptchaToken) {
