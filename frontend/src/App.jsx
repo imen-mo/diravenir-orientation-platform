@@ -2,17 +2,40 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignIn from "./pages/Signin.jsx";
 import SignUp from "./pages/SignUp.jsx";
-import Universites from "./Pages/Universites";
+import Universites from "./pages/Universites.jsx";
+import HomePage from "./pages/HomePage.jsx";
+
+// Placeholders pour les pages manquantes
+const Orientation = () => <div style={{padding:40}}><h2>Orientation Page</h2></div>;
+const Programs = () => <div style={{padding:40}}><h2>Programs Page</h2></div>;
+const About = () => <div style={{padding:40}}><h2>About Us Page</h2></div>;
+const FAQ = () => <div style={{padding:40}}><h2>FAQ Page</h2></div>;
+const Contact = () => <div style={{padding:40}}><h2>Contact Us Page</h2></div>;
+const ProgramSelector = () => <div style={{padding:40}}><h2>AI Program Selector</h2></div>;
+const Scenarios = () => <div style={{padding:40}}><h2>AI Scenarios</h2></div>;
+const Quizzes = () => <div style={{padding:40}}><h2>AI Quizzes/Tests</h2></div>;
+const Goals = () => <div style={{padding:40}}><h2>AI Goals</h2></div>;
+const Opportunities = () => <div style={{padding:40}}><h2>All Opportunities</h2></div>;
 
 function App() {
     return (
         <Router>
             <div>
                 <Routes>
-                    <Route path="/" element={<SignIn />} />
+                    <Route path="/" element={<HomePage />} />
                     <Route path="/signin" element={<SignIn />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/universites" element={<Universites />} />
+                    <Route path="/orientation" element={<Orientation />} />
+                    <Route path="/programs" element={<Programs />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/faq" element={<FAQ />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/program-selector" element={<ProgramSelector />} />
+                    <Route path="/scenarios" element={<Scenarios />} />
+                    <Route path="/quizzes" element={<Quizzes />} />
+                    <Route path="/goals" element={<Goals />} />
+                    <Route path="/opportunities" element={<Opportunities />} />
                 </Routes>
             </div>
         </Router>

@@ -50,7 +50,7 @@ public class Etudiant extends Utilisateur {
     }
 
 
-    // 💼 Historique de recherche (optionnel - liste de chaînes ou d’entités selon le diagramme)
+    // 💼 Historique de recherche (optionnel - liste de chaînes ou d'entités selon le diagramme)
 
     @ElementCollection
     @CollectionTable(name = "etudiant_historique_recherche", joinColumns = @JoinColumn(name = "etudiant_id"))
@@ -61,5 +61,8 @@ public class Etudiant extends Utilisateur {
     @JoinColumn(name = "administrateur_id")
     private Administrateur administrateur;
 
+    @ManyToOne
+    @JoinColumn(name = "temoignage_id")
+    private Temoignage temoignage;
 
 }
