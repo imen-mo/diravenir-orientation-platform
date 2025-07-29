@@ -4,11 +4,12 @@ import SignIn from "./pages/Signin.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import Universites from "./pages/Universites.jsx";
 import HomePage from "./pages/HomePage.jsx";
+import About from "./Pages/About.jsx";
 
 // Placeholders pour les pages manquantes
 const Orientation = () => <div style={{padding:40}}><h2>Orientation Page</h2></div>;
 const Programs = () => <div style={{padding:40}}><h2>Programs Page</h2></div>;
-const About = () => <div style={{padding:40}}><h2>About Us Page</h2></div>;
+
 const FAQ = () => <div style={{padding:40}}><h2>FAQ Page</h2></div>;
 const Contact = () => <div style={{padding:40}}><h2>Contact Us Page</h2></div>;
 const ProgramSelector = () => <div style={{padding:40}}><h2>AI Program Selector</h2></div>;
