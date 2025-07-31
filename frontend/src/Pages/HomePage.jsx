@@ -207,27 +207,32 @@ const HomePage = () => {
         <div className="destinations-list">
           {destinations.length > 0 ? (
             destinations.map((d, idx) => (
-              <div key={idx} className="destination-card">
+              <Link 
+                key={idx} 
+                to={`/destinations/${d.nom.toLowerCase()}`} 
+                className="destination-card"
+                style={{ textDecoration: 'none' }}
+              >
                 <h4>{d.nom}</h4>
                 <p>{d.description}</p>
                 {d.imageUrl && <img src={d.imageUrl} alt={d.nom} />}
-              </div>
+              </Link>
             ))
           ) : (
-            // Fallback destinations
+            // Fallback destinations with navigation links
             <>
-              <div className="destination-card">
+              <Link to="/destinations/china" className="destination-card" style={{ textDecoration: 'none' }}>
                 <h4>China</h4>
                 <p>Discover opportunities in one of the world's fastest-growing economies</p>
-              </div>
-              <div className="destination-card">
+              </Link>
+              <Link to="/destinations/cyprus" className="destination-card" style={{ textDecoration: 'none' }}>
                 <h4>Cyprus</h4>
                 <p>Study in a beautiful Mediterranean island with excellent universities</p>
-              </div>
-              <div className="destination-card">
+              </Link>
+              <Link to="/destinations/romania" className="destination-card" style={{ textDecoration: 'none' }}>
                 <h4>Romania</h4>
                 <p>Experience European education with affordable costs</p>
-              </div>
+              </Link>
             </>
           )}
         </div>

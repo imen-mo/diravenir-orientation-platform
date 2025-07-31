@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './About.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import romaniaImage from '../assets/ROMANIA.jpg';
 import cyprusImage from '../assets/chypre.jpg';
 import chinaImage from '../assets/CHINA.jpg';
 import meetingImage from '../assets/meeting.png';
+import orientationImage from '../assets/orientation.png';
 import passeportImage from '../assets/passeport.png';
 import meryemImage from '../assets/meryemderni.jpg';
 import nadiaImage from '../assets/nadiaboukdir.jpg';
@@ -57,6 +59,64 @@ const About = () => {
           <div className="meeting-image">
             <img src={meetingImage} alt="Team Meeting" />
           </div>
+
+          {/* Student Orientation Section */}
+          <div className="orientation-section">
+            <h3 className="section-subtitle">Student Orientation with Diravenir</h3>
+            
+            <div className="orientation-grid">
+              <div className="orientation-card">
+                <div className="orientation-icon">
+                  <i className="fas fa-user-graduate"></i>
+                </div>
+                <h4>1. Personalized Guidance and Counseling</h4>
+                <p>Diravenir offers personalized orientation sessions for students. Our goal is to answer their questions, clarify their academic path choices, and guide them toward the right international study solution that matches their academic profile and aspirations.</p>
+              </div>
+              
+              <div className="orientation-card">
+                <div className="orientation-icon">
+                  <i className="fas fa-chalkboard-teacher"></i>
+                </div>
+                <h4>2. Workshops & Public Events</h4>
+                <p>We regularly organize interactive workshops, like those held in February 2025, enabling students to take action through exchanges, advice, and testimonials.</p>
+              </div>
+              
+              <div className="orientation-card">
+                <div className="orientation-icon">
+                  <i className="fas fa-graduation-cap"></i>
+                </div>
+                <h4>3. Student Fair Participation</h4>
+                <p>Diravenir participated in the International Student Forum 2025 (Casablanca, April 2025), offering free individual consultations and direct orientation during the event.</p>
+              </div>
+              
+              <div className="orientation-card">
+                <div className="orientation-icon">
+                  <i className="fas fa-laptop"></i>
+                </div>
+                <h4>4. Digital Educational Content</h4>
+                <p>On Instagram and YouTube, Diravenir shares motivational reels, testimonials from scholarship students, and tips for excelling in the baccalaureate or applying to universities abroad.</p>
+              </div>
+              
+              <div className="orientation-card full-width">
+                <div className="orientation-icon">
+                  <i className="fas fa-globe-africa"></i>
+                </div>
+                <h4>5. Comprehensive International Support</h4>
+                <p>We provide expert guidance on:</p>
+                <ul className="orientation-list">
+                  <li>Selecting the right country and university (Cyprus, China, and Romania)</li>
+                  <li>Preparing application documents and submissions</li>
+                  <li>Accessing scholarship opportunities</li>
+                  <li>Organizing accommodation and logistics</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div className="orientation-image-container">
+              <img src={orientationImage} alt="Student Orientation" className="orientation-image" />
+            </div>
+          </div>
+          
           <h3 className="section-subtitle">Let's make your future career successful</h3>
           <div className="contact-section">
             <div className="contact-grid">
@@ -92,16 +152,31 @@ const About = () => {
           <h3 className="cofounders-title">Co-founders of DIRAVENIR</h3>
           <div className="cofounders-section">
             <div className="cofounder-card">
-              <div className="cofounder-image">
-                <img src={meryemImage} alt="Meryem Derni" />
-              </div>
+              <a 
+                href="https://www.instagram.com/meryemderni?igsh=YmJuZGtweXB3NG00" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="cofounder-image-link"
+                title="Visit Meryem's Instagram"
+              >
+                <div className="cofounder-image">
+                  <img src={meryemImage} alt="Meryem Derni" />
+                </div>
+              </a>
               <h4 className="cofounder-name">Meryem Derni</h4>
               <p className="cofounder-degree">MSc in France</p>
             </div>
             <div className="cofounder-card">
-              <div className="cofounder-image">
-                <img src={nadiaImage} alt="Nadia Boukdir" />
-              </div>
+              <a 
+                href="https://www.instagram.com/nadia.boukdir/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="cofounder-image-link"
+              >
+                <div className="cofounder-image">
+                  <img src={nadiaImage} alt="Nadia Boukdir" />
+                </div>
+              </a>
               <h4 className="cofounder-name">Nadia Boukdir</h4>
               <p className="cofounder-degree">MSc in the United Kingdom</p>
             </div>

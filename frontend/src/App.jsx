@@ -5,6 +5,9 @@ import SignUp from "./pages/SignUp.jsx";
 import Universites from "./pages/Universites.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import About from "./Pages/About.jsx";
+import China from "./pages/China.jsx";
+import Cyprus from "./pages/Cyprus.jsx";
+import Romania from "./pages/Romania.jsx";
 
 // Placeholders pour les pages manquantes
 const Orientation = () => <div style={{padding:40}}><h2>Orientation Page</h2></div>;
@@ -37,6 +40,9 @@ function App() {
                     <Route path="/quizzes" element={<Quizzes />} />
                     <Route path="/goals" element={<Goals />} />
                     <Route path="/opportunities" element={<Opportunities />} />
+                    <Route path="/destinations/china" element={<China />} />
+                    <Route path="/destinations/cyprus" element={<Cyprus />} />
+                    <Route path="/destinations/romania" element={<Romania />} />
                 </Routes>
             </div>
         </Router>
