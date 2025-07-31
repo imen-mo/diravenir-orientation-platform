@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './About.css';
 import romaniaImage from '../assets/ROMANIA.jpg';
 import cyprusImage from '../assets/chypre.jpg';
@@ -8,10 +9,30 @@ import passeportImage from '../assets/passeport.png';
 import meryemImage from '../assets/meryemderni.jpg';
 import nadiaImage from '../assets/nadiaboukdir.jpg';
 import diravenirLogo from '../assets/DIRAVENIR.jpg';
+import logo from '../assets/logo.png';
 
 const About = () => {
+  const navigate = useNavigate();
+  
   return (
-    <div className="about-container">
+    <div className="about-page">
+      {/* Navbar - Same as Contact Page */}
+      <nav className="navbar">
+        <div className="navbar-left">
+          <img src={logo} alt="DirAvenir Logo" className="logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }} />
+        </div>
+        <div className="navbar-right">
+          <Link to="/" className="nav-button">Home</Link>
+          <Link to="/orientation" className="nav-button">Orientation</Link>
+          <Link to="/programs" className="nav-button">Programs</Link>
+          <Link to="/about" className="nav-button active">About US</Link>
+          <Link to="/faq" className="nav-button">FAQ</Link>
+          <Link to="/contact" className="nav-button">Contact US</Link>
+          <Link to="/signin" className="nav-button">Log In</Link>
+          <Link to="/signup" className="nav-button">Create Account</Link>
+        </div>
+      </nav>
+
       <div className="about-content">
         <h1 className="section-title">About Us</h1>
         <div className="mission-statement">
@@ -28,10 +49,6 @@ const About = () => {
             Our business blossoms as the fruition of months of unwavering dedication and teamwork between two best friends who dared to dream. From the inception of this idea to its realization, our journey has been marked by shared visions, late-night collaborations, and a relentless pursuit of excellence. Together, we've cultivated not just a business but a testament to the power of friendship, hard work, and a shared dream coming to life.
             Our passion lies in unlocking new horizons for the youth, providing them with unprecedented opportunities to build their academic foundation abroad and explore the transformative possibilities of global learning.
           </p>
-          <p className="section-text">
-            Our business blossoms as the fruition of months of unwavering dedication and teamwork between two best friends who dared to dream. From the inception of this idea to its realization, our journey has been marked by shared visions, late-night collaborations, and a relentless pursuit of excellence. Together, we've cultivated not just a business but a testament to the power of friendship, hard work, and a shared dream coming to life.
-            Our passion lies in unlocking new horizons for the youth, providing them with unprecedented opportunities to build their academic foundation abroad and explore the transformative possibilities of global learning.
-          </p>
           <div className="vision-container">
             <p className="section-text vision-text">
               We aspire to be the catalyst for a future where education empowers, connects, and illuminates the path to a better world.
@@ -41,9 +58,6 @@ const About = () => {
             <img src={meetingImage} alt="Team Meeting" />
           </div>
           <h3 className="section-subtitle">Let's make your future career successful</h3>
-          <p className="section-text">
-            As a newcomer, we bring a spirit of enthusiasm, dedication, and a commitment to redefining the landscape of International education.
-          </p>
           <div className="contact-section">
             <div className="contact-grid">
               <div className="contact-image">
@@ -122,19 +136,21 @@ const About = () => {
 
         {/* Partners Section */}
         <div className="partners-section">
-          <h3 className="section-title">Our partners</h3>
-          <ul className="partners-list">
-            <li>• Final International University</li>
-            <li>• Near East University</li>
-            <li>• Cyprus International University</li>
-            <li>• Eastern Mediterranean University</li>
-            <li>• Bahçeşehir Cyprus University (BAU)</li>
-            <li>• University of Kyrenia (probable)</li>
-            <li>• Maltepe University</li>
-            <li>• Eurasian Universities Union (EURAS)</li>
-            <li>• Modern University College (Palestine) (probable)</li>
-            <li>• Al Akhawayn University (Maroc) (probable)</li>
-          </ul>
+          <h3 className="section-title">Our Partners</h3>
+          <div className="partners-grid">
+            <div className="partner-item">
+              <h4>Final International University</h4>
+              <p>Leading university in Cyprus offering quality education</p>
+            </div>
+            <div className="partner-item">
+              <h4>Cyprus International University</h4>
+              <p>International university with diverse programs</p>
+            </div>
+            <div className="partner-item">
+              <h4>BAU</h4>
+              <p>Bahçeşehir University - Excellence in education</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

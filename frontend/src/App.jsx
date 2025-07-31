@@ -11,7 +11,7 @@ const Orientation = () => <div style={{padding:40}}><h2>Orientation Page</h2></d
 const Programs = () => <div style={{padding:40}}><h2>Programs Page</h2></div>;
 
 const FAQ = () => <div style={{padding:40}}><h2>FAQ Page</h2></div>;
-const Contact = () => <div style={{padding:40}}><h2>Contact Us Page</h2></div>;
+import Contact from "./Pages/Contact";
 const ProgramSelector = () => <div style={{padding:40}}><h2>AI Program Selector</h2></div>;
 const Scenarios = () => <div style={{padding:40}}><h2>AI Scenarios</h2></div>;
 const Quizzes = () => <div style={{padding:40}}><h2>AI Quizzes/Tests</h2></div>;
