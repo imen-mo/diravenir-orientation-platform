@@ -12,6 +12,7 @@ import meryemImage from '../assets/meryemderni.jpg';
 import nadiaImage from '../assets/nadiaboukdir.jpg';
 import diravenirLogo from '../assets/DIRAVENIR.jpg';
 import logo from '../assets/logo.png';
+import Footer from '../components/Footer';
 
 const About = () => {
   const navigate = useNavigate();
@@ -228,6 +229,7 @@ const About = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

@@ -4,6 +4,7 @@ import "../Pages/SignUp.css";
 import API from "../services/api";
 import illustration from "../assets/illustration.png";
 import logo from "../assets/logo.png";
+import Footer from "../components/Footer";
 
 export default function SignUp() {
     const [formData, setFormData] = useState({
@@ -151,69 +152,7 @@ export default function SignUp() {
             </main>
 
             {/* Footer */}
-            <footer className="footer">
-                <div className="footer-left">
-                    <img src={logo} alt="DiraVenir" className="footer-logo" />
-                    <p>
-                        Diravenir est une plateforme web qui accompagne les étudiants dans
-                        leur orientation scolaire et leurs démarches de candidature au
-                        Maroc et à l'étranger. Elle se distingue par une approche
-                        personnalisée basée sur des tests, des recommandations et un suivi
-                        avant toute demande.
-                    </p>
-
-                    {/* ✅ Newsletter form */}
-                    <div className="newsletter">
-                        <label>Subscribe Our Newsletter</label>
-                        <form onSubmit={handleNewsletterSubmit} className="newsletter-form">
-                            <input
-                                type="email"
-                                placeholder="Your Email address"
-                                value={newsletterEmail}
-                                onChange={(e) => setNewsletterEmail(e.target.value)}
-                                required
-                            />
-                            <button type="submit" className="newsletter-button">›</button>
-                        </form>
-                    </div>
-
-                    <div className="footer-bottom">
-                        <a href="/terms">Terms & Conditions</a> |{" "}
-                        <a href="/privacy">Privacy Policy</a>
-                    </div>
-                </div>
-
-                <div className="footer-center">
-                    <h3>
-                        Quick <span className="highlight">Links</span>
-                    </h3>
-                    <ul>
-                        <li><Link to="/">Home</Link></li>
-                        <li><Link to="/our-story">Our Story</Link></li>
-                        <li><Link to="/best-courses">Best Courses</Link></li>
-                        <li><Link to="/faqs">Your FAQ's</Link></li>
-                        <li><Link to="/cancellation">Cancellation & Refunds</Link></li>
-                        <li><Link to="/contact">Contact US</Link></li>
-                    </ul>
-                </div>
-
-                <div className="footer-right">
-                    <h3>Contact <span className="highlight">Us</span></h3>
-                    <p>
-                        BD la Résistance, 179, Angle des Boulevards de Londres, Av. Mers
-                        Sultan, Casablanca 20250
-                    </p>
-                    <p>Email: contact@diravenir.com</p>
-                    <p>Phone: +91 8428448903 / +91 9475484959</p>
-                    <div className="social-icons">
-                        <a href="https://facebook.com" aria-label="Facebook">Fb</a>
-                        <a href="https://twitter.com" aria-label="Twitter">Tw</a>
-                        <a href="https://linkedin.com" aria-label="LinkedIn">In</a>
-                        <a href="https://instagram.com" aria-label="Instagram">Ig</a>
-                        <a href="https://youtube.com" aria-label="YouTube">Yt</a>
-                    </div>
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 }

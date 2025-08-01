@@ -1,5 +1,6 @@
 import React from "react";
 import "./Universites.css";
+import Footer from "../components/Footer";
 
 const universites = [
     {
@@ -56,6 +57,7 @@ const Universites = () => {
                     </div>
                 ))}
             </div>
+            <Footer />
         </div>
     );
 };

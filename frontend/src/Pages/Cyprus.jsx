@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './CountryPage.css';
+import Footer from '../components/Footer';
 
 const Cyprus = () => {
   return (
@@ -44,6 +45,7 @@ const Cyprus = () => {
           <Link to="/programs" className="cta-button secondary">View All Programs</Link>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

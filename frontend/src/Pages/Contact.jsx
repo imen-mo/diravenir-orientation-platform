@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
+import Footer from '../components/Footer';
 import './Contact.css';
 
 const Contact = () => {
@@ -150,6 +151,7 @@ const Contact = () => {
           </form>
         </div>
       </section>
+      <Footer />
     </div>
   );
 };

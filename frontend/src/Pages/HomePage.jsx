@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
+import logo from "../assets/logo-colorfull.png";
+import illustration from "../assets/illustration.png";
+import meeting from "../assets/meeting.png";
+import orientation from "../assets/orientation.png";
 import { fetchFilieres, fetchTemoignages, fetchDestinations, fetchPartenaires } from "../services/api";
+import Footer from "../components/Footer";
 import "./HomePage.css";
 
 const HomePage = () => {
@@ -41,79 +45,183 @@ const HomePage = () => {
           <img src={logo} alt="DirAvenir Logo" className="logo" />
         </div>
         <div className="navbar-right">
-          <Link to="/" className="nav-button">Home</Link>
+          <Link to="/" className="nav-button active">Home</Link>
           <Link to="/orientation" className="nav-button">Orientation</Link>
           <Link to="/programs" className="nav-button">Programs</Link>
           <Link to="/about" className="nav-button">About US</Link>
           <Link to="/faq" className="nav-button">FAQ</Link>
           <Link to="/contact" className="nav-button">Contact US</Link>
-          <Link to="/signin" className="nav-button">Log In</Link>
-          <Link to="/signup" className="nav-button">Create Account</Link>
+          <Link to="/signin" className="nav-button login-btn">Log In</Link>
+          <Link to="/signup" className="nav-button signup-btn">Create Account</Link>
         </div>
       </nav>
 
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
-          <h1>Guide Your Way Up To Success With Us</h1>
-          <p>Get the guidance you need for the future of work.</p>
-          <input type="text" placeholder="Search the program you want" className="search-input" />
-          <div className="tags">
-            <span>Cloud Computing</span>
-            <span>Cyber Security</span>
-            <span>DevOps</span>
-            <span>Data Science</span>
-            <span>Software Testing</span>
+          <div className="hero-text">
+            <h1>Guide Your Way Up To Success With Us</h1>
+            <p>Get the guidance you need for the future of work.</p>
+            <div className="search-container">
+              <input type="text" placeholder="Search the program you want" className="search-input" />
+              <button className="search-btn">Search</button>
+            </div>
+            <div className="tags">
+              <span className="tag active">Cloud Computing</span>
+              <span className="tag">Cyber Security</span>
+              <span className="tag">DevOps</span>
+              <span className="tag">Data Science</span>
+              <span className="tag">Software Testing</span>
+            </div>
+            <div className="hero-buttons">
+              <button className="hero-btn primary" onClick={() => navigate('/programs/data-analyst')}>
+                Data Analyst
+              </button>
+              <button className="hero-btn secondary" onClick={() => navigate('/programs/website-design')}>
+                Website Design
+              </button>
+            </div>
           </div>
-          <div className="hero-buttons">
-            <button onClick={() => navigate('/programs/data-analyst')}>Data Analyst</button>
-            <button onClick={() => navigate('/programs/website-design')}>Website Design</button>
+          <div className="hero-image">
+            <img src={illustration} alt="Student Success" className="main-illustration" />
+            <div className="floating-card">
+              <div className="card-header">
+                <span className="card-title">Best programs</span>
+              </div>
+              <div className="card-content">
+                <div className="program-item">
+                  <div className="program-icon purple">📊</div>
+                  <div className="program-info">
+                    <span className="program-name">Data Analyst</span>
+                    <span className="program-reviews">280 Reviews</span>
+                  </div>
+                </div>
+                <div className="program-item">
+                  <div className="program-icon yellow">🎨</div>
+                  <div className="program-info">
+                    <span className="program-name">Website Design</span>
+                    <span className="program-reviews">216 Reviews</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* AI Based Sections */}
       <section className="ai-sections">
-        <div className="ai-card" onClick={() => navigate('/program-selector')}>
-          <h3>AI Based Program Selector</h3>
-          <p>Find your perfect program with our intelligent matching system</p>
+        <div className="section-header">
+          <h2>Morocco's First AI Based Orientation Platform</h2>
         </div>
-        <div className="ai-card" onClick={() => navigate('/scenarios')}>
-          <h3>AI Based Scenarios</h3>
-          <p>Explore real-world scenarios to understand your career path</p>
-        </div>
-        <div className="ai-card" onClick={() => navigate('/quizzes')}>
-          <h3>AI Based Quizzes/Tests</h3>
-          <p>Test your knowledge and skills with our adaptive assessments</p>
-        </div>
-        <div className="ai-card" onClick={() => navigate('/goals')}>
-          <h3>AI Based Goals</h3>
-          <p>Set and track your career goals with personalized insights</p>
+        <div className="ai-cards-container">
+          <div className="ai-card" onClick={() => navigate('/program-selector')}>
+            <div className="card-icon">
+              <div className="icon-container">
+                <div className="brain-icon">🧠</div>
+                <div className="server-icon">🖥️</div>
+              </div>
+            </div>
+            <h3>AI Based Program Selector</h3>
+            <p>Find your perfect program with our intelligent matching system</p>
+          </div>
+          <div className="ai-card" onClick={() => navigate('/scenarios')}>
+            <div className="card-icon">
+              <div className="icon-container">
+                <div className="scenario-icon">📋</div>
+                <div className="gear-icon">⚙️</div>
+              </div>
+            </div>
+            <h3>AI Based Scenarios</h3>
+            <p>Explore real-world scenarios to understand your career path</p>
+          </div>
+          <div className="ai-card" onClick={() => navigate('/quizzes')}>
+            <div className="card-icon">
+              <div className="icon-container">
+                <div className="quiz-icon">❓</div>
+                <div className="brain-icon">🧠</div>
+              </div>
+            </div>
+            <h3>AI Based Quizzes/Tests</h3>
+            <p>Test your knowledge and skills with our adaptive assessments</p>
+          </div>
+          <div className="ai-card" onClick={() => navigate('/goals')}>
+            <div className="card-icon">
+              <div className="icon-container">
+                <div className="code-icon">💻</div>
+                <div className="tech-icons">🔧</div>
+              </div>
+            </div>
+            <h3>AI Based Gamification</h3>
+            <p>Set and track your career goals with personalized insights</p>
+          </div>
         </div>
       </section>
 
       {/* Who Can Join */}
       <section className="who-can-join">
         <h2>Career Orientation Schemes For All</h2>
-        <ul>
-          <li>Colleges/Universities</li>
-          <li>Students</li>
-          <li>Career Changers</li>
-          <li>Educational Institutions</li>
-        </ul>
+        <div className="target-groups">
+          <div className="group-card">
+            <div className="group-icon">🎓</div>
+            <h3>Colleges/Universities</h3>
+          </div>
+          <div className="group-card">
+            <div className="group-icon">👨‍🎓</div>
+            <h3>Students</h3>
+          </div>
+          <div className="group-card">
+            <div className="group-icon">🔄</div>
+            <h3>Career Changers</h3>
+          </div>
+          <div className="group-card">
+            <div className="group-icon">🏫</div>
+            <h3>Educational Institutions</h3>
+          </div>
+        </div>
       </section>
 
       {/* How It Works */}
       <section className="how-it-works">
         <h2>How It Works</h2>
-        <ol>
-          <li>Orientation Aptitude Tests and diagrams</li>
-          <li>Program Cases matching your profil</li>
-          <li>Opportunities selection in universities</li>
-          <li>Application to a chosen opportunity</li>
-          <li>Real Time Tracking of your application</li>
-          <li>Application guidance & Monitoring</li>
-        </ol>
+        <div className="steps-container">
+          <div className="step-item">
+            <div className="step-number">1</div>
+            <div className="step-content">
+              <h3>Orientation Aptitude Tests and diagrams</h3>
+            </div>
+          </div>
+          <div className="step-item">
+            <div className="step-number">2</div>
+            <div className="step-content">
+              <h3>Program Cases matching your profil</h3>
+            </div>
+          </div>
+          <div className="step-item">
+            <div className="step-number">3</div>
+            <div className="step-content">
+              <h3>Opportunities selection in universities</h3>
+            </div>
+          </div>
+          <div className="step-item">
+            <div className="step-number">4</div>
+            <div className="step-content">
+              <h3>Application to a chosen opportunity</h3>
+            </div>
+          </div>
+          <div className="step-item">
+            <div className="step-number">5</div>
+            <div className="step-content">
+              <h3>Real Time Tracking of your application</h3>
+            </div>
+          </div>
+          <div className="step-item">
+            <div className="step-number">6</div>
+            <div className="step-content">
+              <h3>Application guidance & Monitoring</h3>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Popular Programs */}
@@ -149,16 +257,25 @@ const HomePage = () => {
             </>
           )}
         </div>
-        <button onClick={() => navigate('/opportunities')}>View All Opportunities</button>
+        <button className="view-all-btn" onClick={() => navigate('/opportunities')}>View All Opportunities</button>
       </section>
 
       {/* Achievements */}
       <section className="achievements">
         <h2>Our Achievements</h2>
         <div className="stats">
-          <div>200 Students Abroad</div>
-          <div>70 Programs Available</div>
-          <div>90% Students Satisfied</div>
+          <div className="stat-item">
+            <div className="stat-number">200</div>
+            <div className="stat-label">Students Abroad</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-number">70</div>
+            <div className="stat-label">Programs Available</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-number">90%</div>
+            <div className="stat-label">Students Satisfied</div>
+          </div>
         </div>
       </section>
 
@@ -275,24 +392,7 @@ const HomePage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="footer">
-        <div className="footer-left">
-          <img src={logo} alt="DirAvenir Logo" className="logo" />
-          <p>DirAvenir est une plateforme web qui accompagne les étudiants dans leur orientation académique et professionnelle, facilitant leur accès aux meilleures opportunités d'études à l'étranger.</p>
-        </div>
-        <div className="footer-center">
-          <h4>Quick Links</h4>
-          <Link to="/">Home</Link>
-          <Link to="/programs">Best Programs</Link>
-          <Link to="/faq">Our FAQS</Link>
-          <Link to="/contact">Contact US</Link>
-        </div>
-        <div className="footer-right">
-          <h4>Contact Us</h4>
-          <p>contact@diravenir.com</p>
-          <p>+212 777 447 546</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
