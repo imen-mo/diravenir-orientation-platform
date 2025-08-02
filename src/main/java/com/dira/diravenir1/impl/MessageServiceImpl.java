@@ -1,4 +1,4 @@
-package com.dira.diravenir1.impl;
+﻿package com.dira.diravenir1.impl;
 
 import com.dira.diravenir1.dto.MessageDTO;
 import com.dira.diravenir1.Entities.Conseiller;
@@ -27,9 +27,9 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public MessageDTO envoyerMessage(MessageDTO dto) {
         Etudiant etudiant = etudiantRepository.findById(dto.getEtudiantId())
-                .orElseThrow(() -> new RuntimeException("Etudiant non trouvé"));
+                .orElseThrow(() -> new RuntimeException("Etudiant non trouvÃ©"));
         Conseiller conseiller = conseillerRepository.findById(dto.getConseillerId())
-                .orElseThrow(() -> new RuntimeException("Conseiller non trouvé"));
+                .orElseThrow(() -> new RuntimeException("Conseiller non trouvÃ©"));
         Message message = messageMapper.toEntity(dto, etudiant, conseiller);
         message = messageRepository.save(message);
         return messageMapper.toDTO(message);
@@ -49,3 +49,4 @@ public class MessageServiceImpl implements MessageService {
                 .collect(Collectors.toList());
     }
 } 
+

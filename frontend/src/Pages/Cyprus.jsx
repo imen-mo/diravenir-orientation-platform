@@ -45,7 +45,6 @@ const Cyprus = () => {
           <Link to="/programs" className="cta-button secondary">View All Programs</Link>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

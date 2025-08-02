@@ -1,4 +1,4 @@
-package com.dira.diravenir1.impl;
+﻿package com.dira.diravenir1.impl;
 
 import com.dira.diravenir1.Entities.Partenaire;
 import com.dira.diravenir1.Repository.PartenaireRepository;
@@ -56,3 +56,4 @@ public class PartenaireServiceImpl implements PartenaireService {
         partenaireRepository.deleteById(id);
     }
 } 
+

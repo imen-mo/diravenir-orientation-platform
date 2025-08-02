@@ -1,4 +1,4 @@
-package com.dira.diravenir1.impl;
+﻿package com.dira.diravenir1.impl;
 
 import com.dira.diravenir1.Entities.Administrateur;
 import com.dira.diravenir1.Entities.Etudiant;
@@ -82,16 +82,16 @@ public class EtudiantServiceImpl implements EtudiantService {
     public EtudiantDTO getEtudiantById(Long id) {
         return etudiantRepository.findById(id)
                 .map(this::toDto)
-                .orElseThrow(() -> new RuntimeException("Etudiant non trouvé"));
+                .orElseThrow(() -> new RuntimeException("Etudiant non trouvÃ©"));
     }
 
     @Override
     @Transactional
     public EtudiantDTO updateEtudiant(Long id, EtudiantDTO dto) {
         Etudiant existingEtudiant = etudiantRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Etudiant non trouvé"));
+                .orElseThrow(() -> new RuntimeException("Etudiant non trouvÃ©"));
 
-        // Met à jour les champs simples
+        // Met Ã  jour les champs simples
         existingEtudiant.setNiveauEtude(dto.getNiveauEtude());
         existingEtudiant.setSpecialite(dto.getSpecialite());
         existingEtudiant.setPays(dto.getPays());
@@ -105,7 +105,7 @@ public class EtudiantServiceImpl implements EtudiantService {
         existingEtudiant.setDomaine(dto.getDomaine());
         existingEtudiant.setHistoriqueRecherche(dto.getHistoriqueRecherche());
 
-        // Mise à jour de l’administrateur si présent
+        // Mise Ã  jour de lâ€™administrateur si prÃ©sent
         if (dto.getAdministrateurId() != null) {
             Administrateur admin = administrateurRepository.findById(dto.getAdministrateurId())
                     .orElse(null);
@@ -114,13 +114,13 @@ public class EtudiantServiceImpl implements EtudiantService {
             existingEtudiant.setAdministrateur(null);
         }
 
-        // Mise à jour des candidatures —
+        // Mise Ã  jour des candidatures â€”
         // Attention : ici on suppose que DTO ne contient pas la liste des candidatures,
-        // sinon il faudrait gérer la collection de candidatures explicitement
-        // (à adapter si tu as un DTO avec candidatures)
+        // sinon il faudrait gÃ©rer la collection de candidatures explicitement
+        // (Ã  adapter si tu as un DTO avec candidatures)
         // Sinon ne rien faire sur candidatures ici
 
-        // Sauvegarde et retourne le DTO mis à jour
+        // Sauvegarde et retourne le DTO mis Ã  jour
         return toDto(etudiantRepository.save(existingEtudiant));
     }
 
@@ -129,3 +129,5 @@ public class EtudiantServiceImpl implements EtudiantService {
         etudiantRepository.deleteById(id);
     }
 }
+
+

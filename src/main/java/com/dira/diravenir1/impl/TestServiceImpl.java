@@ -1,4 +1,4 @@
-package com.dira.diravenir1.impl;
+﻿package com.dira.diravenir1.impl;
 
 import com.dira.diravenir1.Entities.Test;
 import com.dira.diravenir1.Repository.TestRepository;
@@ -20,7 +20,7 @@ public class TestServiceImpl implements TestService {
     public TestDTO createTest(TestDTO dto) {
         Test test = new Test();
         test.setType(dto.getType());
-        test.setDatePassage(dto.getDatePassage()); // ✅ CORRECTION ICI (anciennement getClass)
+        test.setDatePassage(dto.getDatePassage()); // âœ… CORRECTION ICI (anciennement getClass)
         test.setResultat(dto.getResultat());
         Test saved = testRepository.save(test);
         dto.setId(saved.getId());
@@ -39,3 +39,5 @@ public class TestServiceImpl implements TestService {
         }).collect(Collectors.toList());
     }
 }
+
+

@@ -31,22 +31,7 @@ const Contact = () => {
 
   return (
     <div className="contact-page">
-      {/* Navbar - Same as HomePage */}
-      <nav className="navbar">
-        <div className="navbar-left">
-          <img src={logo} alt="DirAvenir Logo" className="logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }} />
-        </div>
-        <div className="navbar-right">
-          <Link to="/" className="nav-button">Home</Link>
-          <Link to="/orientation" className="nav-button">Orientation</Link>
-          <Link to="/programs" className="nav-button">Programs</Link>
-          <Link to="/about" className="nav-button">About US</Link>
-          <Link to="/faq" className="nav-button">FAQ</Link>
-          <Link to="/contact" className="nav-button active">Contact US</Link>
-          <Link to="/signin" className="nav-button">Log In</Link>
-          <Link to="/signup" className="nav-button">Create Account</Link>
-        </div>
-      </nav>
+
 
       {/* Contact Section */}
       <section className="contact-section">
@@ -151,7 +136,6 @@ const Contact = () => {
           </form>
         </div>
       </section>
-      <Footer />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-package com.dira.diravenir1.impl;
+﻿package com.dira.diravenir1.impl;
 
 import com.dira.diravenir1.Entities.Candidature;
 import com.dira.diravenir1.Entities.Document;
@@ -37,13 +37,13 @@ public class DocumentServiceImpl implements DocumentService {
 
         if (dto.getEtudiantId() != null) {
             Etudiant etudiant = etudiantRepository.findById(dto.getEtudiantId())
-                    .orElseThrow(() -> new EntityNotFoundException("Étudiant non trouvé avec l'id : " + dto.getEtudiantId()));
+                    .orElseThrow(() -> new EntityNotFoundException("Ã‰tudiant non trouvÃ© avec l'id : " + dto.getEtudiantId()));
             document.setEtudiant(etudiant);
         }
 
         if (dto.getCandidatureId() != null) {
             Candidature candidature = candidatureRepository.findById(dto.getCandidatureId())
-                    .orElseThrow(() -> new EntityNotFoundException("Candidature non trouvée avec l'id : " + dto.getCandidatureId()));
+                    .orElseThrow(() -> new EntityNotFoundException("Candidature non trouvÃ©e avec l'id : " + dto.getCandidatureId()));
             document.setCandidature(candidature);
         }
 
@@ -69,7 +69,7 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public DocumentDTO getById(Long id) {
         Document doc = documentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Document non trouvé avec l'id : " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Document non trouvÃ© avec l'id : " + id));
 
         DocumentDTO dto = new DocumentDTO();
         dto.setId(doc.getId());
@@ -84,7 +84,7 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public DocumentDTO update(Long id, DocumentDTO dto) {
         Document existing = documentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Document non trouvé avec l'id : " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Document non trouvÃ© avec l'id : " + id));
 
         existing.setNom(dto.getNom());
         existing.setType(dto.getType());
@@ -92,7 +92,7 @@ public class DocumentServiceImpl implements DocumentService {
 
         if (dto.getEtudiantId() != null) {
             Etudiant etudiant = etudiantRepository.findById(dto.getEtudiantId())
-                    .orElseThrow(() -> new EntityNotFoundException("Étudiant non trouvé avec l'id : " + dto.getEtudiantId()));
+                    .orElseThrow(() -> new EntityNotFoundException("Ã‰tudiant non trouvÃ© avec l'id : " + dto.getEtudiantId()));
             existing.setEtudiant(etudiant);
         } else {
             existing.setEtudiant(null);
@@ -100,7 +100,7 @@ public class DocumentServiceImpl implements DocumentService {
 
         if (dto.getCandidatureId() != null) {
             Candidature candidature = candidatureRepository.findById(dto.getCandidatureId())
-                    .orElseThrow(() -> new EntityNotFoundException("Candidature non trouvée avec l'id : " + dto.getCandidatureId()));
+                    .orElseThrow(() -> new EntityNotFoundException("Candidature non trouvÃ©e avec l'id : " + dto.getCandidatureId()));
             existing.setCandidature(candidature);
         } else {
             existing.setCandidature(null);
@@ -123,10 +123,12 @@ public class DocumentServiceImpl implements DocumentService {
     @Transactional
     public void delete(Long id) {
         Document document = documentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Document à supprimer introuvable avec l'id : " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Document Ã  supprimer introuvable avec l'id : " + id));
 
 
 
         documentRepository.delete(document);
     }
 }
+
+

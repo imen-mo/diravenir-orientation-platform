@@ -1,7 +1,7 @@
-package com.dira.diravenir1.impl;
+﻿package com.dira.diravenir1.impl;
 
 import com.dira.diravenir1.Entities.Candidature;
-import com.dira.diravenir1.Entities.Document;       // <-- Import ajouté
+import com.dira.diravenir1.Entities.Document;       // <-- Import ajoutÃ©
 import com.dira.diravenir1.Repository.CandidatureRepository;
 import com.dira.diravenir1.service.CandidatureService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class CandidatureServiceImpl implements CandidatureService {
     @Override
     public Candidature getCandidatureById(int id) {
         return candidatureRepository.findById((long) id)
-                .orElseThrow(() -> new RuntimeException("Candidature non trouvée avec l'id : " + id));
+                .orElseThrow(() -> new RuntimeException("Candidature non trouvÃ©e avec l'id : " + id));
     }
 
     @Override
@@ -44,7 +44,7 @@ public class CandidatureServiceImpl implements CandidatureService {
     @Override
     public Candidature updateCandidature(int id, Candidature newData) {
         Candidature existing = candidatureRepository.findById((long) id)
-                .orElseThrow(() -> new RuntimeException("Candidature non trouvée avec l'id : " + id));
+                .orElseThrow(() -> new RuntimeException("Candidature non trouvÃ©e avec l'id : " + id));
 
         existing.setDateSoumission(newData.getDateSoumission());
         existing.setStatut(newData.getStatut());
@@ -70,3 +70,5 @@ public class CandidatureServiceImpl implements CandidatureService {
         return candidatureRepository.save(existing);
     }
 }
+
+

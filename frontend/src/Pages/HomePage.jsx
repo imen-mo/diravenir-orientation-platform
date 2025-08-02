@@ -39,22 +39,6 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
-      {/* Navbar */}
-      <nav className="navbar">
-        <div className="navbar-left">
-          <img src={logo} alt="DirAvenir Logo" className="logo" />
-        </div>
-        <div className="navbar-right">
-          <Link to="/" className="nav-button active">Home</Link>
-          <Link to="/orientation" className="nav-button">Orientation</Link>
-          <Link to="/programs" className="nav-button">Programs</Link>
-          <Link to="/about" className="nav-button">About US</Link>
-          <Link to="/faq" className="nav-button">FAQ</Link>
-          <Link to="/contact" className="nav-button">Contact US</Link>
-          <Link to="/signin" className="nav-button login-btn">Log In</Link>
-          <Link to="/signup" className="nav-button signup-btn">Create Account</Link>
-        </div>
-      </nav>
 
       {/* Hero Section */}
       <section className="hero-section">
@@ -391,8 +375,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <Footer />
+
     </div>
   );
 };

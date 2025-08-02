@@ -11,4 +11,11 @@ public class ResultatTestDTO {
     private String profilGénéré;
     private Long testId;
     private Long etudiantId;
+
+    public void setProfil(Object profil) {
+    }
+
+    public Object getProfil() {
+        return null;
+    }
 }

@@ -12,18 +12,45 @@ public class UtilisateurMapper {
         dto.setNom(utilisateur.getNom());
         dto.setPrenom(utilisateur.getPrenom());
         dto.setEmail(utilisateur.getEmail());
-        dto.setMotDePasse(utilisateur.getPassword());
+        dto.setMotDePasse(null); // Ne pas exposer le mot de passe
         dto.setRole(utilisateur.getRole());
+        
+        // ======================
+        // === NOUVEAUX CHAMPS ===
+        // ======================
+        dto.setPhotoProfil(utilisateur.getPhotoProfil());
+        dto.setGoogleId(utilisateur.getGoogleId());
+        dto.setProvider(utilisateur.getProvider());
+        dto.setProviderId(utilisateur.getProviderId());
+        dto.setDateCreation(utilisateur.getDateCreation());
+        dto.setDerniereConnexion(utilisateur.getDerniereConnexion());
+        dto.setCompteActif(utilisateur.isCompteActif());
+        dto.setEmailVerifie(utilisateur.isEmailVerifie());
+        
         return dto;
     }
+    
     public Utilisateur toEntity(UtilisateurDTO dto) {
         Utilisateur utilisateur = new Utilisateur();
         utilisateur.setId(dto.getId());
         utilisateur.setNom(dto.getNom());
         utilisateur.setPrenom(dto.getPrenom());
         utilisateur.setEmail(dto.getEmail());
-        utilisateur.setPassword(dto.getMotDePasse());
+        // Le mot de passe sera géré séparément avec encodage
         utilisateur.setRole(dto.getRole());
+        
+        // ======================
+        // === NOUVEAUX CHAMPS ===
+        // ======================
+        utilisateur.setPhotoProfil(dto.getPhotoProfil());
+        utilisateur.setGoogleId(dto.getGoogleId());
+        utilisateur.setProvider(dto.getProvider());
+        utilisateur.setProviderId(dto.getProviderId());
+        utilisateur.setDateCreation(dto.getDateCreation());
+        utilisateur.setDerniereConnexion(dto.getDerniereConnexion());
+        utilisateur.setCompteActif(dto.isCompteActif());
+        utilisateur.setEmailVerifie(dto.isEmailVerifie());
+        
         return utilisateur;
     }
 } 

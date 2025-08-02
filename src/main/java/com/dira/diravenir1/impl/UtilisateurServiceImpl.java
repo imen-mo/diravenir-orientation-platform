@@ -1,7 +1,5 @@
-package com.dira.diravenir1.impl;
+﻿package com.dira.diravenir1.impl;
 import com.dira.diravenir1.Entities.Role;
-
-
 
 import com.dira.diravenir1.dto.UtilisateurDTO;
 import com.dira.diravenir1.Entities.Utilisateur;
@@ -25,7 +23,6 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
     @Override
     public List<UtilisateurDTO> getAll() {
         return utilisateurRepository.findAll()
@@ -42,21 +39,19 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         return convertToDTO(saved);
     }
 
-
     @Override
     public void createUser(SignupRequest request) {
         Utilisateur utilisateur = new Utilisateur();
 
         utilisateur.setNom(request.getNom());
+        utilisateur.setPrenom(request.getPrenom());
         utilisateur.setEmail(request.getEmail());
 
         // Encodage du mot de passe
-        utilisateur.setPassword(passwordEncoder.encode(request.getMotDePasse()));
+        utilisateur.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        // Par défaut, rôle USER (à ajuster selon ton Enum Role)
+        // Par défaut, rôle USER
         utilisateur.setRole(Role.USER);
-
-        // TODO : compléter avec d'autres champs si nécessaire
 
         utilisateurRepository.save(utilisateur);
     }
@@ -68,34 +63,38 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Override
     public void registerUser(SignupRequest request) {
+        // Normalisation des données
+        request.normalizeData();
+        
         // Validation des mots de passe
         if (!request.isPasswordConfirmed()) {
-            throw new RuntimeException("Les mots de passe ne correspondent pas");
+            throw new SecurityException("Les mots de passe ne correspondent pas");
         }
 
         // Validation email
         if (!isValidEmail(request.getEmail())) {
-            throw new RuntimeException("Format d'email invalide");
+            throw new SecurityException("Format d'email invalide");
         }
 
         // Validation mot de passe fort
-        if (!isStrongPassword(request.getMotDePasse())) {
-            throw new RuntimeException("Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial");
+        if (!request.isStrongPassword()) {
+            throw new SecurityException("Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial");
         }
 
         // Vérifier si l'email existe déjà
         if (utilisateurRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("Un utilisateur avec cet email existe déjà");
+            throw new SecurityException("Un utilisateur avec cet email existe déjà");
         }
 
         Utilisateur utilisateur = new Utilisateur();
         
-        // Remplir seulement les champs essentiels
+        // Remplir les champs essentiels
         utilisateur.setNom(request.getNom());
+        utilisateur.setPrenom(request.getPrenom());
         utilisateur.setEmail(request.getEmail());
         
         // Encodage du mot de passe
-        utilisateur.setPassword(passwordEncoder.encode(request.getMotDePasse()));
+        utilisateur.setPassword(passwordEncoder.encode(request.getPassword()));
         
         // Par défaut, rôle USER
         utilisateur.setRole(Role.USER);
@@ -110,7 +109,8 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         dto.setNom(utilisateur.getNom());
         dto.setPrenom(utilisateur.getPrenom());
         dto.setEmail(utilisateur.getEmail());
-        dto.setMotDePasse(utilisateur.getPassword());
+        // Ne pas exposer le mot de passe dans le DTO
+        dto.setMotDePasse(null);
         dto.setRole(utilisateur.getRole());
         return dto;
     }
@@ -122,28 +122,43 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         utilisateur.setNom(dto.getNom());
         utilisateur.setPrenom(dto.getPrenom());
         utilisateur.setEmail(dto.getEmail());
-        utilisateur.setPassword(dto.getMotDePasse());
+        // Ne pas utiliser le mot de passe du DTO directement
+        if (dto.getMotDePasse() != null) {
+            utilisateur.setPassword(passwordEncoder.encode(dto.getMotDePasse()));
+        }
         utilisateur.setRole(dto.getRole());
         return utilisateur;
-}
-
-    // Validation email
-    private boolean isValidEmail(String email) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        return email != null && email.matches(emailRegex);
     }
 
-    // Validation mot de passe fort
-    private boolean isStrongPassword(String password) {
-        if (password == null || password.length() < 8) {
+    // Validation email améliorée
+    private boolean isValidEmail(String email) {
+        if (email == null || email.trim().isEmpty()) {
             return false;
         }
         
-        boolean hasUpperCase = password.matches(".*[A-Z].*");
-        boolean hasLowerCase = password.matches(".*[a-z].*");
-        boolean hasDigit = password.matches(".*\\d.*");
-        boolean hasSpecialChar = password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*");
+        // Regex plus stricte pour la validation email
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        boolean isValidFormat = email.matches(emailRegex);
         
-        return hasUpperCase && hasLowerCase && hasDigit && hasSpecialChar;
+        // Vérifications supplémentaires
+        if (!isValidFormat) {
+            return false;
+        }
+        
+        // Vérifier la longueur
+        if (email.length() > 254) {
+            return false;
+        }
+        
+        // Vérifier qu'il n'y a pas de caractères dangereux
+        String dangerousChars = "<>\"'&";
+        for (char c : dangerousChars.toCharArray()) {
+            if (email.contains(String.valueOf(c))) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }
+

@@ -1,4 +1,4 @@
-package com.dira.diravenir1.impl;
+﻿package com.dira.diravenir1.impl;
 
 import com.dira.diravenir1.Entities.ResultatTest;
 import com.dira.diravenir1.dto.ResultatTestDTO;
@@ -28,7 +28,7 @@ public class ResultatTestServiceImpl implements ResultatTestService {
     public ResultatTestDTO enregistrerResultat(ResultatTestDTO dto) {
         ResultatTest res = new ResultatTest();
         res.setScore(dto.getScore());
-        res.setProfilGénéré(dto.getProfilGénéré());
+        res.setProfil(dto.getProfil());
 
         res.setTest(testRepo.findById(dto.getTestId()).orElseThrow());
         res.setEtudiant(etudiantRepo.findById(dto.getEtudiantId()).orElseThrow());
@@ -45,10 +45,12 @@ public class ResultatTestServiceImpl implements ResultatTestService {
             ResultatTestDTO dto = new ResultatTestDTO();
             dto.setId(r.getId());
             dto.setScore(r.getScore());
-            dto.setProfilGénéré(r.getProfilGénéré());
+            dto.setProfil(r.getProfil());
             dto.setEtudiantId(r.getEtudiant().getId());
             dto.setTestId(r.getTest().getId());
             return dto;
         }).collect(Collectors.toList());
     }
 }
+
+

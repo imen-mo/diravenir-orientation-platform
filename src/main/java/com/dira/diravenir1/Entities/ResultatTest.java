@@ -24,4 +24,11 @@ public class ResultatTest {
     @ManyToOne
     @JoinColumn(name = "etudiant_id")
     private Etudiant etudiant;
+
+    public Object getProfil() {
+
+    }
+
+    public void setProfil(Object profil) {
+    }
 }

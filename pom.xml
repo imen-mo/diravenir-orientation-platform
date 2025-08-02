@@ -98,6 +98,18 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- 📧 Spring Mail pour l'envoi d'emails -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <!-- 🔐 OAuth2 pour Google Login -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+
         <!-- ✅ Validation API (Jakarta Bean Validation) -->
         <dependency>
             <groupId>jakarta.validation</groupId>

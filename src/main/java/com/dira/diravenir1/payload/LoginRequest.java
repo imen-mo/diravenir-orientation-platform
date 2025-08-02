@@ -1,10 +1,21 @@
 package com.dira.diravenir1.payload;
 
-public class LoginRequest {
-    private String email;
-    private String password;
-    private String recaptchaToken;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
+@Data
+public class LoginRequest {
+    
+    @NotBlank(message = "L'email est requis")
+    @Email(message = "Format d'email invalide")
+    private String email;
+    
+    @NotBlank(message = "Le mot de passe est requis")
+    private String password;
+    
+    @NotBlank(message = "Le token reCAPTCHA est requis")
+    private String recaptchaToken;
 
     public LoginRequest() {}
 
@@ -13,7 +24,7 @@ public class LoginRequest {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = email != null ? email.trim().toLowerCase() : null;
     }
 
     public String getPassword() {
@@ -24,4 +35,11 @@ public class LoginRequest {
         this.password = password;
     }
 
+    public String getRecaptchaToken() {
+        return recaptchaToken;
+    }
+
+    public void setRecaptchaToken(String recaptchaToken) {
+        this.recaptchaToken = recaptchaToken;
+    }
 }

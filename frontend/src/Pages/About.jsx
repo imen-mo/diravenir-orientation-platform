@@ -19,22 +19,6 @@ const About = () => {
   
   return (
     <div className="about-page">
-      {/* Navbar - Same as Contact Page */}
-      <nav className="navbar">
-        <div className="navbar-left">
-          <img src={logo} alt="DirAvenir Logo" className="logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }} />
-        </div>
-        <div className="navbar-right">
-          <Link to="/" className="nav-button">Home</Link>
-          <Link to="/orientation" className="nav-button">Orientation</Link>
-          <Link to="/programs" className="nav-button">Programs</Link>
-          <Link to="/about" className="nav-button active">About US</Link>
-          <Link to="/faq" className="nav-button">FAQ</Link>
-          <Link to="/contact" className="nav-button">Contact US</Link>
-          <Link to="/signin" className="nav-button">Log In</Link>
-          <Link to="/signup" className="nav-button">Create Account</Link>
-        </div>
-      </nav>
 
       <div className="about-content">
         <h1 className="section-title">About Us</h1>
@@ -229,7 +213,6 @@ const About = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

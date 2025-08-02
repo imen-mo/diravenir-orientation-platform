@@ -1,4 +1,4 @@
-package com.dira.diravenir1.impl;
+﻿package com.dira.diravenir1.impl;
 import com.dira.diravenir1.exception.ResourceNotFoundException;
 
 import org.springframework.stereotype.Service;
@@ -45,7 +45,7 @@ public class ConseillerServiceImpl implements ConseillerService {
     @Override
     public ConseillerDTO getById(Long id) {
         Conseiller conseiller = conseillerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Conseiller non trouvé avec l'id : " + id));
+                .orElseThrow(() -> new RuntimeException("Conseiller non trouvÃ© avec l'id : " + id));
         return mapToDTO(conseiller);
     }
 
@@ -66,7 +66,7 @@ public class ConseillerServiceImpl implements ConseillerService {
     @Override
     public ConseillerDTO update(Long id, ConseillerDTO dto) {
         Conseiller existing = conseillerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Conseiller non trouvé avec l'id : " + id));
+                .orElseThrow(() -> new RuntimeException("Conseiller non trouvÃ© avec l'id : " + id));
 
         existing.setNom(dto.getNom());
         existing.setPrenom(dto.getPrenom());
@@ -84,7 +84,7 @@ public class ConseillerServiceImpl implements ConseillerService {
     @Override
     public void deleteById(Long id) {
         Conseiller conseiller = conseillerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Conseiller non trouvé avec l'id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Conseiller non trouvÃ© avec l'id " + id));
 
         conseillerRepository.delete(conseiller);
     }
@@ -92,3 +92,5 @@ public class ConseillerServiceImpl implements ConseillerService {
 
 
 }
+
+

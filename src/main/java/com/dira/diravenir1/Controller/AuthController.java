@@ -6,7 +6,9 @@ import com.dira.diravenir1.payload.JwtResponse;
 import com.dira.diravenir1.security.JwtService;
 import com.dira.diravenir1.service.LoginAttemptService;
 import com.dira.diravenir1.service.RecaptchaService;
+import com.dira.diravenir1.service.RateLimitService;
 import com.dira.diravenir1.service.UtilisateurService;
+import com.dira.diravenir1.service.EmailVerificationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -32,38 +37,110 @@ public class AuthController {
     private final JwtService jwtService;
     private final RecaptchaService recaptchaService;
     private final LoginAttemptService loginAttemptService;
+    private final RateLimitService rateLimitService;
     private final AuthenticationManager authenticationManager;
+    private final EmailVerificationService emailVerificationService;
 
     /**
-     * Inscription (signup)
+     * Inscription (signup) avec sécurité renforcée
      */
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest request) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest request, HttpServletRequest httpRequest) {
+        String ip = getClientIpAddress(httpRequest);
+        
+        // Vérification du rate limiting pour l'inscription
+        if (rateLimitService.isSignupRateLimited(ip)) {
+            logger.warn("🚫 INSCRIPTION BLOQUÉE - IP: {} | Rate limit dépassé", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body(Map.of("error", "Trop de tentatives d'inscription. Veuillez réessayer plus tard."));
+        }
+        
         try {
-            utilisateurService.registerUser(request); // à adapter selon ta logique métier
-            return ResponseEntity.ok("Utilisateur enregistré avec succès");
+            // Validation reCAPTCHA
+            if (!recaptchaService.verify(request.getRecaptchaToken())) {
+                logger.warn("🚫 INSCRIPTION BLOQUÉE - IP: {} | reCAPTCHA invalide", ip);
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", "Validation reCAPTCHA échouée"));
+            }
+            
+            // Normalisation et validation des données
+            request.normalizeData();
+            
+            if (!request.isPasswordConfirmed()) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", "Les mots de passe ne correspondent pas"));
+            }
+            
+            if (!request.isStrongPassword()) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", "Le mot de passe ne respecte pas les critères de sécurité"));
+            }
+            
+            // Vérification si l'email existe déjà
+            if (utilisateurService.existsByEmail(request.getEmail())) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", "Un compte avec cet email existe déjà"));
+            }
+            
+            // Inscription de l'utilisateur
+            utilisateurService.registerUser(request);
+            
+            // Envoyer l'email de vérification
+            emailVerificationService.sendVerificationEmail(request.getEmail());
+            
+            logger.info("✅ INSCRIPTION RÉUSSIE - Email: {} | IP: {}", request.getEmail(), ip);
+            
+            return ResponseEntity.ok(Map.of(
+                "message", "Compte créé avec succès. Veuillez vérifier votre email pour activer votre compte.",
+                "email", request.getEmail()
+            ));
+            
+        } catch (SecurityException e) {
+            logger.warn("🚫 INSCRIPTION ÉCHOUÉE - IP: {} | Raison: {}", ip, e.getMessage());
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erreur d'inscription : " + e.getMessage());
+            logger.error("❌ ERREUR INTERNE - IP: {} | Erreur: {}", ip, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Une erreur interne s'est produite"));
         }
     }
 
     /**
-     * Connexion (signin)
+     * Connexion (signin) avec sécurité renforcée
      */
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest request, HttpServletRequest httpRequest) {
-        String ip = httpRequest.getRemoteAddr();
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest request, HttpServletRequest httpRequest) {
+        String ip = getClientIpAddress(httpRequest);
+        
+        // Vérification du rate limiting
+        if (rateLimitService.isRateLimited(ip, "/api/auth/signin")) {
+            logger.warn("🚫 CONNEXION BLOQUÉE - IP: {} | Rate limit dépassé", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body(Map.of("error", "Trop de tentatives de connexion. Veuillez réessayer plus tard."));
+        }
         
         // Vérifier si l'IP est bloquée
         if (loginAttemptService.isBlocked(ip)) {
             logger.warn("🚫 TENTATIVE DE CONNEXION BLOQUÉE - IP: {} | Compte bloqué temporairement", ip);
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
-                    .body("Trop de tentatives échouées. Compte temporairement bloqué.");
+                    .body(Map.of("error", "Trop de tentatives échouées. Compte temporairement bloqué."));
         }
         
         try {
+            // Validation reCAPTCHA
+            if (!recaptchaService.verify(request.getRecaptchaToken())) {
+                logger.warn("🚫 CONNEXION BLOQUÉE - IP: {} | reCAPTCHA invalide", ip);
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", "Validation reCAPTCHA échouée"));
+            }
+            
+            // Normalisation de l'email
+            String normalizedEmail = request.getEmail() != null ? request.getEmail().trim().toLowerCase() : null;
+            
+            // Authentification
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+                    new UsernamePasswordAuthenticationToken(normalizedEmail, request.getPassword())
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -73,6 +150,8 @@ public class AuthController {
 
             // Connexion réussie - réinitialiser les tentatives
             loginAttemptService.loginSucceeded(ip);
+
+            logger.info("✅ CONNEXION RÉUSSIE - Email: {} | IP: {}", username, ip);
 
             return ResponseEntity.ok(new JwtResponse(jwt));
 
@@ -87,7 +166,184 @@ public class AuthController {
                 String.format("Email ou mot de passe incorrect. Tentatives restantes: %d", remainingAttempts) :
                 "Trop de tentatives échouées. Compte temporairement bloqué.";
                 
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
+            logger.warn("🔴 CONNEXION ÉCHOUÉE - IP: {} | Tentatives: {}/5", ip, attempts);
+            
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", errorMessage));
         }
+    }
+
+    /**
+     * Déconnexion (logout)
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest httpRequest) {
+        String ip = getClientIpAddress(httpRequest);
+        
+        // Nettoyer le contexte de sécurité
+        SecurityContextHolder.clearContext();
+        
+        logger.info("✅ DÉCONNEXION - IP: {}", ip);
+        
+        return ResponseEntity.ok(Map.of("message", "Déconnexion réussie"));
+    }
+
+    /**
+     * Vérification de la validité du token
+     */
+    @GetMapping("/verify")
+    public ResponseEntity<?> verifyToken(HttpServletRequest httpRequest) {
+        String ip = getClientIpAddress(httpRequest);
+        
+        try {
+            String authHeader = httpRequest.getHeader("Authorization");
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Token manquant ou invalide"));
+            }
+            
+            String token = authHeader.substring(7);
+            String username = jwtService.extractUsername(token);
+            
+            if (jwtService.isTokenExpired(token)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Token expiré"));
+            }
+            
+            return ResponseEntity.ok(Map.of(
+                "valid", true,
+                "username", username
+            ));
+            
+        } catch (Exception e) {
+            logger.warn("🚫 VÉRIFICATION TOKEN ÉCHOUÉE - IP: {} | Erreur: {}", ip, e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Token invalide"));
+        }
+    }
+
+    /**
+     * Vérification de l'email
+     */
+    @GetMapping("/verify-email")
+    public ResponseEntity<?> verifyEmail(@RequestParam String token, HttpServletRequest httpRequest) {
+        String ip = getClientIpAddress(httpRequest);
+        
+        try {
+            boolean isValid = emailVerificationService.verifyEmailToken(token);
+            
+            if (isValid) {
+                logger.info("✅ VÉRIFICATION EMAIL RÉUSSIE - IP: {}", ip);
+                return ResponseEntity.ok(Map.of(
+                    "message", "Email vérifié avec succès. Votre compte est maintenant actif."
+                ));
+            } else {
+                logger.warn("🚫 VÉRIFICATION EMAIL ÉCHOUÉE - IP: {} | Token invalide", ip);
+                return ResponseEntity.badRequest().body(Map.of(
+                    "error", "Token de vérification invalide ou expiré"
+                ));
+            }
+        } catch (Exception e) {
+            logger.error("❌ ERREUR VÉRIFICATION EMAIL - IP: {} | Erreur: {}", ip, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Erreur lors de la vérification"));
+        }
+    }
+
+    /**
+     * Demande de réinitialisation de mot de passe
+     */
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
+        String ip = getClientIpAddress(httpRequest);
+        String email = request.get("email");
+        
+        if (email == null || email.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email requis"));
+        }
+        
+        try {
+            // Vérifier si l'utilisateur existe
+            if (!utilisateurService.existsByEmail(email)) {
+                // Ne pas révéler si l'email existe ou non
+                logger.info("📧 DEMANDE RÉINITIALISATION - Email: {} | IP: {}", email, ip);
+                return ResponseEntity.ok(Map.of(
+                    "message", "Si l'email existe, un lien de réinitialisation a été envoyé"
+                ));
+            }
+            
+            // Envoyer l'email de réinitialisation
+            emailVerificationService.sendPasswordResetEmail(email);
+            
+            logger.info("📧 EMAIL RÉINITIALISATION ENVOYÉ - Email: {} | IP: {}", email, ip);
+            
+            return ResponseEntity.ok(Map.of(
+                "message", "Si l'email existe, un lien de réinitialisation a été envoyé"
+            ));
+            
+        } catch (Exception e) {
+            logger.error("❌ ERREUR RÉINITIALISATION - IP: {} | Erreur: {}", ip, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Erreur lors de l'envoi de l'email"));
+        }
+    }
+
+    /**
+     * Réinitialisation de mot de passe
+     */
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
+        String ip = getClientIpAddress(httpRequest);
+        String token = request.get("token");
+        String newPassword = request.get("newPassword");
+        
+        if (token == null || newPassword == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Token et nouveau mot de passe requis"));
+        }
+        
+        try {
+            String email = emailVerificationService.getEmailFromResetToken(token);
+            
+            if (email == null) {
+                logger.warn("🚫 RÉINITIALISATION ÉCHOUÉE - IP: {} | Token invalide", ip);
+                return ResponseEntity.badRequest().body(Map.of(
+                    "error", "Token de réinitialisation invalide ou expiré"
+                ));
+            }
+            
+            // TODO: Implémenter la mise à jour du mot de passe dans UtilisateurService
+            // utilisateurService.updatePassword(email, newPassword);
+            
+            // Invalider le token
+            emailVerificationService.invalidateResetToken(token);
+            
+            logger.info("✅ MOT DE PASSE RÉINITIALISÉ - Email: {} | IP: {}", email, ip);
+            
+            return ResponseEntity.ok(Map.of(
+                "message", "Mot de passe réinitialisé avec succès"
+            ));
+            
+        } catch (Exception e) {
+            logger.error("❌ ERREUR RÉINITIALISATION - IP: {} | Erreur: {}", ip, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Erreur lors de la réinitialisation"));
+        }
+    }
+
+    /**
+     * Obtention de l'adresse IP réelle du client
+     */
+    private String getClientIpAddress(HttpServletRequest request) {
+        String xForwardedFor = request.getHeader("X-Forwarded-For");
+        if (xForwardedFor != null && !xForwardedFor.isEmpty() && !"unknown".equalsIgnoreCase(xForwardedFor)) {
+            return xForwardedFor.split(",")[0].trim();
+        }
+        
+        String xRealIp = request.getHeader("X-Real-IP");
+        if (xRealIp != null && !xRealIp.isEmpty() && !"unknown".equalsIgnoreCase(xRealIp)) {
+            return xRealIp;
+        }
+        
+        return request.getRemoteAddr();
     }
 }

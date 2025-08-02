@@ -1,3 +1,6 @@
+/* SignIn.css */
+@import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap');
+
 .signin-container {
     display: flex;
     flex-direction: column;
@@ -6,33 +9,42 @@
     font-family: 'Segoe UI', sans-serif;
 }
 
+/* --- Navbar intégré sur la page de login (si nécessaire) --- */
 .navbar {
     padding: 20px 60px;
-    background-color: white;
-    box-shadow: 0 0 10px #eee;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     display: flex;
     align-items: center;
+    z-index: 10;
 }
 
 .logo {
     height: 40px;
 }
 
+/* --- Contenu principal de la page --- */
 .signin-content {
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 60px;
+    padding: 60px 20px;
     gap: 50px;
     flex-wrap: wrap;
 }
 
+/* --- Formulaire de connexion --- */
 .signin-form {
-    background: white;
-    box-shadow: 0 4px 15px #ddd;
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     border-radius: 16px;
-    padding: 40px;
+    padding: 40px 30px;
     width: 350px;
+    transition: transform 0.3s ease;
+}
+.signin-form:hover {
+    transform: translateY(-4px);
 }
 
 .signin-form h1 {
@@ -46,35 +58,173 @@
     width: 100%;
     margin-bottom: 20px;
     border: none;
-    border-bottom: 1px solid #ccc;
-    padding: 10px 5px;
+    border-bottom: 1px solid #ddd;
+    padding: 12px 8px;
     font-size: 14px;
     outline: none;
     background: transparent;
+    transition: border-color 0.2s;
+}
+.signin-form input:focus {
+    border-bottom-color: #40004C;
 }
 
+.remember-me {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 20px;
+}
+.remember-me input {
+    margin-right: 8px;
+    accent-color: #40004C;
+}
+
+.signin-error {
+    color: #e63946;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+
+/* Bouton principal */
 .btn-login {
-    background: #ffb700;
-    color: white;
-    border: none;
+    display: block;
     width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    font-weight: bold;
+    background: #40004C;
+    color: #fff;
+    border: none;
+    padding: 12px 0;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
     cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
 }
-
 .btn-login:hover {
-    background: #e6a600;
+    background: #370045;
+}
+.btn-login:active {
+    transform: scale(0.97);
 }
 
+/* Liens de bas de formulaire */
+.terms-text {
+    margin-top: 25px;
+    font-size: 12px;
+    color: #777;
+    text-align: center;
+}
+.terms-text a {
+    color: #40004C;
+    text-decoration: none;
+    font-weight: 600;
+}
+.terms-text a:hover {
+    text-decoration: underline;
+}
+
+/* --- Illustration à droite --- */
 .signin-image img {
     max-width: 400px;
     border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
+}
+.signin-image img:hover {
+    transform: scale(1.02);
 }
 
+/* Google Login Section */
+.google-login-section {
+    margin-bottom: 2rem;
+}
+
+.separator {
+    position: relative;
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.separator::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e5e7eb;
+}
+
+.separator-text {
+    background: white;
+    padding: 0 1rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+/* Form Options */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.forgot-password {
+    color: #3b82f6;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.forgot-password:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+/* Signup Link */
+.signup-link {
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.signup-link p {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.signup-link .link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.signup-link .link:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+/* --- Responsive tablette & mobile --- */
 @media (max-width: 900px) {
     .signin-content {
-        flex-direction: column;
+        flex-direction: column-reverse;
+        padding: 40px 10px;
+    }
+
+    .signin-form {
+        width: 100%;
+        max-width: 360px;
+    }
+
+    .signin-image img {
+        max-width: 100%;
+    }
+
+    .navbar {
+        padding: 15px 30px;
     }
 }

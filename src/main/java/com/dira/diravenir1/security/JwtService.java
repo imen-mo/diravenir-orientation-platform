@@ -2,41 +2,49 @@ package com.dira.diravenir1.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.function.Function;
 
 @Service
 public class JwtService {
 
-    private final String SECRET_KEY = "ma_clé_secrète_super_longue_et_sécurisée_pour_HS512_ma_clé_secrète_super_longue_et_sécurisée_pour_HS512";
-    private final long EXPIRATION_TIME = 1000 * 60 * 60 * 24; // 24 heures
+    @Value("${app.jwtSecret}")
+    private String jwtSecret;
 
-    private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    @Value("${app.jwtExpirationMs}")
+    private long jwtExpirationMs;
+
+    private SecretKey getSigningKey() {
+        // Vérification de la longueur minimale pour HS512 (64 bytes minimum)
+        if (jwtSecret.length() < 64) {
+            throw new IllegalStateException("JWT secret must be at least 64 characters long for HS512 algorithm");
+        }
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
-    // Génère un token JWT à partir d'un Authentication (exemple : utilisé dans controller signin)
+    // Génère un token JWT à partir d'un Authentication
     public String generateToken(Authentication auth) {
         UserDetails userPrincipal = (UserDetails) auth.getPrincipal();
-        return Jwts.builder()
-                .setSubject(userPrincipal.getUsername())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
-                .compact();
+        return generateToken(userPrincipal.getUsername());
     }
 
     // Génère un token JWT à partir d'un username (String)
     public String generateToken(String username) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
+
         return Jwts.builder()
                 .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .setIssuer("diravenir-app")
+                .setAudience("diravenir-users")
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
@@ -51,19 +59,39 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            throw new SecurityException("Token has expired");
+        } catch (UnsupportedJwtException e) {
+            throw new SecurityException("Unsupported JWT token");
+        } catch (MalformedJwtException e) {
+            throw new SecurityException("Invalid JWT token");
+        } catch (SecurityException e) {
+            throw new SecurityException("Invalid JWT signature");
+        } catch (IllegalArgumentException e) {
+            throw new SecurityException("JWT claims string is empty");
+        }
     }
 
     public boolean isTokenValid(String token, String username) {
-        final String extractedUsername = extractUsername(token);
-        return (extractedUsername.equals(username)) && !isTokenExpired(token);
+        try {
+            final String extractedUsername = extractUsername(token);
+            return (extractedUsername.equals(username)) && !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    private boolean isTokenExpired(String token) {
-        return extractClaim(token, Claims::getExpiration).before(new Date());
+    public boolean isTokenExpired(String token) {
+        try {
+            return extractClaim(token, Claims::getExpiration).before(new Date());
+        } catch (Exception e) {
+            return true;
+        }
     }
 }

@@ -301,3 +301,91 @@
         width: 100%;
     }
 }
+
+/* Google Signup Section */
+.google-signup-section {
+    margin-bottom: 2rem;
+}
+
+/* Name Fields */
+.name-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Password Requirements */
+.password-requirements {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: #f3f4f6;
+    border-radius: 0.5rem;
+    border-left: 4px solid #3b82f6;
+}
+
+.password-requirements small {
+    color: #6b7280;
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+/* Terms Checkbox */
+.terms-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+    line-height: 1.4;
+}
+
+.terms-checkbox input[type="checkbox"] {
+    margin-top: 0.125rem;
+}
+
+.terms-checkbox .link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.terms-checkbox .link:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+/* Error Message */
+.error-message {
+    color: #dc2626;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+}
+
+/* Signin Link */
+.signin-link {
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.signin-link p {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.signin-link .link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.signin-link .link:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}

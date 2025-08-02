@@ -1,6 +1,7 @@
 package com.dira.diravenir1.dto;
 
 import com.dira.diravenir1.Entities.Role;
+import java.time.LocalDateTime;
 
 public class UtilisateurDTO {
     private Long id;
@@ -9,8 +10,20 @@ public class UtilisateurDTO {
     private String email;
     private String motDePasse;
     private Role role;
+    
+    // ======================
+    // === NOUVEAUX CHAMPS ===
+    // ======================
+    private String photoProfil;
+    private String googleId;
+    private String provider;
+    private String providerId;
+    private LocalDateTime dateCreation;
+    private LocalDateTime derniereConnexion;
+    private boolean compteActif;
+    private boolean emailVerifie;
 
-    // Getters et Setters
+    // Getters et Setters existants
 
     public Long getId() {
         return id;
@@ -47,5 +60,65 @@ public class UtilisateurDTO {
     }
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    // ======================
+    // === NOUVEAUX GETTERS/SETTERS ===
+    // ======================
+    
+    public String getPhotoProfil() {
+        return photoProfil;
+    }
+    public void setPhotoProfil(String photoProfil) {
+        this.photoProfil = photoProfil;
+    }
+    
+    public String getGoogleId() {
+        return googleId;
+    }
+    public void setGoogleId(String googleId) {
+        this.googleId = googleId;
+    }
+    
+    public String getProvider() {
+        return provider;
+    }
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+    
+    public String getProviderId() {
+        return providerId;
+    }
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
+    }
+    
+    public LocalDateTime getDateCreation() {
+        return dateCreation;
+    }
+    public void setDateCreation(LocalDateTime dateCreation) {
+        this.dateCreation = dateCreation;
+    }
+    
+    public LocalDateTime getDerniereConnexion() {
+        return derniereConnexion;
+    }
+    public void setDerniereConnexion(LocalDateTime derniereConnexion) {
+        this.derniereConnexion = derniereConnexion;
+    }
+    
+    public boolean isCompteActif() {
+        return compteActif;
+    }
+    public void setCompteActif(boolean compteActif) {
+        this.compteActif = compteActif;
+    }
+    
+    public boolean isEmailVerifie() {
+        return emailVerifie;
+    }
+    public void setEmailVerifie(boolean emailVerifie) {
+        this.emailVerifie = emailVerifie;
     }
 }
