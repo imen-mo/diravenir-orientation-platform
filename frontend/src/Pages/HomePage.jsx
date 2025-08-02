@@ -109,6 +109,27 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* Our Story Section */}
+      <section className="our-story-section">
+        <div className="story-container">
+          <div className="story-content">
+            <h2 className="story-subtitle">OUR STORY</h2>
+            <h3 className="story-title">Innovate in New Ways to Guide Students</h3>
+            <p className="story-text">
+              We believe in the power of purpose-driven learning and bold imagination. We see no limits to what we can build when curiosity meets community, when dreams are backed by action.
+              <br /><br />
+              We are not just educating the next generation, we are co-creating the future with them. Each scholar is a builder, a thinker, a doer. Together, we are shaping futures that matter.
+              <br /><br />
+              This is more than a platform. This is a movement for those who dare to dream and work to build.
+            </p>
+          </div>
+          <div className="story-image">
+            {/* Replace with your actual image path */}
+            <img src={meeting} alt="Founder" className="founder-image" />
+          </div>
+        </div>
+      </section>
+
       {/* AI Based Sections */}
       <section className="ai-sections">
         <div className="section-header">
