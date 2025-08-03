@@ -12,6 +12,7 @@ import raniaImage from '../assets/raniajamoudi.png';
 import marouaneImage from '../assets/marouanezahid.png';
 import { FaInstagram } from 'react-icons/fa';
 import Footer from '../components/Footer';
+{/* comment */}
 
 const About = () => {
   const navigate = useNavigate();

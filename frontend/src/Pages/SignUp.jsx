@@ -6,7 +6,7 @@ import illustration from "../assets/illustration.jpg";
 import { motion } from "framer-motion";
 import API from "../services/api";
 import Footer from "../components/Footer";
-
+{/* comment */}
 export default function SignUp() {
     const [formData, setFormData] = useState({
         firstName: "",

@@ -7,7 +7,7 @@ import emailjs from '@emailjs/browser';
 import './Contact.css';
 import logo from '../assets/logo.png';
 import Footer from '../components/Footer';
-
+{/* comment */}
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
