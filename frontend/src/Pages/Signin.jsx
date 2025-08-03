@@ -1,194 +1,232 @@
-// src/pages/SignIn.jsx
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import API from "../services/api";
-import { useAuth } from "../context/AuthContext";
-import GoogleLogin from "../components/GoogleLogin";
-import ReCaptcha from "../components/ReCaptcha";
+import { Link } from "react-router-dom";
+import "../Pages/SignIn.css";
 import logo from "../assets/logo.png";
 import illustration from "../assets/illustration.jpg";
-import "./SignIn.css";
-
+import { motion } from "framer-motion";
+import API from "../services/api";
+import Footer from "../components/Footer";
+{/* comment */}
 export default function SignIn() {
-    const [email, setEmail]       = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError]       = useState("");
-    const [loading, setLoading]   = useState(false);
-    const [recaptchaToken, setRecaptchaToken] = useState("");
-
-    const { login } = useAuth();
-    const navigate   = useNavigate();
-
-    const handleRecaptchaVerify = (token) => {
-        setRecaptchaToken(token);
-        console.log("reCAPTCHA token:", token);
-    };
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
         setLoading(true);
-
-        // Vérification reCAPTCHA
-        if (!recaptchaToken) {
-            setError("Veuillez compléter la vérification reCAPTCHA");
-            setLoading(false);
-            return;
-        }
-
         try {
-            const { data } = await API.post("/auth/signin", { 
-                email, 
+            const response = await API.post("/auth/signin", {
+                email,
                 password,
-                recaptchaToken 
             });
-
-            // Extrait ton token et (optionnel) URL de photo
-            const token    = data.token || data.jwt || data;
-            const photoUrl = data.user?.photoUrl;
-
-            // Stockage
-            localStorage.setItem("token", token);
-            login(photoUrl);
-
-            // Redirection
-            navigate("/");
+            // Stocker le token JWT dans le localStorage (ou autre)
+            localStorage.setItem("token", response.data.token || response.data.jwt || response.data);
+            // Rediriger ou afficher un message de succès
+            window.location.href = "/"; // À adapter selon votre logique
         } catch (err) {
-            const msg =
-                err.response?.data?.message ||
-                err.response?.data?.error ||
-                err.response?.data ||
-                "Erreur lors de la connexion. Veuillez réessayer.";
-            setError(msg);
+            setError(
+                err.response?.data || "Erreur lors de la connexion. Veuillez réessayer."
+            );
         } finally {
             setLoading(false);
         }
     };
 
-    const handleGoogleSuccess = (user) => {
-        console.log("Connexion Google réussie:", user);
-        // La redirection sera gérée par le backend
-    };
-
-    const handleGoogleError = (error) => {
-        console.error("Erreur connexion Google:", error);
-        setError("Erreur lors de la connexion avec Google. Veuillez réessayer.");
-    };
-
     return (
-        <motion.div
-            className="signin-container"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-        >
-            <header className="signin-header">
-                <img src={logo} alt="Diravenir" className="signin-logo" />
-            </header>
+        <div className="signin-page-elegant">
+            {/* Header / Nav */}
+            <motion.header
+                className="navbar"
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.8 }}
+            >
+                <div className="navbar-left">
+                    <img src={logo} alt="DirAvenir Logo" className="logo" onClick={() => window.location.href = '/'} />
+                </div>
+                <div className="navbar-right">
+                    <a href="/" className="nav-button">Home</a>
+                    <a href="/orientation" className="nav-button">Orientation</a>
+                    <a href="/programs" className="nav-button">Programs</a>
+                    <a href="/about" className="nav-button">About US</a>
+                    <a href="/faq" className="nav-button">FAQ</a>
+                    <a href="/contact" className="nav-button">Contact US</a>
+                    <a href="/signin" className="nav-button active">Log In</a>
+                    <a href="/signup" className="nav-button">Create Account</a>
+                </div>
+            </motion.header>
 
-            <main className="signin-content">
-                {/* Formulaire */}
-                <motion.section
-                    className="form-section"
+            {/* Main content */}
+            <main className="main-content-elegant">
+                {/* Left side: form */}
+                <motion.div
+                    className="form-section-elegant"
                     initial={{ x: -100, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.2, duration: 0.8 }}
+                    transition={{ delay: 0.3, duration: 1 }}
                 >
-                    <h1 className="signin-title">
-                        Sign <span className="highlight">In</span>
-                    </h1>
-
-                    {/* Google Login */}
-                    <div className="google-login-section">
-                        <GoogleLogin 
-                            onSuccess={handleGoogleSuccess}
-                            onError={handleGoogleError}
-                            variant="primary"
-                            className="w-full mb-6"
-                        />
-                        
-                        {/* Séparateur */}
-                        <div className="separator">
-                            <span className="separator-text">ou</span>
-                        </div>
-                    </div>
-
-                    <form onSubmit={handleSubmit} className="signin-form">
-                        <input
-                            type="email"
-                            placeholder="Email Address"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-
-                        <div className="form-options">
-                            <label className="remember-me">
-                                <input type="checkbox" /> Remember Me
-                            </label>
-                            <Link to="/forgot-password" className="forgot-password">
-                                Mot de passe oublié ?
-                            </Link>
+                    <div className="form-container-elegant">
+                        <div className="form-header-elegant">
+                            <motion.div
+                                className="logo-circle"
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                transition={{ delay: 0.5, duration: 0.6, type: "spring" }}
+                            >
+                                <div className="logo-inner">
+                                    <span>DA</span>
+                                </div>
+                            </motion.div>
+                            <motion.h1
+                                initial={{ y: 20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{ delay: 0.7, duration: 0.8 }}
+                                className="welcome-title-elegant"
+                            >
+                                Welcome Back
+                            </motion.h1>
+                            <motion.p
+                                initial={{ y: 20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{ delay: 0.9, duration: 0.8 }}
+                                className="welcome-subtitle-elegant"
+                            >
+                                Sign in to your account to continue
+                            </motion.p>
                         </div>
 
-                        {/* reCAPTCHA */}
-                        <div className="recaptcha-section">
-                            <ReCaptcha onVerify={handleRecaptchaVerify} />
-                        </div>
-
-                        {error && <div className="signin-error">{error}</div>}
-
-                        <motion.button
-                            type="submit"
-                            className="btn-primary"
-                            whileTap={{ scale: 0.95 }}
-                            disabled={loading || !recaptchaToken}
+                        <motion.form 
+                            onSubmit={handleSubmit}
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ delay: 1.1, duration: 0.8 }}
+                            className="login-form-elegant"
                         >
-                            {loading ? "Connexion..." : "Log In"}
-                        </motion.button>
-                    </form>
+                            <div className="input-group-elegant">
+                                <label className="input-label">Email Address</label>
+                                <div className="input-wrapper-elegant">
+                                    <input
+                                        type="email"
+                                        placeholder="Enter your email"
+                                        value={email}
+                                        onChange={e => setEmail(e.target.value)}
+                                        required
+                                        className="form-input-elegant"
+                                    />
+                                    <div className="input-focus-border"></div>
+                                </div>
+                            </div>
 
-                    <div className="signup-link">
-                        <p>
-                            Pas encore de compte ?{" "}
-                            <Link to="/signup" className="link">
-                                Créer un compte
-                            </Link>
-                        </p>
+                            <div className="input-group-elegant">
+                                <label className="input-label">Password</label>
+                                <div className="input-wrapper-elegant">
+                                    <input
+                                        type="password"
+                                        placeholder="Enter your password"
+                                        value={password}
+                                        onChange={e => setPassword(e.target.value)}
+                                        required
+                                        className="form-input-elegant"
+                                    />
+                                    <div className="input-focus-border"></div>
+                                </div>
+                            </div>
+
+                            <div className="form-options-elegant">
+                                <label className="checkbox-container-elegant">
+                                    <input type="checkbox" />
+                                    <span className="checkmark-elegant"></span>
+                                    <span className="checkbox-text">Remember me</span>
+                                </label>
+                                <a href="/forgot-password" className="forgot-link-elegant">Forgot password?</a>
+                            </div>
+
+                            {error && (
+                                <motion.div 
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="error-message-elegant"
+                                >
+                                    <div className="error-icon">⚠️</div>
+                                    <span>{error}</span>
+                                </motion.div>
+                            )}
+
+                            <motion.button
+                                type="submit"
+                                className="login-btn-elegant"
+                                whileHover={{ scale: 1.02, y: -2 }}
+                                whileTap={{ scale: 0.98 }}
+                                disabled={loading}
+                            >
+                                <span className="btn-text-elegant">
+                                    {loading ? "Signing In..." : "Sign In"}
+                                </span>
+                                <div className="btn-arrow">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                </div>
+                            </motion.button>
+                        </motion.form>
+
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 1.4, duration: 0.8 }}
+                            className="signup-prompt-elegant"
+                        >
+                            <p>Don't have an account? <a href="/signup" className="signup-link-elegant">Create Account</a></p>
+                        </motion.div>
                     </div>
+                </motion.div>
 
-                    <p className="terms-text">
-                        By logging in, you agree to our{" "}
-                        <Link to="/terms" className="link">
-                            Terms of Service
-                        </Link>{" "}
-                        and{" "}
-                        <Link to="/privacy" className="link">
-                            Privacy Policy
-                        </Link>
-                        .
-                    </p>
-                </motion.section>
-
-                {/* Illustration */}
-                <motion.section
-                    className="illustration-section"
+                {/* Right side: decorative content */}
+                <motion.div
+                    className="decorative-section-elegant"
                     initial={{ x: 100, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.3, duration: 0.8 }}
+                    transition={{ delay: 0.4, duration: 1 }}
                 >
-                    <img src={illustration} alt="Illustration" className="illustration" />
-                </motion.section>
+                    <div className="decorative-content-elegant">
+                        <div className="background-pattern">
+                            <div className="pattern-circle circle-1"></div>
+                            <div className="pattern-circle circle-2"></div>
+                            <div className="pattern-circle circle-3"></div>
+                            <div className="pattern-line line-1"></div>
+                            <div className="pattern-line line-2"></div>
+                        </div>
+                        
+                        <div className="main-illustration-elegant">
+                            <div className="image-container">
+                                <img src={illustration} alt="Education Illustration" />
+                                <div className="image-overlay"></div>
+                            </div>
+                        </div>
+                        
+                        <div className="floating-elements-elegant">
+                            <div className="floating-item item-1">
+                                <div className="item-icon">🎓</div>
+                                <span>Education</span>
+                            </div>
+                            <div className="floating-item item-2">
+                                <div className="item-icon">🌟</div>
+                                <span>Success</span>
+                            </div>
+                            <div className="floating-item item-3">
+                                <div className="item-icon">🚀</div>
+                                <span>Future</span>
+                            </div>
+                        </div>
+                    </div>
+                </motion.div>
             </main>
-        </motion.div>
+
+            {/* Footer */}
+            <Footer />
+        </div>
     );
 }

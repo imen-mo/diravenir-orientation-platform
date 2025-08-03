@@ -23,4 +23,5 @@ public class FiliereController {
     public List<Filiere> getAllFilieres() {
         return filiereService.getAllFilieres();
     }
+
 }

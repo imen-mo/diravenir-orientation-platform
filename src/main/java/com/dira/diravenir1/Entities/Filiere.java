@@ -9,6 +9,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
+@Getter
 public class Filiere {
 
     @Id
@@ -48,4 +50,15 @@ public class Filiere {
     @ManyToOne
     @JoinColumn(name = "universite_id")
     private Universite universite;
+
+
+    public void setUniversiteId(Long aLong) {
+        return; 
+    }
+
+    public void setPartenaireId(Long aLong) {return;
+    }
+
+    public void setDestinationId(Long aLong) {
+    }
 }

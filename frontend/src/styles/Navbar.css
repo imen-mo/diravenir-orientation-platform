@@ -3,11 +3,11 @@
     justify-content: space-between;
     align-items: center;
     padding: 20px 40px;
-    position: absolute;
-    top: 0;
-    width: 100%;
+    position: relative;
     z-index: 10;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(75, 1, 75, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .navbar-left {
@@ -16,9 +16,16 @@
 }
 
 .logo {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     margin-right: 15px;
+    filter: brightness(0) saturate(100%) invert(67%) sepia(100%) saturate(1000%) hue-rotate(359deg) brightness(103%) contrast(107%);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.logo:hover {
+    transform: scale(1.05);
 }
 
 .site-name {
@@ -26,13 +33,31 @@
     font-weight: bold;
 }
 
+.navbar-right {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
 .navbar-right .nav-link {
     color: white;
-    margin-left: 20px;
     text-decoration: none;
-    font-size: 1.1rem;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 8px;
+    position: relative;
 }
 
 .navbar-right .nav-link:hover {
-    text-decoration: underline;
+    color: #ffd700;
+    background: rgba(255, 215, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.navbar-right .nav-link.active {
+    color: #ffd700;
+    font-weight: 600;
+    background: rgba(255, 215, 0, 0.15);
 }
