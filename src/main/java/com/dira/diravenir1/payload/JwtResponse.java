@@ -1,13 +1,18 @@
 package com.dira.diravenir1.payload;
 
-
 public class JwtResponse {
     private String token;
+    private long expiresIn; // en secondes
 
     public JwtResponse() {}
 
     public JwtResponse(String token) {
         this.token = token;
+    }
+
+    public JwtResponse(String token, long expiresIn) {
+        this.token = token;
+        this.expiresIn = expiresIn;
     }
 
     public String getToken() {
@@ -16,5 +21,13 @@ public class JwtResponse {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public long getExpiresIn() {
+        return expiresIn;
+    }
+
+    public void setExpiresIn(long expiresIn) {
+        this.expiresIn = expiresIn;
     }
 }

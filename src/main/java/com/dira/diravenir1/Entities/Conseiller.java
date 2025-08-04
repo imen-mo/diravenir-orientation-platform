@@ -3,6 +3,7 @@ package com.dira.diravenir1.Entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @NoArgsConstructor

@@ -3,12 +3,7 @@ package com.dira.diravenir1.Controller;
 import com.dira.diravenir1.payload.LoginRequest;
 import com.dira.diravenir1.payload.SignupRequest;
 import com.dira.diravenir1.payload.JwtResponse;
-import com.dira.diravenir1.security.JwtService;
-import com.dira.diravenir1.service.LoginAttemptService;
-import com.dira.diravenir1.service.RecaptchaService;
-import com.dira.diravenir1.service.RateLimitService;
-import com.dira.diravenir1.service.UtilisateurService;
-import com.dira.diravenir1.service.EmailVerificationService;
+import com.dira.diravenir1.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -153,7 +147,7 @@ public class AuthController {
 
             logger.info("✅ CONNEXION RÉUSSIE - Email: {} | IP: {}", username, ip);
 
-            return ResponseEntity.ok(new JwtResponse(jwt));
+            return ResponseEntity.ok(new JwtResponse(jwt, jwtService.getExpiration()));
 
         } catch (AuthenticationException ex) {
             // Connexion échouée - incrémenter les tentatives

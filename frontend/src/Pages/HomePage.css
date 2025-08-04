@@ -17,12 +17,31 @@ body {
 }
 
 /* ===== OUR STORY SECTION ===== */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
 .our-story-section {
-  padding: 6rem 5%;
-  background: #ffffff;
-  position: relative;
-  overflow: hidden;
+  background-color: #f8f8f8;
+  padding: 50px 0;
+  text-align: center;
 }
+
+.our-story-section h2 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+}
+
+.our-story-section p {
+  font-size: 1.2em;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.our-story-section img {
+  max-width: 100%;
+  height: auto;
+  margin-top: 20px;
+}
+
 
 .story-container {
   max-width: 1200px;

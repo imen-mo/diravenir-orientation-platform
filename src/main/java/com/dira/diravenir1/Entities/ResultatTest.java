@@ -26,9 +26,10 @@ public class ResultatTest {
     private Etudiant etudiant;
 
     public Object getProfil() {
-
+        return id;
     }
 
     public void setProfil(Object profil) {
+        this.id = (Long) profil;
     }
 }
