@@ -20,8 +20,12 @@ public class RecaptchaService {
     private static final String GOOGLE_RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
 
     public boolean verify(String recaptchaToken) {
+        System.out.println("🔍 RecaptchaService.verify() - Environment: " + environment);
+        System.out.println("🔍 RecaptchaService.verify() - Token: " + (recaptchaToken != null ? "PRÉSENT" : "ABSENT"));
+        
         // Désactiver la vérification en environnement de développement
         if ("dev".equals(environment)) {
+            System.out.println("🔍 RecaptchaService.verify() - Mode DEV détecté, retourne true");
             return true;
         }
         

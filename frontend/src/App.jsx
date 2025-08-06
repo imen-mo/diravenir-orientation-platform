@@ -26,19 +26,19 @@ const LoadingFallback = () => (
 const ErrorBoundary = ({ children }) => <>{children}</>;
 
 // Pages
-const SignIn = lazy(() => import("./pages/Signin"));
-const SignUp = lazy(() => import("./pages/SignUp"));
-const SignUpSuccess = lazy(() => import("./pages/SignUpSuccess"));
-const HomePage = lazy(() => import("./pages/HomePage"));
-const About = lazy(() => import("./pages/About"));
-const Contact = lazy(() => import("./pages/Contact"));
-const FAQ = lazy(() => import("./pages/FAQ"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const Universites = lazy(() => import("./pages/Universites"));
-const StudentDashboard = lazy(() => import("./pages/StudentDashboard"));
-const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
-const Programs = lazy(() => import("./pages/Programs"));
-const ProgramDetail = lazy(() => import("./pages/ProgramDetail"));
+const SignIn = lazy(() => import("./Pages/Signin"));
+const SignUp = lazy(() => import("./Pages/SignUp"));
+const SignUpSuccess = lazy(() => import("./Pages/SignUpSuccess"));
+const HomePage = lazy(() => import("./Pages/HomePage"));
+const About = lazy(() => import("./Pages/About"));
+const Contact = lazy(() => import("./Pages/Contact"));
+const FAQ = lazy(() => import("./Pages/FAQ"));
+const NotFound = lazy(() => import("./Pages/NotFound"));
+const Universites = lazy(() => import("./Pages/Universites"));
+const StudentDashboard = lazy(() => import("./Pages/StudentDashboard"));
+const AdminDashboard = lazy(() => import("./Pages/AdminDashboard"));
+const Programs = lazy(() => import("./Pages/Programs"));
+const ProgramDetail = lazy(() => import("./Pages/ProgramDetail"));
 
 // Layouts
 const MainLayout = () => (

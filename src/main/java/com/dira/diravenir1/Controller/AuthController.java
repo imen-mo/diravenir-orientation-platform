@@ -42,6 +42,9 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest request, HttpServletRequest httpRequest) {
         String ip = getClientIpAddress(httpRequest);
         
+        logger.info("🔍 TENTATIVE D'INSCRIPTION - IP: {} | Email: {} | reCAPTCHA Token: {}", 
+                   ip, request.getEmail(), request.getRecaptchaToken() != null ? "PRÉSENT" : "ABSENT");
+        
         // Vérification du rate limiting pour l'inscription
         if (rateLimitService.isSignupRateLimited(ip)) {
             logger.warn("🚫 INSCRIPTION BLOQUÉE - IP: {} | Rate limit dépassé", ip);
@@ -51,7 +54,10 @@ public class AuthController {
         
         try {
             // Validation reCAPTCHA
-            if (!recaptchaService.verify(request.getRecaptchaToken())) {
+            boolean recaptchaValid = recaptchaService.verify(request.getRecaptchaToken());
+            logger.info("🔍 VÉRIFICATION reCAPTCHA - IP: {} | Résultat: {}", ip, recaptchaValid);
+            
+            if (!recaptchaValid) {
                 logger.warn("🚫 INSCRIPTION BLOQUÉE - IP: {} | reCAPTCHA invalide", ip);
                 return ResponseEntity.badRequest()
                         .body(Map.of("error", "Validation reCAPTCHA échouée"));

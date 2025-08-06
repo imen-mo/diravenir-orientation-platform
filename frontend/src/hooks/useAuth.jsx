@@ -35,9 +35,9 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     try {
       const response = await authService.login(email, password);
-      setToken(response.data.token);
-      // setUser(response.data.user); // Décommentez quand votre API renvoie les données utilisateur
-      return response.data;
+      setToken(response.token);
+      // setUser(response.user); // Décommentez quand votre API renvoie les données utilisateur
+      return response;
     } catch (err) {
       const errorMessage = err.response?.data?.message || 'Échec de la connexion';
       setError(errorMessage);
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     try {
       const response = await authService.register(userData);
-      return response.data;
+      return response;
     } catch (err) {
       const errorMessage = err.response?.data?.message || "Échec de l'inscription";
       setError(errorMessage);

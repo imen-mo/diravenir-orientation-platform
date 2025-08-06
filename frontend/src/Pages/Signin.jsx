@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { loadReCaptcha } from '../utils/recaptcha';
+import ReCAPTCHA from "react-google-recaptcha";
 import logo from '../assets/logo.png';
 
 export default function SignIn() {
@@ -15,6 +15,7 @@ export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState("");
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -22,8 +23,6 @@ export default function SignIn() {
   const from = location.state?.from?.pathname || '/';
 
   useEffect(() => {
-    loadReCaptcha().catch(console.error);
-    
     const savedEmail = localStorage.getItem('savedEmail');
     const savedRememberMe = localStorage.getItem('rememberMe') === 'true';
 
@@ -39,17 +38,22 @@ export default function SignIn() {
     if (error) setError('');
   };
 
+  const handleRecaptchaVerify = (token) => {
+    setRecaptchaToken(token);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    try {
-      const recaptchaToken = await window.grecaptcha.execute(
-        import.meta.env.VITE_RECAPTCHA_SITE_KEY,
-        { action: 'login' }
-      );
+    if (!recaptchaToken) {
+      setError("Veuillez valider le reCAPTCHA.");
+      setLoading(false);
+      return;
+    }
 
+    try {
       if (rememberMe) {
         localStorage.setItem('savedEmail', formData.email);
         localStorage.setItem('rememberMe', 'true');
@@ -63,7 +67,8 @@ export default function SignIn() {
       navigate(from, { replace: true });
     } catch (err) {
       console.error('Erreur de connexion:', err);
-      setError(err.message || 'Une erreur est survenue lors de la connexion');
+      const errorMessage = err.response?.data?.error || err.response?.data?.message || (typeof err.response?.data === 'string' ? err.response?.data : null) || "Erreur lors de la connexion. Veuillez réessayer.";
+      setError(errorMessage);
       toast.error('Échec de la connexion. Veuillez réessayer.');
     } finally {
       setLoading(false);
@@ -150,10 +155,17 @@ export default function SignIn() {
                 </div>
               </div>
 
+              <div style={{ margin: '16px 0' }}>
+                <ReCAPTCHA
+                  sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+                  onChange={handleRecaptchaVerify}
+                />
+              </div>
+
               <div>
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || !recaptchaToken}
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
                 >
                   {loading ? 'Connexion en cours...' : 'Se connecter'}

@@ -14,10 +14,6 @@ public class SignupRequest {
 
     @NotBlank(message = "Le mot de passe est requis")
     @Size(min = 8, message = "Le mot de passe doit contenir au moins 8 caractères")
-    @Pattern(
-        regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-        message = "Le mot de passe doit contenir au moins une minuscule, une majuscule, un chiffre et un caractère spécial"
-    )
     private String password;
 
     @NotBlank(message = "La confirmation du mot de passe est requise")
@@ -49,7 +45,7 @@ public class SignupRequest {
         boolean hasUpperCase = password.matches(".*[A-Z].*");
         boolean hasLowerCase = password.matches(".*[a-z].*");
         boolean hasDigit = password.matches(".*\\d.*");
-        boolean hasSpecialChar = password.matches(".*[@$!%*?&].*");
+        boolean hasSpecialChar = password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*");
         
         return hasUpperCase && hasLowerCase && hasDigit && hasSpecialChar;
     }

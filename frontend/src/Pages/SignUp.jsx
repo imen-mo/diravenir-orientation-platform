@@ -6,6 +6,7 @@ import illustration from "../assets/illustration.jpg";
 import { motion } from "framer-motion";
 import API from "../services/api";
 import Footer from "../components/Footer";
+import ReCAPTCHA from "react-google-recaptcha";
 import { setToken } from "../utils/auth";
 
 export default function SignUp() {
@@ -18,6 +19,8 @@ export default function SignUp() {
     });
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState("");
+    const [recaptchaToken, setRecaptchaToken] = useState("");
 
     const handleChange = (e) => {
         setFormData({
@@ -26,9 +29,19 @@ export default function SignUp() {
         });
     };
 
+    const handleRecaptchaVerify = (token) => {
+        setRecaptchaToken(token);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+        setSuccess("");
+
+        if (!recaptchaToken) {
+            setError("Veuillez valider le reCAPTCHA.");
+            return;
+        }
 
         // Validation des mots de passe
         if (formData.password !== formData.confirmPassword) {
@@ -48,13 +61,16 @@ export default function SignUp() {
                 prenom: formData.prenom,
                 email: formData.email,
                 password: formData.password,
+                recaptchaToken: recaptchaToken
             });
             
-            // Stocker le token JWT dans le localStorage
-            setToken(response.data.token || response.data.jwt || response.data);
+            // Afficher le message de succès
+            setSuccess(response.data.message || "Compte créé avec succès !");
             
-            // Rediriger vers la page d'accueil
-            window.location.href = "/";
+            // Optionnel : rediriger après quelques secondes
+            setTimeout(() => {
+                window.location.href = "/signin";
+            }, 3000);
         } catch (err) {
             setError(
                 err.response?.data?.message || "Erreur lors de la création du compte. Veuillez réessayer."
@@ -233,12 +249,30 @@ export default function SignUp() {
                                 </motion.div>
                             )}
 
+                            {success && (
+                                <motion.div 
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="success-message-elegant"
+                                >
+                                    <div className="success-icon">✅</div>
+                                    <span>{success}</span>
+                                </motion.div>
+                            )}
+
+                            <div style={{ margin: '16px 0' }}>
+                                <ReCAPTCHA
+                                    sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+                                    onChange={handleRecaptchaVerify}
+                                />
+                            </div>
+
                             <motion.button
                                 type="submit"
                                 className="login-btn-elegant"
                                 whileHover={{ scale: 1.02, y: -2 }}
                                 whileTap={{ scale: 0.98 }}
-                                disabled={loading}
+                                disabled={loading || !recaptchaToken}
                             >
                                 <span className="btn-text-elegant">
                                     {loading ? "Creating Account..." : "Create Account"}

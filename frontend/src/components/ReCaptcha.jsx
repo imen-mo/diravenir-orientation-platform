@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-const ReCaptcha = ({ onVerify, siteKey = "6LcI44rAAAAAHCZY0PZtFgD8i3RS372u7yWa4JK" }) => {
+const ReCaptcha = ({ onVerify, siteKey = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" }) => {
   const recaptchaRef = useRef(null);
   const widgetIdRef = useRef(null);
 
