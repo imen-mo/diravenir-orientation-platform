@@ -18,5 +18,5 @@ public class Destination {
     private String imageUrl;
 
     @OneToMany(mappedBy = "destination", cascade = CascadeType.ALL)
-    private List<Filiere> filieres;
+    private List<Program> programs;
 } 

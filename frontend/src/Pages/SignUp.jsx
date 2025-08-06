@@ -6,11 +6,12 @@ import illustration from "../assets/illustration.jpg";
 import { motion } from "framer-motion";
 import API from "../services/api";
 import Footer from "../components/Footer";
-{/* comment */}
+import { setToken } from "../utils/auth";
+
 export default function SignUp() {
     const [formData, setFormData] = useState({
-        firstName: "",
-        lastName: "",
+        nom: "",
+        prenom: "",
         email: "",
         password: "",
         confirmPassword: ""
@@ -43,14 +44,14 @@ export default function SignUp() {
         setLoading(true);
         try {
             const response = await API.post("/auth/signup", {
-                firstName: formData.firstName,
-                lastName: formData.lastName,
+                nom: formData.nom,
+                prenom: formData.prenom,
                 email: formData.email,
                 password: formData.password,
             });
             
             // Stocker le token JWT dans le localStorage
-            localStorage.setItem("token", response.data.token || response.data.jwt || response.data);
+            setToken(response.data.token || response.data.jwt || response.data);
             
             // Rediriger vers la page d'accueil
             window.location.href = "/";
@@ -134,13 +135,13 @@ export default function SignUp() {
                             className="login-form-elegant"
                         >
                             <div className="input-group-elegant">
-                                <label className="input-label">First Name</label>
+                                <label className="input-label">Nom</label>
                                 <div className="input-wrapper-elegant">
                                     <input
                                         type="text"
-                                        name="firstName"
-                                        placeholder="Enter your first name"
-                                        value={formData.firstName}
+                                        name="nom"
+                                        placeholder="Entrez votre nom"
+                                        value={formData.nom}
                                         onChange={handleChange}
                                         required
                                         className="form-input-elegant"
@@ -150,13 +151,13 @@ export default function SignUp() {
                             </div>
 
                             <div className="input-group-elegant">
-                                <label className="input-label">Last Name</label>
+                                <label className="input-label">Prénom</label>
                                 <div className="input-wrapper-elegant">
                                     <input
                                         type="text"
-                                        name="lastName"
-                                        placeholder="Enter your last name"
-                                        value={formData.lastName}
+                                        name="prenom"
+                                        placeholder="Entrez votre prénom"
+                                        value={formData.prenom}
                                         onChange={handleChange}
                                         required
                                         className="form-input-elegant"
@@ -171,7 +172,7 @@ export default function SignUp() {
                                     <input
                                         type="email"
                                         name="email"
-                                        placeholder="Enter your email"
+                                        placeholder="Entrez votre email"
                                         value={formData.email}
                                         onChange={handleChange}
                                         required
@@ -187,7 +188,7 @@ export default function SignUp() {
                                     <input
                                         type="password"
                                         name="password"
-                                        placeholder="Create a password"
+                                        placeholder="Créez un mot de passe"
                                         value={formData.password}
                                         onChange={handleChange}
                                         required
@@ -203,7 +204,7 @@ export default function SignUp() {
                                     <input
                                         type="password"
                                         name="confirmPassword"
-                                        placeholder="Confirm your password"
+                                        placeholder="Confirmez votre mot de passe"
                                         value={formData.confirmPassword}
                                         onChange={handleChange}
                                         required

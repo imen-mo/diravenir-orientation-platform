@@ -85,8 +85,8 @@ public class Utilisateur {
     private String providerId;
 
     @ManyToOne
-    @JoinColumn(name = "filiere_id")
-    private Filiere filiere;
+    @JoinColumn(name = "program_id")
+    private Program program;
 
     @PrePersist
     protected void onCreate() {

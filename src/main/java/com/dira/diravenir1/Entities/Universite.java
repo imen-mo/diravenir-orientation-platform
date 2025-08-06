@@ -22,5 +22,5 @@ public class Universite {
     private String logoUrl;
 
     @OneToMany(mappedBy = "universite", cascade = CascadeType.ALL)
-    private List<Filiere> Filiere;
+    private List<Program> programs;
 } 

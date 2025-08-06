@@ -1,0 +1,393 @@
+/* Page de détail du programme */
+.program-detail-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+}
+
+/* Header avec logo et titre */
+.program-header {
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+}
+
+.program-logo {
+  flex-shrink: 0;
+}
+
+.university-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid #fbbf24;
+  background: white;
+  padding: 0.5rem;
+}
+
+.program-title {
+  flex-grow: 1;
+}
+
+.main-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+}
+
+.program-name {
+  color: #fbbf24;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.university-name {
+  color: white;
+  font-weight: 400;
+}
+
+/* Contenu principal */
+.program-content {
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+
+/* Colonne gauche */
+.content-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.info-section {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+}
+
+.info-section h2 {
+  color: #fbbf24;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.info-section p {
+  color: white;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* Liste des avantages */
+.benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  color: white;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.check-icon {
+  color: #10b981;
+  font-weight: bold;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+/* Colonne droite */
+.content-right {
+  position: relative;
+}
+
+.program-info-section {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.program-info-section::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(45deg, #fbbf24, #f59e0b);
+  border-radius: 50%;
+  opacity: 0.3;
+  z-index: -1;
+}
+
+.program-info-section h2 {
+  color: #fbbf24;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+/* Tableau d'informations */
+.info-table {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  color: #d1d5db;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.info-value {
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.scholarship-available {
+  color: #10b981 !important;
+  font-weight: 700;
+}
+
+/* Section des documents */
+.documents-section {
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+}
+
+.documents-section h2 {
+  color: #fbbf24;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.documents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.document-card {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.document-card:hover {
+  border-color: #fbbf24;
+  transform: translateY(-4px);
+}
+
+.document-icon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.document-card span {
+  color: white;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* Call to Action */
+.cta-section {
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  background: #1e1b4b;
+  padding: 2rem;
+  border-radius: 1rem;
+  text-align: center;
+}
+
+.cta-content h2 {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.btn-apply-large {
+  background: #fbbf24;
+  color: #1f2937;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-apply-large:hover {
+  background: #f59e0b;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(251, 191, 36, 0.3);
+}
+
+/* Autres universités */
+.other-universities {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.other-universities h3 {
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.universities-logos {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.university-logo-small {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.university-logo-small:hover {
+  background: rgba(251, 191, 36, 0.2);
+  transform: scale(1.1);
+}
+
+/* Gestion d'erreur */
+.program-detail-error {
+  text-align: center;
+  padding: 3rem;
+  color: white;
+}
+
+.program-detail-error h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-back {
+  background: #fbbf24;
+  color: #1f2937;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+  background: #f59e0b;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .program-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .program-detail-page {
+    padding: 1rem;
+  }
+
+  .program-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .main-title {
+    font-size: 1.5rem;
+  }
+
+  .documents-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .universities-logos {
+    gap: 1rem;
+  }
+
+  .university-logo-small {
+    width: 50px;
+    height: 50px;
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .program-header {
+    padding: 1rem;
+  }
+
+  .info-section,
+  .program-info-section,
+  .documents-section {
+    padding: 1rem;
+  }
+
+  .documents-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .universities-logos {
+    justify-content: space-around;
+  }
+} 

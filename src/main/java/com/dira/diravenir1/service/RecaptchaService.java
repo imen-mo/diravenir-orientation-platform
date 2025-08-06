@@ -13,11 +13,19 @@ public class RecaptchaService {
 
     @Value("${google.recaptcha.secret}")
     private String recaptchaSecret;
-
+    
+    @Value("${app.environment:dev}")
+    private String environment;
 
     private static final String GOOGLE_RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
 
     public boolean verify(String recaptchaToken) {
+        // Désactiver la vérification en environnement de développement
+        if ("dev".equals(environment)) {
+            return true;
+        }
+        
+        // Vérification normale en production
         RestTemplate restTemplate = new RestTemplate();
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -29,11 +37,15 @@ public class RecaptchaService {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
-        ResponseEntity<GoogleResponse> response = restTemplate.postForEntity(
-                GOOGLE_RECAPTCHA_VERIFY_URL, request, GoogleResponse.class);
+        try {
+            ResponseEntity<GoogleResponse> response = restTemplate.postForEntity(
+                    GOOGLE_RECAPTCHA_VERIFY_URL, request, GoogleResponse.class);
 
-        GoogleResponse googleResponse = response.getBody();
-
-        return googleResponse != null && googleResponse.isSuccess();
+            GoogleResponse googleResponse = response.getBody();
+            return googleResponse != null && googleResponse.isSuccess();
+        } catch (Exception e) {
+            // En cas d'erreur de connexion à Google, on accepte en développement
+            return "dev".equals(environment);
+        }
     }
 }
