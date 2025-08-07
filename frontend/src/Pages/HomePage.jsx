@@ -233,7 +233,7 @@ const HomePage = () => {
       <section className="popular-programs">
         <h2>Popular Programs</h2>
         <div className="programs-grid">
-          {programs.length > 0 ? (
+          {Array.isArray(programs) && programs.length > 0 ? (
             programs.map((prog, idx) => (
               <div key={idx} className="program-card" onClick={() => navigate(`/programs/${prog.id}`)}>
                 <h3>{prog.nom}</h3>
@@ -288,7 +288,7 @@ const HomePage = () => {
       <section className="testimonials">
         <h2>From Dreamers to Achievers & doers</h2>
         <div className="testimonials-list">
-          {temoignages.length > 0 ? (
+          {Array.isArray(temoignages) && temoignages.length > 0 ? (
             temoignages.map((t, idx) => (
               <div key={idx} className="testimonial-card">
                 <h4>{t.nom}</h4>
@@ -327,7 +327,7 @@ const HomePage = () => {
       <section className="destinations">
         <h2>Our Destinations</h2>
         <div className="destinations-list">
-          {destinations.length > 0 ? (
+          {Array.isArray(destinations) && destinations.length > 0 ? (
             destinations.map((d, idx) => (
               <Link 
                 key={idx} 
@@ -364,7 +364,7 @@ const HomePage = () => {
       <section className="partners">
         <h2>Our Partners</h2>
         <div className="partners-list">
-          {partenaires.length > 0 ? (
+          {Array.isArray(partenaires) && partenaires.length > 0 ? (
             partenaires.map((p, idx) => (
               <div key={idx} className="partner-card">
                 <h4>{p.nom}</h4>

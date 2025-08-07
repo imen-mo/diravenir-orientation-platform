@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => {
     // Expose les variables d'environnement au client
     define: {
       'process.env': {
-        VITE_RECAPTCHA_SITE_KEY: JSON.stringify(env.VITE_RECAPTCHA_SITE_KEY),
+        VITE_RECAPTCHA_SITE_KEY: JSON.stringify(process.env.VITE_RECAPTCHA_SITE_KEY),
         VITE_API_URL: JSON.stringify(env.VITE_API_URL)
       }
     },

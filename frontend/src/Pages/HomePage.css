@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
 /* ===== RESET ET BASE ===== */
 * {
   margin: 0;
@@ -17,7 +19,6 @@ body {
 }
 
 /* ===== OUR STORY SECTION ===== */
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
 .our-story-section {
   background-color: #f8f8f8;

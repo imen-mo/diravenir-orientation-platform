@@ -1,12 +1,47 @@
 import axios from "axios";
 
 // ✅ Définir une seule fois l'URL de base
-const API_BASE = "http://localhost:8084/api";
+const API_BASE = process.env.VITE_API_URL || "http://localhost:8084/api";
 
 // ✅ Créer une instance Axios réutilisable
 const API = axios.create({
   baseURL: API_BASE,
+  timeout: 10000, // 10 secondes de timeout
 });
+
+// ✅ Intercepteur pour les requêtes
+API.interceptors.request.use(
+  (config) => {
+    console.log(`🚀 Requête API: ${config.method?.toUpperCase()} ${config.url}`);
+    return config;
+  },
+  (error) => {
+    console.error('❌ Erreur de requête:', error);
+    return Promise.reject(error);
+  }
+);
+
+// ✅ Intercepteur pour les réponses
+API.interceptors.response.use(
+  (response) => {
+    console.log(`✅ Réponse API: ${response.status} ${response.config.url}`);
+    return response;
+  },
+  (error) => {
+    console.error('❌ Erreur de réponse:', {
+      status: error.response?.status,
+      message: error.response?.data?.message || error.message,
+      url: error.config?.url
+    });
+    
+    // Gestion spécifique des erreurs de connexion
+    if (error.code === 'ERR_NETWORK' || error.code === 'ECONNREFUSED') {
+      console.error('🔌 Erreur de connexion au serveur. Vérifiez que le backend est démarré sur le port 8084.');
+    }
+    
+    return Promise.reject(error);
+  }
+);
 
 // ✅ Exporter l'instance par défaut
 export default API;
