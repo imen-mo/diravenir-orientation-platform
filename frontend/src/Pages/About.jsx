@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './About.css';
+import '../Pages/SignUp.css';
 import orientationImage from '../assets/orientation.png';
 import etudiantImage from '../assets/etudiant.png';
 import meetingImage from '../assets/meeting.png';
@@ -12,6 +13,7 @@ import raniaImage from '../assets/raniajamoudi.png';
 import marouaneImage from '../assets/marouanezahid.png';
 import { FaInstagram } from 'react-icons/fa';
 import Footer from '../components/Footer';
+import GlobalNavbar from '../components/GlobalNavbar';
 {/* comment */}
 
 const About = () => {
@@ -60,24 +62,7 @@ const About = () => {
 
   return (
     <div className="about-page-modern">
-      {/* Header/Navigation Bar */}
-      <nav className="navbar-modern">
-        <div className="navbar-left">
-          <img src={logo} alt="DirAvenir Logo" className="logo-modern" />
-        </div>
-        <div className="navbar-center">
-          <Link to="/" className="nav-link-modern">Home</Link>
-          <Link to="/orientation" className="nav-link-modern">Orientation</Link>
-          <Link to="/programs" className="nav-link-modern">Programs</Link>
-          <Link to="/about" className="nav-link-modern active">About US</Link>
-          <Link to="/faq" className="nav-link-modern">FAQ</Link>
-          <Link to="/contact" className="nav-link-modern">Contact US</Link>
-        </div>
-        <div className="navbar-right">
-          <Link to="/signin" className="btn-login-modern">Log in</Link>
-          <Link to="/signup" className="btn-create-account-modern">Create Account</Link>
-        </div>
-      </nav>
+
 
       {/* Main Content */}
       <div className="main-content-modern">
@@ -339,8 +324,7 @@ const About = () => {
         </div>
       </section>
       
-      {/* Footer */}
-      <Footer />
+
     </div>
   );
 };

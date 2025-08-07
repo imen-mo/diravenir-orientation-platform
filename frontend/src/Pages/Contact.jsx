@@ -5,9 +5,11 @@ import { IoMdSend } from 'react-icons/io';
 import { motion, useAnimation, useInView } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import './Contact.css';
+import '../Pages/SignUp.css';
 import logo from '../assets/logo.png';
 import Footer from '../components/Footer';
-{/* comment */}
+import GlobalNavbar from '../components/GlobalNavbar';
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -130,21 +132,7 @@ const Contact = () => {
 
   return (
     <div className="contact-page">
-      <nav className="navbar">
-        <div className="navbar-left">
-          <img src={logo} alt="DirAvenir Logo" className="logo" onClick={() => window.location.href = '/'} style={{ cursor: 'pointer' }} />
-        </div>
-        <div className="navbar-right">
-          <a href="/" className="nav-button">Home</a>
-          <a href="/orientation" className="nav-button">Orientation</a>
-          <a href="/programs" className="nav-button">Programs</a>
-          <a href="/about" className="nav-button">About US</a>
-          <a href="/faq" className="nav-button">FAQ</a>
-          <a href="/contact" className="nav-button active">Contact US</a>
-          <a href="/signin" className="nav-button">Log In</a>
-          <a href="/signup" className="nav-button">Create Account</a>
-        </div>
-      </nav>
+
 
       <section className="contact-hero">
         <div className="contact-hero-content">
@@ -356,7 +344,7 @@ const Contact = () => {
           </form>
         </motion.div>
       </section>
-      <Footer />
+
     </div>
   );
 };

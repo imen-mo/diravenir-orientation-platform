@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // ✅ Définir une seule fois l'URL de base
-const API_BASE = process.env.VITE_API_URL || "http://localhost:8084/api";
+const API_BASE = "http://localhost:8084";
 
 // ✅ Créer une instance Axios réutilisable
 const API = axios.create({

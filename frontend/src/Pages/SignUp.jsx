@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "../Pages/SignIn.css";
+import "../Pages/SignUp.css";
 import logo from "../assets/logo.png";
 import illustration from "../assets/illustration.jpg";
 import { motion } from "framer-motion";
@@ -9,6 +9,7 @@ import Footer from "../components/Footer";
 import ReCAPTCHA from "react-google-recaptcha";
 import { setToken } from "../utils/auth";
 import GoogleLogin from "../components/GoogleLogin";
+import GlobalNavbar from "../components/GlobalNavbar";
 
 export default function SignUp() {
     const [formData, setFormData] = useState({
@@ -76,28 +77,9 @@ export default function SignUp() {
     };
 
     return (
-        <div className="signin-page-elegant">
+        <div className="signup-page-elegant">
             {/* Header / Nav */}
-            <motion.header
-                className="navbar"
-                initial={{ y: -50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.8 }}
-            >
-                <div className="navbar-left">
-                    <img src={logo} alt="DirAvenir Logo" className="logo" onClick={() => window.location.href = '/'} />
-                </div>
-                <div className="navbar-right">
-                    <a href="/" className="nav-button">Home</a>
-                    <a href="/orientation" className="nav-button">Orientation</a>
-                    <a href="/programs" className="nav-button">Programs</a>
-                    <a href="/about" className="nav-button">About US</a>
-                    <a href="/faq" className="nav-button">FAQ</a>
-                    <a href="/contact" className="nav-button">Contact US</a>
-                    <a href="/signin" className="nav-button">Log In</a>
-                    <a href="/signup" className="nav-button active">Create Account</a>
-                </div>
-            </motion.header>
+            <GlobalNavbar activePage="signup" />
 
             {/* Main content */}
             <main className="main-content-elegant">
@@ -227,7 +209,7 @@ export default function SignUp() {
 
                             <div className="form-options-elegant">
                                 <label className="checkbox-container-elegant">
-                                    <input type="checkbox" required />
+                                    <input type="checkbox" required name="terms" />
                                     <span className="checkmark-elegant"></span>
                                     <span className="checkbox-text">I agree to the Terms & Conditions</span>
                                 </label>

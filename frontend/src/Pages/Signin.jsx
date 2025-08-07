@@ -4,8 +4,13 @@ import { useAuth } from '../hooks/useAuth';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ReCAPTCHA from "react-google-recaptcha";
-import logo from '../assets/logo.png';
 import GoogleLogin from '../components/GoogleLogin';
+import logo from '../assets/logo.png';
+import illustration from '../assets/illustration.jpg';
+import { motion } from "framer-motion";
+import Footer from '../components/Footer';
+import "../Pages/SignUp.css";
+import GlobalNavbar from '../components/GlobalNavbar';
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
@@ -77,103 +82,150 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="signin-page-elegant">
       <ToastContainer position="top-right" autoClose={5000} />
-      <div className="flex min-h-screen">
-        {/* Left side: Form */}
-        <div className="w-full md:w-1/2 p-8 flex items-center justify-center">
-          <div className="w-full max-w-md">
-            <div className="text-center mb-8">
-              <img src={logo} alt="Logo" className="h-20 mx-auto mb-4" />
-              <h1 className="text-2xl font-bold text-gray-900">Connexion</h1>
-              <p className="text-gray-600">Connectez-vous pour accéder à votre compte</p>
+      
+      {/* Header / Nav */}
+      <GlobalNavbar activePage="signin" />
+
+      {/* Main content */}
+      <main className="main-content-elegant">
+        {/* Left side: form */}
+        <motion.div
+          className="form-section-elegant"
+          initial={{ x: -100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.3, duration: 1 }}
+        >
+          <div className="form-container-elegant">
+            <div className="form-header-elegant">
+              <motion.div
+                className="logo-circle"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.5, duration: 0.6, type: "spring" }}
+              >
+                <div className="logo-inner">
+                  <span>DA</span>
+                </div>
+              </motion.div>
+              <motion.h1
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.7, duration: 0.8 }}
+                className="welcome-title-elegant"
+              >
+                Welcome Back
+              </motion.h1>
+              <motion.p
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.9, duration: 0.8 }}
+                className="welcome-subtitle-elegant"
+              >
+                Sign in to continue your journey
+              </motion.p>
             </div>
 
-            {error && (
-              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-                {error}
+            <motion.form 
+              onSubmit={handleSubmit}
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 1.1, duration: 0.8 }}
+              className="login-form-elegant"
+            >
+              <div className="input-group-elegant">
+                <label className="input-label">Email Address</label>
+                <div className="input-wrapper-elegant">
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Entrez votre email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="form-input-elegant"
+                  />
+                  <div className="input-focus-border"></div>
+                </div>
               </div>
-            )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Adresse email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                  Mot de passe
-                </label>
-                <div className="relative mt-1 rounded-md shadow-sm">
+              <div className="input-group-elegant">
+                <label className="input-label">Password</label>
+                <div className="input-wrapper-elegant">
                   <input
                     type={showPassword ? "text" : "password"}
-                    id="password"
                     name="password"
+                    placeholder="Entrez votre mot de passe"
                     value={formData.password}
                     onChange={handleChange}
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 pr-10"
                     required
+                    className="form-input-elegant"
                   />
+                  <div className="input-focus-border"></div>
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
                     onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      position: 'absolute',
+                      right: '12px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: '16px'
+                    }}
                   >
                     {showPassword ? '👁️' : '👁️‍🗨️'}
                   </button>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
+              <div className="form-options-elegant">
+                <label className="checkbox-container-elegant">
                   <input
-                    id="remember-me"
-                    name="remember-me"
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    name="rememberMe"
                   />
-                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                    Se souvenir de moi
-                  </label>
-                </div>
-                <div className="text-sm">
-                  <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
-                    Mot de passe oublié ?
-                  </a>
-                </div>
+                  <span className="checkmark-elegant"></span>
+                  <span className="checkbox-text">Se souvenir de moi</span>
+                </label>
+                <a href="#" className="forgot-link-elegant">
+                  Mot de passe oublié ?
+                </a>
               </div>
 
-              {/* Désactiver reCAPTCHA dans le formulaire : */}
-              {/* <div style={{ margin: '16px 0' }}>
-                <ReCAPTCHA
-                  sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-                  onChange={handleRecaptchaVerify}
-                />
-              </div> */}
-
-              <div>
-                <button
-                  type="submit"
-                  disabled={loading || !recaptchaToken}
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+              {error && (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="error-message-elegant"
                 >
-                  {loading ? 'Connexion en cours...' : 'Se connecter'}
-                </button>
-              </div>
-            </form>
+                  <div className="error-icon">⚠️</div>
+                  <span>{error}</span>
+                </motion.div>
+              )}
+
+              <motion.button
+                type="submit"
+                className="login-btn-elegant"
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                disabled={loading}
+              >
+                <span className="btn-text-elegant">
+                  {loading ? "Connexion en cours..." : "Se connecter"}
+                </span>
+                <div className="btn-arrow">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+              </motion.button>
+            </motion.form>
 
             <div className="mt-6">
               <div className="relative">
@@ -181,7 +233,7 @@ export default function SignIn() {
                   <div className="w-full border-t border-gray-300"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-gray-50 text-gray-500">Ou continuez avec</span>
+                  <span className="px-2 bg-white text-gray-500">Ou continuez avec</span>
                 </div>
               </div>
               <div className="mt-6 grid grid-cols-1 gap-3">
@@ -189,47 +241,60 @@ export default function SignIn() {
               </div>
             </div>
 
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
-                Pas encore de compte ?{' '}
-                <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500">
-                  S'inscrire
-                </Link>
-              </p>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.4, duration: 0.8 }}
+              className="signup-prompt-elegant"
+            >
+              <p>Pas encore de compte ? <Link to="/signup" className="signup-link-elegant">S'inscrire</Link></p>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Right side: decorative content */}
+        <motion.div
+          className="decorative-section-elegant"
+          initial={{ x: 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.4, duration: 1 }}
+        >
+          <div className="decorative-content-elegant">
+            <div className="background-pattern">
+              <div className="pattern-circle circle-1"></div>
+              <div className="pattern-circle circle-2"></div>
+              <div className="pattern-circle circle-3"></div>
+              <div className="pattern-line line-1"></div>
+              <div className="pattern-line line-2"></div>
+            </div>
+            
+            <div className="main-illustration-elegant">
+              <div className="image-container">
+                <img src={illustration} alt="Education Illustration" />
+                <div className="image-overlay"></div>
+              </div>
+            </div>
+            
+            <div className="floating-elements-elegant">
+              <div className="floating-item item-1">
+                <div className="item-icon">🎓</div>
+                <span>Education</span>
+              </div>
+              <div className="floating-item item-2">
+                <div className="item-icon">🌟</div>
+                <span>Success</span>
+              </div>
+              <div className="floating-item item-3">
+                <div className="item-icon">🚀</div>
+                <span>Future</span>
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Right side: Illustration */}
-        <div className="hidden md:flex md:w-1/2 bg-blue-600 items-center justify-center p-12">
-          <div className="text-center text-white">
-            <h2 className="text-4xl font-bold mb-4">Bienvenue sur DirAvenir</h2>
-            <p className="text-xl">Votre plateforme d'orientation universitaire personnalisée</p>
-          </div>
-        </div>
-      </div>
+        </motion.div>
+      </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-sm text-gray-500">
-              © {new Date().getFullYear()} DirAvenir. Tous droits réservés.
-            </p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link to="/privacy" className="text-sm text-gray-500 hover:text-gray-700">
-                Confidentialité
-              </Link>
-              <Link to="/terms" className="text-sm text-gray-500 hover:text-gray-700">
-                Conditions d'utilisation
-              </Link>
-              <Link to="/contact" className="text-sm text-gray-500 hover:text-gray-700">
-                Contact
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

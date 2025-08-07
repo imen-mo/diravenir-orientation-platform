@@ -44,9 +44,9 @@ const Programs = () => {
     // Recherche par texte
     if (searchTerm) {
       filtered = filtered.filter(program =>
-        program.majorName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        program.universityName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        program.description?.toLowerCase().includes(searchTerm.toLowerCase())
+          program.majorName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          program.universityName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          program.description?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -109,123 +109,123 @@ const Programs = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
-      </div>
+        <div className="flex justify-center items-center h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+        </div>
     );
   }
 
   return (
-    <div className="programs-page">
-      {/* Header avec recherche et filtres */}
-      <div className="programs-header">
-        <div className="search-section">
-          <div className="search-container">
-            <svg className="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input
-              type="text"
-              placeholder="Search Program here"
-              value={searchTerm}
-              onChange={handleSearch}
-              className="search-input"
-            />
-          </div>
-        </div>
-
-        <div className="filters-section">
-          <div className="filter-buttons">
-            <button
-              className={`filter-btn ${activeFilter === 'ALL' ? 'active' : ''}`}
-              onClick={() => handleFilterChange('ALL')}
-            >
-              All
-            </button>
-            <button
-              className={`filter-btn ${activeFilter === 'OPENED' ? 'active' : ''}`}
-              onClick={() => handleFilterChange('OPENED')}
-            >
-              Opened
-            </button>
-            <button
-              className={`filter-btn ${activeFilter === 'COMING_SOON' ? 'active' : ''}`}
-              onClick={() => handleFilterChange('COMING_SOON')}
-            >
-              Coming Soon
-            </button>
-            <button
-              className={`filter-btn ${activeFilter === 'CLOSED' ? 'active' : ''}`}
-              onClick={() => handleFilterChange('CLOSED')}
-            >
-              Closed
-            </button>
-          </div>
-
-          <div className="sort-section">
-            <select
-              value={sortBy}
-              onChange={handleSortChange}
-              className="sort-select"
-            >
-              <option value="popular">Sort by Popular Programs</option>
-              <option value="name">Sort by Name</option>
-              <option value="university">Sort by University</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      {/* Grille des programmes */}
-      <div className="programs-grid">
-        {filteredPrograms.map((program) => (
-          <div key={program.id} className="program-card">
-            {/* Image du programme (rond) */}
-            <div className="program-image-container">
-              <img
-                src={program.programImage || getDefaultProgramImage(program.majorName)}
-                alt={program.majorName}
-                className="program-image"
-                onError={(e) => {
-                  e.target.src = getDefaultProgramImage(program.majorName);
-                }}
+      <div className="programs-page">
+        {/* Header avec recherche et filtres */}
+        <div className="programs-header">
+          <div className="search-section">
+            <div className="search-container">
+              <svg className="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                  type="text"
+                  placeholder="Search Program here"
+                  value={searchTerm}
+                  onChange={handleSearch}
+                  className="search-input"
               />
             </div>
+          </div>
 
-            {/* Nom du programme */}
-            <h3 className="program-name">{program.majorName}</h3>
-
-            {/* Description */}
-            <p className="program-description">{program.description}</p>
-
-            {/* Statut */}
-            <div className="program-status">
-              <span className={`status-badge ${getStatusColor(program.status)}`}>
-                {getStatusText(program.status)}
-              </span>
+          <div className="filters-section">
+            <div className="filter-buttons">
+              <button
+                  className={filter-btn ${activeFilter === 'ALL' ? 'active' : ''}}
+                  onClick={() => handleFilterChange('ALL')}
+              >
+                All
+              </button>
+              <button
+                  className={filter-btn ${activeFilter === 'OPENED' ? 'active' : ''}}
+                  onClick={() => handleFilterChange('OPENED')}
+              >
+                Opened
+              </button>
+              <button
+                  className={filter-btn ${activeFilter === 'COMING_SOON' ? 'active' : ''}}
+                  onClick={() => handleFilterChange('COMING_SOON')}
+              >
+                Coming Soon
+              </button>
+              <button
+                  className={filter-btn ${activeFilter === 'CLOSED' ? 'active' : ''}}
+                  onClick={() => handleFilterChange('CLOSED')}
+              >
+                Closed
+              </button>
             </div>
 
-            {/* Boutons d'action */}
-            <div className="program-actions">
-              <button className="btn-apply">
-                Apply Now
-              </button>
-              <button className="btn-view-more">
-                View More
-              </button>
+            <div className="sort-section">
+              <select
+                  value={sortBy}
+                  onChange={handleSortChange}
+                  className="sort-select"
+              >
+                <option value="popular">Sort by Popular Programs</option>
+                <option value="name">Sort by Name</option>
+                <option value="university">Sort by University</option>
+              </select>
             </div>
           </div>
-        ))}
-      </div>
-
-      {/* Message si aucun programme trouvé */}
-      {filteredPrograms.length === 0 && !loading && (
-        <div className="no-programs">
-          <p>Aucun programme trouvé avec les critères sélectionnés.</p>
         </div>
-      )}
-    </div>
+
+        {/* Grille des programmes */}
+        <div className="programs-grid">
+          {filteredPrograms.map((program) => (
+              <div key={program.id} className="program-card">
+                {/* Image du programme (rond) */}
+                <div className="program-image-container">
+                  <img
+                      src={program.programImage || getDefaultProgramImage(program.majorName)}
+                      alt={program.majorName}
+                      className="program-image"
+                      onError={(e) => {
+                        e.target.src = getDefaultProgramImage(program.majorName);
+                      }}
+                  />
+                </div>
+
+                {/* Nom du programme */}
+                <h3 className="program-name">{program.majorName}</h3>
+
+                {/* Description */}
+                <p className="program-description">{program.description}</p>
+
+                {/* Statut */}
+                <div className="program-status">
+              <span className={status-badge ${getStatusColor(program.status)}}>
+                {getStatusText(program.status)}
+              </span>
+                </div>
+
+                {/* Boutons d'action */}
+                <div className="program-actions">
+                  <button className="btn-apply">
+                    Apply Now
+                  </button>
+                  <button className="btn-view-more">
+                    View More
+                  </button>
+                </div>
+              </div>
+          ))}
+        </div>
+
+        {/* Message si aucun programme trouvé */}
+        {filteredPrograms.length === 0 && !loading && (
+            <div className="no-programs">
+              <p>Aucun programme trouvé avec les critères sélectionnés.</p>
+            </div>
+        )}
+      </div>
   );
 };
 
-export default Programs; 
+export default Programs;

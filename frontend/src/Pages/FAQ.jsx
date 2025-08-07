@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './FAQ.css';
+import '../Pages/SignUp.css';
 import logo from '../assets/logo.png';
 import { FaPlus, FaMinus } from 'react-icons/fa';
+import GlobalNavbar from '../components/GlobalNavbar';
 
 const QUESTIONS = [
     {
@@ -26,27 +28,6 @@ export default function FAQ() {
 
     return (
         <div className="faq-page">
-            {/* HEADER */}
-            <header className="faq-header">
-                <div className="faq-header-inner">
-                    <Link to="/"><img src={logo} alt="Diravenir" className="faq-logo"/></Link>
-                    <nav className="faq-nav">
-                        {["/", "/orientation", "/programs", "/about", "/faq", "/contact"].map((to,i) => (
-                            <Link
-                                key={to}
-                                to={to}
-                                className={pathname===to ? "active" : ""}
-                            >
-                                {["Home","Orientation","Programs","About US","FAQ","Contact US"][i]}
-                            </Link>
-                        ))}
-                    </nav>
-                    <div className="faq-actions">
-                        <Link to="/signin" className="btn-outline">Log in</Link>
-                        <Link to="/signup" className="btn-solid">Create Account</Link>
-                    </div>
-                </div>
-            </header>
 
             {/* PAGE TITLE */}
             <section className="faq-title">
