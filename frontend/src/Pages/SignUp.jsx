@@ -8,6 +8,7 @@ import API from "../services/api";
 import Footer from "../components/Footer";
 import ReCAPTCHA from "react-google-recaptcha";
 import { setToken } from "../utils/auth";
+import GoogleLogin from "../components/GoogleLogin";
 
 export default function SignUp() {
     const [formData, setFormData] = useState({
@@ -38,11 +39,6 @@ export default function SignUp() {
         setError("");
         setSuccess("");
 
-        if (!recaptchaToken) {
-            setError("Veuillez valider le reCAPTCHA.");
-            return;
-        }
-
         // Validation des mots de passe
         if (formData.password !== formData.confirmPassword) {
             setError("Les mots de passe ne correspondent pas");
@@ -60,8 +56,7 @@ export default function SignUp() {
                 nom: formData.nom,
                 prenom: formData.prenom,
                 email: formData.email,
-                password: formData.password,
-                recaptchaToken: recaptchaToken
+                password: formData.password
             });
             
             // Afficher le message de succès
@@ -260,7 +255,7 @@ export default function SignUp() {
                                 </motion.div>
                             )}
 
-                            <div style={{ margin: '16px 0' }}>
+                            {/* <div style={{ margin: '16px 0' }}>
                                 <ReCAPTCHA
                                     sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
                                     onChange={handleRecaptchaVerify}
@@ -269,14 +264,14 @@ export default function SignUp() {
                                         setError("Erreur de vérification reCAPTCHA. Veuillez réessayer.");
                                     }}
                                 />
-                            </div>
+                            </div> */}
 
                             <motion.button
                                 type="submit"
                                 className="login-btn-elegant"
                                 whileHover={{ scale: 1.02, y: -2 }}
                                 whileTap={{ scale: 0.98 }}
-                                disabled={loading || !recaptchaToken}
+                                disabled={loading}
                             >
                                 <span className="btn-text-elegant">
                                     {loading ? "Creating Account..." : "Create Account"}
@@ -299,15 +294,7 @@ export default function SignUp() {
                                 </div>
                             </div>
                             <div className="mt-6 grid grid-cols-1 gap-3">
-                                <a
-                                    href={`${import.meta.env.VITE_API_URL || 'http://localhost:8084'}/oauth2/authorization/google`}
-                                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                                >
-                                    <span className="sr-only">S'inscrire avec Google</span>
-                                    <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z" />
-                                    </svg>
-                                </a>
+                                <GoogleLogin className="w-full" variant="default" />
                             </div>
                         </div>
 
