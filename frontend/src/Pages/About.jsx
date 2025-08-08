@@ -11,6 +11,10 @@ import meryemImage from '../assets/meryemderni.png';
 import nadiaImage from '../assets/nadiaboukdir.png';
 import raniaImage from '../assets/raniajamoudi.png';
 import marouaneImage from '../assets/marouanezahid.png';
+import abdellahImage from '../assets/abdellahlouadi.png';
+import bouchraImage from '../assets/bouchyalyass.png';
+import hamzaImage from '../assets/hamzaaomari.png';
+import wiamImage from '../assets/wiamfarih.png';
 import { FaInstagram } from 'react-icons/fa';
 import Footer from '../components/Footer';
 import GlobalNavbar from '../components/GlobalNavbar';
@@ -274,51 +278,97 @@ const About = () => {
             <span className="team-our">Our</span> <span className="team-team">Team</span>
           </h2>
           
-          <div className="team-grid">
-            {/* Meryem Derni */}
-            <div className="team-member">
-              <a href="https://www.instagram.com/meryemderni?igsh=YmJuZGtweXB3NG00" target="_blank" rel="noopener noreferrer" className="team-member-link">
-                <div className="team-image-container">
-                  <img src={meryemImage} alt="Meryem Derni" className="team-image" />
-                  <div className="instagram-overlay">
-                    <FaInstagram className="instagram-icon" />
+          {/* Co Founders Row */}
+          <div className="co-founders-row">
+            <h3 className="co-founders-title">Co Founders</h3>
+            <div className="co-founders-container">
+              {/* Meryem Derni */}
+              <div className="team-member co-founder">
+                <a href="https://www.instagram.com/meryemderni?igsh=YmJuZGtweXB3NG00" target="_blank" rel="noopener noreferrer" className="team-member-link">
+                  <div className="team-image-container">
+                    <img src={meryemImage} alt="Meryem Derni" className="team-image" />
+                    <div className="instagram-overlay">
+                      <FaInstagram className="instagram-icon" />
+                    </div>
                   </div>
-                </div>
-              </a>
-              <h3 className="team-member-name">Meryem Derni</h3>
-              <p className="team-member-role">Head of Marketing & Sales</p>
-            </div>
+                </a>
+                <h3 className="team-member-name">Meryem Derni</h3>
+                <p className="team-member-role">Co Founder</p>
+              </div>
 
-            {/* Nadia Boukdir */}
-            <div className="team-member">
-              <a href="https://www.instagram.com/nadia.boukdir?igsh=aDJ1eXRjdWlkdmR1" target="_blank" rel="noopener noreferrer" className="team-member-link">
-                <div className="team-image-container">
-                  <img src={nadiaImage} alt="Nadia Boukdir" className="team-image" />
-                  <div className="instagram-overlay">
-                    <FaInstagram className="instagram-icon" />
+              {/* Nadia Boukdir */}
+              <div className="team-member co-founder">
+                <a href="https://www.instagram.com/nadia.boukdir?igsh=aDJ1eXRjdWlkdmR1" target="_blank" rel="noopener noreferrer" className="team-member-link">
+                  <div className="team-image-container">
+                    <img src={nadiaImage} alt="Nadia Boukdir" className="team-image" />
+                    <div className="instagram-overlay">
+                      <FaInstagram className="instagram-icon" />
+                    </div>
                   </div>
+                </a>
+                <h3 className="team-member-name">Nadia Boukdir</h3>
+                <p className="team-member-role">Co Founder</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Team Members Row */}
+          <div className="team-members-row">
+            <h3 className="team-members-title">Our Team</h3>
+            <div className="team-members-scroll">
+              {/* Abdellah Louadi */}
+              <div className="team-member">
+                <div className="team-image-container">
+                  <img src={abdellahImage} alt="Abdellah Louadi" className="team-image" />
                 </div>
-              </a>
-              <h3 className="team-member-name">Nadia Boukdir</h3>
-              <p className="team-member-role">Team Member</p>
-            </div>
-
-            {/* Rania Jamoudi */}
-            <div className="team-member">
-              <div className="team-image-container">
-                <img src={raniaImage} alt="Rania Jamoudi" className="team-image" />
+                <h3 className="team-member-name">Abdellah Louadi</h3>
+                <p className="team-member-role">Educational Consultant</p>
               </div>
-              <h3 className="team-member-name">Rania Jamoudi</h3>
-              <p className="team-member-role">Admission Coordinator</p>
-            </div>
 
-            {/* Marouane Zahid */}
-            <div className="team-member">
-              <div className="team-image-container">
-                <img src={marouaneImage} alt="Marouane Zahid" className="team-image" />
+              {/* Hamza Aomari */}
+              <div className="team-member">
+                <div className="team-image-container">
+                  <img src={hamzaImage} alt="Hamza Aomari" className="team-image" />
+                </div>
+                <h3 className="team-member-name">Hamza Aomari</h3>
+                <p className="team-member-role">Educational Consultant</p>
               </div>
-              <h3 className="team-member-name">Marouane Zahid</h3>
-              <p className="team-member-role">Sales Representative</p>
+
+              {/* Wiam Farih */}
+              <div className="team-member">
+                <div className="team-image-container">
+                  <img src={wiamImage} alt="Wiam Farih" className="team-image" />
+                </div>
+                <h3 className="team-member-name">Wiam Farih</h3>
+                <p className="team-member-role">Educational Consultant</p>
+              </div>
+
+              {/* Marouane Zahid */}
+              <div className="team-member">
+                <div className="team-image-container">
+                  <img src={marouaneImage} alt="Marouane Zahid" className="team-image" />
+                </div>
+                <h3 className="team-member-name">Marouane Zahid</h3>
+                <p className="team-member-role">Educational Consultant</p>
+              </div>
+
+              {/* Rania Jamoudi */}
+              <div className="team-member">
+                <div className="team-image-container">
+                  <img src={raniaImage} alt="Rania Jamoudi" className="team-image" />
+                </div>
+                <h3 className="team-member-name">Rania Jamoudi</h3>
+                <p className="team-member-role">Admission Coordinator</p>
+              </div>
+
+              {/* Bouchra Lyass */}
+              <div className="team-member">
+                <div className="team-image-container">
+                  <img src={bouchraImage} alt="Bouchra Lyass" className="team-image" />
+                </div>
+                <h3 className="team-member-name">Bouchra Lyass</h3>
+                <p className="team-member-role">Marketing Coordinator</p>
+              </div>
             </div>
           </div>
         </div>

@@ -36,12 +36,10 @@ const Programs = () => {
   const filterAndSortPrograms = () => {
     let filtered = programs;
 
-    // Filtrage par statut
     if (activeFilter !== 'ALL') {
       filtered = filtered.filter(program => program.status === activeFilter);
     }
 
-    // Recherche par texte
     if (searchTerm) {
       filtered = filtered.filter(program =>
           program.majorName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -50,10 +48,8 @@ const Programs = () => {
       );
     }
 
-    // Tri
     switch (sortBy) {
       case 'popular':
-        // Tri par popularité (ici on utilise l'ID comme exemple)
         filtered.sort((a, b) => a.id - b.id);
         break;
       case 'name':
@@ -137,25 +133,25 @@ const Programs = () => {
           <div className="filters-section">
             <div className="filter-buttons">
               <button
-                  className={filter-btn ${activeFilter === 'ALL' ? 'active' : ''}}
+                  className={`filter-btn ${activeFilter === 'ALL' ? 'active' : ''}`}
                   onClick={() => handleFilterChange('ALL')}
               >
                 All
               </button>
               <button
-                  className={filter-btn ${activeFilter === 'OPENED' ? 'active' : ''}}
+                  className={`filter-btn ${activeFilter === 'OPENED' ? 'active' : ''}`}
                   onClick={() => handleFilterChange('OPENED')}
               >
                 Opened
               </button>
               <button
-                  className={filter-btn ${activeFilter === 'COMING_SOON' ? 'active' : ''}}
+                  className={`filter-btn ${activeFilter === 'COMING_SOON' ? 'active' : ''}`}
                   onClick={() => handleFilterChange('COMING_SOON')}
               >
                 Coming Soon
               </button>
               <button
-                  className={filter-btn ${activeFilter === 'CLOSED' ? 'active' : ''}}
+                  className={`filter-btn ${activeFilter === 'CLOSED' ? 'active' : ''}`}
                   onClick={() => handleFilterChange('CLOSED')}
               >
                 Closed
@@ -180,7 +176,6 @@ const Programs = () => {
         <div className="programs-grid">
           {filteredPrograms.map((program) => (
               <div key={program.id} className="program-card">
-                {/* Image du programme (rond) */}
                 <div className="program-image-container">
                   <img
                       src={program.programImage || getDefaultProgramImage(program.majorName)}
@@ -192,20 +187,16 @@ const Programs = () => {
                   />
                 </div>
 
-                {/* Nom du programme */}
                 <h3 className="program-name">{program.majorName}</h3>
 
-                {/* Description */}
                 <p className="program-description">{program.description}</p>
 
-                {/* Statut */}
                 <div className="program-status">
-              <span className={status-badge ${getStatusColor(program.status)}}>
+              <span className={`status-badge ${getStatusColor(program.status)}`}>
                 {getStatusText(program.status)}
               </span>
                 </div>
 
-                {/* Boutons d'action */}
                 <div className="program-actions">
                   <button className="btn-apply">
                     Apply Now
@@ -218,7 +209,7 @@ const Programs = () => {
           ))}
         </div>
 
-        {/* Message si aucun programme trouvé */}
+        {/* Aucun programme trouvé */}
         {filteredPrograms.length === 0 && !loading && (
             <div className="no-programs">
               <p>Aucun programme trouvé avec les critères sélectionnés.</p>

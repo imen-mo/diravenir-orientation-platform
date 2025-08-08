@@ -1,7 +1,8 @@
 import axios from "axios";
 
 // ✅ Définir une seule fois l'URL de base
-const API_BASE = "http://localhost:8084";
+const API_BASE = "http://localhost:8084/api";
+
 
 // ✅ Créer une instance Axios réutilisable
 const API = axios.create({
