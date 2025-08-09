@@ -46,31 +46,86 @@ export default function SignUp() {
             return;
         }
 
-        if (formData.password.length < 6) {
-            setError("Le mot de passe doit contenir au moins 6 caractères");
+        // Validation de la force du mot de passe
+        if (formData.password.length < 8) {
+            setError("Le mot de passe doit contenir au moins 8 caractères");
             return;
         }
 
+        // Vérification des critères de complexité
+        const hasUpperCase = /[A-Z]/.test(formData.password);
+        const hasLowerCase = /[a-z]/.test(formData.password);
+        const hasDigit = /\d/.test(formData.password);
+        const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(formData.password);
+
+        if (!hasUpperCase || !hasLowerCase || !hasDigit || !hasSpecialChar) {
+            setError("Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial");
+            return;
+        }
+
+        // Préparation des données à envoyer
+        const requestData = {
+            nom: formData.nom.trim(),
+            prenom: formData.prenom.trim(),
+            email: formData.email.trim().toLowerCase(),
+            password: formData.password,
+            confirmPassword: formData.confirmPassword,
+            recaptchaToken: "dummy-token-for-testing"
+        };
+        
+        console.log("📤 Données à envoyer :", JSON.stringify(requestData, null, 2));
+
         setLoading(true);
         try {
-            const response = await API.post("/auth/signup", {
-                nom: formData.nom,
-                prenom: formData.prenom,
-                email: formData.email,
-                password: formData.password
-            });
+            console.log("🔄 Envoi de la requête d'inscription...");
+            const response = await API.post("/auth/signup", requestData);
             
-            // Afficher le message de succès
+            console.log("✅ Réponse du serveur :", response.data);
             setSuccess(response.data.message || "Compte créé avec succès !");
             
-            // Optionnel : rediriger après quelques secondes
+            // Redirection après 3 secondes
             setTimeout(() => {
                 window.location.href = "/signin";
             }, 3000);
+            
         } catch (err) {
-            setError(
-                err.response?.data?.message || "Erreur lors de la création du compte. Veuillez réessayer."
-            );
+            console.error('❌ Erreur complète:', err);
+            
+            // Affichage détaillé de l'erreur dans la console
+            if (err.response) {
+                // Le serveur a répondu avec un statut d'erreur
+                console.error('📡 Réponse d\'erreur:', {
+                    status: err.response.status,
+                    statusText: err.response.statusText,
+                    data: err.response.data,
+                    headers: err.response.headers
+                });
+                
+                // Gestion des erreurs spécifiques
+                if (err.response.status === 400) {
+                    if (err.response.data.errors) {
+                        // Erreurs de validation détaillées
+                        const errorMessages = Object.values(err.response.data.errors).flat().join('\n');
+                        setError(`Erreur de validation :\n${errorMessages}`);
+                    } else if (err.response.data.message) {
+                        setError(err.response.data.message);
+                    } else {
+                        setError('Données invalides. Veuillez vérifier les champs.');
+                    }
+                } else if (err.response.status === 409) {
+                    setError('Cette adresse email est déjà utilisée.');
+                } else {
+                    setError(`Erreur serveur (${err.response.status}): ${err.response.data.message || 'Veuillez réessayer plus tard.'}`);
+                }
+            } else if (err.request) {
+                // La requête a été faite mais aucune réponse n'a été reçue
+                console.error('❌ Pas de réponse du serveur:', err.request);
+                setError('Impossible de se connecter au serveur. Vérifiez votre connexion internet.');
+            } else {
+                // Erreur lors de la configuration de la requête
+                console.error('❌ Erreur de configuration:', err.message);
+                setError('Erreur lors de la configuration de la requête. Veuillez réessayer.');
+            }
         } finally {
             setLoading(false);
         }

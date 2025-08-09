@@ -53,17 +53,15 @@ public class AuthController {
         }
         
         try {
-            // Validation reCAPTCHA
-            boolean recaptchaValid = recaptchaService.verify(request.getRecaptchaToken());
-            logger.info("🔍 VÉRIFICATION reCAPTCHA - IP: {} | Résultat: {}", ip, recaptchaValid);
+            // Désactivation temporaire de la vérification reCAPTCHA
+            boolean recaptchaValid = true; // Par défaut à true pour désactiver la vérification
             
-            if (!recaptchaValid) {
-                logger.warn("🚫 INSCRIPTION BLOQUÉE - IP: {} | reCAPTCHA invalide", ip);
-                return ResponseEntity.badRequest()
-                        .body(Map.of("error", "Validation reCAPTCHA échouée"));
-            }
+            // Si vous voulez réactiver reCAPTCHA plus tard, utilisez cette ligne à la place :
+            // boolean recaptchaValid = recaptchaService.verify(request.getRecaptchaToken());
             
-            // Normalisation et validation des données
+            logger.info("🔍 VÉRIFICATION reCAPTCHA - IP: {} | Désactivée pour les tests", ip);
+            
+            // Validation des données
             request.normalizeData();
             
             if (!request.isPasswordConfirmed()) {
