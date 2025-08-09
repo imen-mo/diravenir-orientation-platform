@@ -7,7 +7,7 @@ import orientation from "../assets/orientation.png";
 import { fetchFilieres, fetchTemoignages, fetchDestinations, fetchPartenaires } from "../services/api";
 import Footer from "../components/Footer";
 import "./HomePage.css";
-
+{/* Icône de succès */}
 const HomePage = () => {
   const navigate = useNavigate();
   const [programs, setPrograms] = useState([]);

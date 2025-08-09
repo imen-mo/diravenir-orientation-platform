@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+{/* Icône de succès */}import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './FAQ.css';
 import '../Pages/SignUp.css';

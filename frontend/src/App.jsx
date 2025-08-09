@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+{/* Icône de succès */}import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

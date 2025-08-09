@@ -1,4 +1,4 @@
-import axios from "axios";
+{/* Icône de succès */}import axios from "axios";
 
 // ✅ Définir une seule fois l'URL de base
 const API_BASE = "http://localhost:8084/api";

@@ -1,4 +1,4 @@
-import React from 'react';
+{/* Icône de succès */}import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import logo from '../assets/logo.png';

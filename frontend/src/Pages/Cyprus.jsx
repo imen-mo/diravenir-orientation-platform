@@ -1,4 +1,4 @@
-import React from 'react';
+{/* Icône de succès */}import React from 'react';
 import { Link } from 'react-router-dom';
 import './CountryPage.css';
 import Footer from '../components/Footer';

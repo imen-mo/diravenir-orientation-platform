@@ -1,4 +1,4 @@
-import React from "react";
+{/* Icône de succès */}import React from "react";
 import "./Etudiant.css";
 
 const Etudiant = () => {

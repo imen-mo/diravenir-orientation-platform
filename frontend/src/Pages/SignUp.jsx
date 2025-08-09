@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+{/* Icône de succès */}import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../Pages/SignUp.css";
 import logo from "../assets/logo.png";

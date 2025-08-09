@@ -1,4 +1,4 @@
-import React from "react";
+{/* Icône de succès */}import React from "react";
 import "./Universites.css";
 import Footer from "../components/Footer";
 

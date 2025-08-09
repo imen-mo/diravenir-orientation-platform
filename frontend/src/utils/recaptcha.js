@@ -1,4 +1,4 @@
-/**
+{/* Icône de succès */}/**
  * Utilitaire pour gérer reCAPTCHA
  */
 

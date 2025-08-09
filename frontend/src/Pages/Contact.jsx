@@ -132,7 +132,7 @@ const Contact = () => {
 
   return (
     <div className="contact-page">
-
+        {/* Icône de succès */}
 
       <section className="contact-hero">
         <div className="contact-hero-content">
