@@ -4,6 +4,12 @@ import logo from "../assets/logo-colorfull.png";
 import illustration from "../assets/illustration.png";
 import meeting from "../assets/meeting.png";
 import orientation from "../assets/orientation.png";
+import chinaImage from "../assets/CHINA.jpg";
+import cyprusImage from "../assets/chypre.jpg";
+import romaniaImage from "../assets/ROMANIA.jpg";
+import bauImage from "../assets/BAU.png";
+import cyprusUniImage from "../assets/Cyprus International University.png";
+import finalUniImage from "../assets/Final International University.png";
 import { fetchFilieres, fetchTemoignages, fetchDestinations, fetchPartenaires } from "../services/api";
 import Footer from "../components/Footer";
 import "./HomePage.css";
@@ -229,6 +235,84 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* Work & Internships & Academic Schedule */}
+      <section className="opportunities-section">
+        <div className="opportunities-header">
+          <h2>Your Path to Success</h2>
+          <p>Discover amazing opportunities for work, internships, and academic excellence</p>
+        </div>
+        
+        <div className="opportunities-grid">
+          {/* Work & Internships Card */}
+          <div className="opportunity-card work-internship">
+            <div className="card-graphic">
+              <div className="floating-icons">
+                <span className="icon-1">💼</span>
+                <span className="icon-2">🌍</span>
+                <span className="icon-3">🚀</span>
+              </div>
+              <div className="main-icon">🎯</div>
+            </div>
+            <div className="card-content">
+              <h3>Work & Internships</h3>
+              <p>Gain real-world experience with international companies and organizations</p>
+              <div className="opportunity-features">
+                <div className="feature">
+                  <span className="feature-icon">🏢</span>
+                  <span>Corporate Partnerships</span>
+                </div>
+                <div className="feature">
+                  <span className="feature-icon">🌐</span>
+                  <span>Remote Opportunities</span>
+                </div>
+                <div className="feature">
+                  <span className="feature-icon">📈</span>
+                  <span>Career Growth</span>
+                </div>
+              </div>
+              <button className="opportunity-btn" onClick={() => navigate('/work-internships')}>
+                Explore Opportunities
+                <span className="btn-arrow">→</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Academic Schedule Card */}
+          <div className="opportunity-card academic-schedule">
+            <div className="card-graphic">
+              <div className="floating-icons">
+                <span className="icon-1">📚</span>
+                <span className="icon-2">🎓</span>
+                <span className="icon-3">⭐</span>
+              </div>
+              <div className="main-icon">📅</div>
+            </div>
+            <div className="card-content">
+              <h3>Academic Schedule</h3>
+              <p>Plan your educational journey with our comprehensive academic calendar</p>
+              <div className="opportunity-features">
+                <div className="feature">
+                  <span className="feature-icon">📖</span>
+                  <span>Course Planning</span>
+                </div>
+                <div className="feature">
+                  <span className="feature-icon">⏰</span>
+                  <span>Deadline Tracking</span>
+                </div>
+                <div className="feature">
+                  <span className="feature-icon">🎯</span>
+                  <span>Goal Setting</span>
+                </div>
+              </div>
+              <button className="opportunity-btn" onClick={() => navigate('/academic-schedule')}>
+                View Schedule
+                <span className="btn-arrow">→</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Popular Programs */}
       <section className="popular-programs">
         <h2>Popular Programs</h2>
@@ -238,6 +322,7 @@ const HomePage = () => {
               <div key={idx} className="program-card" onClick={() => navigate(`/programs/${prog.id}`)}>
                 <h3>{prog.nom}</h3>
                 <p>{prog.domaine}</p>
+                <div className="program-price">Starting from $2,500</div>
                 <button>Apply Now</button>
               </div>
             ))
@@ -247,22 +332,25 @@ const HomePage = () => {
               <div className="program-card">
                 <h3>Computer Science</h3>
                 <p>Technology & Engineering</p>
+                <div className="program-price">Starting from $2,500</div>
                 <button>Apply Now</button>
               </div>
               <div className="program-card">
                 <h3>Business Administration</h3>
                 <p>Business & Management</p>
+                <div className="program-price">Starting from $2,800</div>
                 <button>Apply Now</button>
               </div>
               <div className="program-card">
                 <h3>Data Science</h3>
                 <p>Technology & Analytics</p>
+                <div className="program-price">Starting from $3,200</div>
                 <button>Apply Now</button>
               </div>
             </>
           )}
         </div>
-        <button className="view-all-btn" onClick={() => navigate('/opportunities')}>View All Opportunities</button>
+        <button className="view-all-btn" onClick={() => navigate('/programs')}>View All Programs</button>
       </section>
 
       {/* Achievements */}
@@ -341,19 +429,43 @@ const HomePage = () => {
               </Link>
             ))
           ) : (
-            // Fallback destinations with navigation links
+            // Fallback destinations with background images and prices
             <>
-              <Link to="/destinations/china" className="destination-card" style={{ textDecoration: 'none' }}>
-                <h4>China</h4>
-                <p>Discover opportunities in one of the world's fastest-growing economies</p>
+              <Link to="/destinations/china" className="destination-card china-bg" style={{ textDecoration: 'none' }}>
+                <div className="destination-overlay">
+                  <h4>China</h4>
+                  <p>Discover opportunities in one of the world's fastest-growing economies</p>
+                  <div className="destination-price">Starting from $3,500</div>
+                  <div className="destination-features">
+                    <span>🏛️ Top Universities</span>
+                    <span>💰 Affordable Costs</span>
+                    <span>🌏 Cultural Experience</span>
+                  </div>
+                </div>
               </Link>
-              <Link to="/destinations/cyprus" className="destination-card" style={{ textDecoration: 'none' }}>
-                <h4>Cyprus</h4>
-                <p>Study in a beautiful Mediterranean island with excellent universities</p>
+              <Link to="/destinations/cyprus" className="destination-card cyprus-bg" style={{ textDecoration: 'none' }}>
+                <div className="destination-overlay">
+                  <h4>Cyprus</h4>
+                  <p>Study in a beautiful Mediterranean island with excellent universities</p>
+                  <div className="destination-price">Starting from $4,200</div>
+                  <div className="destination-features">
+                    <span>🏝️ Mediterranean Climate</span>
+                    <span>🎓 Quality Education</span>
+                    <span>🌊 Beautiful Beaches</span>
+                  </div>
+                </div>
               </Link>
-              <Link to="/destinations/romania" className="destination-card" style={{ textDecoration: 'none' }}>
-                <h4>Romania</h4>
-                <p>Experience European education with affordable costs</p>
+              <Link to="/destinations/romania" className="destination-card romania-bg" style={{ textDecoration: 'none' }}>
+                <div className="destination-overlay">
+                  <h4>Romania</h4>
+                  <p>Experience European education with affordable costs</p>
+                  <div className="destination-price">Starting from $2,800</div>
+                  <div className="destination-features">
+                    <span>🇪🇺 European Union</span>
+                    <span>💵 Low Cost of Living</span>
+                    <span>🏰 Rich History</span>
+                  </div>
+                </div>
               </Link>
             </>
           )}
@@ -374,23 +486,70 @@ const HomePage = () => {
               </div>
             ))
           ) : (
-            // Fallback partners
+            // Fallback partners with background images and website links
             <>
-              <div className="partner-card">
-                <h4>Final International University</h4>
-                <p>Leading university in Cyprus offering quality education</p>
-                <a href="#" target="_blank" rel="noopener noreferrer">Visit Website</a>
-              </div>
-              <div className="partner-card">
-                <h4>Cyprus International University</h4>
-                <p>International university with diverse programs</p>
-                <a href="#" target="_blank" rel="noopener noreferrer">Visit Website</a>
-              </div>
-              <div className="partner-card">
-                <h4>BAU</h4>
-                <p>Bahçeşehir University - Excellence in education</p>
-                <a href="#" target="_blank" rel="noopener noreferrer">Visit Website</a>
-              </div>
+              <a 
+                href="https://www.final.edu.tr" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="partner-card final-uni-bg"
+              >
+                <div className="partner-overlay">
+                  <h4>Final International University</h4>
+                  <p>Leading university in Cyprus offering quality education with modern facilities and international programs</p>
+                  <div className="partner-features">
+                    <span>🎓 Quality Education</span>
+                    <span>🌍 International Programs</span>
+                    <span>🏛️ Modern Campus</span>
+                  </div>
+                  <div className="partner-link">
+                    Visit Official Website
+                    <span className="link-arrow">→</span>
+                  </div>
+                </div>
+              </a>
+              
+              <a 
+                href="https://www.ciu.edu.tr" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="partner-card cyprus-uni-bg"
+              >
+                <div className="partner-overlay">
+                  <h4>Cyprus International University</h4>
+                  <p>International university with diverse programs and a multicultural learning environment</p>
+                  <div className="partner-features">
+                    <span>🌐 Multicultural</span>
+                    <span>📚 Diverse Programs</span>
+                    <span>🏝️ Cyprus Location</span>
+                  </div>
+                  <div className="partner-link">
+                    Visit Official Website
+                    <span className="link-arrow">→</span>
+                  </div>
+                </div>
+              </a>
+              
+              <a 
+                href="https://www.bau.edu.tr" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="partner-card bau-uni-bg"
+              >
+                <div className="partner-overlay">
+                  <h4>BAU - Bahçeşehir University</h4>
+                  <p>Excellence in education with innovative teaching methods and global partnerships</p>
+                  <div className="partner-features">
+                    <span>🚀 Innovation</span>
+                    <span>🤝 Global Partnerships</span>
+                    <span>⭐ Excellence</span>
+                  </div>
+                  <div className="partner-link">
+                    Visit Official Website
+                    <span className="link-arrow">→</span>
+                  </div>
+                </div>
+              </a>
             </>
           )}
         </div>

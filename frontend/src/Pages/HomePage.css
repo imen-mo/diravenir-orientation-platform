@@ -914,7 +914,7 @@ body {
 
 .destinations-list, .partners-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
 }
 
@@ -932,6 +932,35 @@ body {
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  min-height: 400px;
+}
+
+/* Background images for destinations */
+.destination-card.china-bg {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4)), url('../assets/CHINA.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.destination-card.cyprus-bg {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4)), url('../assets/chypre.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.destination-card.romania-bg {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4)), url('../assets/ROMANIA.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.destination-overlay {
+  position: relative;
+  z-index: 2;
+  color: white;
 }
 
 .destination-card:hover {
@@ -941,24 +970,57 @@ body {
 }
 
 .destination-card h4 {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  color: #4c1d95;
+  color: white;
   margin-bottom: 1rem;
   position: relative;
   z-index: 2;
   transition: color 0.3s ease;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .destination-card:hover h4 {
-  color: #7c3aed;
+  color: #fbbf24;
 }
 
 .destination-card p {
-  color: #6b7280;
+  color: #f3f4f6;
   margin-bottom: 1.5rem;
   position: relative;
   z-index: 2;
+  font-size: 1rem;
+  line-height: 1.6;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.destination-price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-bottom: 1.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  display: inline-block;
+  border: 2px solid #fbbf24;
+}
+
+.destination-features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.destination-features span {
+  background: rgba(139, 92, 246, 0.8);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .destination-card img {
@@ -994,51 +1056,257 @@ body {
   height: 8px;
 }
 
+/* Program price styling */
+.program-price {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #059669;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  padding: 0.5rem 1rem;
+  border-radius: 15px;
+  border: 2px solid #10b981;
+  display: inline-block;
+}
+
+/* Enhanced program cards */
+.program-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.1);
+  text-align: center;
+  border: 2px solid #f3e8ff;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.program-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #8b5cf6, #ec4899);
+  transition: all 0.3s ease;
+}
+
+.program-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(139, 92, 246, 0.2);
+  border-color: #8b5cf6;
+}
+
+.program-card:hover::before {
+  height: 6px;
+}
+
+.program-card h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #4c1d95;
+  margin-bottom: 0.5rem;
+}
+
+.program-card p {
+  color: #6b7280;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.program-card button {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.program-card button:hover {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+}
+
+/* ===== PARTNERS SECTION ENHANCED ===== */
 .partner-card {
   background: white;
   padding: 2.5rem;
   border-radius: 25px;
-  box-shadow: 0 10px 30px rgba(251, 191, 36, 0.15);
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.15);
   text-align: center;
-  border: 2px solid #fef3c7;
+  border: 2px solid #f3e8ff;
   transition: all 0.3s ease;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  min-height: 400px;
+}
+
+/* Background images for partner universities */
+.partner-card.final-uni-bg {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4)), url('../assets/Final International University.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.partner-card.cyprus-uni-bg {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4)), url('../assets/Cyprus International University.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.partner-card.bau-uni-bg {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4)), url('../assets/BAU.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.partner-overlay {
+  position: relative;
+  z-index: 2;
+  color: white;
 }
 
 .partner-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(251, 191, 36, 0.25);
-  border-color: #fbbf24;
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(139, 92, 246, 0.25);
+  border-color: #8b5cf6;
 }
 
 .partner-card h4 {
-  font-size: 1.25rem;
+  font-size: 1.6rem;
   font-weight: 700;
-  color: #4c1d95;
+  color: white;
   margin-bottom: 1rem;
+  position: relative;
+  z-index: 2;
+  transition: color 0.3s ease;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.partner-card:hover h4 {
+  color: #fbbf24;
 }
 
 .partner-card p {
-  color: #6b7280;
-  margin-bottom: 1rem;
+  color: #f3f4f6;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 2;
+  font-size: 1rem;
+  line-height: 1.6;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.partner-features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.partner-features span {
+  background: rgba(139, 92, 246, 0.8);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.partner-link {
+  background: rgba(251, 191, 36, 0.9);
+  color: #1f2937;
+  padding: 0.8rem 1.5rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 2px solid #fbbf24;
+  transition: all 0.3s ease;
+  text-shadow: none;
+}
+
+.partner-link:hover {
+  background: #fbbf24;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(251, 191, 36, 0.4);
+}
+
+.link-arrow {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.partner-card:hover .link-arrow {
+  transform: translateX(5px);
 }
 
 .partner-card img {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 1rem;
+  border-radius: 15px;
+  margin-bottom: 1.5rem;
+  border: 3px solid #f3e8ff;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
 }
 
-.partner-card a {
-  color: #8b5cf6;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease;
+.partner-card:hover img {
+  transform: scale(1.05) rotate(2deg);
+  border-color: #8b5cf6;
+  box-shadow: 0 5px 15px rgba(139, 92, 246, 0.2);
 }
 
-.partner-card a:hover {
-  color: #7c3aed;
+.partner-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #8b5cf6, #ec4899);
+  transition: all 0.3s ease;
+}
+
+.partner-card:hover::before {
+  height: 8px;
+}
+
+/* Responsive design for partners */
+@media (max-width: 768px) {
+  .partners-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .partner-card {
+    padding: 2rem;
+    min-height: 350px;
+  }
+  
+  .partner-card h4 {
+    font-size: 1.4rem;
+  }
 }
 
 /* ===== FOOTER ===== */
@@ -1328,4 +1596,252 @@ html {
 button:focus, input:focus, a:focus {
   outline: 2px solid #8b5cf6;
   outline-offset: 2px;
+} 
+
+/* ===== OPPORTUNITIES SECTION ===== */
+.opportunities-section {
+  padding: 5rem 5%;
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+}
+
+.opportunities-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.opportunities-header h2 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #4c1d95, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.opportunities-header p {
+  font-size: 1.2rem;
+  color: #64748b;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.opportunities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.opportunity-card {
+  background: white;
+  border-radius: 30px;
+  padding: 3rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.opportunity-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(236, 72, 153, 0.05));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.opportunity-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 30px 80px rgba(139, 92, 246, 0.2);
+  border-color: #8b5cf6;
+}
+
+.opportunity-card:hover::before {
+  opacity: 1;
+}
+
+.work-internship {
+  border-left: 5px solid #f59e0b;
+}
+
+.academic-schedule {
+  border-left: 5px solid #10b981;
+}
+
+.card-graphic {
+  position: relative;
+  height: 120px;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-icon {
+  font-size: 4rem;
+  z-index: 2;
+  position: relative;
+  animation: float 3s ease-in-out infinite;
+}
+
+.floating-icons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.floating-icons span {
+  position: absolute;
+  font-size: 1.5rem;
+  animation: float 4s ease-in-out infinite;
+}
+
+.icon-1 {
+  top: 20px;
+  left: 20px;
+  animation-delay: 0s;
+}
+
+.icon-2 {
+  top: 30px;
+  right: 30px;
+  animation-delay: 1s;
+}
+
+.icon-3 {
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation-delay: 2s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.card-content h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.card-content p {
+  color: #64748b;
+  text-align: center;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+.opportunity-features {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  background: #f8fafc;
+  border-radius: 15px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.feature:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: translateX(5px);
+}
+
+.feature-icon {
+  font-size: 1.2rem;
+  min-width: 30px;
+}
+
+.feature span:last-child {
+  font-weight: 500;
+  color: #475569;
+}
+
+.opportunity-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.opportunity-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.opportunity-btn:hover::before {
+  left: 100%;
+}
+
+.opportunity-btn:hover {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+}
+
+.btn-arrow {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.opportunity-btn:hover .btn-arrow {
+  transform: translateX(5px);
+}
+
+/* Responsive design for opportunities */
+@media (max-width: 768px) {
+  .opportunities-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .opportunity-card {
+    padding: 2rem;
+  }
+  
+  .opportunities-header h2 {
+    font-size: 2.2rem;
+  }
 } 
