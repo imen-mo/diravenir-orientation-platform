@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { Link } from 'react-router-dom';
 import './Settings.css';
@@ -18,6 +18,24 @@ export default function Settings() {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
     const [showEmailChange, setShowEmailChange] = useState(false);
+    const [photoFile, setPhotoFile] = useState(null);
+    const [photoPreview, setPhotoPreview] = useState(user?.photoProfil || '');
+    const [uploadingPhoto, setUploadingPhoto] = useState(false);
+
+    // Mettre à jour le formData quand l'utilisateur change
+    useEffect(() => {
+        if (user) {
+            setFormData({
+                nom: user.nom || '',
+                prenom: user.prenom || '',
+                telephone: user.telephone || '',
+                languePreferee: user.languePreferee || 'Français',
+                photoProfil: user.photoProfil || '',
+                email: user.email || ''
+            });
+            setPhotoPreview(user.photoProfil || '');
+        }
+    }, [user]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -27,22 +45,105 @@ export default function Settings() {
         }));
     };
 
+    const handlePhotoChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Vérifier le type de fichier
+            if (!file.type.startsWith('image/')) {
+                setMessage({ type: 'error', text: 'Veuillez sélectionner un fichier image valide.' });
+                return;
+            }
+
+            // Vérifier la taille (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                setMessage({ type: 'error', text: 'Le fichier est trop volumineux (max 5MB).' });
+                return;
+            }
+
+            setPhotoFile(file);
+            
+            // Créer un aperçu
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setPhotoPreview(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const uploadPhoto = async () => {
+        if (!photoFile) return null;
+
+        setUploadingPhoto(true);
+        try {
+            const formData = new FormData();
+            formData.append('file', photoFile);
+
+            const response = await fetch('http://localhost:8084/api/upload/profile-photo', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error('Erreur lors de l\'upload de la photo');
+            }
+
+            const photoUrl = await response.text();
+            setMessage({ type: 'success', text: 'Photo uploadée avec succès ! 📸' });
+            return photoUrl;
+
+        } catch (error) {
+            console.error('Erreur upload photo:', error);
+            setMessage({ type: 'error', text: 'Erreur lors de l\'upload de la photo. Veuillez réessayer.' });
+            return null;
+        } finally {
+            setUploadingPhoto(false);
+        }
+    };
+
     const handleProfileUpdate = async (e) => {
         e.preventDefault();
         setLoading(true);
         setMessage({ type: '', text: '' });
 
         try {
-            // Préparer les données à mettre à jour (exclure l'email)
+            let finalPhotoUrl = formData.photoProfil;
+
+            // Si une nouvelle photo a été sélectionnée, l'uploader d'abord
+            if (photoFile) {
+                const uploadedPhotoUrl = await uploadPhoto();
+                if (uploadedPhotoUrl) {
+                    finalPhotoUrl = uploadedPhotoUrl;
+                } else {
+                    setLoading(false);
+                    return; // Arrêter si l'upload a échoué
+                }
+            }
+
+            // Préparer les données à mettre à jour
             const updateData = {
                 nom: formData.nom,
                 prenom: formData.prenom,
                 telephone: formData.telephone,
                 languePreferee: formData.languePreferee,
-                photoProfil: formData.photoProfil
+                photoProfil: finalPhotoUrl
             };
 
-            await updateProfile(updateData);
+            const updatedProfile = await updateProfile(updateData);
+            
+            // Mettre à jour le formData local avec les nouvelles données
+            setFormData(prev => ({
+                ...prev,
+                ...updatedProfile
+            }));
+            
+            // Réinitialiser la photo
+            setPhotoFile(null);
+            setPhotoPreview(updatedProfile.photoProfil || '');
+            
             setMessage({ type: 'success', text: 'Profil mis à jour avec succès ! 🎉' });
             
             // Effacer le message après 5 secondes
@@ -235,17 +336,45 @@ export default function Settings() {
                                 <div className="form-group full-width">
                                     <label htmlFor="photoProfil">
                                         <span className="label-icon">📷</span>
-                                        URL de la photo de profil
+                                        Photo de profil
                                     </label>
-                                    <input
-                                        type="url"
-                                        id="photoProfil"
-                                        name="photoProfil"
-                                        value={formData.photoProfil}
-                                        onChange={handleInputChange}
-                                        className="form-input"
-                                        placeholder="https://exemple.com/photo.jpg"
-                                    />
+                                    
+                                    {/* Aperçu de la photo actuelle */}
+                                    {photoPreview && (
+                                        <div className="photo-preview">
+                                            <img 
+                                                src={photoPreview} 
+                                                alt="Photo de profil actuelle" 
+                                                className="current-photo"
+                                            />
+                                        </div>
+                                    )}
+                                    
+                                    {/* Input de fichier */}
+                                    <div className="file-upload-container">
+                                        <input
+                                            type="file"
+                                            id="photoProfil"
+                                            name="photoProfil"
+                                            accept="image/*"
+                                            onChange={handlePhotoChange}
+                                            className="file-input"
+                                            disabled={uploadingPhoto}
+                                        />
+                                        <label htmlFor="photoProfil" className="file-upload-label">
+                                            {uploadingPhoto ? (
+                                                <span className="uploading-text">⏳ Upload en cours...</span>
+                                            ) : photoFile ? (
+                                                <span className="file-selected">📁 {photoFile.name}</span>
+                                            ) : (
+                                                <span className="upload-text">📁 Choisir une photo</span>
+                                            )}
+                                        </label>
+                                    </div>
+                                    
+                                    <p className="upload-hint">
+                                        Formats acceptés: JPG, PNG, GIF. Taille max: 5MB
+                                    </p>
                                 </div>
                             </div>
 
@@ -367,59 +496,7 @@ export default function Settings() {
                         </div>
                     </div>
 
-                    {/* Carte des préférences de sécurité */}
-                    <div className="settings-card security-settings-card">
-                        <div className="card-header">
-                            <div className="card-header-content">
-                                <span className="card-icon">🔒</span>
-                                <h2>Sécurité et Confidentialité</h2>
-                            </div>
-                            <div className="card-header-decoration">
-                                <div className="decoration-line"></div>
-                            </div>
-                        </div>
 
-                        <div className="security-options">
-                            <div className="security-option">
-                                <div className="option-info">
-                                    <span className="option-icon">🔐</span>
-                                    <div className="option-details">
-                                        <h3>Authentification à deux facteurs</h3>
-                                        <p>Ajoutez une couche de sécurité supplémentaire à votre compte</p>
-                                    </div>
-                                </div>
-                                <button className="option-toggle disabled">
-                                    <span className="toggle-text">Bientôt disponible</span>
-                                </button>
-                            </div>
-
-                            <div className="security-option">
-                                <div className="option-info">
-                                    <span className="option-icon">📱</span>
-                                    <div className="option-details">
-                                        <h3>Notifications de connexion</h3>
-                                        <p>Recevez une alerte lors de nouvelles connexions</p>
-                                    </div>
-                                </div>
-                                <button className="option-toggle disabled">
-                                    <span className="toggle-text">Bientôt disponible</span>
-                                </button>
-                            </div>
-
-                            <div className="security-option">
-                                <div className="option-info">
-                                    <span className="option-icon">📊</span>
-                                    <div className="option-details">
-                                        <h3>Partage de données</h3>
-                                        <p>Contrôlez comment vos données sont utilisées</p>
-                                    </div>
-                                </div>
-                                <button className="option-toggle disabled">
-                                    <span className="toggle-text">Bientôt disponible</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
 
                     {/* Carte des actions rapides */}
                     <div className="settings-card actions-settings-card">
@@ -437,11 +514,6 @@ export default function Settings() {
                             <Link to="/profile" className="quick-action-btn">
                                 <span className="action-icon">👤</span>
                                 <span className="action-text">Voir mon profil</span>
-                            </Link>
-                            
-                            <Link to="/dashboard" className="quick-action-btn">
-                                <span className="action-icon">📊</span>
-                                <span className="action-text">Tableau de bord</span>
                             </Link>
                             
                             <Link to="/contact" className="quick-action-btn">

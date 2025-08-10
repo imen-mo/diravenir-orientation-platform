@@ -76,7 +76,16 @@ export const AuthProvider = ({ children }) => {
     try {
       const updatedProfile = await userService.updateProfile(profileData);
       setUser(updatedProfile);
-      return updatedProfile;
+      
+      // Rafraîchir les données utilisateur depuis le serveur
+      try {
+        const freshProfile = await userService.getProfile();
+        setUser(freshProfile);
+        return freshProfile;
+      } catch (refreshError) {
+        console.warn('Erreur lors du rafraîchissement du profil:', refreshError);
+        return updatedProfile;
+      }
     } catch (error) {
       throw error;
     }
