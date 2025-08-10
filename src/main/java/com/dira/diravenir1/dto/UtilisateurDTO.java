@@ -10,6 +10,7 @@ public class UtilisateurDTO {
     private String email;
     private String motDePasse;
     private Role role;
+    private String languePreferee;
     
     // ======================
     // === NOUVEAUX CHAMPS ===
@@ -60,6 +61,13 @@ public class UtilisateurDTO {
     }
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getLanguePreferee() {
+        return languePreferee;
+    }
+    public void setLanguePreferee(String languePreferee) {
+        this.languePreferee = languePreferee;
     }
 
     // ======================

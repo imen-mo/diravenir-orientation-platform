@@ -1,4 +1,5 @@
 {/* Icône de succès */}import axios from "axios";
+import { getToken } from "../utils/auth";
 
 // ✅ Définir une seule fois l'URL de base
 const API_BASE = "http://localhost:8084/api";
@@ -13,6 +14,11 @@ const API = axios.create({
 // ✅ Intercepteur pour les requêtes
 API.interceptors.request.use(
   (config) => {
+    const token = getToken();
+    if (token) {
+      config.headers = config.headers || {};
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     console.log(`🚀 Requête API: ${config.method?.toUpperCase()} ${config.url}`);
     return config;
   },
@@ -75,9 +81,17 @@ export const fetchPartenaires = async () => {
 
 // Services API
 export const authService = {
-  login: async (email, password) => {
+  login: async (email, password, recaptchaToken) => {
     try {
-      const response = await API.post('/auth/signin', { email, password });
+      const response = await API.post('/auth/signin', { email, password, recaptchaToken });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  logout: async () => {
+    try {
+      const response = await API.post('/auth/logout');
       return response.data;
     } catch (error) {
       throw error;

@@ -14,6 +14,7 @@ public class UtilisateurMapper {
         dto.setEmail(utilisateur.getEmail());
         dto.setMotDePasse(null); // Ne pas exposer le mot de passe
         dto.setRole(utilisateur.getRole());
+        dto.setLanguePreferee(utilisateur.getLanguePreferee());
         
         // ======================
         // === NOUVEAUX CHAMPS ===
@@ -38,6 +39,7 @@ public class UtilisateurMapper {
         utilisateur.setEmail(dto.getEmail());
         // Le mot de passe sera géré séparément avec encodage
         utilisateur.setRole(dto.getRole());
+        utilisateur.setLanguePreferee(dto.getLanguePreferee());
         
         // ======================
         // === NOUVEAUX CHAMPS ===

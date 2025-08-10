@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext, useContext } from 'react';
-import { authService } from '../services/api';
+import { authService, userService } from '../services/api';
 import { setToken, removeToken, getToken } from '../utils/auth';
 
 // Créer le contexte d'authentification
@@ -16,9 +16,8 @@ export const AuthProvider = ({ children }) => {
       const token = getToken();
       if (token) {
         try {
-          // Vous pouvez ajouter une requête pour récupérer les infos utilisateur
-          // const response = await authService.getProfile();
-          // setUser(response.data);
+          const profile = await userService.getProfile();
+          setUser(profile);
         } catch (err) {
           console.error('Erreur de vérification du token:', err);
           removeToken();
@@ -30,13 +29,18 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (email, password, recaptchaToken) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await authService.login(email, password);
+      const response = await authService.login(email, password, recaptchaToken);
       setToken(response.token);
-      // setUser(response.user); // Décommentez quand votre API renvoie les données utilisateur
+      try {
+        const profile = await userService.getProfile();
+        setUser(profile);
+      } catch (e) {
+        // profil non indispensable pour compléter la connexion
+      }
       return response;
     } catch (err) {
       const errorMessage = err.response?.data?.message || 'Échec de la connexion';
@@ -62,9 +66,20 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try { await authService.logout(); } catch (_) {}
     removeToken();
     setUser(null);
+  };
+
+  const updateProfile = async (profileData) => {
+    try {
+      const updatedProfile = await userService.updateProfile(profileData);
+      setUser(updatedProfile);
+      return updatedProfile;
+    } catch (error) {
+      throw error;
+    }
   };
 
   const value = {
@@ -74,6 +89,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    updateProfile,
     isAuthenticated: !!getToken(),
   };
 

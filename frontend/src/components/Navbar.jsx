@@ -18,8 +18,8 @@ export default function Navbar() {
     const { isAuthenticated, user, logout } = useAuth();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        await logout();
         setShowProfileMenu(false);
     };
 

@@ -1,0 +1,684 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+.settings-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Header avec gradient */
+.settings-header {
+    background: linear-gradient(135deg, #40004C 0%, #5c1b7e 50%, #7c3aed 100%);
+    padding: 4rem 2rem 6rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.settings-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="settings-grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23settings-grain)"/></svg>');
+    opacity: 0.3;
+}
+
+.settings-header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.settings-header-text {
+    color: white;
+    max-width: 600px;
+}
+
+.settings-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.settings-emoji {
+    font-size: 4rem;
+    animation: spin 4s linear infinite;
+}
+
+.settings-subtitle {
+    font-size: 1.25rem;
+    font-weight: 400;
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+.settings-header-decoration {
+    position: relative;
+}
+
+.floating-gears {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.gear {
+    position: absolute;
+    font-size: 2rem;
+    animation: spin 6s linear infinite;
+}
+
+.gear-1 {
+    top: 20px;
+    left: 20px;
+    animation-delay: 0s;
+}
+
+.gear-2 {
+    top: 80px;
+    right: 40px;
+    animation-delay: 2s;
+    animation-direction: reverse;
+}
+
+.gear-3 {
+    bottom: 40px;
+    left: 60px;
+    animation-delay: 4s;
+}
+
+/* Contenu principal */
+.settings-content {
+    max-width: 1200px;
+    margin: -3rem auto 0;
+    padding: 0 2rem 4rem;
+    position: relative;
+    z-index: 3;
+}
+
+/* Message de notification */
+.message-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    font-weight: 500;
+    animation: slideInDown 0.5s ease;
+}
+
+.message-banner.success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+    border: 2px solid #c3e6cb;
+}
+
+.message-banner.error {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+    border: 2px solid #f5c6cb;
+}
+
+.message-icon {
+    font-size: 1.25rem;
+}
+
+.message-text {
+    flex: 1;
+}
+
+/* Section principale des paramètres */
+.settings-main-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Cartes de paramètres */
+.settings-card {
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    padding: 2.5rem;
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.settings-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #40004C, #7c3aed, #FFC300);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.settings-card:hover::before {
+    transform: scaleX(1);
+}
+
+.settings-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+}
+
+/* En-tête des cartes */
+.card-header {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.card-header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.card-icon {
+    font-size: 2rem;
+    background: linear-gradient(135deg, #40004C, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.card-header h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #40004C;
+    margin: 0;
+}
+
+.card-header-decoration {
+    position: relative;
+}
+
+.decoration-line {
+    height: 3px;
+    background: linear-gradient(90deg, #40004C, #7c3aed, #FFC300);
+    border-radius: 2px;
+    width: 100%;
+}
+
+/* Formulaires */
+.settings-form {
+    width: 100%;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #40004C;
+    font-size: 0.95rem;
+}
+
+.label-icon {
+    font-size: 1.1rem;
+}
+
+.form-input,
+.form-select {
+    padding: 0.875rem 1rem;
+    border: 2px solid rgba(64, 0, 76, 0.1);
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-input:focus,
+.form-select:focus {
+    outline: none;
+    border-color: #40004C;
+    box-shadow: 0 0 0 3px rgba(64, 0, 76, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-input::placeholder {
+    color: #999;
+}
+
+.form-select {
+    cursor: pointer;
+}
+
+/* Boutons d'action */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.save-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: linear-gradient(135deg, #40004C, #7c3aed);
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(64, 0, 76, 0.3);
+    font-family: inherit;
+}
+
+.save-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(64, 0, 76, 0.4);
+}
+
+.save-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.btn-icon {
+    font-size: 1.1rem;
+}
+
+.loading-dots {
+    animation: pulse 1.5s infinite;
+}
+
+/* Section de changement d'email */
+.email-settings-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid rgba(64, 0, 76, 0.1);
+}
+
+.current-email-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.email-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, rgba(64, 0, 76, 0.05), rgba(124, 58, 237, 0.05));
+    border-radius: 12px;
+    border: 1px solid rgba(64, 0, 76, 0.1);
+}
+
+.email-label {
+    font-weight: 600;
+    color: #40004C;
+}
+
+.email-value {
+    font-family: 'Courier New', monospace;
+    color: #666;
+    background: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    border: 1px solid rgba(64, 0, 76, 0.1);
+}
+
+.change-email-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #FFC300, #f97316);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 195, 0, 0.3);
+    font-family: inherit;
+    align-self: flex-start;
+}
+
+.change-email-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 195, 0, 0.4);
+}
+
+.email-change-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(64, 0, 76, 0.02);
+    border-radius: 16px;
+    border: 1px solid rgba(64, 0, 76, 0.1);
+}
+
+.email-form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.confirm-email-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    font-family: inherit;
+}
+
+.confirm-email-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+}
+
+.cancel-email-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #dc3545, #fd7e14);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+    font-family: inherit;
+}
+
+.cancel-email-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+}
+
+/* Section de sécurité */
+.security-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.security-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: rgba(64, 0, 76, 0.02);
+    border-radius: 16px;
+    border: 1px solid rgba(64, 0, 76, 0.1);
+    transition: all 0.3s ease;
+}
+
+.security-option:hover {
+    background: rgba(64, 0, 76, 0.05);
+    border-color: rgba(64, 0, 76, 0.2);
+}
+
+.option-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.option-icon {
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, #40004C, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.option-details h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #40004C;
+    margin: 0 0 0.25rem 0;
+}
+
+.option-details p {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.option-toggle {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.option-toggle.disabled {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+    cursor: not-allowed;
+}
+
+.toggle-text {
+    font-size: 0.8rem;
+}
+
+/* Actions rapides */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.quick-action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(64, 0, 76, 0.05), rgba(124, 58, 237, 0.05));
+    border-radius: 16px;
+    text-decoration: none;
+    color: inherit;
+    border: 2px solid rgba(64, 0, 76, 0.1);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.quick-action-btn:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, rgba(64, 0, 76, 0.1), rgba(124, 58, 237, 0.1));
+    border-color: rgba(64, 0, 76, 0.2);
+    box-shadow: 0 10px 25px rgba(64, 0, 76, 0.1);
+}
+
+.action-icon {
+    font-size: 2rem;
+}
+
+.action-text {
+    font-weight: 600;
+    color: #40004C;
+    font-size: 0.9rem;
+}
+
+/* Loading state */
+.settings-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    gap: 1rem;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(64, 0, 76, 0.1);
+    border-left: 4px solid #40004C;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.settings-loading p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* Animations */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .settings-header {
+        padding: 3rem 1rem 5rem;
+    }
+    
+    .settings-title {
+        font-size: 2.5rem;
+    }
+    
+    .settings-emoji {
+        font-size: 3rem;
+    }
+    
+    .settings-content {
+        padding: 0 1rem 3rem;
+        margin-top: -2rem;
+    }
+    
+    .settings-card {
+        padding: 1.5rem;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .email-display {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .email-form-actions {
+        flex-direction: column;
+    }
+    
+    .security-option {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+    
+    .floating-gears {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .settings-title {
+        font-size: 2rem;
+    }
+    
+    .settings-emoji {
+        font-size: 2.5rem;
+    }
+    
+    .card-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .form-input,
+    .form-select {
+        padding: 0.75rem 0.875rem;
+    }
+    
+    .save-btn {
+        padding: 0.875rem 1.5rem;
+        font-size: 0.9rem;
+    }
+}

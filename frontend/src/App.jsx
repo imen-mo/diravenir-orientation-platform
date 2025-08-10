@@ -39,6 +39,13 @@ const StudentDashboard = lazy(() => import("./Pages/StudentDashboard"));
 const AdminDashboard = lazy(() => import("./Pages/AdminDashboard"));
 const Programs = lazy(() => import("./Pages/Programs"));
 const ProgramDetail = lazy(() => import("./Pages/ProgramDetail"));
+const Profile = lazy(() => import("./Pages/Profile"));
+const Settings = lazy(() => import("./Pages/Settings"));
+
+// Country Pages
+const China = lazy(() => import("./Pages/China"));
+const Cyprus = lazy(() => import("./Pages/Cyprus"));
+const Romania = lazy(() => import("./Pages/Romania"));
 
 // Layouts
 const MainLayout = () => (
@@ -89,12 +96,18 @@ function App() {
                                 <Route path="/universites" element={<Universites />} />
                                 <Route path="/programs" element={<Programs />} />
                                 <Route path="/programs/:id" element={<ProgramDetail />} />
+                                
+                                {/* Country Routes */}
+                                <Route path="/destinations/china" element={<China />} />
+                                <Route path="/destinations/cyprus" element={<Cyprus />} />
+                                <Route path="/destinations/romania" element={<Romania />} />
 
                                 {/* Protected */}
                                 <Route element={<PrivateRoute />}>
                                     <Route path="/dashboard" element={<StudentDashboard />} />
                                     <Route path="/admin" element={<AdminDashboard />} />
-                                    <Route path="/profile" element={<div>Mon profil</div>} />
+                                    <Route path="/profile" element={<Profile />} />
+                                    <Route path="/settings" element={<Settings />} />
                                 </Route>
 
                                 <Route path="*" element={<NotFound />} />
