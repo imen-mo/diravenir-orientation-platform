@@ -235,84 +235,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Work & Internships & Academic Schedule */}
-      <section className="opportunities-section">
-        <div className="opportunities-header">
-          <h2>Your Path to Success</h2>
-          <p>Discover amazing opportunities for work, internships, and academic excellence</p>
-        </div>
-        
-        <div className="opportunities-grid">
-          {/* Work & Internships Card */}
-          <div className="opportunity-card work-internship">
-            <div className="card-graphic">
-              <div className="floating-icons">
-                <span className="icon-1">💼</span>
-                <span className="icon-2">🌍</span>
-                <span className="icon-3">🚀</span>
-              </div>
-              <div className="main-icon">🎯</div>
-            </div>
-            <div className="card-content">
-              <h3>Work & Internships</h3>
-              <p>Gain real-world experience with international companies and organizations</p>
-              <div className="opportunity-features">
-                <div className="feature">
-                  <span className="feature-icon">🏢</span>
-                  <span>Corporate Partnerships</span>
-                </div>
-                <div className="feature">
-                  <span className="feature-icon">🌐</span>
-                  <span>Remote Opportunities</span>
-                </div>
-                <div className="feature">
-                  <span className="feature-icon">📈</span>
-                  <span>Career Growth</span>
-                </div>
-              </div>
-              <button className="opportunity-btn" onClick={() => navigate('/work-internships')}>
-                Explore Opportunities
-                <span className="btn-arrow">→</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Academic Schedule Card */}
-          <div className="opportunity-card academic-schedule">
-            <div className="card-graphic">
-              <div className="floating-icons">
-                <span className="icon-1">📚</span>
-                <span className="icon-2">🎓</span>
-                <span className="icon-3">⭐</span>
-              </div>
-              <div className="main-icon">📅</div>
-            </div>
-            <div className="card-content">
-              <h3>Academic Schedule</h3>
-              <p>Plan your educational journey with our comprehensive academic calendar</p>
-              <div className="opportunity-features">
-                <div className="feature">
-                  <span className="feature-icon">📖</span>
-                  <span>Course Planning</span>
-                </div>
-                <div className="feature">
-                  <span className="feature-icon">⏰</span>
-                  <span>Deadline Tracking</span>
-                </div>
-                <div className="feature">
-                  <span className="feature-icon">🎯</span>
-                  <span>Goal Setting</span>
-                </div>
-              </div>
-              <button className="opportunity-btn" onClick={() => navigate('/academic-schedule')}>
-                View Schedule
-                <span className="btn-arrow">→</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Popular Programs */}
       <section className="popular-programs">
         <h2>Popular Programs</h2>
@@ -433,8 +355,8 @@ const HomePage = () => {
             <>
               <Link to="/destinations/china" className="destination-card china-bg" style={{ textDecoration: 'none' }}>
                 <div className="destination-overlay">
-                  <h4>China</h4>
-                  <p>Discover opportunities in one of the world's fastest-growing economies</p>
+                <h4>China</h4>
+                <p>Discover opportunities in one of the world's fastest-growing economies</p>
                   <div className="destination-price">Starting from $3,500</div>
                   <div className="destination-features">
                     <span>🏛️ Top Universities</span>
@@ -445,8 +367,8 @@ const HomePage = () => {
               </Link>
               <Link to="/destinations/cyprus" className="destination-card cyprus-bg" style={{ textDecoration: 'none' }}>
                 <div className="destination-overlay">
-                  <h4>Cyprus</h4>
-                  <p>Study in a beautiful Mediterranean island with excellent universities</p>
+                <h4>Cyprus</h4>
+                <p>Study in a beautiful Mediterranean island with excellent universities</p>
                   <div className="destination-price">Starting from $4,200</div>
                   <div className="destination-features">
                     <span>🏝️ Mediterranean Climate</span>
@@ -457,8 +379,8 @@ const HomePage = () => {
               </Link>
               <Link to="/destinations/romania" className="destination-card romania-bg" style={{ textDecoration: 'none' }}>
                 <div className="destination-overlay">
-                  <h4>Romania</h4>
-                  <p>Experience European education with affordable costs</p>
+                <h4>Romania</h4>
+                <p>Experience European education with affordable costs</p>
                   <div className="destination-price">Starting from $2,800</div>
                   <div className="destination-features">
                     <span>🇪🇺 European Union</span>
@@ -495,7 +417,7 @@ const HomePage = () => {
                 className="partner-card final-uni-bg"
               >
                 <div className="partner-overlay">
-                  <h4>Final International University</h4>
+                <h4>Final International University</h4>
                   <p>Leading university in Cyprus offering quality education with modern facilities and international programs</p>
                   <div className="partner-features">
                     <span>🎓 Quality Education</span>
@@ -506,7 +428,7 @@ const HomePage = () => {
                     Visit Official Website
                     <span className="link-arrow">→</span>
                   </div>
-                </div>
+              </div>
               </a>
               
               <a 
@@ -516,7 +438,7 @@ const HomePage = () => {
                 className="partner-card cyprus-uni-bg"
               >
                 <div className="partner-overlay">
-                  <h4>Cyprus International University</h4>
+                <h4>Cyprus International University</h4>
                   <p>International university with diverse programs and a multicultural learning environment</p>
                   <div className="partner-features">
                     <span>🌐 Multicultural</span>
@@ -547,8 +469,8 @@ const HomePage = () => {
                   <div className="partner-link">
                     Visit Official Website
                     <span className="link-arrow">→</span>
-                  </div>
-                </div>
+              </div>
+              </div>
               </a>
             </>
           )}

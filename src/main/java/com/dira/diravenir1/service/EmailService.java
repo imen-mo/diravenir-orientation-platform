@@ -58,7 +58,8 @@ public class EmailService {
             
         } catch (Exception e) {
             logger.error("❌ Erreur lors de l'envoi de l'email de vérification à {} : {}", to, e.getMessage());
-            throw new RuntimeException("Impossible d'envoyer l'email de vérification", e);
+            // Ne pas lever d'exception pour ne pas interrompre le processus d'inscription
+            // L'utilisateur peut toujours se connecter et demander un nouvel email de vérification
         }
     }
 
@@ -88,7 +89,7 @@ public class EmailService {
             
         } catch (Exception e) {
             logger.error("❌ Erreur lors de l'envoi de l'email de réinitialisation à {} : {}", to, e.getMessage());
-            throw new RuntimeException("Impossible d'envoyer l'email de réinitialisation", e);
+            // Ne pas lever d'exception pour ne pas interrompre le processus
         }
     }
 

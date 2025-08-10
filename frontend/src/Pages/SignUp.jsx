@@ -23,6 +23,9 @@ export default function SignUp() {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState("");
     const [recaptchaToken, setRecaptchaToken] = useState("");
+    const [showResendEmail, setShowResendEmail] = useState(false);
+    const [resendLoading, setResendLoading] = useState(false);
+    const [resendMessage, setResendMessage] = useState("");
 
     const handleChange = (e) => {
         setFormData({
@@ -33,6 +36,28 @@ export default function SignUp() {
 
     const handleRecaptchaVerify = (token) => {
         setRecaptchaToken(token);
+    };
+
+    const handleResendVerificationEmail = async () => {
+        setResendLoading(true);
+        setResendMessage("");
+        
+        try {
+            const response = await API.post("/auth/resend-verification", { email: formData.email });
+            setResendMessage(response.message || "Email de vérification renvoyé avec succès !");
+            setShowResendEmail(false);
+        } catch (err) {
+            console.error('Erreur lors du renvoi de l\'email:', err);
+            if (err.response?.data?.error) {
+                setResendMessage(err.response.data.error);
+            } else if (err.response?.data?.message) {
+                setResendMessage(err.response.data.message);
+            } else {
+                setResendMessage("Erreur lors du renvoi de l'email. Veuillez réessayer.");
+            }
+        } finally {
+            setResendLoading(false);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -82,11 +107,12 @@ export default function SignUp() {
             
             console.log("✅ Réponse du serveur :", response.data);
             setSuccess(response.data.message || "Compte créé avec succès !");
+            setShowResendEmail(true);
             
-            // Redirection après 3 secondes
-            setTimeout(() => {
-                window.location.href = "/signin";
-            }, 3000);
+            // Ne plus rediriger automatiquement, laisser l'utilisateur choisir
+            // setTimeout(() => {
+            //     window.location.href = "/signin";
+            // }, 3000);
             
         } catch (err) {
             console.error('❌ Erreur complète:', err);
@@ -109,13 +135,22 @@ export default function SignUp() {
                         setError(`Erreur de validation :\n${errorMessages}`);
                     } else if (err.response.data.message) {
                         setError(err.response.data.message);
+                    } else if (err.response.data.error) {
+                        setError(err.response.data.error);
                     } else {
                         setError('Données invalides. Veuillez vérifier les champs.');
                     }
                 } else if (err.response.status === 409) {
                     setError('Cette adresse email est déjà utilisée.');
+                } else if (err.response.status === 500) {
+                    // Erreur interne du serveur - peut être liée à l'email mais l'inscription a réussi
+                    if (err.response.data.error && err.response.data.error.includes("email")) {
+                        setError('Compte créé avec succès, mais problème avec l\'envoi de l\'email de vérification. Vous pouvez vous connecter et demander un nouvel email de vérification.');
+                    } else {
+                        setError(`Erreur serveur (${err.response.status}): ${err.response.data.error || err.response.data.message || 'Veuillez réessayer plus tard.'}`);
+                    }
                 } else {
-                    setError(`Erreur serveur (${err.response.status}): ${err.response.data.message || 'Veuillez réessayer plus tard.'}`);
+                    setError(`Erreur serveur (${err.response.status}): ${err.response.data.error || err.response.data.message || 'Veuillez réessayer plus tard.'}`);
                 }
             } else if (err.request) {
                 // La requête a été faite mais aucune réponse n'a été reçue
@@ -289,6 +324,31 @@ export default function SignUp() {
                                 >
                                     <div className="success-icon">✅</div>
                                     <span>{success}</span>
+                                </motion.div>
+                            )}
+
+                            {showResendEmail && (
+                                <motion.div 
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="info-message-elegant"
+                                >
+                                    <div className="info-icon">ℹ️</div>
+                                    <div className="info-content">
+                                        <p>Vérifiez votre boîte email pour activer votre compte.</p>
+                                        <p>Si vous n'avez pas reçu l'email, vous pouvez le redemander :</p>
+                                        <button
+                                            type="button"
+                                            onClick={handleResendVerificationEmail}
+                                            disabled={resendLoading}
+                                            className="resend-btn-elegant"
+                                        >
+                                            {resendLoading ? "Envoi en cours..." : "Renvoyer l'email"}
+                                        </button>
+                                        {resendMessage && (
+                                            <p className="resend-message">{resendMessage}</p>
+                                        )}
+                                    </div>
                                 </motion.div>
                             )}
 

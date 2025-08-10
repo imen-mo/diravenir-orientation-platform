@@ -83,8 +83,16 @@ public class AuthController {
             // Inscription de l'utilisateur
             utilisateurService.registerUser(request);
             
-            // Envoyer l'email de vérification
-            emailVerificationService.sendVerificationEmail(request.getEmail());
+            // Envoyer l'email de vérification de manière asynchrone pour ne pas bloquer la réponse
+            try {
+                emailVerificationService.sendVerificationEmail(request.getEmail());
+                logger.info("✅ Email de vérification envoyé avec succès à : {}", request.getEmail());
+            } catch (Exception emailError) {
+                // Log l'erreur d'email mais ne pas faire échouer l'inscription
+                logger.warn("⚠️ Échec de l'envoi de l'email de vérification à {} : {}", 
+                           request.getEmail(), emailError.getMessage());
+                // L'utilisateur peut toujours se connecter et demander un nouvel email de vérification
+            }
             
             logger.info("✅ INSCRIPTION RÉUSSIE - Email: {} | IP: {}", request.getEmail(), ip);
             
@@ -168,6 +176,55 @@ public class AuthController {
             
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", errorMessage));
+        }
+    }
+
+    /**
+     * Redemander un email de vérification
+     */
+    @PostMapping("/resend-verification")
+    public ResponseEntity<?> resendVerificationEmail(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
+        String ip = getClientIpAddress(httpRequest);
+        String email = request.get("email");
+        
+        if (email == null || email.trim().isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "L'email est requis"));
+        }
+        
+        email = email.trim().toLowerCase();
+        
+        logger.info("🔍 DEMANDE DE RÉENVOI D'EMAIL - IP: {} | Email: {}", ip, email);
+        
+        try {
+            // Vérifier si l'utilisateur existe
+            if (!utilisateurService.existsByEmail(email)) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", "Aucun compte trouvé avec cet email"));
+            }
+            
+            // Envoyer un nouvel email de vérification
+            try {
+                emailVerificationService.sendVerificationEmail(email);
+                logger.info("✅ Nouvel email de vérification envoyé à : {}", email);
+                
+                return ResponseEntity.ok(Map.of(
+                    "message", "Un nouvel email de vérification a été envoyé.",
+                    "email", email
+                ));
+                
+            } catch (Exception emailError) {
+                logger.warn("⚠️ Échec de l'envoi du nouvel email de vérification à {} : {}", 
+                           email, emailError.getMessage());
+                
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(Map.of("error", "Impossible d'envoyer l'email de vérification. Veuillez réessayer plus tard."));
+            }
+            
+        } catch (Exception e) {
+            logger.error("❌ ERREUR LORS DU RÉENVOI - IP: {} | Erreur: {}", ip, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Une erreur interne s'est produite"));
         }
     }
 

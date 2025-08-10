@@ -37,13 +37,19 @@ API.interceptors.response.use(
   (error) => {
     console.error('❌ Erreur de réponse:', {
       status: error.response?.status,
-      message: error.response?.data?.message || error.message,
+      message: error.response?.data?.message || error.response?.data?.error || error.message,
       url: error.config?.url
     });
     
     // Gestion spécifique des erreurs de connexion
     if (error.code === 'ERR_NETWORK' || error.code === 'ECONNREFUSED') {
       console.error('🔌 Erreur de connexion au serveur. Vérifiez que le backend est démarré sur le port 8084.');
+    }
+    
+    // Améliorer la gestion des erreurs pour l'inscription
+    if (error.config?.url?.includes('/auth/signup') && error.response?.status === 500) {
+      // Pour l'inscription, une erreur 500 peut signifier que l'email a échoué mais l'inscription a réussi
+      console.warn('⚠️ Erreur 500 lors de l\'inscription - peut être liée à l\'envoi d\'email');
     }
     
     return Promise.reject(error);
@@ -100,6 +106,14 @@ export const authService = {
   register: async (userData) => {
     try {
       const response = await API.post('/auth/signup', userData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  resendVerification: async (email) => {
+    try {
+      const response = await API.post('/auth/resend-verification', { email });
       return response.data;
     } catch (error) {
       throw error;
