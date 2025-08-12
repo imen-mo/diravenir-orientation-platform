@@ -36,9 +36,9 @@ export default function EmailVerification() {
                     console.log('✅ Email vérifié avec succès');
                     setVerificationStatus('success');
                     
-                    // Rediriger vers la page d'accueil après 3 secondes
+                    // Rediriger vers la page de connexion après 3 secondes
                     setTimeout(() => {
-                        navigate('/', { replace: true });
+                        navigate('/signin', { replace: true });
                     }, 3000);
                 } else {
                     const errorData = await response.json();
@@ -158,14 +158,14 @@ export default function EmailVerification() {
                         Email vérifié avec succès !
                     </h2>
                     <p className="mt-4 text-gray-600">
-                        Votre compte a été activé avec succès. Vous allez être redirigé vers la page d'accueil dans quelques secondes.
+                        Votre compte a été activé avec succès. Vous allez être redirigé vers la page de connexion dans quelques secondes.
                     </p>
                     <div className="mt-6">
                         <button
-                            onClick={() => navigate('/', { replace: true })}
+                            onClick={() => navigate('/signin', { replace: true })}
                             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                         >
-                            Aller à l'accueil maintenant
+                            Aller à la connexion maintenant
                         </button>
                     </div>
                 </div>
