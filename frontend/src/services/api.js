@@ -1,9 +1,9 @@
-{/* Icône de succès */}import axios from "axios";
+import axios from "axios";
 import { getToken } from "../utils/auth";
+import { getApiBaseUrl } from "../config/api";
 
 // ✅ Définir une seule fois l'URL de base
-const API_BASE = "http://localhost:8084/api";
-
+const API_BASE = getApiBaseUrl();
 
 // ✅ Créer une instance Axios réutilisable
 const API = axios.create({
@@ -87,17 +87,40 @@ export const fetchPartenaires = async () => {
 
 // Services API
 export const authService = {
-  login: async (email, password, recaptchaToken) => {
+  login: async (email, password) => {
     try {
-      const response = await API.post('/auth/signin', { email, password, recaptchaToken });
+      console.log('🔐 Tentative de connexion:', { email, hasPassword: !!password });
+      
+      const response = await API.post('/auth/signin', { email, password });
+      
+      console.log('✅ Connexion réussie:', response.data);
       return response.data;
     } catch (error) {
+      console.error('❌ Erreur de connexion détaillée:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message,
+        config: {
+          url: error.config?.url,
+          method: error.config?.method,
+          headers: error.config?.headers
+        }
+      });
       throw error;
     }
   },
   logout: async () => {
     try {
       const response = await API.post('/auth/logout');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  logoutAll: async () => {
+    try {
+      const response = await API.post('/auth/logout-all');
       return response.data;
     } catch (error) {
       throw error;
@@ -118,10 +141,21 @@ export const authService = {
     } catch (error) {
       throw error;
     }
-  },
+  }
+};
+
+export const userService = {
   getProfile: async () => {
     try {
-      const response = await API.get('/auth/me');
+      const response = await API.get('/users/profile');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  updateProfile: async (profileData) => {
+    try {
+      const response = await API.put('/users/profile', profileData);
       return response.data;
     } catch (error) {
       throw error;
@@ -129,6 +163,24 @@ export const authService = {
   }
 };
 
+export const uploadFile = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const response = await API.post('/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Service pour les programmes
 export const programService = {
   getAll: async () => {
     try {
@@ -213,71 +265,5 @@ export const programService = {
     } catch (error) {
       throw error;
     }
-  }
-};
-
-export const destinationService = {
-  getAll: async () => {
-    try {
-      const response = await API.get('/destinations');
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getById: async (id) => {
-    try {
-      const response = await API.get(`/destinations/${id}`);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  }
-};
-
-export const temoignageService = {
-  getAll: async () => {
-    try {
-      const response = await API.get('/temoignages');
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  }
-};
-
-export const userService = {
-  getProfile: async () => {
-    try {
-      const response = await API.get('/users/me');
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  updateProfile: async (userData) => {
-    try {
-      const response = await API.put('/users/me', userData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  }
-};
-
-// Fonctions utilitaires
-export const uploadFile = async (file) => {
-  const formData = new FormData();
-  formData.append('file', file);
-
-  try {
-    const response = await API.post('/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw error;
   }
 };

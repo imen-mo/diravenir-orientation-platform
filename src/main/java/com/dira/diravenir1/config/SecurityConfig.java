@@ -80,15 +80,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(
-                "http://localhost:3000",
-                "http://localhost:3001",
-                "http://localhost:3003",
-                "http://localhost:5173",
-                "http://localhost:5174",
-                "http://localhost:5178",
-                "http://localhost:5179"
-        ));
+        
+        // Solution simple : autoriser tous les ports locaux
+        config.setAllowedOriginPatterns(List.of("http://localhost:*"));
+        
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization"));

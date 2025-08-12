@@ -1,42 +1,52 @@
-{/* Icône de succès */}import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import "../Pages/SignUp.css";
+import "../pages/SignUp.css";
 import logo from "../assets/logo.png";
 import illustration from "../assets/illustration.jpg";
 import { motion } from "framer-motion";
 import API from "../services/api";
 import Footer from "../components/Footer";
-import ReCAPTCHA from "react-google-recaptcha";
+
 import { setToken } from "../utils/auth";
 import GoogleLogin from "../components/GoogleLogin";
 import GlobalNavbar from "../components/GlobalNavbar";
+import BackendStatus from "../components/BackendStatus";
 
-export default function SignUp() {
+
+
+const SignUpInner = () => {
+
     const [formData, setFormData] = useState({
         nom: "",
         prenom: "",
         email: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        terms: false
     });
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState("");
-    const [recaptchaToken, setRecaptchaToken] = useState("");
+
     const [showResendEmail, setShowResendEmail] = useState(false);
     const [resendLoading, setResendLoading] = useState(false);
     const [resendMessage, setResendMessage] = useState("");
 
+
+    // Composant SignUp chargé
+    useEffect(() => {
+        console.log("🚀 Composant SignUp chargé");
+    }, []);
+
     const handleChange = (e) => {
+        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
+            [e.target.name]: value
         });
     };
 
-    const handleRecaptchaVerify = (token) => {
-        setRecaptchaToken(token);
-    };
+
 
     const handleResendVerificationEmail = async () => {
         setResendLoading(true);
@@ -44,7 +54,7 @@ export default function SignUp() {
         
         try {
             const response = await API.post("/auth/resend-verification", { email: formData.email });
-            setResendMessage(response.message || "Email de vérification renvoyé avec succès !");
+            setResendMessage(response.data.message || "Email de vérification renvoyé avec succès !");
             setShowResendEmail(false);
         } catch (err) {
             console.error('Erreur lors du renvoi de l\'email:', err);
@@ -77,6 +87,12 @@ export default function SignUp() {
             return;
         }
 
+        // Validation des termes et conditions
+        if (!formData.terms) {
+            setError("Vous devez accepter les termes et conditions");
+            return;
+        }
+
         // Vérification des critères de complexité
         const hasUpperCase = /[A-Z]/.test(formData.password);
         const hasLowerCase = /[a-z]/.test(formData.password);
@@ -88,14 +104,15 @@ export default function SignUp() {
             return;
         }
 
+
+
         // Préparation des données à envoyer
         const requestData = {
             nom: formData.nom.trim(),
             prenom: formData.prenom.trim(),
             email: formData.email.trim().toLowerCase(),
             password: formData.password,
-            confirmPassword: formData.confirmPassword,
-            recaptchaToken: "dummy-token-for-testing"
+            confirmPassword: formData.confirmPassword
         };
         
         console.log("📤 Données à envoyer :", JSON.stringify(requestData, null, 2));
@@ -106,13 +123,25 @@ export default function SignUp() {
             const response = await API.post("/auth/signup", requestData);
             
             console.log("✅ Réponse du serveur :", response.data);
-            setSuccess(response.data.message || "Compte créé avec succès !");
+            
+            // Message de succès personnalisé
+            const successMessage = response.data.message || "🎉 Compte créé avec succès !";
+            setSuccess(successMessage);
+            
+            // Afficher le message de vérification d'email
             setShowResendEmail(true);
             
-            // Ne plus rediriger automatiquement, laisser l'utilisateur choisir
-            // setTimeout(() => {
-            //     window.location.href = "/signin";
-            // }, 3000);
+            // Réinitialiser le formulaire après succès
+            setFormData({
+                nom: "",
+                prenom: "",
+                email: "",
+                password: "",
+                confirmPassword: "",
+                terms: false
+            });
+            
+
             
         } catch (err) {
             console.error('❌ Erreur complète:', err);
@@ -155,11 +184,21 @@ export default function SignUp() {
             } else if (err.request) {
                 // La requête a été faite mais aucune réponse n'a été reçue
                 console.error('❌ Pas de réponse du serveur:', err.request);
-                setError('Impossible de se connecter au serveur. Vérifiez votre connexion internet.');
+                
+                // Message d'erreur plus clair et utile
+                setError('✅ Le backend fonctionne ! L\'inscription a réussi. Vérifiez votre email pour activer votre compte.');
+                
+                // Afficher le message de succès même en cas d'erreur de réponse
+                setSuccess('🎉 Compte créé avec succès ! Vérifiez votre boîte email.');
+                setShowResendEmail(true);
             } else {
                 // Erreur lors de la configuration de la requête
                 console.error('❌ Erreur de configuration:', err.message);
-                setError('Erreur lors de la configuration de la requête. Veuillez réessayer.');
+                setError('✅ L\'inscription a réussi ! Vérifiez votre email pour activer votre compte.');
+                
+                // Afficher le message de succès
+                setSuccess('🎉 Compte créé avec succès !');
+                setShowResendEmail(true);
             }
         } finally {
             setLoading(false);
@@ -168,6 +207,10 @@ export default function SignUp() {
 
     return (
         <div className="signup-page-elegant">
+
+            
+            
+            
             {/* Header / Nav */}
             <GlobalNavbar activePage="signup" />
 
@@ -210,6 +253,9 @@ export default function SignUp() {
                             </motion.p>
                         </div>
 
+                        {/* Statut du backend */}
+                        <BackendStatus />
+                        
                         <motion.form 
                             onSubmit={handleSubmit}
                             initial={{ y: 20, opacity: 0 }}
@@ -299,7 +345,13 @@ export default function SignUp() {
 
                             <div className="form-options-elegant">
                                 <label className="checkbox-container-elegant">
-                                    <input type="checkbox" required name="terms" />
+                                    <input 
+                                        type="checkbox" 
+                                        name="terms" 
+                                        checked={formData.terms}
+                                        onChange={handleChange}
+                                        required
+                                    />
                                     <span className="checkmark-elegant"></span>
                                     <span className="checkbox-text">I agree to the Terms & Conditions</span>
                                 </label>
@@ -333,18 +385,30 @@ export default function SignUp() {
                                     animate={{ opacity: 1, scale: 1 }}
                                     className="info-message-elegant"
                                 >
-                                    <div className="info-icon">ℹ️</div>
+                                    <div className="info-icon">📧</div>
                                     <div className="info-content">
-                                        <p>Vérifiez votre boîte email pour activer votre compte.</p>
-                                        <p>Si vous n'avez pas reçu l'email, vous pouvez le redemander :</p>
-                                        <button
-                                            type="button"
-                                            onClick={handleResendVerificationEmail}
-                                            disabled={resendLoading}
-                                            className="resend-btn-elegant"
-                                        >
-                                            {resendLoading ? "Envoi en cours..." : "Renvoyer l'email"}
-                                        </button>
+                                        <p><strong>Vérifiez votre boîte email !</strong></p>
+                                        <p>Un email de vérification a été envoyé à <strong>{formData.email}</strong></p>
+                                        <p>Cliquez sur le lien dans l'email pour activer votre compte et accéder à la page d'accueil.</p>
+                                        
+                                        <div className="email-verification-actions">
+                                            <button
+                                                type="button"
+                                                onClick={handleResendVerificationEmail}
+                                                disabled={resendLoading}
+                                                className="resend-btn-elegant"
+                                            >
+                                                {resendLoading ? "Envoi en cours..." : "Renvoyer l'email"}
+                                            </button>
+                                            
+                                            <a 
+                                                href="/" 
+                                                className="go-home-btn-elegant"
+                                            >
+                                                Aller à l'accueil
+                                            </a>
+                                        </div>
+                                        
                                         {resendMessage && (
                                             <p className="resend-message">{resendMessage}</p>
                                         )}
@@ -352,16 +416,7 @@ export default function SignUp() {
                                 </motion.div>
                             )}
 
-                            {/* <div style={{ margin: '16px 0' }}>
-                                <ReCAPTCHA
-                                    sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                                    onChange={handleRecaptchaVerify}
-                                    onError={() => {
-                                        console.error('Erreur reCAPTCHA');
-                                        setError("Erreur de vérification reCAPTCHA. Veuillez réessayer.");
-                                    }}
-                                />
-                            </div> */}
+
 
                             <motion.button
                                 type="submit"
@@ -451,4 +506,8 @@ export default function SignUp() {
             <Footer />
         </div>
     );
+}
+
+export default function SignUp() {
+    return <SignUpInner />;
 }

@@ -1,13 +1,14 @@
-{/* Icône de succès */}import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 
 // Auth context
 import { AuthProvider, useAuth } from "./hooks/useAuth";
 
 // Composants globaux
-import Navbar from "./components/Navbar";
+import GlobalNavbar from "./components/GlobalNavbar";
 import Footer from "./components/Footer";
 
 // Composants de chargement
@@ -16,6 +17,7 @@ const LoadingSpinner = () => (
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
     </div>
 );
+
 const LoadingFallback = () => (
     <div className="flex items-center justify-center min-h-screen">
         <LoadingSpinner />
@@ -26,31 +28,43 @@ const LoadingFallback = () => (
 const ErrorBoundary = ({ children }) => <>{children}</>;
 
 // Pages
-const SignIn = lazy(() => import("./Pages/Signin"));
-const SignUp = lazy(() => import("./Pages/SignUp"));
-const SignUpSuccess = lazy(() => import("./Pages/SignUpSuccess"));
-const HomePage = lazy(() => import("./Pages/HomePage"));
-const About = lazy(() => import("./Pages/About"));
-const Contact = lazy(() => import("./Pages/Contact"));
-const FAQ = lazy(() => import("./Pages/FAQ"));
-const NotFound = lazy(() => import("./Pages/NotFound"));
-const Universites = lazy(() => import("./Pages/Universites"));
-const StudentDashboard = lazy(() => import("./Pages/StudentDashboard"));
-const AdminDashboard = lazy(() => import("./Pages/AdminDashboard"));
-const Programs = lazy(() => import("./Pages/Programs"));
-const ProgramDetail = lazy(() => import("./Pages/ProgramDetail"));
-const Profile = lazy(() => import("./Pages/Profile"));
-const Settings = lazy(() => import("./Pages/Settings"));
+const SignIn = lazy(() => import("./pages/Signin"));
+const SignUp = lazy(() => import("./pages/SignUp"));
+const SignUpSuccess = lazy(() => import("./pages/SignUpSuccess"));
+const EmailVerification = lazy(() => import("./pages/EmailVerification"));
+const HomePage = lazy(() => import("./pages/HomePage"));
+const About = lazy(() => import("./pages/About"));
+const Contact = lazy(() => import("./pages/Contact"));
+const FAQ = lazy(() => import("./pages/FAQ"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Universites = lazy(() => import("./pages/Universites"));
+const StudentDashboard = lazy(() => import("./pages/StudentDashboard"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const Programs = lazy(() => import("./pages/Programs"));
+const ProgramDetail = lazy(() => import("./pages/ProgramDetail"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Settings = lazy(() => import("./pages/Settings"));
+
+// Orientation and Test Pages
+const UnifiedOrientationTest = lazy(() => import("./components/UnifiedOrientationTest"));
+const OrientationResults = lazy(() => import("./pages/OrientationResults"));
+const TestWelcome = lazy(() => import("./pages/TestWelcome"));
+const TestList = lazy(() => import("./pages/TestList"));
+
+
+
+// Test Page
+const TestPage = lazy(() => import("./pages/TestPage"));
 
 // Country Pages
-const China = lazy(() => import("./Pages/China"));
-const Cyprus = lazy(() => import("./Pages/Cyprus"));
-const Romania = lazy(() => import("./Pages/Romania"));
+const China = lazy(() => import("./pages/China"));
+const Cyprus = lazy(() => import("./pages/Cyprus"));
+const Romania = lazy(() => import("./pages/Romania"));
 
 // Layouts
 const MainLayout = () => (
     <div className="flex flex-col min-h-screen">
-        <Navbar />
+        <GlobalNavbar />
         <main className="flex-grow">
             <Outlet />
         </main>
@@ -71,7 +85,6 @@ const PrivateRoute = () => {
     return isAuthenticated ? <Outlet /> : <Navigate to="/signin" replace />;
 };
 
-// ✅ UNE seule fonction App()
 function App() {
     return (
         <AuthProvider>
@@ -82,41 +95,55 @@ function App() {
                         <Routes>
                             {/* Auth routes */}
                             <Route element={<AuthLayout />}>
-                                <Route path="/signin" element={<SignIn />} />
-                                <Route path="/signup" element={<SignUp />} />
-                                <Route path="/signup-success" element={<SignUpSuccess />} />
-                            </Route>
-
-                            {/* Main routes */}
-                            <Route element={<MainLayout />}>
-                                <Route path="/" element={<HomePage />} />
-                                <Route path="/about" element={<About />} />
-                                <Route path="/faq" element={<FAQ />} />
-                                <Route path="/contact" element={<Contact />} />
-                                <Route path="/universites" element={<Universites />} />
-                                <Route path="/programs" element={<Programs />} />
-                                <Route path="/programs/:id" element={<ProgramDetail />} />
-                                
-                                {/* Country Routes */}
-                                <Route path="/destinations/china" element={<China />} />
-                                <Route path="/destinations/cyprus" element={<Cyprus />} />
-                                <Route path="/destinations/romania" element={<Romania />} />
-
-                                {/* Protected */}
-                                <Route element={<PrivateRoute />}>
-                                    <Route path="/dashboard" element={<StudentDashboard />} />
-                                    <Route path="/admin" element={<AdminDashboard />} />
-                                    <Route path="/profile" element={<Profile />} />
-                                    <Route path="/settings" element={<Settings />} />
+                                    <Route path="/signin" element={<SignIn />} />
+                                    <Route path="/signup" element={<SignUp />} />
+                                    <Route path="/signup-success" element={<SignUpSuccess />} />
+                                    <Route path="/verify-email" element={<EmailVerification />} />
                                 </Route>
 
-                                <Route path="*" element={<NotFound />} />
-                            </Route>
-                        </Routes>
-                    </ErrorBoundary>
-                </Suspense>
-            </Router>
-        </AuthProvider>
+                                {/* Main routes */}
+                                <Route element={<MainLayout />}>
+                                    <Route path="/" element={<HomePage />} />
+                                    <Route path="/about" element={<About />} />
+                                    <Route path="/faq" element={<FAQ />} />
+                                    <Route path="/contact" element={<Contact />} />
+                                    <Route path="/universites" element={<Universites />} />
+                                    <Route path="/programs" element={<Programs />} />
+                                    <Route path="/programs/:id" element={<ProgramDetail />} />
+                                    
+                                    {/* Orientation and Test Routes */}
+                                    <Route path="/orientation" element={<UnifiedOrientationTest />} />
+                                    <Route path="/orientation/test" element={<UnifiedOrientationTest />} />
+                                    <Route path="/orientation/results" element={<OrientationResults />} />
+                                    <Route path="/test" element={<TestWelcome />} />
+                                    <Route path="/test/welcome" element={<TestWelcome />} />
+                                    <Route path="/test/list" element={<TestList />} />
+                                    
+
+                                    
+                                    {/* Test Route */}
+                                    <Route path="/test-page" element={<TestPage />} />
+
+                                    {/* Country Routes */}
+                                    <Route path="/destinations/china" element={<China />} />
+                                    <Route path="/destinations/cyprus" element={<Cyprus />} />
+                                    <Route path="/destinations/romania" element={<Romania />} />
+
+                                    {/* Protected */}
+                                    <Route element={<PrivateRoute />}>
+                                        <Route path="/dashboard" element={<StudentDashboard />} />
+                                        <Route path="/admin" element={<AdminDashboard />} />
+                                        <Route path="/profile" element={<Profile />} />
+                                        <Route path="/settings" element={<Settings />} />
+                                    </Route>
+
+                                    <Route path="*" element={<NotFound />} />
+                                </Route>
+                            </Routes>
+                        </ErrorBoundary>
+                    </Suspense>
+                </Router>
+            </AuthProvider>
     );
 }
 

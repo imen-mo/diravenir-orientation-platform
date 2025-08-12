@@ -53,13 +53,16 @@ public class AuthController {
         }
         
         try {
-            // Désactivation temporaire de la vérification reCAPTCHA
-            boolean recaptchaValid = true; // Par défaut à true pour désactiver la vérification
+            // Vérification reCAPTCHA pour l'inscription
+            boolean recaptchaValid = recaptchaService.verifySignup(request.getRecaptchaToken());
             
-            // Si vous voulez réactiver reCAPTCHA plus tard, utilisez cette ligne à la place :
-            // boolean recaptchaValid = recaptchaService.verify(request.getRecaptchaToken());
+            if (!recaptchaValid) {
+                logger.warn("🚫 INSCRIPTION BLOQUÉE - IP: {} | reCAPTCHA invalide", ip);
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", "Vérification reCAPTCHA échouée. Veuillez réessayer."));
+            }
             
-            logger.info("🔍 VÉRIFICATION reCAPTCHA - IP: {} | Désactivée pour les tests", ip);
+            logger.info("🔍 VÉRIFICATION reCAPTCHA - IP: {} | Validée avec succès", ip);
             
             // Validation des données
             request.normalizeData();
@@ -81,7 +84,14 @@ public class AuthController {
             }
             
             // Inscription de l'utilisateur
-            utilisateurService.registerUser(request);
+            logger.info("🔄 Tentative d'inscription de l'utilisateur...");
+            try {
+                utilisateurService.registerUser(request);
+                logger.info("✅ Utilisateur inscrit avec succès dans la base de données");
+            } catch (Exception userError) {
+                logger.error("❌ ERREUR LORS DE L'INSCRIPTION UTILISATEUR: {}", userError.getMessage(), userError);
+                throw userError;
+            }
             
             // Envoyer l'email de vérification de manière asynchrone pour ne pas bloquer la réponse
             try {
@@ -107,8 +117,9 @@ public class AuthController {
                     .body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
             logger.error("❌ ERREUR INTERNE - IP: {} | Erreur: {}", ip, e.getMessage(), e);
+            logger.error("❌ STACK TRACE COMPLÈTE:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Une erreur interne s'est produite"));
+                    .body(Map.of("error", "Erreur: " + e.getMessage()));
         }
     }
 
@@ -134,8 +145,8 @@ public class AuthController {
         }
         
         try {
-            // Validation reCAPTCHA
-            if (!recaptchaService.verify(request.getRecaptchaToken())) {
+            // Validation reCAPTCHA pour la connexion
+            if (!recaptchaService.verifySignin(request.getRecaptchaToken())) {
                 logger.warn("🚫 CONNEXION BLOQUÉE - IP: {} | reCAPTCHA invalide", ip);
                 return ResponseEntity.badRequest()
                         .body(Map.of("error", "Validation reCAPTCHA échouée"));
@@ -199,6 +210,7 @@ public class AuthController {
         try {
             // Vérifier si l'utilisateur existe
             if (!utilisateurService.existsByEmail(email)) {
+                logger.warn("🚫 Tentative de réenvoi d'email pour un email inexistant: {}", email);
                 return ResponseEntity.badRequest()
                         .body(Map.of("error", "Aucun compte trouvé avec cet email"));
             }
@@ -214,17 +226,26 @@ public class AuthController {
                 ));
                 
             } catch (Exception emailError) {
-                logger.warn("⚠️ Échec de l'envoi du nouvel email de vérification à {} : {}", 
-                           email, emailError.getMessage());
+                logger.error("❌ ÉCHEC CRITIQUE DE L'ENVOI D'EMAIL - Email: {} | Erreur: {}", 
+                           email, emailError.getMessage(), emailError);
                 
+                // Retourner une réponse plus détaillée pour aider au diagnostic
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body(Map.of("error", "Impossible d'envoyer l'email de vérification. Veuillez réessayer plus tard."));
+                        .body(Map.of(
+                            "error", "Impossible d'envoyer l'email de vérification. Veuillez réessayer plus tard.",
+                            "details", "Problème de configuration du service email",
+                            "timestamp", System.currentTimeMillis()
+                        ));
             }
             
         } catch (Exception e) {
-            logger.error("❌ ERREUR LORS DU RÉENVOI - IP: {} | Erreur: {}", ip, e.getMessage(), e);
+            logger.error("❌ ERREUR LORS DU RÉENVOI - IP: {} | Email: {} | Erreur: {}", 
+                        ip, email, e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Une erreur interne s'est produite"));
+                    .body(Map.of(
+                        "error", "Une erreur interne s'est produite lors du traitement de votre demande",
+                        "timestamp", System.currentTimeMillis()
+                    ));
         }
     }
 
@@ -235,12 +256,108 @@ public class AuthController {
     public ResponseEntity<?> logout(HttpServletRequest httpRequest) {
         String ip = getClientIpAddress(httpRequest);
         
-        // Nettoyer le contexte de sécurité
-        SecurityContextHolder.clearContext();
+        try {
+            // Extraire le token JWT de l'en-tête Authorization
+            String authHeader = httpRequest.getHeader("Authorization");
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                
+                try {
+                    // Vérifier que le token est valide avant de le blacklister
+                    if (jwtService.isTokenValid(token, jwtService.extractUsername(token))) {
+                        // Ajouter le token à la liste noire
+                        jwtService.blacklistToken(token);
+                        logger.info("✅ Token JWT ajouté à la liste noire - IP: {}", ip);
+                    } else {
+                        logger.warn("⚠️ Token JWT invalide lors du logout - IP: {}", ip);
+                    }
+                } catch (Exception tokenError) {
+                    logger.warn("⚠️ Erreur lors du traitement du token JWT - IP: {} | Erreur: {}", ip, tokenError.getMessage());
+                }
+            } else {
+                logger.info("ℹ️ Aucun token JWT trouvé dans l'en-tête Authorization - IP: {}", ip);
+            }
+            
+            // Nettoyer le contexte de sécurité
+            SecurityContextHolder.clearContext();
+            
+            logger.info("✅ DÉCONNEXION RÉUSSIE - IP: {}", ip);
+            
+            return ResponseEntity.ok(Map.of(
+                "message", "Déconnexion réussie",
+                "timestamp", System.currentTimeMillis()
+            ));
+            
+        } catch (Exception e) {
+            logger.error("❌ ERREUR LORS DE LA DÉCONNEXION - IP: {} | Erreur: {}", ip, e.getMessage(), e);
+            
+            // Même en cas d'erreur, on nettoie le contexte de sécurité
+            SecurityContextHolder.clearContext();
+            
+            return ResponseEntity.ok(Map.of(
+                "message", "Déconnexion effectuée",
+                "warning", "Erreur lors du traitement du token",
+                "timestamp", System.currentTimeMillis()
+            ));
+        }
+    }
+
+    /**
+     * Déconnexion de tous les appareils (logout all devices)
+     */
+    @PostMapping("/logout-all")
+    public ResponseEntity<?> logoutAllDevices(HttpServletRequest httpRequest) {
+        String ip = getClientIpAddress(httpRequest);
         
-        logger.info("✅ DÉCONNEXION - IP: {}", ip);
-        
-        return ResponseEntity.ok(Map.of("message", "Déconnexion réussie"));
+        try {
+            // Extraire le token JWT de l'en-tête Authorization
+            String authHeader = httpRequest.getHeader("Authorization");
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                
+                try {
+                    String username = jwtService.extractUsername(token);
+                    
+                    // Vérifier que le token est valide avant de le blacklister
+                    if (jwtService.isTokenValid(token, username)) {
+                        // Ajouter le token actuel à la liste noire
+                        jwtService.blacklistToken(token);
+                        
+                        // Ici vous pourriez ajouter une logique pour invalider tous les tokens de l'utilisateur
+                        // Par exemple, en ajoutant un timestamp de déconnexion globale dans la base de données
+                        // ou en utilisant un service de gestion des sessions
+                        
+                        logger.info("✅ DÉCONNEXION GLOBALE - Utilisateur: {} | IP: {}", username, ip);
+                    } else {
+                        logger.warn("⚠️ Token JWT invalide lors du logout global - IP: {}", ip);
+                    }
+                } catch (Exception tokenError) {
+                    logger.warn("⚠️ Erreur lors du traitement du token JWT pour logout global - IP: {} | Erreur: {}", ip, tokenError.getMessage());
+                }
+            } else {
+                logger.info("ℹ️ Aucun token JWT trouvé dans l'en-tête Authorization pour logout global - IP: {}", ip);
+            }
+            
+            // Nettoyer le contexte de sécurité
+            SecurityContextHolder.clearContext();
+            
+            return ResponseEntity.ok(Map.of(
+                "message", "Déconnexion de tous les appareils réussie",
+                "timestamp", System.currentTimeMillis()
+            ));
+            
+        } catch (Exception e) {
+            logger.error("❌ ERREUR LORS DE LA DÉCONNEXION GLOBALE - IP: {} | Erreur: {}", ip, e.getMessage(), e);
+            
+            // Même en cas d'erreur, on nettoie le contexte de sécurité
+            SecurityContextHolder.clearContext();
+            
+            return ResponseEntity.ok(Map.of(
+                "message", "Déconnexion globale effectuée",
+                "warning", "Erreur lors du traitement",
+                "timestamp", System.currentTimeMillis()
+            ));
+        }
     }
 
     /**
@@ -382,6 +499,38 @@ public class AuthController {
             logger.error("❌ ERREUR RÉINITIALISATION - IP: {} | Erreur: {}", ip, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Erreur lors de la réinitialisation"));
+        }
+    }
+
+    /**
+     * Test de configuration email (pour diagnostic)
+     */
+    @PostMapping("/test-email")
+    public ResponseEntity<?> testEmailConfiguration(HttpServletRequest httpRequest) {
+        String ip = getClientIpAddress(httpRequest);
+        
+        logger.info("🧪 TEST DE CONFIGURATION EMAIL - IP: {}", ip);
+        
+        try {
+            // Test simple de la configuration email
+            emailVerificationService.sendVerificationEmail("test@example.com");
+            
+            logger.info("✅ Test de configuration email réussi");
+            return ResponseEntity.ok(Map.of(
+                "message", "Configuration email testée avec succès",
+                "status", "OK",
+                "timestamp", System.currentTimeMillis()
+            ));
+            
+        } catch (Exception e) {
+            logger.error("❌ ÉCHEC DU TEST DE CONFIGURATION EMAIL - IP: {} | Erreur: {}", ip, e.getMessage(), e);
+            
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of(
+                        "error", "Échec du test de configuration email",
+                        "details", e.getMessage(),
+                        "timestamp", System.currentTimeMillis()
+                    ));
         }
     }
 

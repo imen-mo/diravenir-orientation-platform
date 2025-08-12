@@ -1,4 +1,4 @@
-{/* Icône de succès */}// Clé pour le stockage du token dans le localStorage
+// Clé pour le stockage du token dans le localStorage
 const TOKEN_KEY = 'diravenir_auth_token';
 
 // Récupérer le token

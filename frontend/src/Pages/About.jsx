@@ -1,8 +1,6 @@
-{/* Icône de succès */}
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import './About.css';
-import '../Pages/SignUp.css';
 import orientationImage from '../assets/orientation.png';
 import etudiantImage from '../assets/etudiant.png';
 import meetingImage from '../assets/meeting.png';
@@ -19,7 +17,6 @@ import wiamImage from '../assets/wiamfarih.png';
 import { FaInstagram } from 'react-icons/fa';
 import Footer from '../components/Footer';
 import GlobalNavbar from '../components/GlobalNavbar';
-{/* comment */}
 
 const About = () => {
   const navigate = useNavigate();

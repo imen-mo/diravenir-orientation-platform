@@ -2,7 +2,7 @@
 :root {
   --primary-color: #6a287e;       /* Mauve exact de la page About */
   --primary-light: #8e44ad;      /* Lighter mauve */
-  --secondary-color: #ffd700;    /* Orange/Gold */
+  --secondary-color: #ffcf51;    /* Orange/Gold */
   --secondary-light: #ffed4e;    /* Lighter orange */
   --text-color: #2d3748;         /* Dark gray for text */
   --text-light: #718096;         /* Lighter gray for secondary text */
@@ -73,15 +73,15 @@
 }
 
 .nav-button:hover {
-  color: #ffd700 !important;
-  background: rgba(255, 215, 0, 0.1) !important;
+  color: #ffcf51 !important;
+  background: rgba(255, 207, 81, 0.1) !important;
   transform: translateY(-2px) !important;
 }
 
 .nav-button.active {
-  color: #ffd700 !important;
+  color: #ffcf51 !important;
   font-weight: 600 !important;
-  background: rgba(255, 215, 0, 0.15) !important;
+  background: rgba(255, 207, 81, 0.15) !important;
 }
 
 /* ====== MAIN CONTENT ====== */
@@ -515,7 +515,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(106, 40, 126, 0.15), rgba(255, 215, 0, 0.15));
+  background: linear-gradient(135deg, rgba(106, 40, 126, 0.15), rgba(255, 207, 81, 0.15));
   border-radius: 20px;
 }
 
@@ -731,4 +731,61 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Styles pour les actions de vérification d'email */
+.email-verification-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.go-home-btn-elegant {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-light) 100%);
+    color: var(--text-color);
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    min-width: 140px;
+}
+
+.go-home-btn-elegant:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    background: linear-gradient(135deg, var(--secondary-light) 0%, var(--secondary-color) 100%);
+}
+
+.go-home-btn-elegant:active {
+    transform: translateY(0);
+}
+
+/* Amélioration du message de succès */
+.success-message-elegant {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow-sm);
+    animation: slideInUp 0.5s ease-out;
+}
+
+.success-icon {
+    font-size: 24px;
+    flex-shrink: 0;
 }

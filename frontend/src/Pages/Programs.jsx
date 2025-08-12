@@ -1,4 +1,4 @@
-{/* Icône de succès */}import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { programService } from '../services/api';
 import { toast } from 'react-toastify';
 import { getDefaultProgramImage } from '../assets/default-program-images';

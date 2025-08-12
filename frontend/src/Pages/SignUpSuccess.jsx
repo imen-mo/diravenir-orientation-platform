@@ -1,4 +1,4 @@
-{/* Icône de succès */}import React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import logo from '../assets/logo.png';
@@ -23,7 +23,7 @@ export default function SignUpSuccess() {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.2, duration: 0.8 }}
                 >
-                    {/* Icône de succès */}
+
                     <div className="success-icon">
                         <svg 
                             width="64" 

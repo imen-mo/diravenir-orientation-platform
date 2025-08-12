@@ -67,9 +67,47 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    try { await authService.logout(); } catch (_) {}
-    removeToken();
-    setUser(null);
+    try {
+      // Appeler l'API de logout pour invalider le token côté serveur
+      await authService.logout();
+      console.log('✅ Logout réussi côté serveur');
+    } catch (error) {
+      console.warn('⚠️ Erreur lors du logout côté serveur:', error.message);
+      // Continuer avec le logout local même en cas d'erreur serveur
+    } finally {
+      // Toujours nettoyer côté client
+      removeToken();
+      setUser(null);
+      
+      // Rediriger vers la page d'accueil
+      if (window.location.pathname !== '/') {
+        window.location.href = '/';
+      }
+      
+      console.log('✅ Logout local effectué');
+    }
+  };
+
+  const logoutAll = async () => {
+    try {
+      // Appeler l'API de logout global pour invalider tous les tokens
+      await authService.logoutAll();
+      console.log('✅ Logout global réussi côté serveur');
+    } catch (error) {
+      console.warn('⚠️ Erreur lors du logout global côté serveur:', error.message);
+      // Continuer avec le logout local même en cas d'erreur serveur
+    } finally {
+      // Toujours nettoyer côté client
+      removeToken();
+      setUser(null);
+      
+      // Rediriger vers la page d'accueil
+      if (window.location.pathname !== '/') {
+        window.location.href = '/';
+      }
+      
+      console.log('✅ Logout global local effectué');
+    }
   };
 
   const updateProfile = async (profileData) => {
@@ -98,6 +136,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    logoutAll,
     updateProfile,
     isAuthenticated: !!getToken(),
   };

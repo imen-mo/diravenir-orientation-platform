@@ -67,6 +67,9 @@ public class Utilisateur {
 
     @Column(name = "email_verifie", nullable = false)
     private boolean emailVerifie = false;
+    
+    @Column(name = "compte_verifie", nullable = false)
+    private boolean compteVerifie = false;
 
     // ======================
     // === NOUVEAUX CHAMPS ===

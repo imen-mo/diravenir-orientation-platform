@@ -5,10 +5,9 @@ import { IoMdSend } from 'react-icons/io';
 import { motion, useAnimation, useInView } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import './Contact.css';
-import '../Pages/SignUp.css';
+import '../pages/SignUp.css';
 import logo from '../assets/logo.png';
 import Footer from '../components/Footer';
-import GlobalNavbar from '../components/GlobalNavbar';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -132,7 +131,6 @@ const Contact = () => {
 
   return (
     <div className="contact-page">
-        {/* Icône de succès */}
 
       <section className="contact-hero">
         <div className="contact-hero-content">

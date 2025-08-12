@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +22,9 @@ import java.util.function.Function;
 @Slf4j
 @Service
 public class JwtService {
+
+    @Autowired
+    private TokenBlacklistService tokenBlacklistService;
 
     @Value("${app.jwt.secret}")
     private String secretKey;
@@ -91,6 +95,12 @@ public class JwtService {
      */
     public boolean isTokenValid(String token, String expectedUsername) {
         try {
+            // Vérifier d'abord si le token est dans la liste noire
+            if (tokenBlacklistService.isTokenBlacklisted(token)) {
+                log.warn("Token JWT dans la liste noire");
+                return false;
+            }
+            
             String actualUsername = extractUsername(token);
             return actualUsername.equals(expectedUsername) && !isTokenExpired(token);
         } catch (JwtException | IllegalArgumentException e) {
@@ -159,5 +169,20 @@ public class JwtService {
      */
     public long getExpiration() {
         return jwtExpirationMs / 1000;
+    }
+
+    /**
+     * Ajoute un token à la liste noire lors de la déconnexion
+     * @param token Le token JWT à blacklister
+     */
+    public void blacklistToken(String token) {
+        try {
+            Claims claims = extractAllClaims(token);
+            long expirationTime = claims.getExpiration().getTime();
+            tokenBlacklistService.blacklistToken(token, expirationTime);
+            log.info("Token JWT ajouté à la liste noire");
+        } catch (Exception e) {
+            log.error("Erreur lors de l'ajout du token à la liste noire: {}", e.getMessage());
+        }
     }
 }

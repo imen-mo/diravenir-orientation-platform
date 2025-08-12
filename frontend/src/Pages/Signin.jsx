@@ -1,18 +1,21 @@
-{/* Icône de succès */}import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ReCAPTCHA from "react-google-recaptcha";
+
 import GoogleLogin from '../components/GoogleLogin';
 import logo from '../assets/logo.png';
 import illustration from '../assets/illustration.jpg';
 import { motion } from "framer-motion";
 import Footer from '../components/Footer';
-import "../Pages/SignUp.css";
+import "../pages/SignUp.css";
 import GlobalNavbar from '../components/GlobalNavbar';
+import LoginTest from '../components/LoginTest';
 
-export default function SignIn() {
+
+// Composant interne pour utiliser le hook reCAPTCHA
+function SignInForm() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -21,11 +24,12 @@ export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [recaptchaToken, setRecaptchaToken] = useState("");
+
 
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
   const from = location.state?.from?.pathname || '/';
 
   useEffect(() => {
@@ -44,20 +48,10 @@ export default function SignIn() {
     if (error) setError('');
   };
 
-  const handleRecaptchaVerify = (token) => {
-    setRecaptchaToken(token);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
-
-    // if (!recaptchaToken) {
-    //   setError("Veuillez valider le reCAPTCHA.");
-    //   setLoading(false);
-    //   return;
-    // }
 
     try {
       if (rememberMe) {
@@ -68,7 +62,7 @@ export default function SignIn() {
         localStorage.removeItem('rememberMe');
       }
 
-      await login(formData.email, formData.password, recaptchaToken);
+      await login(formData.email, formData.password);
       toast.success('Connexion réussie !');
       navigate(from, { replace: true });
     } catch (err) {
@@ -249,6 +243,9 @@ export default function SignIn() {
             >
               <p>Pas encore de compte ? <Link to="/signup" className="signup-link-elegant">S'inscrire</Link></p>
             </motion.div>
+
+            {/* Composant de test de connexion */}
+            <LoginTest />
           </div>
         </motion.div>
 
@@ -297,4 +294,8 @@ export default function SignIn() {
       <Footer />
     </div>
   );
+}
+
+export default function SignIn() {
+  return <SignInForm />;
 }

@@ -52,7 +52,10 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
         // Par défaut, rôle USER
         utilisateur.setRole(Role.USER);
-
+        
+        // Marquer l'email comme vérifié pour les tests (à retirer en production)
+        utilisateur.setEmailVerifie(true);
+        
         utilisateurRepository.save(utilisateur);
     }
 
@@ -98,7 +101,16 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         
         // Par défaut, rôle USER
         utilisateur.setRole(Role.USER);
-
+        
+        // Marquer l'email comme vérifié pour les tests (à retirer en production)
+        utilisateur.setEmailVerifie(true);
+        
+        // Marquer le compte comme vérifié pour les tests (à retirer en production)
+        utilisateur.setCompteVerifie(true);
+        
+        // S'assurer que le compte est actif
+        utilisateur.setCompteActif(true);
+        
         utilisateurRepository.save(utilisateur);
     }
 

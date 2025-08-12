@@ -1,4 +1,4 @@
-{/* Icône de succès */}import React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 const NotFound = () => {

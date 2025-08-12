@@ -1,8 +1,8 @@
-{/* Icône de succès */}/* ====== GLOBAL STYLES ====== */
+/* ====== GLOBAL STYLES ====== */
 :root {
   --primary-color: #6a287e;       /* Mauve exact de la page About */
   --primary-light: #8e44ad;      /* Lighter mauve */
-  --secondary-color: #ffd700;    /* Orange/Gold */
+  --secondary-color: #ffcf51;    /* Orange/Gold */
   --secondary-light: #ffed4e;    /* Lighter orange */
   --text-color: #2d3748;         /* Dark gray for text */
   --text-light: #718096;         /* Lighter gray for secondary text */
@@ -66,15 +66,15 @@
 }
 
 .signin-page-elegant .nav-button:hover {
-  color: #ffd700 !important;
-  background: rgba(255, 215, 0, 0.1) !important;
+  color: #ffcf51 !important;
+  background: rgba(255, 207, 81, 0.1) !important;
   transform: translateY(-2px) !important;
 }
 
 .signin-page-elegant .nav-button.active {
-  color: #ffd700 !important;
+  color: #ffcf51 !important;
   font-weight: 600 !important;
-  background: rgba(255, 215, 0, 0.15) !important;
+  background: rgba(255, 207, 81, 0.15) !important;
 }
 
 /* ====== MAIN CONTENT ====== */
@@ -508,7 +508,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(106, 40, 126, 0.15), rgba(255, 215, 0, 0.15));
+  background: linear-gradient(135deg, rgba(106, 40, 126, 0.15), rgba(255, 207, 81, 0.15));
   border-radius: 20px;
 }
 

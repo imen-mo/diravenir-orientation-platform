@@ -1,4 +1,4 @@
-{/* Icône de succès */}import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { programService } from '../services/api';
 import { toast } from 'react-toastify';

@@ -1,4 +1,4 @@
-{/* Icône de succès */}/* Page principale */
+/* Page principale */
 .programs-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -49,8 +49,8 @@
 
 .search-input:focus {
   outline: none;
-  border-color: #8b5cf6;
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  border-color: #541652;
+  box-shadow: 0 0 0 3px rgba(84, 22, 82, 0.1);
 }
 
 /* Section des filtres */
@@ -105,7 +105,7 @@
 
 .sort-select:focus {
   outline: none;
-  border-color: #8b5cf6;
+  border-color: #541652;
 }
 
 /* Grille des programmes */
@@ -140,7 +140,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(84, 22, 82, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
   opacity: 0;
   transition: opacity 0.3s ease;
 }

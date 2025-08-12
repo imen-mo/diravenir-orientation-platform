@@ -2,25 +2,26 @@
 
 /* FOOTER GLOBAL */
 .footer {
-  background-color: #40004C;        /* violet foncé */
+  background-color: #441048;        /* violet foncé/aubergine comme l'image */
   color: #fff;
-  padding: 60px 20px;
+  padding: 80px 40px 60px;         /* plus d'espace en haut */
   font-family: 'Poppins', sans-serif;
 }
 
 /* WRAPPER À 3 COLONNES */
 .footer-container {
-  max-width: 1200px;
+  max-width: 1400px;                /* plus large pour plus d'aération */
   margin: 0 auto;
   display: flex;
   justify-content: space-between;   /* espace égal entre les 3 blocs */
   flex-wrap: wrap;
+  gap: 80px;                        /* espacement entre colonnes */
 }
 
 /* CHAQUE SECTION */
 .footer-section {
-  flex: 1 1 280px;                   /* chacun prend au moins 280px */
-  margin: 0 10px;
+  flex: 1 1 320px;                  /* plus large pour plus d'aération */
+  margin: 0;
 }
 
 /* TEXTE & ALIGN */
@@ -28,122 +29,218 @@
 .center-section{ text-align: center;}
 .right-section { text-align: right; }
 
-/* --- LEFT --- */
+/* --- LEFT SECTION - Amélioré avec plus d'aération --- */
 .left-section .logo {
-  height: 60px;
-  margin-bottom: 20px;
+  height: 80px;                     /* logo plus grand */
+  margin-bottom: 30px;              /* plus d'espace */
+  display: block;
 }
+
 .left-section p {
-  font-size: 15px;
-  line-height: 1.8;
+  font-size: 16px;                  /* texte légèrement plus grand */
+  line-height: 1.9;                 /* plus d'espace entre lignes */
   color: #e0dfe8;
-  margin-bottom: 24px;
+  margin-bottom: 35px;              /* plus d'espace après la description */
+  max-width: 380px;                 /* largeur contrôlée pour la lisibilité */
 }
+
+/* Newsletter Section - Mieux aérée */
+.newsletter-section {
+  margin-bottom: 35px;              /* plus d'espace */
+}
+
+.newsletter-section h4 {
+  color: #FDCB00;                   /* jaune vif comme l'image */
+  font-size: 18px;
+  margin-bottom: 20px;              /* plus d'espace */
+  font-weight: 600;
+}
+
 .left-section .newsletter-form {
-  display: inline-flex;
+  display: flex;
   border-bottom: 2px solid #666;
+  max-width: 320px;                 /* plus large */
+  padding-bottom: 5px;              /* espace sous la ligne */
 }
+
 .left-section .newsletter-input {
   background: transparent;
   border: none;
-  color: #ddd;
-  padding: 8px;
-}
-.left-section .newsletter-button {
-  background: #FFC300;
-  color: #40004C;
-  border: none;
-  padding: 0 16px;
-  font-weight: 600;
-}
-.left-section .bottom-links {
-  margin-top: 24px;
-  font-size: 13px;
-}
-.left-section .bottom-links a {
-  color: #ccc;
-  margin: 0 12px;
-  text-decoration: none;
+  color: #fff;
+  padding: 12px 0;                  /* plus de padding */
+  flex: 1;
+  font-size: 15px;
+  outline: none;
 }
 
-/* --- CENTER --- */
+.left-section .newsletter-input::placeholder {
+  color: #aaa;
+}
+
+.left-section .newsletter-button {
+  background: #FDCB00;              /* jaune vif comme l'image */
+  color: #4A1F5A;                   /* violet foncé pour le contraste */
+  border: none;
+  padding: 12px 20px;               /* plus de padding */
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;               /* coins arrondis */
+  transition: all 0.3s ease;
+}
+
+.left-section .newsletter-button:hover {
+  background: #E6B800;              /* jaune plus foncé au hover */
+  transform: translateY(-2px);
+}
+
+/* Legal Links - Mieux espacés */
+.left-section .bottom-links {
+  margin-top: 0;
+  font-size: 14px;
+  display: flex;
+  gap: 30px;                        /* plus d'espace entre les liens */
+}
+
+.left-section .bottom-links a {
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  padding: 8px 0;                   /* zone de clic plus grande */
+}
+
+.left-section .bottom-links a:hover {
+  color: #FDCB00;                   /* jaune vif au hover */
+}
+
+/* --- CENTER SECTION --- */
 .center-section h4 {
-  color: #FFC300;
-  font-size: 18px;
-  margin-bottom: 16px;
+  color: #FDCB00;                   /* jaune vif comme l'image */
+  font-size: 20px;                  /* titre plus grand */
+  margin-bottom: 25px;              /* plus d'espace */
   font-weight: 600;
 }
+
+.center-section .highlight {
+  color: #FDCB00;                   /* jaune vif */
+}
+
 .center-section ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
+
 .center-section li {
-  margin-bottom: 12px;
+  margin-bottom: 16px;              /* plus d'espace entre liens */
 }
+
 .center-section a {
   color: #ccc;
   text-decoration: none;
   font-size: 15px;
-}
-.center-section a:hover {
-  color: #fff;
+  transition: color 0.3s ease;
+  padding: 5px 0;                   /* zone de clic plus grande */
 }
 
-/* --- RIGHT --- */
+.center-section a:hover {
+  color: #FDCB00;                   /* jaune vif au hover */
+}
+
+/* --- RIGHT SECTION --- */
 .right-section h4 {
-  color: #FFC300;
-  font-size: 18px;
-  margin-bottom: 16px;
+  color: #FDCB00;                   /* jaune vif comme l'image */
+  font-size: 20px;                  /* titre plus grand */
+  margin-bottom: 25px;              /* plus d'espace */
   font-weight: 600;
 }
-.right-section p,
-.right-section a {
-  color: #ccc;
-  font-size: 15px;
-  text-decoration: none;
-  display: block;
-  margin-bottom: 12px;
-}
-.right-section a:hover {
-  color: #fff;
-}
-.right-section .social-icons {
-  margin-top: 24px;
-}
-.right-section .social-icon {
-  color: #ccc;
-  font-size: 20px;
-  margin-left: 12px;
-}
-.right-section .social-icon:first-child {
-  margin-left: 0;
+
+.right-section .highlight {
+  color: #FDCB00;                   /* jaune vif */
 }
 
-/* COPYRIGHT */
-.footer-copyright {
-  text-align: center;
-  margin-top: 40px;
-  color: #aaa;
-  font-size: 14px;
-  border-top: 1px solid #5a005f;
-  padding-top: 20px;
+.right-section .contact-info p {
+  color: #ccc;
+  font-size: 15px;
+  margin-bottom: 16px;              /* plus d'espace */
+  line-height: 1.6;
+}
+
+.right-section .social-icons {
+  margin-top: 30px;                 /* plus d'espace */
+  display: flex;
+  gap: 20px;                        /* plus d'espace entre icônes */
+}
+
+.right-section .social-icon {
+  color: #ccc;
+  font-size: 22px;                  /* icônes plus grandes */
+  transition: all 0.3s ease;
+  padding: 8px;                     /* zone de clic plus grande */
+}
+
+.right-section .social-icon:hover {
+  color: #FDCB00;                   /* jaune vif au hover */
+  transform: translateY(-2px);
 }
 
 /* RESPONSIVE */
+@media (max-width: 1200px) {
+  .footer-container {
+    gap: 60px;
+  }
+  
+  .footer-section {
+    flex: 1 1 300px;
+  }
+}
+
 @media (max-width: 768px) {
+  .footer {
+    padding: 60px 30px 40px;
+  }
+  
   .footer-container {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    gap: 50px;
   }
+  
   .footer-section {
-    margin: 20px 0;
-  }
-  .right-section, .center-section {
+    margin: 0;
     text-align: center;
   }
+  
+  .left-section p {
+    max-width: 100%;
+  }
+  
   .left-section .newsletter-form {
-    width: 100%;
+    margin: 0 auto;
+  }
+  
+  .left-section .bottom-links {
+    justify-content: center;
+  }
+  
+  .right-section .social-icons {
+    justify-content: center;
   }
 }
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 50px 20px 30px;
+  }
+  
+  .footer-container {
+    gap: 40px;
+  }
+  
+  .left-section .bottom-links {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
