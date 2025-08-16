@@ -265,23 +265,29 @@ const UnifiedOrientationTest = () => {
     }
   };
 
-  const sendAnswersToBackend = async (allAnswers) => {
+  const sendAnswersToBackend = async () => {
     try {
+      // Préparer les données dans le format attendu par le backend
       const requestData = {
-        question1: allAnswers[1],
-        question2: allAnswers[2],
-        question3: allAnswers[3],
-        question4: allAnswers[4],
-        question5: allAnswers[5],
-        question6: allAnswers[6],
-        question7: allAnswers[7],
-        question8: allAnswers[8],
-        question9: allAnswers[9],
-        question10: allAnswers[10],
-        question11: allAnswers[11],
-        question12: allAnswers[12],
-        question13: allAnswers[13],
-        question14: allAnswers[14]
+        question1: allAnswers[1] || "A",
+        question2: allAnswers[2] ? [allAnswers[2]] : ["A"],
+        question3: allAnswers[3] || "A",
+        question4: allAnswers[4] || "A",
+        question5: allAnswers[5] ? [allAnswers[5]] : ["A"],
+        question6: allAnswers[6] || "A",
+        question7: allAnswers[7] || "A",
+        question8: allAnswers[8] || "A",
+        question9: {
+          "security": 80,
+          "innovation": 70,
+          "autonomy": 75,
+          "salary": 65
+        },
+        question10: allAnswers[10] || "A",
+        question11: allAnswers[11] || "A",
+        question12: allAnswers[12] || "A",
+        question13: allAnswers[13] || "A",
+        question14: allAnswers[14] ? [allAnswers[14]] : ["A"]
       };
 
       console.log('Envoi des réponses au backend:', requestData);
