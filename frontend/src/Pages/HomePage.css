@@ -1490,6 +1490,107 @@ body {
   transform: translateY(-2px);
 }
 
+/* ===== BANNIÈRE OAUTH2 ===== */
+
+.oauth2-welcome-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 15px 20px;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: slideDown 0.5s ease-out;
+}
+
+.oauth2-welcome-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.oauth2-welcome-icon {
+  font-size: 24px;
+  animation: bounce 2s infinite;
+}
+
+.oauth2-welcome-text h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.oauth2-welcome-text p {
+  margin: 5px 0 0 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.oauth2-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.oauth2-profile-btn,
+.oauth2-dashboard-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.oauth2-profile-btn {
+  background: #667eea;
+  color: white;
+}
+
+.oauth2-profile-btn:hover {
+  background: #5a6fd8;
+  transform: translateY(-1px);
+}
+
+.oauth2-dashboard-btn {
+  background: #764ba2;
+  color: white;
+}
+
+.oauth2-dashboard-btn:hover {
+  background: #6a4190;
+  transform: translateY(-1px);
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
   .navbar {

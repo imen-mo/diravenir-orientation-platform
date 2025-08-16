@@ -1,48 +1,45 @@
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
+import { loadEnv } from 'vite'
 
+// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  // Charge les variables d'environnement en fonction du mode (dev/prod)
   const env = loadEnv(mode, process.cwd(), '')
   
   return {
     plugins: [react()],
+    server: {
+      port: 3000,
+      host: true,
+      open: true
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
       },
     },
-    // Expose les variables d'environnement au client
     define: {
       'process.env': {
-        VITE_RECAPTCHA_SITE_KEY: JSON.stringify(env.VITE_RECAPTCHA_SITE_KEY || '6Lf6Vp0rAAAAAMghRpLjSbffcSEF7Z-JGBZbZA0U'),
-        VITE_API_URL: JSON.stringify(env.VITE_API_URL || 'http://localhost:8084/api')
-      }
-    },
-    server: {
-      port: 3000,
-      host: true,
-      strictPort: true,
-      proxy: {
-        '/api': {
-          target: 'http://localhost:8084',
-          changeOrigin: true,
-          secure: false,
-          ws: true,
-        }
+        NODE_ENV: JSON.stringify(mode),
+        // Suppression des variables reCAPTCHA
       }
     },
     optimizeDeps: {
-      include: ['react-google-recaptcha-v3'],
-      force: true
+      include: [
+        'react',
+        'react-dom',
+        'react-router-dom',
+        'axios'
+      ]
     },
     build: {
       rollupOptions: {
         output: {
           manualChunks: {
             vendor: ['react', 'react-dom'],
-            recaptcha: ['react-google-recaptcha-v3']
+            router: ['react-router-dom'],
+            http: ['axios']
           }
         }
       }

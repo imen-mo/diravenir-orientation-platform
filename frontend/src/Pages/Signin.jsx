@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import './Signin.css';
 
 import GoogleLogin from '../components/GoogleLogin';
 import logo from '../assets/logo.png';
 import illustration from '../assets/illustration.jpg';
 import { motion } from "framer-motion";
 import Footer from '../components/Footer';
-import "../pages/SignUp.css";
 import GlobalNavbar from '../components/GlobalNavbar';
-import LoginTest from '../components/LoginTest';
+
 
 
 // Composant interne pour utiliser le hook reCAPTCHA
@@ -244,8 +242,7 @@ function SignInForm() {
               <p>Pas encore de compte ? <Link to="/signup" className="signup-link-elegant">S'inscrire</Link></p>
             </motion.div>
 
-            {/* Composant de test de connexion */}
-            <LoginTest />
+            
           </div>
         </motion.div>
 

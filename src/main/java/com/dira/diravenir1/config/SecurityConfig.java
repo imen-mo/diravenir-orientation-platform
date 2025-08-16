@@ -1,6 +1,7 @@
 package com.dira.diravenir1.config;
 
 import com.dira.diravenir1.service.JwtAuthenticationFilter;
+import com.dira.diravenir1.config.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +34,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2UserService;
+    private final OAuth2SuccessHandler oauth2SuccessHandler;
 
     /**
      * Chaîne de filtres de sécurité principale
@@ -42,20 +44,27 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/api/auth/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/auth/signin")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/auth/signup")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/auth/verify-email")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/auth/forgot-password")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/auth/reset-password")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/oauth2/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/actuator/health")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/public/**", "GET")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/orientation/**")).permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(oauth2UserService))
-                        .defaultSuccessUrl("/api/auth/oauth2-success", true)
-                        .failureUrl("/api/auth/oauth2-failure")
+                        .successHandler(oauth2SuccessHandler)
+                        .failureHandler((request, response, exception) -> {
+                            response.sendRedirect("http://localhost:3000/signin?error=oauth2_failed");
+                        })
                 )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {
@@ -81,7 +90,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         
-        // Solution simple : autoriser tous les ports locaux
+        // Solution : utiliser allowedOriginPatterns au lieu de allowedOrigins avec "*"
         config.setAllowedOriginPatterns(List.of("http://localhost:*"));
         
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

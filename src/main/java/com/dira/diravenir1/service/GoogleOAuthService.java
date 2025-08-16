@@ -53,6 +53,7 @@ public class GoogleOAuthService extends DefaultOAuth2UserService {
         
         if (existingUser.isPresent()) {
             Utilisateur user = existingUser.get();
+            logger.info("✅ Utilisateur OAuth2 existant trouvé : {} | Rôle: {}", email, user.getRole());
             
             // Mettre à jour les informations si nécessaire
             boolean updated = false;
@@ -69,12 +70,16 @@ public class GoogleOAuthService extends DefaultOAuth2UserService {
                 logger.info("✅ Informations utilisateur OAuth2 mises à jour : {}", email);
             }
             
-            logger.info("✅ Utilisateur OAuth2 existant trouvé : {}", email);
+            // Marquer l'utilisateur comme connecté OAuth2
+            user.setDerniereConnexion(java.time.LocalDateTime.now());
+            utilisateurRepository.save(user);
+            
             return createOAuth2User(user, oauth2User.getAttributes());
         } else {
             // Créer un nouvel utilisateur
+            logger.info("🆕 Création d'un nouvel utilisateur OAuth2 : {}", email);
             Utilisateur newUser = createNewOAuth2User(provider, providerId, email, name, picture, givenName, familyName);
-            logger.info("✅ Nouvel utilisateur OAuth2 créé : {}", email);
+            logger.info("✅ Nouvel utilisateur OAuth2 créé avec succès : {}", email);
             return createOAuth2User(newUser, oauth2User.getAttributes());
         }
     }

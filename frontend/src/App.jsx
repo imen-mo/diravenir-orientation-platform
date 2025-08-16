@@ -32,6 +32,7 @@ const SignIn = lazy(() => import("./pages/Signin"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const SignUpSuccess = lazy(() => import("./pages/SignUpSuccess"));
 const EmailVerification = lazy(() => import("./pages/EmailVerification"));
+const OAuth2Success = lazy(() => import("./pages/OAuth2Success"));
 const HomePage = lazy(() => import("./pages/HomePage"));
 const About = lazy(() => import("./pages/About"));
 const Contact = lazy(() => import("./pages/Contact"));
@@ -99,6 +100,7 @@ function App() {
                                     <Route path="/signup" element={<SignUp />} />
                                     <Route path="/signup-success" element={<SignUpSuccess />} />
                                     <Route path="/verify-email" element={<EmailVerification />} />
+                                    <Route path="/oauth2-success" element={<OAuth2Success />} />
                                 </Route>
 
                                 {/* Main routes */}

@@ -1,160 +1,71 @@
-import { useState, useEffect, createContext, useContext } from 'react';
-import { authService, userService } from '../services/api';
-import { setToken, removeToken, getToken } from '../utils/auth';
+import React, { useState, useEffect, createContext, useContext } from 'react';
+import authService from '../services/api';
 
-// Créer le contexte d'authentification
-const AuthContext = createContext(null);
+const AuthContext = createContext();
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Vérifier l'état d'authentification au chargement
   useEffect(() => {
-    const checkAuth = async () => {
-      const token = getToken();
-      if (token) {
-        try {
-          const profile = await userService.getProfile();
-          setUser(profile);
-        } catch (err) {
-          console.error('Erreur de vérification du token:', err);
-          removeToken();
-        }
-      }
-      setLoading(false);
-    };
-
-    checkAuth();
+    // Vérifier si l'utilisateur est déjà connecté au chargement
+    const token = localStorage.getItem('token');
+    if (token) {
+      // Optionnel : valider le token avec le backend
+      setUser({ token }); // Placeholder - ajustez selon votre logique
+    }
+    setLoading(false);
   }, []);
 
-  const login = async (email, password, recaptchaToken) => {
-    setLoading(true);
-    setError(null);
+  const login = async (email, password) => {
     try {
-      const response = await authService.login(email, password, recaptchaToken);
-      setToken(response.token);
-      try {
-        const profile = await userService.getProfile();
-        setUser(profile);
-      } catch (e) {
-        // profil non indispensable pour compléter la connexion
+      setLoading(true);
+      setError(null);
+      
+      const response = await authService.login(email, password);
+      
+      if (response.token) {
+        localStorage.setItem('token', response.token);
+        setUser(response);
+        return { success: true };
+      } else {
+        return { success: false, error: 'Réponse invalide du serveur' };
       }
-      return response;
-    } catch (err) {
-      const errorMessage = err.response?.data?.message || 'Échec de la connexion';
-      setError(errorMessage);
-      throw new Error(errorMessage);
+    } catch (error) {
+      console.error('Erreur de connexion:', error);
+      return { 
+        success: false, 
+        error: error.response?.data?.message || 'Erreur de connexion' 
+      };
     } finally {
       setLoading(false);
     }
   };
 
-  const register = async (userData) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await authService.register(userData);
-      return response;
-    } catch (err) {
-      const errorMessage = err.response?.data?.message || "Échec de l'inscription";
-      setError(errorMessage);
-      throw new Error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const logout = async () => {
-    try {
-      // Appeler l'API de logout pour invalider le token côté serveur
-      await authService.logout();
-      console.log('✅ Logout réussi côté serveur');
-    } catch (error) {
-      console.warn('⚠️ Erreur lors du logout côté serveur:', error.message);
-      // Continuer avec le logout local même en cas d'erreur serveur
-    } finally {
-      // Toujours nettoyer côté client
-      removeToken();
-      setUser(null);
-      
-      // Rediriger vers la page d'accueil
-      if (window.location.pathname !== '/') {
-        window.location.href = '/';
-      }
-      
-      console.log('✅ Logout local effectué');
-    }
-  };
-
-  const logoutAll = async () => {
-    try {
-      // Appeler l'API de logout global pour invalider tous les tokens
-      await authService.logoutAll();
-      console.log('✅ Logout global réussi côté serveur');
-    } catch (error) {
-      console.warn('⚠️ Erreur lors du logout global côté serveur:', error.message);
-      // Continuer avec le logout local même en cas d'erreur serveur
-    } finally {
-      // Toujours nettoyer côté client
-      removeToken();
-      setUser(null);
-      
-      // Rediriger vers la page d'accueil
-      if (window.location.pathname !== '/') {
-        window.location.href = '/';
-      }
-      
-      console.log('✅ Logout global local effectué');
-    }
-  };
-
-  const updateProfile = async (profileData) => {
-    try {
-      const updatedProfile = await userService.updateProfile(profileData);
-      setUser(updatedProfile);
-      
-      // Rafraîchir les données utilisateur depuis le serveur
-      try {
-        const freshProfile = await userService.getProfile();
-        setUser(freshProfile);
-        return freshProfile;
-      } catch (refreshError) {
-        console.warn('Erreur lors du rafraîchissement du profil:', refreshError);
-        return updatedProfile;
-      }
-    } catch (error) {
-      throw error;
-    }
+  const logout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
   };
 
   const value = {
     user,
-    loading,
-    error,
     login,
-    register,
     logout,
-    logoutAll,
-    updateProfile,
-    isAuthenticated: !!getToken(),
+    loading
   };
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };
-
-// Hook personnalisé pour utiliser le contexte d'authentification
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth doit être utilisé à l\'intérieur d\'un AuthProvider');
-  }
-  return context;
-};
-
-export default AuthContext;

@@ -8,9 +8,9 @@ const TestWelcome = () => {
 
   const handleStartTest = () => {
     setIsStarting(true);
-    // Simulate a brief loading animation before navigating to the first question
+    // Simulate a brief loading animation before navigating to the unified test
     setTimeout(() => {
-      navigate('/test-question/1');
+      navigate('/orientation');
     }, 2000);
   };
 

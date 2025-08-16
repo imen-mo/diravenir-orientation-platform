@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import logo from "../assets/logo-colorfull.png";
 import illustration from "../assets/illustration.png";
 import meeting from "../assets/meeting.png";
@@ -16,38 +16,104 @@ import "./HomePage.css";
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [programs, setPrograms] = useState([]);
   const [temoignages, setTemoignages] = useState([]);
   const [destinations, setDestinations] = useState([]);
   const [partenaires, setPartenaires] = useState([]);
+  const [oauth2Success, setOauth2Success] = useState(false);
+  const [oauth2Email, setOauth2Email] = useState('');
+  const [oauth2Token, setOauth2Token] = useState('');
+
+  console.log('🔍 HomePage composant rendu');
 
   useEffect(() => {
+    console.log('🔍 HomePage useEffect exécuté');
+    
+    // Détecter la connexion OAuth2 réussie
+    const oauth2Param = searchParams.get('oauth2');
+    const emailParam = searchParams.get('email');
+    const tokenParam = searchParams.get('token');
+    
+    if (oauth2Param === 'success' && emailParam && tokenParam) {
+      setOauth2Success(true);
+      setOauth2Email(emailParam);
+      setOauth2Token(tokenParam);
+      
+      // Stocker le token dans localStorage pour l'authentification
+      localStorage.setItem('token', tokenParam);
+      
+      // Nettoyer l'URL après 5 secondes
+      setTimeout(() => {
+        setOauth2Success(false);
+        navigate('/', { replace: true });
+      }, 5000);
+    }
+
     // Charger les programmes
     fetchFilieres()
-      .then(data => setPrograms(data))
-      .catch(err => console.error("Erreur lors du chargement des filières:", err));
+      .then(data => {
+        console.log('✅ Programmes chargés:', data);
+        setPrograms(data);
+      })
+      .catch(err => console.error("❌ Erreur lors du chargement des filières:", err));
 
     // Charger les témoignages
     fetchTemoignages()
-      .then(data => setTemoignages(data))
-      .catch(err => console.error("Erreur lors du chargement des témoignages:", err));
+      .then(data => {
+        console.log('✅ Témoignages chargés:', data);
+        setTemoignages(data);
+      })
+      .catch(err => console.error("❌ Erreur lors du chargement des témoignages:", err));
 
     // Charger les destinations
     fetchDestinations()
-      .then(data => setDestinations(data))
-      .catch(err => console.error("Erreur lors du chargement des destinations:", err));
+      .then(data => {
+        console.log('✅ Destinations chargées:', data);
+        setDestinations(data);
+      })
+      .catch(err => console.error("❌ Erreur lors du chargement des destinations:", err));
 
     // Charger les partenaires
     fetchPartenaires()
-      .then(data => setPartenaires(data))
-      .catch(err => console.error("Erreur lors du chargement des partenaires:", err));
-  }, []);
+      .then(data => {
+        console.log('✅ Partenaires chargés:', data);
+        setPartenaires(data);
+      })
+      .catch(err => console.error("❌ Erreur lors du chargement des partenaires:", err));
+  }, [searchParams, navigate]);
 
   return (
     <div className="home-page">
-
       {/* Hero Section */}
       <section className="hero-section">
+        {/* Message de bienvenue OAuth2 */}
+        {oauth2Success && (
+          <div className="oauth2-welcome-banner">
+            <div className="oauth2-welcome-content">
+              <div className="oauth2-welcome-icon">🎉</div>
+              <div className="oauth2-welcome-text">
+                <h3>Bienvenue !</h3>
+                <p>Vous êtes maintenant connecté avec votre compte Google ({oauth2Email})</p>
+                <div className="oauth2-actions">
+                  <button 
+                    onClick={() => navigate('/profile')}
+                    className="oauth2-profile-btn"
+                  >
+                    👤 Voir mon profil
+                  </button>
+                  <button 
+                    onClick={() => navigate('/dashboard')}
+                    className="oauth2-dashboard-btn"
+                  >
+                    📊 Mon tableau de bord
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
         <div className="hero-content">
           <div className="hero-text">
             <h1>Guide Your Way Up To Success With Us</h1>

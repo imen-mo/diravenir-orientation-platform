@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import orientationService from '../services/orientationService';
 import './UnifiedOrientationTest.css';
 
 const UnifiedOrientationTest = () => {
@@ -87,9 +88,9 @@ const UnifiedOrientationTest = () => {
       question: "Quand vous devez apprendre quelque chose de nouveau, comment préférez-vous le faire ?",
       type: "single",
       options: [
-        { id: 'A', icon: '📖', title: 'Lire et prendre des notes détaillées' },
+        { id: 'A', icon: '📚', title: 'Lire et prendre des notes détaillées' },
         { id: 'B', icon: '🎥', title: 'Regarder des tutoriels vidéo ou des démonstrations' },
-        { id: 'C', icon: '🔄', title: 'Essayer par moi-même, pratiquer et faire des erreurs' },
+        { id: 'C', icon: '🛠️', title: 'Essayer par moi-même, pratiquer et faire des erreurs' },
         { id: 'D', icon: '💭', title: 'Discuter avec d\'autres et échanger des idées' }
       ]
     },
@@ -101,7 +102,7 @@ const UnifiedOrientationTest = () => {
       options: [
         { id: 'A', icon: '❤️', title: 'Améliorer la vie des individus directement', description: 'Bien-être, santé, éducation' },
         { id: 'B', icon: '⚡', title: 'Créer des systèmes ou des produits qui rendent le monde plus efficace' },
-        { id: 'C', icon: '🌟', title: 'Contribuer à la beauté et à la culture', description: 'Arts, design, histoire' },
+        { id: 'C', icon: '🎭', title: 'Contribuer à la beauté et à la culture', description: 'Arts, design, histoire' },
         { id: 'D', icon: '⚖️', title: 'Défendre une cause ou promouvoir la justice sociale' }
       ]
     },
@@ -136,7 +137,7 @@ const UnifiedOrientationTest = () => {
       question: "Si vous deviez résoudre un grand problème, quelle serait votre motivation principale ?",
       type: "single",
       options: [
-        { id: 'A', icon: '🔬', title: 'Comprendre la racine du problème', description: 'Pour une solution durable' },
+        { id: 'A', icon: '🔍', title: 'Comprendre la racine du problème pour une solution durable' },
         { id: 'B', icon: '⚡', title: 'Mettre en place rapidement une solution concrète' },
         { id: 'C', icon: '🤝', title: 'Rallier les gens autour de la solution' },
         { id: 'D', icon: '🚀', title: 'Développer une solution technologique avancée' }
@@ -180,36 +181,26 @@ const UnifiedOrientationTest = () => {
       category: "Matières et Parcours Académiques Préférés",
       question: "Parmi ces groupes de matières, lesquels vous ont le plus passionné(e) durant votre parcours scolaire ?",
       type: "multiple",
-      maxSelections: 3,
+      maxSelections: 2,
       options: [
         { id: 'A', icon: '🔬', title: 'Sciences', description: 'Maths, Physique-Chimie, SVT' },
         { id: 'B', icon: '📚', title: 'Littérature et Langues', description: 'Français, Langues étrangères, Philosophie' },
         { id: 'C', icon: '🌍', title: 'Sciences Sociales et Humaines', description: 'Histoire-Géo, SES, Psychologie' },
         { id: 'D', icon: '🎨', title: 'Arts et Design', description: 'Arts Plastiques, Musique, Design' },
         { id: 'E', icon: '💻', title: 'Technologie et Informatique', description: 'NSI, STI2D, Sciences de l\'ingénieur' },
-        { id: 'F', icon: '📊', title: 'Gestion et Économie', description: 'Management, Droit' }
+        { id: 'F', icon: '💰', title: 'Gestion et Économie', description: 'Management, Droit' }
       ]
     }
   ];
 
   const currentQ = questions[currentQuestion];
 
-  useEffect(() => {
-    // Initialiser les valeurs par défaut
-    if (currentQ.type === 'sliders') {
-      const defaultValues = {};
-      currentQ.options.forEach(option => {
-        defaultValues[option.id] = 50;
-      });
-      setSliderValues(defaultValues);
-    }
-  }, [currentQuestion]);
-
-  const handleSingleSelect = (optionId) => {
+  // Gestion des réponses
+  const handleSingleAnswer = (optionId) => {
     setAnswers(prev => ({ ...prev, [currentQ.id]: optionId }));
   };
 
-  const handleMultipleSelect = (optionId) => {
+  const handleMultipleAnswer = (optionId) => {
     setSelectedMultiple(prev => {
       if (prev.includes(optionId)) {
         return prev.filter(id => id !== optionId);
@@ -226,69 +217,99 @@ const UnifiedOrientationTest = () => {
     }
   };
 
-  const removeFromDragOrder = (optionId) => {
-    setDragOrder(prev => prev.filter(id => id !== optionId));
+  const removeFromDragOrder = (index) => {
+    setDragOrder(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSliderChange = (optionId, value) => {
     setSliderValues(prev => ({ ...prev, [optionId]: value }));
   };
 
+  // Navigation
   const handleNext = () => {
-    let currentAnswer;
-    
-    switch (currentQ.type) {
-      case 'single':
-        currentAnswer = answers[currentQ.id];
-        break;
-      case 'multiple':
-        currentAnswer = selectedMultiple;
-        break;
-      case 'dragdrop':
-        currentAnswer = dragOrder;
-        break;
-      case 'sliders':
-        currentAnswer = sliderValues;
-        break;
-      default:
-        currentAnswer = null;
-    }
-
-    if (currentAnswer && (Array.isArray(currentAnswer) ? currentAnswer.length > 0 : true)) {
-      // Sauvegarder la réponse
-      setAnswers(prev => ({ ...prev, [currentQ.id]: currentAnswer }));
+    if (currentQuestion === questions.length - 1) {
+      // Terminer le test
+      const allAnswers = {
+        ...answers,
+        [currentQ.id]: currentQ.type === 'multiple' ? selectedMultiple : 
+                      currentQ.type === 'dragdrop' ? dragOrder :
+                      currentQ.type === 'sliders' ? sliderValues : answers[currentQ.id]
+      };
       
-      // Réinitialiser les états temporaires
+      sendAnswersToBackend(allAnswers);
+    } else {
+      // Sauvegarder les réponses de la question actuelle
+      const currentAnswers = currentQ.type === 'multiple' ? selectedMultiple : 
+                           currentQ.type === 'dragdrop' ? dragOrder :
+                           currentQ.type === 'sliders' ? sliderValues : answers[currentQ.id];
+      
+      setAnswers(prev => ({ ...prev, [currentQ.id]: currentAnswers }));
+      
+      // Passer à la question suivante
+      setCurrentQuestion(prev => prev + 1);
+      
+      // Réinitialiser les états spécifiques
+      setSelectedMultiple([]);
       setDragOrder([]);
       setSliderValues({});
-      setSelectedMultiple([]);
-
-      if (currentQuestion < questions.length - 1) {
-        setCurrentQuestion(prev => prev + 1);
-      } else {
-        // Test terminé, naviguer vers les résultats
-        navigate('/orientation-results', { state: { answers: { ...answers, [currentQ.id]: currentAnswer } } });
-      }
     }
   };
 
   const handlePrevious = () => {
     if (currentQuestion > 0) {
       setCurrentQuestion(prev => prev - 1);
-      // Restaurer la réponse précédente si elle existe
-      const prevAnswer = answers[questions[currentQuestion - 1].id];
-      if (prevAnswer) {
-        if (questions[currentQuestion - 1].type === 'dragdrop') {
-          setDragOrder(prevAnswer);
-        } else if (questions[currentQuestion - 1].type === 'sliders') {
-          setSliderValues(prevAnswer);
-        } else if (questions[currentQuestion - 1].type === 'multiple') {
-          setSelectedMultiple(prevAnswer);
-        }
-      }
+      // Réinitialiser les états spécifiques
+      setSelectedMultiple([]);
+      setDragOrder([]);
+      setSliderValues({});
     }
   };
 
+  const sendAnswersToBackend = async (allAnswers) => {
+    try {
+      const requestData = {
+        question1: allAnswers[1],
+        question2: allAnswers[2],
+        question3: allAnswers[3],
+        question4: allAnswers[4],
+        question5: allAnswers[5],
+        question6: allAnswers[6],
+        question7: allAnswers[7],
+        question8: allAnswers[8],
+        question9: allAnswers[9],
+        question10: allAnswers[10],
+        question11: allAnswers[11],
+        question12: allAnswers[12],
+        question13: allAnswers[13],
+        question14: allAnswers[14]
+      };
+
+      console.log('Envoi des réponses au backend:', requestData);
+
+      // Utiliser le service d'orientation pour communiquer avec le backend
+      const response = await orientationService.calculateOrientation(requestData);
+      
+      console.log('Réponse du backend:', response);
+
+      navigate('/orientation/results', { 
+        state: { 
+          backendResponse: response,
+          userAnswers: allAnswers
+        } 
+      });
+
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi au backend:', error);
+      navigate('/orientation/results', { 
+        state: { 
+          userAnswers: allAnswers,
+          error: 'Erreur de connexion au serveur'
+        } 
+      });
+    }
+  };
+
+  // Rendu du contenu de la question selon le type
   const renderQuestionContent = () => {
     switch (currentQ.type) {
       case 'single':
@@ -298,13 +319,14 @@ const UnifiedOrientationTest = () => {
               <div
                 key={option.id}
                 className={`option-card ${answers[currentQ.id] === option.id ? 'selected' : ''}`}
-                onClick={() => handleSingleSelect(option.id)}
+                onClick={() => handleSingleAnswer(option.id)}
               >
                 <div className="option-icon">{option.icon}</div>
-                <h3 className="option-title">{option.title}</h3>
-                {option.description && <p className="option-description">{option.description}</p>}
-                <div className="option-check">
-                  {answers[currentQ.id] === option.id && <span>✓</span>}
+                <div className="option-content">
+                  <h3 className="option-title">{option.title}</h3>
+                  {option.description && (
+                    <p className="option-description">{option.description}</p>
+                  )}
                 </div>
               </div>
             ))}
@@ -313,23 +335,27 @@ const UnifiedOrientationTest = () => {
 
       case 'multiple':
         return (
-          <div className="options-grid multiple">
+          <div className="options-grid">
             {currentQ.options.map((option) => (
               <div
                 key={option.id}
                 className={`option-card ${selectedMultiple.includes(option.id) ? 'selected' : ''}`}
-                onClick={() => handleMultipleSelect(option.id)}
+                onClick={() => handleMultipleAnswer(option.id)}
               >
                 <div className="option-icon">{option.icon}</div>
-                <h3 className="option-title">{option.title}</h3>
-                {option.description && <p className="option-description">{option.description}</p>}
-                <div className="option-check">
-                  {selectedMultiple.includes(option.id) && <span>✓</span>}
+                <div className="option-content">
+                  <h3 className="option-title">{option.title}</h3>
+                  {option.description && (
+                    <p className="option-description">{option.description}</p>
+                  )}
                 </div>
+                {selectedMultiple.includes(option.id) && (
+                  <div className="selection-indicator">✓</div>
+                )}
               </div>
             ))}
             <div className="selection-info">
-              Sélectionnez jusqu'à {currentQ.maxSelections} options ({selectedMultiple.length}/{currentQ.maxSelections})
+              Sélectionné(s): {selectedMultiple.length}/{currentQ.maxSelections}
             </div>
           </div>
         );
@@ -340,43 +366,40 @@ const UnifiedOrientationTest = () => {
             <div className="available-options">
               <h4>Options disponibles :</h4>
               <div className="options-grid">
-                {currentQ.options.filter(option => !dragOrder.includes(option.id)).map((option) => (
-                  <div
-                    key={option.id}
-                    className="option-card draggable"
-                    onClick={() => handleDragDrop(option.id)}
-                  >
-                    <div className="option-icon">{option.icon}</div>
-                    <h3 className="option-title">{option.title}</h3>
-                  </div>
-                ))}
+                {currentQ.options
+                  .filter(option => !dragOrder.includes(option.id))
+                  .map((option) => (
+                    <div
+                      key={option.id}
+                      className="option-card draggable"
+                      onClick={() => handleDragDrop(option.id)}
+                    >
+                      <div className="option-icon">{option.icon}</div>
+                      <div className="option-title">{option.title}</div>
+                    </div>
+                  ))}
               </div>
             </div>
             
             <div className="selected-order">
-              <h4>Votre ordre de préférence (top 3) :</h4>
-              <div className="order-slots">
-                {[1, 2, 3].map((position) => (
-                  <div key={position} className="order-slot">
-                    <span className="position-number">{position}</span>
-                    {dragOrder[position - 1] && (
-                      <div className="selected-option">
-                        <div className="option-icon">
-                          {currentQ.options.find(opt => opt.id === dragOrder[position - 1])?.icon}
-                        </div>
-                        <span className="option-title">
-                          {currentQ.options.find(opt => opt.id === dragOrder[position - 1])?.title}
-                        </span>
-                        <button 
-                          className="remove-btn"
-                          onClick={() => removeFromDragOrder(dragOrder[position - 1])}
-                        >
-                          ×
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                ))}
+              <h4>Votre ordre de préférence :</h4>
+              <div className="order-list">
+                {dragOrder.map((optionId, index) => {
+                  const option = currentQ.options.find(opt => opt.id === optionId);
+                  return (
+                    <div key={optionId} className="order-item">
+                      <span className="order-number">{index + 1}</span>
+                      <div className="option-icon">{option.icon}</div>
+                      <div className="option-title">{option.title}</div>
+                      <button
+                        className="remove-button"
+                        onClick={() => removeFromDragOrder(index)}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -386,16 +409,16 @@ const UnifiedOrientationTest = () => {
         return (
           <div className="sliders-container">
             {currentQ.options.map((option) => (
-              <div key={option.id} className="slider-item">
-                <div className="slider-header">
-                  <h4 className="slider-title">{option.title}</h4>
-                  <span className="slider-value">{sliderValues[option.id] || 50}%</span>
+              <div key={option.id} className="slider-group">
+                <div className="slider-label">
+                  <span>{option.title}</span>
+                  <span className="slider-value">{sliderValues[option.id] || 0}/5</span>
                 </div>
                 <input
                   type="range"
                   min="0"
-                  max="100"
-                  value={sliderValues[option.id] || 50}
+                  max="5"
+                  value={sliderValues[option.id] || 0}
                   onChange={(e) => handleSliderChange(option.id, parseInt(e.target.value))}
                   className="slider-input"
                 />
@@ -440,57 +463,45 @@ const UnifiedOrientationTest = () => {
         </div>
       </div>
 
-      {/* Barre de progression */}
-      <div className="progress-container">
-        <div className="progress-bar">
-          <div className="progress-fill" style={{ width: `${progressPercentage}%` }}></div>
-        </div>
-        <span className="progress-text">
-          Question {currentQuestion + 1} sur {questions.length}
-        </span>
-      </div>
-
-      {/* Catégorie */}
-      <div className="category-badge">
-        {currentQ.category}
-      </div>
-
-      {/* Question */}
-      <div className="question-container">
+      {/* Carte principale du test */}
+      <div className="test-card">
+        {/* Question principale */}
         <h2 className="question-text">{currentQ.question}</h2>
+        <p className="question-instruction">
+          {currentQ.type === 'single' && '(SÉLECTIONNEZ UNE SEULE OPTION)'}
+          {currentQ.type === 'multiple' && '(SÉLECTIONNEZ JUSQU\'À 3 OPTIONS)'}
+          {currentQ.type === 'dragdrop' && '(GLISSEZ-DÉPOSEZ 3 OPTIONS DANS L\'ORDRE DE PRÉFÉRENCE)'}
+          {currentQ.type === 'sliders' && '(AJUSTEZ LES CURSEURS SELON VOTRE PRÉFÉRENCE)'}
+        </p>
         
         {/* Contenu de la question selon le type */}
         {renderQuestionContent()}
-      </div>
 
-      {/* Navigation */}
-      <div className="navigation-buttons">
-        {currentQuestion > 0 && (
-          <button className="nav-button previous" onClick={handlePrevious}>
-            <span className="arrow">←</span>
-            Précédent
+        {/* Navigation et progression */}
+        <div className="navigation-section">
+          {currentQuestion > 0 && (
+            <a href="#" className="back-button" onClick={handlePrevious}>
+              ← Précédent
+            </a>
+          )}
+          
+          <button 
+            className={`btn ${canProceed() ? 'btn-primary' : 'btn-secondary'}`}
+            disabled={!canProceed()}
+            onClick={handleNext}
+          >
+            {currentQuestion === questions.length - 1 ? 'Terminer le test' : 'Suivant'}
           </button>
-        )}
-        
-        <button 
-          className="nav-button next"
-          disabled={!canProceed()}
-          onClick={handleNext}
-        >
-          {currentQuestion === questions.length - 1 ? 'Terminer le test' : 'Suivant'}
-          <span className="arrow">→</span>
-        </button>
-      </div>
+        </div>
 
-      {/* Indicateur de progression visuel */}
-      <div className="progress-indicator">
-        <div className="progress-dots">
-          {questions.map((_, index) => (
-            <div 
-              key={index} 
-              className={`progress-dot ${index <= currentQuestion ? 'active' : ''} ${index === currentQuestion ? 'current' : ''}`}
-            />
-          ))}
+        {/* Barre de progression professionnelle */}
+        <div className="progress-container">
+          <div className="progress-bar">
+            <div className="progress-fill" style={{ width: `${progressPercentage}%` }}></div>
+          </div>
+          <div className="progress-text">
+            Question {currentQuestion + 1} sur {questions.length}
+          </div>
         </div>
       </div>
     </div>
