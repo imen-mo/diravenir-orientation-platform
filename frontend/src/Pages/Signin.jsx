@@ -1,19 +1,18 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Signin.css';
-
+import GlobalNavbar from '../components/GlobalNavbar';
 import GoogleLogin from '../components/GoogleLogin';
 import logo from '../assets/logo.png';
 import illustration from '../assets/illustration.jpg';
 import { motion } from "framer-motion";
 import Footer from '../components/Footer';
-import GlobalNavbar from '../components/GlobalNavbar';
 
-
-
-// Composant interne pour utiliser le hook reCAPTCHA
-function SignInForm() {
+// Composant interne pour le formulaire de connexion
+const SignInForm = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -22,7 +21,6 @@ function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
-
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -60,9 +58,16 @@ function SignInForm() {
         localStorage.removeItem('rememberMe');
       }
 
-      await login(formData.email, formData.password);
-      toast.success('Connexion réussie !');
-      navigate(from, { replace: true });
+      const result = await login(formData.email, formData.password);
+      
+      if (result.success) {
+        toast.success('Connexion réussie !');
+        // Redirection vers la page d'accueil ou la page demandée
+        navigate(from, { replace: true });
+      } else {
+        setError(result.error || 'Erreur lors de la connexion');
+        toast.error('Échec de la connexion. Veuillez réessayer.');
+      }
     } catch (err) {
       console.error('Erreur de connexion:', err);
       const errorMessage = err.response?.data?.error || err.response?.data?.message || (typeof err.response?.data === 'string' ? err.response?.data : null) || "Erreur lors de la connexion. Veuillez réessayer.";
@@ -75,8 +80,6 @@ function SignInForm() {
 
   return (
     <div className="signin-page-elegant">
-      <ToastContainer position="top-right" autoClose={5000} />
-      
       {/* Header / Nav */}
       <GlobalNavbar activePage="signin" />
 
@@ -291,8 +294,13 @@ function SignInForm() {
       <Footer />
     </div>
   );
-}
+};
 
 export default function SignIn() {
-  return <SignInForm />;
+  return (
+    <>
+      <ToastContainer position="top-right" autoClose={5000} />
+      <SignInForm />
+    </>
+  );
 }

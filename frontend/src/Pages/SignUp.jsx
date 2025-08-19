@@ -111,8 +111,8 @@ const SignUpInner = () => {
             nom: formData.nom.trim(),
             prenom: formData.prenom.trim(),
             email: formData.email.trim().toLowerCase(),
-            password: formData.password,
-            confirmPassword: formData.confirmPassword
+            motDePasse: formData.password,
+            confirmationMotDePasse: formData.confirmPassword
         };
         
         console.log("📤 Données à envoyer :", JSON.stringify(requestData, null, 2));
@@ -172,11 +172,18 @@ const SignUpInner = () => {
                 } else if (err.response.status === 409) {
                     setError('Cette adresse email est déjà utilisée.');
                 } else if (err.response.status === 500) {
-                    // Erreur interne du serveur - peut être liée à l'email mais l'inscription a réussi
-                    if (err.response.data.error && err.response.data.error.includes("email")) {
-                        setError('Compte créé avec succès, mais problème avec l\'envoi de l\'email de vérification. Vous pouvez vous connecter et demander un nouvel email de vérification.');
+                    // Vérifier si c'est une erreur d'email ou d'inscription
+                    const errorData = err.response.data;
+                    if (errorData && errorData.error) {
+                        if (errorData.error.includes("email") || errorData.error.includes("Email")) {
+                            // L'inscription a réussi mais l'email a échoué
+                            setSuccess('🎉 Compte créé avec succès ! Problème avec l\'envoi de l\'email de vérification. Vous pouvez vous connecter et demander un nouvel email.');
+                            setShowResendEmail(true);
+                        } else {
+                            setError(`Erreur serveur: ${errorData.error}`);
+                        }
                     } else {
-                        setError(`Erreur serveur (${err.response.status}): ${err.response.data.error || err.response.data.message || 'Veuillez réessayer plus tard.'}`);
+                        setError('Erreur interne du serveur. Veuillez réessayer plus tard.');
                     }
                 } else {
                     setError(`Erreur serveur (${err.response.status}): ${err.response.data.error || err.response.data.message || 'Veuillez réessayer plus tard.'}`);
@@ -185,20 +192,16 @@ const SignUpInner = () => {
                 // La requête a été faite mais aucune réponse n'a été reçue
                 console.error('❌ Pas de réponse du serveur:', err.request);
                 
-                // Message d'erreur plus clair et utile
-                setError('✅ Le backend fonctionne ! L\'inscription a réussi. Vérifiez votre email pour activer votre compte.');
-                
-                // Afficher le message de succès même en cas d'erreur de réponse
-                setSuccess('🎉 Compte créé avec succès ! Vérifiez votre boîte email.');
-                setShowResendEmail(true);
+                // Vérifier si c'est un problème de connexion
+                if (err.code === 'ERR_NETWORK' || err.code === 'ECONNREFUSED') {
+                    setError('❌ Impossible de se connecter au serveur. Vérifiez que le backend est démarré sur le port 8084.');
+                } else {
+                    setError('❌ Problème de connexion au serveur. Veuillez réessayer.');
+                }
             } else {
                 // Erreur lors de la configuration de la requête
                 console.error('❌ Erreur de configuration:', err.message);
-                setError('✅ L\'inscription a réussi ! Vérifiez votre email pour activer votre compte.');
-                
-                // Afficher le message de succès
-                setSuccess('🎉 Compte créé avec succès !');
-                setShowResendEmail(true);
+                setError('❌ Erreur de configuration de la requête. Veuillez réessayer.');
             }
         } finally {
             setLoading(false);

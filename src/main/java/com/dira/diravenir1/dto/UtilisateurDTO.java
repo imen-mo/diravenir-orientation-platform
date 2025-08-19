@@ -24,6 +24,13 @@ public class UtilisateurDTO {
     private boolean compteActif;
     private boolean emailVerifie;
 
+    // ======================
+    // === STATUT ONLINE/OFFLINE ===
+    // ======================
+    private boolean statutOnline;
+    private LocalDateTime derniereActivite;
+    private boolean sessionActive;
+
     // Getters et Setters existants
 
     public Long getId() {
@@ -128,5 +135,33 @@ public class UtilisateurDTO {
     }
     public void setEmailVerifie(boolean emailVerifie) {
         this.emailVerifie = emailVerifie;
+    }
+
+    // ======================
+    // === STATUT ONLINE/OFFLINE ===
+    // ======================
+    
+    public boolean isStatutOnline() {
+        return statutOnline;
+    }
+    
+    public void setStatutOnline(boolean statutOnline) {
+        this.statutOnline = statutOnline;
+    }
+    
+    public LocalDateTime getDerniereActivite() {
+        return derniereActivite;
+    }
+    
+    public void setDerniereActivite(LocalDateTime derniereActivite) {
+        this.derniereActivite = derniereActivite;
+    }
+    
+    public boolean isSessionActive() {
+        return sessionActive;
+    }
+    
+    public void setSessionActive(boolean sessionActive) {
+        this.sessionActive = sessionActive;
     }
 }

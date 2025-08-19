@@ -12,7 +12,9 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3000,
       host: true,
-      open: true
+      open: true,
+      strictPort: true, // Force le port 3000
+      cors: true // Active CORS pour le développement
     },
     resolve: {
       alias: {

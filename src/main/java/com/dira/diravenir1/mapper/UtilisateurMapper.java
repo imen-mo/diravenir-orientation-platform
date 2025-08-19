@@ -28,6 +28,13 @@ public class UtilisateurMapper {
         dto.setCompteActif(utilisateur.isCompteActif());
         dto.setEmailVerifie(utilisateur.isEmailVerifie());
         
+        // ======================
+        // === STATUT ONLINE/OFFLINE ===
+        // ======================
+        dto.setStatutOnline(utilisateur.isStatutOnline());
+        dto.setDerniereActivite(utilisateur.getDerniereActivite());
+        dto.setSessionActive(utilisateur.isSessionActive());
+        
         return dto;
     }
     
@@ -52,6 +59,13 @@ public class UtilisateurMapper {
         utilisateur.setDerniereConnexion(dto.getDerniereConnexion());
         utilisateur.setCompteActif(dto.isCompteActif());
         utilisateur.setEmailVerifie(dto.isEmailVerifie());
+        
+        // ======================
+        // === STATUT ONLINE/OFFLINE ===
+        // ======================
+        utilisateur.setStatutOnline(dto.isStatutOnline());
+        utilisateur.setDerniereActivite(dto.getDerniereActivite());
+        utilisateur.setSessionActive(dto.isSessionActive());
         
         return utilisateur;
     }

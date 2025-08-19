@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import './styles/GlobalColors.css';
 
 
 // Auth context
@@ -41,6 +42,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const Universites = lazy(() => import("./pages/Universites"));
 const StudentDashboard = lazy(() => import("./pages/StudentDashboard"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Programs = lazy(() => import("./pages/Programs"));
 const ProgramDetail = lazy(() => import("./pages/ProgramDetail"));
 const Profile = lazy(() => import("./pages/Profile"));
@@ -51,6 +53,7 @@ const UnifiedOrientationTest = lazy(() => import("./components/UnifiedOrientatio
 const OrientationResults = lazy(() => import("./pages/OrientationResults"));
 const TestWelcome = lazy(() => import("./pages/TestWelcome"));
 const TestList = lazy(() => import("./pages/TestList"));
+const WelcomePage = lazy(() => import("./pages/WelcomePage"));
 
 
 
@@ -81,9 +84,9 @@ const AuthLayout = () => (
 
 // Route protégée
 const PrivateRoute = () => {
-    const { isAuthenticated, loading } = useAuth();
+    const { user, loading } = useAuth();
     if (loading) return <LoadingFallback />;
-    return isAuthenticated ? <Outlet /> : <Navigate to="/signin" replace />;
+    return user ? <Outlet /> : <Navigate to="/signin" replace />;
 };
 
 function App() {
@@ -114,7 +117,8 @@ function App() {
                                     <Route path="/programs/:id" element={<ProgramDetail />} />
                                     
                                     {/* Orientation and Test Routes */}
-                                    <Route path="/orientation" element={<UnifiedOrientationTest />} />
+                                    <Route path="/orientation" element={<WelcomePage />} />
+                                    <Route path="/orientation/welcome" element={<WelcomePage />} />
                                     <Route path="/orientation/test" element={<UnifiedOrientationTest />} />
                                     <Route path="/orientation/results" element={<OrientationResults />} />
                                     <Route path="/test" element={<TestWelcome />} />
@@ -133,7 +137,8 @@ function App() {
 
                                     {/* Protected */}
                                     <Route element={<PrivateRoute />}>
-                                        <Route path="/dashboard" element={<StudentDashboard />} />
+                                        <Route path="/dashboard" element={<Dashboard />} />
+                                        <Route path="/student-dashboard" element={<StudentDashboard />} />
                                         <Route path="/admin" element={<AdminDashboard />} />
                                         <Route path="/profile" element={<Profile />} />
                                         <Route path="/settings" element={<Settings />} />

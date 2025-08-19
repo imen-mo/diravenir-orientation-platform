@@ -1,0 +1,238 @@
+/* GlobalColors.css - Palette violet/jaune pour toute l'application */
+
+:root {
+  /* Couleurs principales */
+  --violet-dark: #441048;
+  --violet-medium: #430F48;
+  --violet-light: #400C49;
+  
+  /* Couleurs jaunes */
+  --yellow-gold: #FFD700;
+  --yellow-orange: #FFA500;
+  --yellow-dark: #FF8C00;
+  
+  /* Couleurs d'accent */
+  --accent-primary: var(--yellow-gold);
+  --accent-secondary: var(--yellow-orange);
+  --accent-tertiary: var(--yellow-dark);
+  
+  /* Couleurs de fond */
+  --bg-primary: var(--violet-dark);
+  --bg-secondary: var(--violet-medium);
+  --bg-tertiary: var(--violet-light);
+  
+  /* Couleurs de texte */
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255, 255, 255, 0.9);
+  --text-accent: var(--yellow-gold);
+  
+  /* Couleurs de bordure */
+  --border-primary: rgba(255, 215, 0, 0.3);
+  --border-secondary: rgba(255, 215, 0, 0.5);
+  --border-accent: rgba(255, 215, 0, 0.8);
+  
+  /* Couleurs d'ombre */
+  --shadow-primary: rgba(255, 215, 0, 0.4);
+  --shadow-secondary: rgba(255, 215, 0, 0.6);
+  --shadow-accent: rgba(255, 215, 0, 0.8);
+}
+
+/* Styles globaux pour les boutons */
+.btn-global {
+  background: linear-gradient(45deg, var(--yellow-gold), var(--yellow-orange), var(--yellow-dark));
+  color: var(--violet-dark);
+  border: 2px solid var(--border-primary);
+  border-radius: 50px;
+  padding: 1rem 2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px var(--shadow-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-global:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 15px 40px var(--shadow-secondary);
+  border-color: var(--border-accent);
+}
+
+.btn-global::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-global:hover::before {
+  left: 100%;
+}
+
+/* Styles globaux pour les cartes */
+.card-global {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.card-global:hover {
+  border-color: var(--border-primary);
+  transform: translateY(-5px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+}
+
+/* Styles globaux pour les titres */
+.title-global {
+  background: linear-gradient(45deg, var(--yellow-gold), var(--yellow-orange), var(--yellow-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+}
+
+/* Styles globaux pour les icônes */
+.icon-global {
+  filter: drop-shadow(0 0 10px var(--shadow-primary));
+  transition: all 0.3s ease;
+}
+
+.icon-global:hover {
+  filter: drop-shadow(0 0 20px var(--shadow-secondary));
+  transform: scale(1.1);
+}
+
+/* Styles globaux pour les liens */
+.link-global {
+  color: var(--yellow-gold);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.link-global::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--yellow-gold);
+  transition: width 0.3s ease;
+}
+
+.link-global:hover::after {
+  width: 100%;
+}
+
+/* Styles globaux pour les inputs */
+.input-global {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--border-primary);
+  border-radius: 10px;
+  color: var(--text-primary);
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.input-global:focus {
+  outline: none;
+  border-color: var(--border-accent);
+  box-shadow: 0 0 20px var(--shadow-primary);
+}
+
+/* Styles globaux pour les animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Classes utilitaires pour les animations */
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.6s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.6s ease-out;
+}
+
+/* Styles globaux pour les gradients de fond */
+.bg-gradient-violet {
+  background: linear-gradient(135deg, var(--violet-dark) 0%, var(--violet-medium) 50%, var(--violet-light) 100%);
+}
+
+.bg-gradient-yellow {
+  background: linear-gradient(45deg, var(--yellow-gold), var(--yellow-orange), var(--yellow-dark));
+}
+
+/* Styles globaux pour les ombres */
+.shadow-yellow {
+  box-shadow: 0 10px 30px var(--shadow-primary);
+}
+
+.shadow-yellow-hover:hover {
+  box-shadow: 0 15px 40px var(--shadow-secondary);
+}
+
+/* Styles globaux pour les bordures */
+.border-yellow {
+  border-color: var(--border-primary);
+}
+
+.border-yellow-hover:hover {
+  border-color: var(--border-accent);
+}

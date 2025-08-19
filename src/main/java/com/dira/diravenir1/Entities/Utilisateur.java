@@ -63,13 +63,31 @@ public class Utilisateur {
     private LocalDateTime derniereConnexion;
 
     @Column(name = "compte_actif", nullable = false)
+    @Builder.Default
     private boolean compteActif = true;
 
     @Column(name = "email_verifie", nullable = false)
+    @Builder.Default
     private boolean emailVerifie = false;
     
     @Column(name = "compte_verifie", nullable = false)
+    @Builder.Default
     private boolean compteVerifie = false;
+
+    // ======================
+    // === STATUT ONLINE/OFFLINE ===
+    // ======================
+    
+    @Column(name = "statut_online", nullable = false)
+    @Builder.Default
+    private boolean statutOnline = false;
+    
+    @Column(name = "derniere_activite")
+    private LocalDateTime derniereActivite;
+    
+    @Column(name = "session_active")
+    @Builder.Default
+    private boolean sessionActive = false;
 
     // ======================
     // === NOUVEAUX CHAMPS ===

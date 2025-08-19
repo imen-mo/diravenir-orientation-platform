@@ -9,6 +9,11 @@ const UnifiedOrientationTest = () => {
   const [dragOrder, setDragOrder] = useState([]);
   const [sliderValues, setSliderValues] = useState({});
   const [selectedMultiple, setSelectedMultiple] = useState([]);
+  const [personalInfo, setPersonalInfo] = useState({
+    nom: '',
+    email: '',
+    telephone: ''
+  });
   const navigate = useNavigate();
 
   // Configuration des questions
@@ -190,6 +195,13 @@ const UnifiedOrientationTest = () => {
         { id: 'E', icon: '💻', title: 'Technologie et Informatique', description: 'NSI, STI2D, Sciences de l\'ingénieur' },
         { id: 'F', icon: '💰', title: 'Gestion et Économie', description: 'Management, Droit' }
       ]
+    },
+    {
+      id: 15,
+      category: "Informations Personnelles",
+      question: "15- ENTER YOUR EMAIL & FIND OUT",
+      subtitle: "(FILL OUT THIS FORME)",
+      type: "personal_info"
     }
   ];
 
@@ -212,7 +224,7 @@ const UnifiedOrientationTest = () => {
   };
 
   const handleDragDrop = (optionId) => {
-    if (dragOrder.length < 3) {
+    if (!dragOrder.includes(optionId)) {
       setDragOrder(prev => [...prev, optionId]);
     }
   };
@@ -225,143 +237,119 @@ const UnifiedOrientationTest = () => {
     setSliderValues(prev => ({ ...prev, [optionId]: value }));
   };
 
-  // Navigation
+  const handlePersonalInfoChange = (field, value) => {
+    setPersonalInfo(prev => ({ ...prev, [field]: value }));
+  };
+
   const handleNext = () => {
-    if (currentQuestion === questions.length - 1) {
-      // Terminer le test
-      const allAnswers = {
-        ...answers,
-        [currentQ.id]: currentQ.type === 'multiple' ? selectedMultiple : 
-                      currentQ.type === 'dragdrop' ? dragOrder :
-                      currentQ.type === 'sliders' ? sliderValues : answers[currentQ.id]
-      };
-      
-      sendAnswersToBackend(allAnswers);
-    } else {
-      // Sauvegarder les réponses de la question actuelle
-      const currentAnswers = currentQ.type === 'multiple' ? selectedMultiple : 
-                           currentQ.type === 'dragdrop' ? dragOrder :
-                           currentQ.type === 'sliders' ? sliderValues : answers[currentQ.id];
-      
-      setAnswers(prev => ({ ...prev, [currentQ.id]: currentAnswers }));
-      
-      // Passer à la question suivante
-      setCurrentQuestion(prev => prev + 1);
-      
-      // Réinitialiser les états spécifiques
+    // Sauvegarder les réponses de la question actuelle
+    if (currentQ.type === 'multiple') {
+      setAnswers(prev => ({ ...prev, [currentQ.id]: selectedMultiple }));
       setSelectedMultiple([]);
+    } else if (currentQ.type === 'dragdrop') {
+      setAnswers(prev => ({ ...prev, [currentQ.id]: dragOrder }));
       setDragOrder([]);
+    } else if (currentQ.type === 'sliders') {
+      setAnswers(prev => ({ ...prev, [currentQ.id]: sliderValues }));
       setSliderValues({});
+    }
+
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(prev => prev + 1);
     }
   };
 
   const handlePrevious = () => {
     if (currentQuestion > 0) {
       setCurrentQuestion(prev => prev - 1);
-      // Réinitialiser les états spécifiques
-      setSelectedMultiple([]);
-      setDragOrder([]);
-      setSliderValues({});
     }
   };
 
   const sendAnswersToBackend = async () => {
     try {
-      // Préparer les données dans le format attendu par le backend
-      const requestData = {
-        question1: allAnswers[1] || "A",
-        question2: allAnswers[2] ? [allAnswers[2]] : ["A"],
-        question3: allAnswers[3] || "A",
-        question4: allAnswers[4] || "A",
-        question5: allAnswers[5] ? [allAnswers[5]] : ["A"],
-        question6: allAnswers[6] || "A",
-        question7: allAnswers[7] || "A",
-        question8: allAnswers[8] || "A",
-        question9: {
-          "security": 80,
-          "innovation": 70,
-          "autonomy": 75,
-          "salary": 65
-        },
-        question10: allAnswers[10] || "A",
-        question11: allAnswers[11] || "A",
-        question12: allAnswers[12] || "A",
-        question13: allAnswers[13] || "A",
-        question14: allAnswers[14] ? [allAnswers[14]] : ["A"]
-      };
+      // Sauvegarder d'abord les informations personnelles
+      if (personalInfo.nom && personalInfo.email && personalInfo.telephone) {
+        await savePersonalInfo();
+      }
 
-      console.log('Envoi des réponses au backend:', requestData);
-
-      // Utiliser le service d'orientation pour communiquer avec le backend
-      const response = await orientationService.calculateOrientation(requestData);
+      // Envoyer les réponses du test au backend
+      const result = await orientationService.calculateOrientation(answers);
       
-      console.log('Réponse du backend:', response);
-
-      navigate('/orientation/results', { 
+      // Naviguer vers la page de résultats avec les informations personnelles
+      navigate('/orientation-results', { 
         state: { 
-          backendResponse: response,
-          userAnswers: allAnswers
+          results: result, 
+          personalInfo: personalInfo,
+          answers: answers 
         } 
       });
-
     } catch (error) {
-      console.error('Erreur lors de l\'envoi au backend:', error);
-      navigate('/orientation/results', { 
-        state: { 
-          userAnswers: allAnswers,
-          error: 'Erreur de connexion au serveur'
-        } 
-      });
+      console.error('Erreur lors de l\'envoi des réponses:', error);
+      alert('Erreur lors de l\'envoi des réponses. Veuillez réessayer.');
     }
   };
 
-  // Rendu du contenu de la question selon le type
+  const savePersonalInfo = async () => {
+    try {
+      await orientationService.savePersonalInfo(personalInfo);
+      console.log('Informations personnelles sauvegardées avec succès');
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde:', error);
+      throw error;
+    }
+  };
+
   const renderQuestionContent = () => {
     switch (currentQ.type) {
       case 'single':
         return (
-          <div className="options-grid">
+          <div className="options">
             {currentQ.options.map((option) => (
-              <div
-                key={option.id}
-                className={`option-card ${answers[currentQ.id] === option.id ? 'selected' : ''}`}
-                onClick={() => handleSingleAnswer(option.id)}
-              >
-                <div className="option-icon">{option.icon}</div>
+              <label key={option.id} className="option">
+                <input
+                  type="radio"
+                  name={`question-${currentQ.id}`}
+                  value={option.id}
+                  checked={answers[currentQ.id] === option.id}
+                  onChange={() => handleSingleAnswer(option.id)}
+                />
                 <div className="option-content">
-                  <h3 className="option-title">{option.title}</h3>
-                  {option.description && (
-                    <p className="option-description">{option.description}</p>
-                  )}
+                  <span className="option-icon">{option.icon}</span>
+                  <div className="option-text">
+                    <span className="option-title">{option.title}</span>
+                    {option.description && (
+                      <span className="option-description">{option.description}</span>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </label>
             ))}
           </div>
         );
 
       case 'multiple':
         return (
-          <div className="options-grid">
+          <div className="options">
             {currentQ.options.map((option) => (
-              <div
-                key={option.id}
-                className={`option-card ${selectedMultiple.includes(option.id) ? 'selected' : ''}`}
-                onClick={() => handleMultipleAnswer(option.id)}
-              >
-                <div className="option-icon">{option.icon}</div>
+              <label key={option.id} className="option">
+                <input
+                  type="checkbox"
+                  checked={selectedMultiple.includes(option.id)}
+                  onChange={() => handleMultipleAnswer(option.id)}
+                />
                 <div className="option-content">
-                  <h3 className="option-title">{option.title}</h3>
-                  {option.description && (
-                    <p className="option-description">{option.description}</p>
-                  )}
+                  <span className="option-icon">{option.icon}</span>
+                  <div className="option-text">
+                    <span className="option-title">{option.title}</span>
+                    {option.description && (
+                      <span className="option-description">{option.description}</span>
+                    )}
+                  </div>
                 </div>
-                {selectedMultiple.includes(option.id) && (
-                  <div className="selection-indicator">✓</div>
-                )}
-              </div>
+              </label>
             ))}
             <div className="selection-info">
-              Sélectionné(s): {selectedMultiple.length}/{currentQ.maxSelections}
+              Sélectionnez jusqu'à {currentQ.maxSelections} option(s)
             </div>
           </div>
         );
@@ -371,42 +359,36 @@ const UnifiedOrientationTest = () => {
           <div className="dragdrop-container">
             <div className="available-options">
               <h4>Options disponibles :</h4>
-              <div className="options-grid">
-                {currentQ.options
-                  .filter(option => !dragOrder.includes(option.id))
-                  .map((option) => (
-                    <div
-                      key={option.id}
-                      className="option-card draggable"
-                      onClick={() => handleDragDrop(option.id)}
-                    >
-                      <div className="option-icon">{option.icon}</div>
-                      <div className="option-title">{option.title}</div>
-                    </div>
-                  ))}
-              </div>
+              {currentQ.options.map((option) => (
+                <button
+                  key={option.id}
+                  className="drag-option"
+                  onClick={() => handleDragDrop(option.id)}
+                  disabled={dragOrder.includes(option.id)}
+                >
+                  <span className="option-icon">{option.icon}</span>
+                  <span className="option-title">{option.title}</span>
+                </button>
+              ))}
             </div>
-            
             <div className="selected-order">
               <h4>Votre ordre de préférence :</h4>
-              <div className="order-list">
-                {dragOrder.map((optionId, index) => {
-                  const option = currentQ.options.find(opt => opt.id === optionId);
-                  return (
-                    <div key={optionId} className="order-item">
-                      <span className="order-number">{index + 1}</span>
-                      <div className="option-icon">{option.icon}</div>
-                      <div className="option-title">{option.title}</div>
-                      <button
-                        className="remove-button"
-                        onClick={() => removeFromDragOrder(index)}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
+              {dragOrder.map((optionId, index) => {
+                const option = currentQ.options.find(opt => opt.id === optionId);
+                return (
+                  <div key={optionId} className="selected-option">
+                    <span className="order-number">{index + 1}</span>
+                    <span className="option-icon">{option.icon}</span>
+                    <span className="option-title">{option.title}</span>
+                    <button
+                      className="remove-button"
+                      onClick={() => removeFromDragOrder(index)}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           </div>
         );
@@ -437,6 +419,50 @@ const UnifiedOrientationTest = () => {
           </div>
         );
 
+      case 'personal_info':
+        return (
+          <div className="personal-info-container">
+            <div className="personal-info-subtitle">
+              {currentQ.subtitle}
+            </div>
+            <div className="form-fields">
+              <div className="form-field">
+                <label htmlFor="nom">Your Name</label>
+                <input
+                  type="text"
+                  id="nom"
+                  placeholder="Enter Your Name..."
+                  value={personalInfo.nom}
+                  onChange={(e) => handlePersonalInfoChange('nom', e.target.value)}
+                  className="personal-info-input"
+                />
+              </div>
+              <div className="form-field">
+                <label htmlFor="email">Your Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="Enter your email address here..."
+                  value={personalInfo.email}
+                  onChange={(e) => handlePersonalInfoChange('email', e.target.value)}
+                  className="personal-info-input"
+                />
+              </div>
+              <div className="form-field">
+                <label htmlFor="telephone">Your Number phone</label>
+                <input
+                  type="tel"
+                  id="telephone"
+                  placeholder="Enter your Number phone here..."
+                  value={personalInfo.telephone}
+                  onChange={(e) => handlePersonalInfoChange('telephone', e.target.value)}
+                  className="personal-info-input"
+                />
+              </div>
+            </div>
+          </div>
+        );
+
       default:
         return null;
     }
@@ -452,6 +478,8 @@ const UnifiedOrientationTest = () => {
         return dragOrder.length > 0;
       case 'sliders':
         return Object.keys(sliderValues).length > 0;
+      case 'personal_info':
+        return personalInfo.nom && personalInfo.email && personalInfo.telephone;
       default:
         return false;
     }
@@ -460,54 +488,58 @@ const UnifiedOrientationTest = () => {
   const progressPercentage = ((currentQuestion + 1) / questions.length) * 100;
 
   return (
-    <div className="unified-test-container">
-      {/* Header avec navigation */}
-      <div className="test-header">
-        <div className="header-content">
+    <div className="test-container">
+      {/* Particules magiques */}
+      <div className="magic-particles">
+        <div className="particle particle-0"></div>
+        <div className="particle particle-1"></div>
+        <div className="particle particle-2"></div>
+        <div className="particle particle-3"></div>
+        <div className="particle particle-4"></div>
+      </div>
+
+      <div className="test-content">
+        {/* En-tête du test */}
+        <div className="test-header">
           <h1 className="test-title">Test d'Orientation</h1>
           <p className="test-subtitle">Découvrez votre profil et trouvez votre voie</p>
         </div>
-      </div>
 
-      {/* Carte principale du test */}
-      <div className="test-card">
-        {/* Question principale */}
-        <h2 className="question-text">{currentQ.question}</h2>
-        <p className="question-instruction">
-          {currentQ.type === 'single' && '(SÉLECTIONNEZ UNE SEULE OPTION)'}
-          {currentQ.type === 'multiple' && '(SÉLECTIONNEZ JUSQU\'À 3 OPTIONS)'}
-          {currentQ.type === 'dragdrop' && '(GLISSEZ-DÉPOSEZ 3 OPTIONS DANS L\'ORDRE DE PRÉFÉRENCE)'}
-          {currentQ.type === 'sliders' && '(AJUSTEZ LES CURSEURS SELON VOTRE PRÉFÉRENCE)'}
-        </p>
-        
-        {/* Contenu de la question selon le type */}
-        {renderQuestionContent()}
-
-        {/* Navigation et progression */}
-        <div className="navigation-section">
-          {currentQuestion > 0 && (
-            <a href="#" className="back-button" onClick={handlePrevious}>
-              ← Précédent
-            </a>
-          )}
-          
-          <button 
-            className={`btn ${canProceed() ? 'btn-primary' : 'btn-secondary'}`}
-            disabled={!canProceed()}
-            onClick={handleNext}
-          >
-            {currentQuestion === questions.length - 1 ? 'Terminer le test' : 'Suivant'}
-          </button>
-        </div>
-
-        {/* Barre de progression professionnelle */}
-        <div className="progress-container">
+        {/* Barre de progression */}
+        <div className="progress-section">
+          <div className="progress-info">
+            <span>Question {currentQuestion + 1} sur {questions.length}</span>
+            <span>{Math.round(progressPercentage)}%</span>
+          </div>
           <div className="progress-bar">
             <div className="progress-fill" style={{ width: `${progressPercentage}%` }}></div>
           </div>
-          <div className="progress-text">
-            Question {currentQuestion + 1} sur {questions.length}
-          </div>
+        </div>
+
+        {/* Section de la question */}
+        <div className="question-section">
+          <div className="question-number">Question {currentQuestion + 1}</div>
+          <h2 className="question-text">{currentQ.question}</h2>
+          
+          {/* Contenu de la question selon le type */}
+          {renderQuestionContent()}
+        </div>
+
+        {/* Boutons de navigation */}
+        <div className="navigation-buttons">
+          {currentQuestion > 0 && (
+            <button className="nav-button" onClick={handlePrevious}>
+              ← Précédent
+            </button>
+          )}
+          
+          <button 
+            className="nav-button"
+            disabled={!canProceed()}
+            onClick={currentQuestion === questions.length - 1 ? sendAnswersToBackend : handleNext}
+          >
+            {currentQuestion === questions.length - 1 ? 'See My Result Now' : 'Suivant'}
+          </button>
         </div>
       </div>
     </div>

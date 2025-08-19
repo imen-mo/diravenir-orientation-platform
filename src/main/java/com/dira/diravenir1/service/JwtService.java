@@ -26,10 +26,10 @@ public class JwtService {
     @Autowired
     private TokenBlacklistService tokenBlacklistService;
 
-    @Value("${app.jwt.secret}")
+    @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${app.jwt.expiration-ms:86400000}")
+    @Value("${jwt.expiration}")
     private long jwtExpirationMs;
 
     @Value("${app.jwt.refresh-expiration-ms:604800000}")

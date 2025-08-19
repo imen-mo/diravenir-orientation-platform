@@ -5,36 +5,48 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
-
-import java.util.Properties;
 
 @Service
 public class EmailService {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
-    @Value("${spring.mail.host:smtp.gmail.com}")
-    private String mailHost;
-
-    @Value("${spring.mail.port:587}")
-    private int mailPort;
-
-    @Value("${spring.mail.username}")
+    @Value("${spring.mail.username:your-email@gmail.com}")
     private String mailUsername;
-
-    @Value("${spring.mail.password}")
-    private String mailPassword;
 
     @Value("${app.frontend.url:http://localhost:3000}")
     private String frontendUrl;
 
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
+    public EmailService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
+    /**
+     * Vérifie si la configuration email est complète
+     */
+    private boolean isEmailConfigured() {
+        return mailUsername != null && 
+               !mailUsername.equals("your-email@gmail.com") && 
+               mailUsername.contains("@");
+    }
+
+    /**
+     * Envoie un email de vérification UNIQUEMENT lors du signup
+     * Cette méthode ne doit PAS être appelée pour les utilisateurs OAuth2
+     */
     public void sendVerificationEmail(String to, String token) {
         try {
             logger.info("📧 Tentative d'envoi d'email de vérification à : {}", to);
+            
+            // Validation de la configuration email
+            if (!isEmailConfigured()) {
+                logger.warn("⚠️ Configuration email manquante - Email non envoyé mais inscription réussie");
+                // Ne pas lever d'exception, juste logger un avertissement
+                return;
+            }
             
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(mailUsername);
@@ -55,26 +67,28 @@ public class EmailService {
                 verificationUrl
             ));
 
-            JavaMailSender sender = getMailSender();
-            if (sender == null) {
-                throw new RuntimeException("Service email non configuré");
-            }
-            
-            sender.send(message);
+            mailSender.send(message);
             logger.info("✅ Email de vérification envoyé avec succès à : {}", to);
             
         } catch (Exception e) {
-            logger.error("❌ ERREUR CRITIQUE lors de l'envoi de l'email de vérification à {} : {}", to, e.getMessage());
-            logger.error("❌ Détails de l'erreur:", e);
-            
-            // Lever l'exception pour que le service appelant puisse la gérer
-            throw new RuntimeException("Échec de l'envoi de l'email de vérification: " + e.getMessage(), e);
+            logger.warn("⚠️ Échec de l'envoi de l'email de vérification à {} : {}", to, e.getMessage());
+            // Ne pas lever d'exception pour ne pas faire échouer l'inscription
         }
     }
 
+    /**
+     * Envoie un email de réinitialisation de mot de passe
+     * Cette méthode peut être appelée pour tous les utilisateurs
+     */
     public void sendPasswordResetEmail(String to, String token) {
         try {
             logger.info("📧 Tentative d'envoi d'email de réinitialisation à : {}", to);
+            
+            // Validation de la configuration email
+            if (!isEmailConfigured()) {
+                logger.error("❌ Configuration email manquante - Impossible d'envoyer l'email");
+                throw new RuntimeException("Service email non configuré. Veuillez configurer les propriétés email.");
+            }
             
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(mailUsername);
@@ -95,12 +109,7 @@ public class EmailService {
                 resetUrl
             ));
 
-            JavaMailSender sender = getMailSender();
-            if (sender == null) {
-                throw new RuntimeException("Service email non configuré");
-            }
-            
-            sender.send(message);
+            mailSender.send(message);
             logger.info("✅ Email de réinitialisation envoyé avec succès à : {}", to);
             
         } catch (Exception e) {
@@ -112,47 +121,32 @@ public class EmailService {
         }
     }
 
-    private JavaMailSender getMailSender() {
-        if (mailSender == null) {
-            try {
-                logger.info("🔧 Configuration du service email - Host: {} | Port: {} | Username: {}", 
-                           mailHost, mailPort, mailUsername != null ? "CONFIGURÉ" : "NON CONFIGURÉ");
-                
-                // Validation de la configuration
-                if (mailUsername == null || mailUsername.trim().isEmpty()) {
-                    throw new RuntimeException("Nom d'utilisateur email non configuré");
-                }
-                if (mailPassword == null || mailPassword.trim().isEmpty()) {
-                    throw new RuntimeException("Mot de passe email non configuré");
-                }
-                
-                JavaMailSenderImpl sender = new JavaMailSenderImpl();
-                sender.setHost(mailHost);
-                sender.setPort(mailPort);
-                sender.setUsername(mailUsername);
-                sender.setPassword(mailPassword);
-
-                Properties props = sender.getJavaMailProperties();
-                props.put("mail.transport.protocol", "smtp");
-                props.put("mail.smtp.auth", "true");
-                props.put("mail.smtp.starttls.enable", "true");
-                props.put("mail.smtp.connectiontimeout", "10000"); // Augmenté à 10 secondes
-                props.put("mail.smtp.timeout", "10000"); // Augmenté à 10 secondes
-                props.put("mail.smtp.writetimeout", "10000"); // Augmenté à 10 secondes
-                props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-                props.put("mail.smtp.ssl.protocols", "TLSv1.2");
-                props.put("mail.debug", "false"); // Désactivé en production
-                props.put("mail.smtp.ssl.checkserveridentity", "false"); // Pour éviter les problèmes de certificat
-
-                mailSender = sender;
-                logger.info("✅ Service email configuré avec succès");
-                
-            } catch (Exception e) {
-                logger.error("❌ ERREUR LORS DE LA CONFIGURATION DU SERVICE EMAIL: {}", e.getMessage());
-                logger.error("❌ Détails de l'erreur:", e);
-                throw new RuntimeException("Impossible de configurer le service email: " + e.getMessage(), e);
+    /**
+     * Teste la configuration email
+     */
+    public boolean testEmailConfiguration() {
+        try {
+            if (!isEmailConfigured()) {
+                logger.warn("⚠️ Configuration email incomplète");
+                return false;
             }
+            
+            logger.info("✅ Configuration email valide - Username: {}", mailUsername);
+            return true;
+            
+        } catch (Exception e) {
+            logger.error("❌ Erreur lors du test de la configuration email: {}", e.getMessage());
+            return false;
         }
-        return mailSender;
+    }
+
+    /**
+     * Vérifie si l'email doit être envoyé (uniquement pour les utilisateurs locaux, pas OAuth2)
+     */
+    public boolean shouldSendEmail(String provider) {
+        // Envoyer des emails uniquement pour les utilisateurs locaux, pas pour OAuth2
+        boolean shouldSend = provider == null || "local".equals(provider);
+        logger.info("📧 Décision d'envoi d'email - Provider: {} | Envoyer: {}", provider, shouldSend);
+        return shouldSend;
     }
 } 

@@ -96,7 +96,18 @@ public class GoogleOAuthService extends DefaultOAuth2UserService {
         user.setPrenom(firstName);
         user.setPassword("OAUTH2_USER"); // Mot de passe spécial pour les utilisateurs OAuth2
         user.setRole(com.dira.diravenir1.Entities.Role.USER);
+        
+        // ======================
+        // === STATUT COMPTE OAUTH2 ===
+        // ======================
         user.setEmailVerifie(true); // Email vérifié par Google
+        user.setCompteVerifie(true); // Compte vérifié par Google
+        user.setCompteActif(true); // Compte actif
+        user.setStatutOnline(true); // En ligne
+        user.setSessionActive(true); // Session active
+        user.setDerniereActivite(java.time.LocalDateTime.now());
+        user.setDerniereConnexion(java.time.LocalDateTime.now());
+        user.setDateCreation(java.time.LocalDateTime.now());
         
         // ======================
         // === NOUVEAUX CHAMPS ===
@@ -105,6 +116,9 @@ public class GoogleOAuthService extends DefaultOAuth2UserService {
         user.setGoogleId(providerId);
         user.setProvider(provider);
         user.setProviderId(providerId);
+        
+        logger.info("✅ Nouvel utilisateur OAuth2 configuré avec statut actif : {} | Email vérifié: {} | Compte vérifié: {}", 
+                   email, user.isEmailVerifie(), user.isCompteVerifie());
         
         // Sauvegarder l'utilisateur
         return utilisateurRepository.save(user);

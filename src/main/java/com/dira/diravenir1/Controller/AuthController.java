@@ -29,11 +29,11 @@ public class AuthController {
     private final UtilisateurService utilisateurService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final RecaptchaService recaptchaService;
     private final LoginAttemptService loginAttemptService;
     private final RateLimitService rateLimitService;
     private final AuthenticationManager authenticationManager;
     private final EmailVerificationService emailVerificationService;
+    private final UserStatusService userStatusService;
 
     /**
      * Inscription (signup) avec sécurité renforcée
@@ -42,8 +42,7 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest request, HttpServletRequest httpRequest) {
         String ip = getClientIpAddress(httpRequest);
         
-        logger.info("🔍 TENTATIVE D'INSCRIPTION - IP: {} | Email: {} | reCAPTCHA Token: {}", 
-                   ip, request.getEmail(), request.getRecaptchaToken() != null ? "PRÉSENT" : "ABSENT");
+        logger.info("🔍 TENTATIVE D'INSCRIPTION - IP: {} | Email: {}", ip, request.getEmail());
         
         // Vérification du rate limiting pour l'inscription
         if (rateLimitService.isSignupRateLimited(ip)) {
@@ -53,16 +52,7 @@ public class AuthController {
         }
         
         try {
-            // Vérification reCAPTCHA pour l'inscription
-            boolean recaptchaValid = recaptchaService.verifySignup(request.getRecaptchaToken());
-            
-            if (!recaptchaValid) {
-                logger.warn("🚫 INSCRIPTION BLOQUÉE - IP: {} | reCAPTCHA invalide", ip);
-                return ResponseEntity.badRequest()
-                        .body(Map.of("error", "Vérification reCAPTCHA échouée. Veuillez réessayer."));
-            }
-            
-            logger.info("🔍 VÉRIFICATION reCAPTCHA - IP: {} | Validée avec succès", ip);
+            logger.info("🔍 VÉRIFICATION DES DONNÉES - IP: {} | Validation en cours", ip);
             
             // Validation des données
             request.normalizeData();
@@ -90,7 +80,8 @@ public class AuthController {
                 logger.info("✅ Utilisateur inscrit avec succès dans la base de données");
             } catch (Exception userError) {
                 logger.error("❌ ERREUR LORS DE L'INSCRIPTION UTILISATEUR: {}", userError.getMessage(), userError);
-                throw userError;
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(Map.of("error", "Erreur lors de l'inscription: " + userError.getMessage()));
             }
             
             // Envoyer l'email de vérification de manière asynchrone pour ne pas bloquer la réponse
@@ -108,7 +99,8 @@ public class AuthController {
             
             return ResponseEntity.ok(Map.of(
                 "message", "Compte créé avec succès. Veuillez vérifier votre email pour activer votre compte.",
-                "email", request.getEmail()
+                "email", request.getEmail(),
+                "status", "success"
             ));
             
         } catch (SecurityException e) {
@@ -117,9 +109,8 @@ public class AuthController {
                     .body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
             logger.error("❌ ERREUR INTERNE - IP: {} | Erreur: {}", ip, e.getMessage(), e);
-            logger.error("❌ STACK TRACE COMPLÈTE:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Erreur: " + e.getMessage()));
+                    .body(Map.of("error", "Erreur interne du serveur. Veuillez réessayer plus tard."));
         }
     }
 
@@ -145,13 +136,6 @@ public class AuthController {
         }
         
         try {
-            // Validation reCAPTCHA pour la connexion
-            if (!recaptchaService.verifySignin(request.getRecaptchaToken())) {
-                logger.warn("🚫 CONNEXION BLOQUÉE - IP: {} | reCAPTCHA invalide", ip);
-                return ResponseEntity.badRequest()
-                        .body(Map.of("error", "Validation reCAPTCHA échouée"));
-            }
-            
             // Normalisation de l'email
             String normalizedEmail = request.getEmail() != null ? request.getEmail().trim().toLowerCase() : null;
             
@@ -164,6 +148,9 @@ public class AuthController {
 
             String username = authentication.getName();
             String jwt = jwtService.generateToken(username);
+
+            // Marquer l'utilisateur comme online
+            userStatusService.markUserAsOnline(username);
 
             // Connexion réussie - réinitialiser les tentatives
             loginAttemptService.loginSucceeded(ip);
@@ -190,64 +177,7 @@ public class AuthController {
         }
     }
 
-    /**
-     * Redemander un email de vérification
-     */
-    @PostMapping("/resend-verification")
-    public ResponseEntity<?> resendVerificationEmail(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
-        String ip = getClientIpAddress(httpRequest);
-        String email = request.get("email");
-        
-        if (email == null || email.trim().isEmpty()) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "L'email est requis"));
-        }
-        
-        email = email.trim().toLowerCase();
-        
-        logger.info("🔍 DEMANDE DE RÉENVOI D'EMAIL - IP: {} | Email: {}", ip, email);
-        
-        try {
-            // Vérifier si l'utilisateur existe
-            if (!utilisateurService.existsByEmail(email)) {
-                logger.warn("🚫 Tentative de réenvoi d'email pour un email inexistant: {}", email);
-                return ResponseEntity.badRequest()
-                        .body(Map.of("error", "Aucun compte trouvé avec cet email"));
-            }
-            
-            // Envoyer un nouvel email de vérification
-            try {
-                emailVerificationService.sendVerificationEmail(email);
-                logger.info("✅ Nouvel email de vérification envoyé à : {}", email);
-                
-                return ResponseEntity.ok(Map.of(
-                    "message", "Un nouvel email de vérification a été envoyé.",
-                    "email", email
-                ));
-                
-            } catch (Exception emailError) {
-                logger.error("❌ ÉCHEC CRITIQUE DE L'ENVOI D'EMAIL - Email: {} | Erreur: {}", 
-                           email, emailError.getMessage(), emailError);
-                
-                // Retourner une réponse plus détaillée pour aider au diagnostic
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body(Map.of(
-                            "error", "Impossible d'envoyer l'email de vérification. Veuillez réessayer plus tard.",
-                            "details", "Problème de configuration du service email",
-                            "timestamp", System.currentTimeMillis()
-                        ));
-            }
-            
-        } catch (Exception e) {
-            logger.error("❌ ERREUR LORS DU RÉENVOI - IP: {} | Email: {} | Erreur: {}", 
-                        ip, email, e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of(
-                        "error", "Une erreur interne s'est produite lors du traitement de votre demande",
-                        "timestamp", System.currentTimeMillis()
-                    ));
-        }
-    }
+
 
     /**
      * Déconnexion (logout)
@@ -263,8 +193,13 @@ public class AuthController {
                 String token = authHeader.substring(7);
                 
                 try {
+                    String username = jwtService.extractUsername(token);
+                    
+                    // Marquer l'utilisateur comme offline
+                    userStatusService.markUserAsOffline(username);
+                    
                     // Vérifier que le token est valide avant de le blacklister
-                    if (jwtService.isTokenValid(token, jwtService.extractUsername(token))) {
+                    if (jwtService.isTokenValid(token, username)) {
                         // Ajouter le token à la liste noire
                         jwtService.blacklistToken(token);
                         logger.info("✅ Token JWT ajouté à la liste noire - IP: {}", ip);
@@ -423,6 +358,44 @@ public class AuthController {
     }
 
     /**
+     * Demande d'un nouvel email de vérification
+     */
+    @PostMapping("/resend-verification")
+    public ResponseEntity<?> resendVerificationEmail(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
+        String ip = getClientIpAddress(httpRequest);
+        String email = request.get("email");
+        
+        if (email == null || email.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email requis"));
+        }
+        
+        try {
+            logger.info("📧 DEMANDE RENVOI EMAIL VÉRIFICATION - Email: {} | IP: {}", email, ip);
+            
+            // Vérifier si l'utilisateur existe
+            if (!utilisateurService.existsByEmail(email)) {
+                return ResponseEntity.badRequest().body(Map.of(
+                    "error", "Aucun compte trouvé avec cet email"
+                ));
+            }
+            
+            // Envoyer un nouvel email de vérification
+            emailVerificationService.sendVerificationEmail(email);
+            
+            logger.info("✅ NOUVEL EMAIL VÉRIFICATION ENVOYÉ - Email: {} | IP: {}", email, ip);
+            
+            return ResponseEntity.ok(Map.of(
+                "message", "Nouvel email de vérification envoyé avec succès"
+            ));
+            
+        } catch (Exception e) {
+            logger.error("❌ ERREUR RENVOI EMAIL VÉRIFICATION - IP: {} | Erreur: {}", ip, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Erreur lors de l'envoi de l'email"));
+        }
+    }
+
+    /**
      * Demande de réinitialisation de mot de passe
      */
     @PostMapping("/forgot-password")
@@ -531,6 +504,67 @@ public class AuthController {
                         "details", e.getMessage(),
                         "timestamp", System.currentTimeMillis()
                     ));
+        }
+    }
+
+    /**
+     * Vérifier le statut de l'utilisateur connecté
+     */
+    @GetMapping("/status")
+    public ResponseEntity<?> getUserStatus(HttpServletRequest httpRequest) {
+        try {
+            String authHeader = httpRequest.getHeader("Authorization");
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                String username = jwtService.extractUsername(token);
+                
+                if (jwtService.isTokenValid(token, username)) {
+                    boolean isOnline = userStatusService.isUserOnline(username);
+                    return ResponseEntity.ok(Map.of(
+                        "email", username,
+                        "online", isOnline,
+                        "timestamp", System.currentTimeMillis()
+                    ));
+                }
+            }
+            
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Token invalide ou expiré"));
+                    
+        } catch (Exception e) {
+            logger.error("❌ ERREUR LORS DE LA VÉRIFICATION DU STATUT - Erreur: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Erreur lors de la vérification du statut"));
+        }
+    }
+
+    /**
+     * Mettre à jour l'activité de l'utilisateur (heartbeat)
+     */
+    @PostMapping("/heartbeat")
+    public ResponseEntity<?> updateUserActivity(HttpServletRequest httpRequest) {
+        try {
+            String authHeader = httpRequest.getHeader("Authorization");
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                String username = jwtService.extractUsername(token);
+                
+                if (jwtService.isTokenValid(token, username)) {
+                    userStatusService.updateUserActivity(username);
+                    return ResponseEntity.ok(Map.of(
+                        "message", "Activité mise à jour",
+                        "timestamp", System.currentTimeMillis()
+                    ));
+                }
+            }
+            
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Token invalide ou expiré"));
+                    
+        } catch (Exception e) {
+            logger.error("❌ ERREUR LORS DE LA MISE À JOUR DE L'ACTIVITÉ - Erreur: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Erreur lors de la mise à jour de l'activité"));
         }
     }
 

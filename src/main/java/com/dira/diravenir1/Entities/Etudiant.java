@@ -3,6 +3,7 @@ package com.dira.diravenir1.Entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,25 @@ public class Etudiant extends Utilisateur {
     private String anneeEtude;
 
     private String domaine;
+
+    // ======================
+    // === CHAMPS TEST D'ORIENTATION ===
+    // ======================
+    
+    @Column(name = "nom_test", length = 100)
+    private String nomTest;
+    
+    @Column(name = "email_test", length = 255)
+    private String emailTest;
+    
+    @Column(name = "telephone_test", length = 20)
+    private String telephoneTest;
+    
+    @Column(name = "date_test_orientation")
+    private LocalDateTime dateTestOrientation;
+    
+    @Column(name = "statut_test_complete")
+    private Boolean statutTestComplete = false;
 
     @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Candidature> candidatures = new ArrayList<>();

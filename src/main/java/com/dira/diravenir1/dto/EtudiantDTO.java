@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -30,6 +31,15 @@ public class EtudiantDTO {
     private String etablissement;
     private String anneeEtude;
     private String domaine;
+
+    // ======================
+    // === CHAMPS TEST D'ORIENTATION ===
+    // ======================
+    private String nomTest;
+    private String emailTest;
+    private String telephoneTest;
+    private LocalDateTime dateTestOrientation;
+    private Boolean statutTestComplete;
 
     private List<Long> candidaturesIds;
 

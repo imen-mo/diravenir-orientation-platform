@@ -105,15 +105,15 @@ public class OrientationServiceTest {
     @Test
     void testAllMajorsRetrieval() {
         // Tester la récupération de toutes les majeures
-        List<MajorRecommendationDTO> allMajors = orientationService.getAllMajors();
+        List<String> allMajors = orientationService.getAllMajors();
         
         assertNotNull(allMajors, "La liste des majeures ne doit pas être null");
         assertTrue(allMajors.size() > 0, "Il doit y avoir des majeures disponibles");
         
         // Vérifier que chaque majeure a un nom
-        for (MajorRecommendationDTO major : allMajors) {
-            assertNotNull(major.getName(), "Chaque majeure doit avoir un nom");
-            assertFalse(major.getName().trim().isEmpty(), "Le nom de la majeure ne doit pas être vide");
+        for (String major : allMajors) {
+            assertNotNull(major, "Chaque majeure doit avoir un nom");
+            assertFalse(major.trim().isEmpty(), "Le nom de la majeure ne doit pas être vide");
         }
 
         System.out.println("📚 Nombre de majeures disponibles : " + allMajors.size());
@@ -122,7 +122,8 @@ public class OrientationServiceTest {
     @Test
     void testTestWithExampleAnswers() {
         // Tester la méthode de test avec des réponses d'exemple
-        OrientationResponseDTO testResponse = orientationService.testWithExampleAnswers();
+        OrientationRequestDTO exampleRequest = createExampleRequest();
+        OrientationResponseDTO testResponse = orientationService.calculateOrientation(exampleRequest);
         
         assertNotNull(testResponse, "La réponse du test ne doit pas être null");
         assertNotNull(testResponse.getTop3Recommendations(), "Les recommandations ne doivent pas être null");
@@ -130,6 +131,62 @@ public class OrientationServiceTest {
         
         System.out.println("🧪 Test avec exemples réussi !");
         System.out.println("🏆 Première recommandation : " + testResponse.getTop3Recommendations().get(0).getName());
+    }
+    
+    /**
+     * Crée une requête d'exemple pour les tests
+     */
+    private OrientationRequestDTO createExampleRequest() {
+        OrientationRequestDTO request = new OrientationRequestDTO();
+        
+        // Question 1: Intérêt scientifique/technique
+        request.setQuestion1("Très intéressé");
+        
+        // Question 2: Intérêts multiples (sélection multiple)
+        request.setQuestion2(Arrays.asList("Sciences", "Technologie", "Mathématiques"));
+        
+        // Question 3: Intérêt artistique/créatif
+        request.setQuestion3("Intéressé");
+        
+        // Question 4: Intérêt social/humain
+        request.setQuestion4("Très intéressé");
+        
+        // Question 5: Intérêts spécifiques (drag & drop)
+        request.setQuestion5(Arrays.asList("Business", "Gestion", "Leadership"));
+        
+        // Question 6: Intérêt logique/analytique
+        request.setQuestion6("Très intéressé");
+        
+        // Question 7: Compétence résolution de problèmes
+        request.setQuestion7("Très compétent");
+        
+        // Question 8: Compétence communication
+        request.setQuestion8("Compétent");
+        
+        // Question 9: Préférences de travail (sliders)
+        Map<String, Integer> workPrefs = new HashMap<>();
+        workPrefs.put("Équipe", 80);
+        workPrefs.put("Autonome", 60);
+        workPrefs.put("Pratique", 70);
+        workPrefs.put("Théorie", 50);
+        request.setQuestion9(workPrefs);
+        
+        // Question 10: Valeur impact sociétal
+        request.setQuestion10("Très important");
+        
+        // Question 11: Valeur innovation/défi
+        request.setQuestion11("Important");
+        
+        // Question 12: Valeur stabilité/sécurité
+        request.setQuestion12("Modérément important");
+        
+        // Question 13: Valeur autonomie
+        request.setQuestion13("Important");
+        
+        // Question 14: Compétences organisationnelles
+        request.setQuestion14(Arrays.asList("Organisation", "Planification", "Gestion de projet"));
+        
+        return request;
     }
 
     /**

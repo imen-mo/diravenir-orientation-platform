@@ -24,9 +24,18 @@ public class EtudiantMapper {
         dto.setEtablissement(etudiant.getEtablissement());
         dto.setAnneeEtude(etudiant.getAnneeEtude());
         dto.setDomaine(etudiant.getDomaine());
+        
+        // Mapping des nouveaux champs du test d'orientation
+        dto.setNomTest(etudiant.getNomTest());
+        dto.setEmailTest(etudiant.getEmailTest());
+        dto.setTelephoneTest(etudiant.getTelephoneTest());
+        dto.setDateTestOrientation(etudiant.getDateTestOrientation());
+        dto.setStatutTestComplete(etudiant.getStatutTestComplete());
+        
         // Ajoute les autres champs nécessaires
         return dto;
     }
+    
     public Etudiant toEntity(EtudiantDTO dto) {
         Etudiant etudiant = new Etudiant();
         etudiant.setId(dto.getId());
@@ -45,6 +54,14 @@ public class EtudiantMapper {
         etudiant.setEtablissement(dto.getEtablissement());
         etudiant.setAnneeEtude(dto.getAnneeEtude());
         etudiant.setDomaine(dto.getDomaine());
+        
+        // Mapping des nouveaux champs du test d'orientation
+        etudiant.setNomTest(dto.getNomTest());
+        etudiant.setEmailTest(dto.getEmailTest());
+        etudiant.setTelephoneTest(dto.getTelephoneTest());
+        etudiant.setDateTestOrientation(dto.getDateTestOrientation());
+        etudiant.setStatutTestComplete(dto.getStatutTestComplete());
+        
         // Ajoute les autres champs nécessaires
         return etudiant;
     }

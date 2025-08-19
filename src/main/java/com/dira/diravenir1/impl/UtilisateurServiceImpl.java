@@ -48,7 +48,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         utilisateur.setEmail(request.getEmail());
 
         // Encodage du mot de passe
-        utilisateur.setPassword(passwordEncoder.encode(request.getPassword()));
+        utilisateur.setPassword(passwordEncoder.encode(request.getMotDePasse()));
 
         // Par défaut, rôle USER
         utilisateur.setRole(Role.USER);
@@ -66,52 +66,57 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Override
     public void registerUser(SignupRequest request) {
-        // Normalisation des données
-        request.normalizeData();
-        
-        // Validation des mots de passe
-        if (!request.isPasswordConfirmed()) {
-            throw new SecurityException("Les mots de passe ne correspondent pas");
-        }
+        try {
+            // Normalisation des données
+            request.normalizeData();
+            
+            // Validation des mots de passe
+            if (!request.isPasswordConfirmed()) {
+                throw new SecurityException("Les mots de passe ne correspondent pas");
+            }
 
-        // Validation email
-        if (!isValidEmail(request.getEmail())) {
-            throw new SecurityException("Format d'email invalide");
-        }
+            // Validation email
+            if (!isValidEmail(request.getEmail())) {
+                throw new SecurityException("Format d'email invalide");
+            }
 
-        // Validation mot de passe fort
-        if (!request.isStrongPassword()) {
-            throw new SecurityException("Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial");
-        }
+            // Validation mot de passe fort
+            if (!request.isStrongPassword()) {
+                throw new SecurityException("Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial");
+            }
 
-        // Vérifier si l'email existe déjà
-        if (utilisateurRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new SecurityException("Un utilisateur avec cet email existe déjà");
-        }
+            // Vérifier si l'email existe déjà
+            if (utilisateurRepository.findByEmail(request.getEmail()).isPresent()) {
+                throw new SecurityException("Un utilisateur avec cet email existe déjà");
+            }
 
-        Utilisateur utilisateur = new Utilisateur();
-        
-        // Remplir les champs essentiels
-        utilisateur.setNom(request.getNom());
-        utilisateur.setPrenom(request.getPrenom());
-        utilisateur.setEmail(request.getEmail());
-        
-        // Encodage du mot de passe
-        utilisateur.setPassword(passwordEncoder.encode(request.getPassword()));
-        
-        // Par défaut, rôle USER
-        utilisateur.setRole(Role.USER);
-        
-        // Marquer l'email comme vérifié pour les tests (à retirer en production)
-        utilisateur.setEmailVerifie(true);
-        
-        // Marquer le compte comme vérifié pour les tests (à retirer en production)
-        utilisateur.setCompteVerifie(true);
-        
-        // S'assurer que le compte est actif
-        utilisateur.setCompteActif(true);
-        
-        utilisateurRepository.save(utilisateur);
+            Utilisateur utilisateur = new Utilisateur();
+            
+            // Remplir les champs essentiels
+            utilisateur.setNom(request.getNom());
+            utilisateur.setPrenom(request.getPrenom());
+            utilisateur.setEmail(request.getEmail());
+            
+            // Encodage du mot de passe
+            utilisateur.setPassword(passwordEncoder.encode(request.getMotDePasse()));
+            
+            // Par défaut, rôle USER
+            utilisateur.setRole(Role.USER);
+            
+            // Initialiser les champs obligatoires avec des valeurs par défaut
+            utilisateur.setDateCreation(java.time.LocalDateTime.now());
+            utilisateur.setCompteActif(true);
+            utilisateur.setEmailVerifie(false); // Laissez l'email non vérifié par défaut
+            utilisateur.setCompteVerifie(false);
+            utilisateur.setStatutOnline(false);
+            utilisateur.setSessionActive(false);
+            
+            // Sauvegarder l'utilisateur
+            utilisateurRepository.save(utilisateur);
+            
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de l'inscription: " + e.getMessage(), e);
+        }
     }
 
     // Méthode de conversion Entity -> DTO

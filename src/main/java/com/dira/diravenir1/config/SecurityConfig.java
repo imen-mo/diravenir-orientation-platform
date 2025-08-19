@@ -1,11 +1,9 @@
 package com.dira.diravenir1.config;
 
 import com.dira.diravenir1.service.JwtAuthenticationFilter;
-import com.dira.diravenir1.config.OAuth2SuccessHandler;
-import lombok.RequiredArgsConstructor;
+import com.dira.diravenir1.service.GoogleOAuthService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -14,11 +12,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -29,12 +27,19 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2UserService;
     private final OAuth2SuccessHandler oauth2SuccessHandler;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, 
+                         GoogleOAuthService oauth2UserService,
+                         OAuth2SuccessHandler oauth2SuccessHandler) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.oauth2UserService = oauth2UserService;
+        this.oauth2SuccessHandler = oauth2SuccessHandler;
+    }
 
     /**
      * Chaîne de filtres de sécurité principale
@@ -44,7 +49,7 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
-                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/auth/signin")).permitAll()
@@ -52,7 +57,11 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/api/auth/verify-email")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/auth/forgot-password")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/auth/reset-password")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/auth/status")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/auth/heartbeat")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/oauth2/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/login/oauth2/code/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/test/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/actuator/health")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/public/**", "GET")).permitAll()
@@ -63,7 +72,12 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo.userService(oauth2UserService))
                         .successHandler(oauth2SuccessHandler)
                         .failureHandler((request, response, exception) -> {
-                            response.sendRedirect("http://localhost:3000/signin?error=oauth2_failed");
+                            try {
+                                response.sendRedirect("http://localhost:3000/signin?error=oauth2_failed&message=" + 
+                                    java.net.URLEncoder.encode(exception.getMessage(), "UTF-8"));
+                            } catch (Exception e) {
+                                response.sendRedirect("http://localhost:3000/signin?error=oauth2_failed");
+                            }
                         })
                 )
                 .exceptionHandling(ex -> ex

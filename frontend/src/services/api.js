@@ -1,9 +1,9 @@
 import axios from "axios";
 import { getToken } from "../utils/auth";
-import { getApiBaseUrl } from "../config/api";
+import { API_CONFIG } from "../config/api";
 
 // ✅ Définir une seule fois l'URL de base
-const API_BASE = getApiBaseUrl();
+const API_BASE = API_CONFIG.BACKEND_URL + API_CONFIG.API_BASE_PATH;
 
 // ✅ Créer une instance Axios réutilisable
 const API = axios.create({
@@ -44,6 +44,16 @@ API.interceptors.response.use(
     // Gestion spécifique des erreurs de connexion
     if (error.code === 'ERR_NETWORK' || error.code === 'ECONNREFUSED') {
       console.error('🔌 Erreur de connexion au serveur. Vérifiez que le backend est démarré sur le port 8084.');
+    }
+    
+    // Gestion des erreurs d'authentification
+    if (error.response?.status === 401) {
+      console.warn('🔐 Token expiré ou invalide, nettoyage de l\'authentification');
+      localStorage.removeItem('token');
+      // Rediriger vers la page de connexion si nécessaire
+      if (window.location.pathname !== '/signin') {
+        window.location.href = '/signin';
+      }
     }
     
     // Améliorer la gestion des erreurs pour l'inscription
@@ -137,6 +147,28 @@ export const authService = {
   resendVerification: async (email) => {
     try {
       const response = await API.post('/auth/resend-verification', { email });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
+  // ======================
+  // === STATUT UTILISATEUR ===
+  // ======================
+  
+  getUserStatus: async () => {
+    try {
+      const response = await API.get('/auth/status');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
+  updateUserActivity: async () => {
+    try {
+      const response = await API.post('/auth/heartbeat');
       return response.data;
     } catch (error) {
       throw error;

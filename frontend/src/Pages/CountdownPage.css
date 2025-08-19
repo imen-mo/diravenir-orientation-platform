@@ -1,0 +1,424 @@
+/* CountdownPage.css - Page de compte à rebours magique et choquante */
+
+.countdown-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #441048 0%, #430F48 50%, #400C49 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Particules magiques flottantes */
+.magic-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  animation: particleFloat 8s ease-in-out infinite;
+}
+
+.particle-0 {
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 215, 0, 0.9);
+  animation-delay: 0s;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+.particle-1 {
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 165, 0, 0.9);
+  animation-delay: 2s;
+  box-shadow: 0 0 15px rgba(255, 165, 0, 0.7);
+}
+
+.particle-2 {
+  width: 3px;
+  height: 3px;
+  background: rgba(255, 140, 0, 0.8);
+  animation-delay: 4s;
+  box-shadow: 0 0 8px rgba(255, 140, 0, 0.5);
+}
+
+.particle-3 {
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 215, 0, 0.9);
+  animation-delay: 6s;
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+}
+
+.particle:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+.particle:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; }
+.particle:nth-child(3) { top: 30%; left: 20%; animation-delay: 2s; }
+.particle:nth-child(4) { top: 40%; right: 25%; animation-delay: 3s; }
+.particle:nth-child(5) { top: 50%; left: 30%; animation-delay: 4s; }
+.particle:nth-child(6) { top: 60%; right: 35%; animation-delay: 5s; }
+.particle:nth-child(7) { top: 70%; left: 40%; animation-delay: 6s; }
+.particle:nth-child(8) { top: 80%; right: 45%; animation-delay: 7s; }
+.particle:nth-child(9) { top: 90%; left: 50%; animation-delay: 8s; }
+.particle:nth-child(10) { top: 15%; left: 60%; animation-delay: 9s; }
+.particle:nth-child(11) { top: 25%; right: 65%; animation-delay: 10s; }
+.particle:nth-child(12) { top: 35%; left: 70%; animation-delay: 11s; }
+.particle:nth-child(13) { top: 45%; right: 75%; animation-delay: 12s; }
+.particle:nth-child(14) { top: 55%; left: 80%; animation-delay: 13s; }
+.particle:nth-child(15) { top: 65%; right: 85%; animation-delay: 14s; }
+.particle:nth-child(16) { top: 75%; left: 90%; animation-delay: 15s; }
+.particle:nth-child(17) { top: 85%; right: 95%; animation-delay: 16s; }
+.particle:nth-child(18) { top: 95%; left: 95%; animation-delay: 17s; }
+.particle:nth-child(19) { top: 5%; left: 85%; animation-delay: 18s; }
+.particle:nth-child(20) { top: 45%; left: 5%; animation-delay: 19s; }
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px) scale(1.2);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-40px) translateX(-5px) scale(0.8);
+    opacity: 0.9;
+  }
+  75% {
+    transform: translateY(-30px) translateX(15px) scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+/* Grille de points animés en arrière-plan */
+.countdown-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle, rgba(255, 215, 0, 0.1) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255, 165, 0, 0.08) 1px, transparent 1px);
+  background-size: 50px 50px, 80px 80px;
+  background-position: 0 0, 25px 25px;
+  animation: gridMove 20s linear infinite;
+  z-index: 1;
+}
+
+@keyframes gridMove {
+  0% { background-position: 0 0, 25px 25px; }
+  100% { background-position: 50px 50px, 80px 80px; }
+}
+
+.countdown-content {
+  text-align: center;
+  z-index: 2;
+  position: relative;
+}
+
+.countdown-number {
+  font-size: 20rem;
+  font-weight: 900;
+  color: white;
+  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  margin-bottom: 2rem;
+  animation: countdownPulse 1s ease-in-out infinite;
+  background: linear-gradient(45deg, #FFD700, #FFA500, #FF8C00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+
+.countdown-number::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: numberGlow 2s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes numberGlow {
+  0%, 100% { opacity: 0.1; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.3; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+@keyframes countdownPulse {
+  0%, 100% { 
+    transform: scale(1) rotate(0deg); 
+  }
+  50% { 
+    transform: scale(1.1) rotate(2deg); 
+  }
+}
+
+.magic-quote {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  border-radius: 30px;
+  padding: 3rem;
+  margin-bottom: 3rem;
+  max-width: 800px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+  animation: quoteSlideIn 0.8s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.magic-quote::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+.magic-quote::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #FFD700, #FFA500, #FF8C00, #FFD700);
+  border-radius: 30px;
+  z-index: -1;
+  animation: borderRotate 4s linear infinite;
+}
+
+@keyframes borderRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0%, 100% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+}
+
+.quote-text {
+  font-size: 2rem;
+  color: white;
+  line-height: 1.6;
+  font-weight: 600;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  margin-bottom: 1.5rem;
+}
+
+.quote-author {
+  font-size: 1.2rem;
+  color: rgba(255, 215, 0, 0.9);
+  font-style: italic;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+}
+
+.countdown-progress {
+  width: 500px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0 auto;
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  position: relative;
+}
+
+.countdown-progress::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+  animation: progressShimmer 2s ease-in-out infinite;
+}
+
+@keyframes progressShimmer {
+  0%, 100% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(45deg, #FFD700, #FFA500, #FF8C00, #FFD700);
+  border-radius: 4px;
+  transition: width 3s ease;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+  position: relative;
+}
+
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: progressGlow 1s ease-in-out infinite;
+}
+
+@keyframes progressGlow {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* Message "Ready! Let's begin!" */
+.ready-message {
+  animation: readySlideIn 0.8s ease-out;
+  position: relative;
+}
+
+.ready-message::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  right: -50px;
+  bottom: -50px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: readyGlow 3s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes readyGlow {
+  0%, 100% { opacity: 0.1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(1.2); }
+}
+
+.ready-text {
+  font-size: 8rem;
+  font-weight: 900;
+  color: white;
+  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  margin-bottom: 1rem;
+  background: linear-gradient(45deg, #FFD700, #FFA500, #FF8C00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: readyPulse 1.5s ease-in-out infinite;
+  position: relative;
+}
+
+.ready-text::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 110%;
+  height: 110%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: readyTextGlow 2s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes readyTextGlow {
+  0%, 100% { opacity: 0.1; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.3; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+.lets-begin-text {
+  font-size: 4rem;
+  font-weight: 700;
+  color: rgba(255, 215, 0, 0.9);
+  text-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+  margin-bottom: 2rem;
+  animation: letsBeginSlideIn 1s ease-out 0.3s both;
+}
+
+.ready-emoji {
+  font-size: 6rem;
+  animation: emojiBounce 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+}
+
+@keyframes readyPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes letsBeginSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes emojiBounce {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-20px) rotate(5deg); }
+  50% { transform: translateY(-40px) rotate(0deg); }
+  75% { transform: translateY(-20px) rotate(-5deg); }
+}
+
+@keyframes quoteSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive pour le compte à rebours */
+@media (max-width: 768px) {
+  .countdown-number {
+    font-size: 12rem;
+  }
+  
+  .ready-text {
+    font-size: 5rem;
+  }
+  
+  .lets-begin-text {
+    font-size: 2.5rem;
+  }
+  
+  .ready-emoji {
+    font-size: 4rem;
+  }
+  
+  .quote-text {
+    font-size: 1.5rem;
+  }
+  
+  .countdown-progress {
+    width: 300px;
+  }
+  
+  .magic-quote {
+    padding: 2rem;
+    margin: 0 1rem 2rem;
+  }
+}
