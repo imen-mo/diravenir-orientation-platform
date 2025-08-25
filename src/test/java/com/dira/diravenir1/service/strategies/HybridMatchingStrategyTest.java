@@ -311,7 +311,7 @@ class HybridMatchingStrategyTest {
      */
     private MajorProfileDTO createTestInformatiqueMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Informatique");
+        major.setProgram("Informatique");
         major.setInteretScientifiqueTech(5);
         major.setInteretArtistiqueCreatif(2);
         major.setInteretSocialHumain(2);
@@ -337,7 +337,7 @@ class HybridMatchingStrategyTest {
      */
     private MajorProfileDTO createTestArtsMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Arts");
+        major.setProgram("Arts");
         major.setInteretScientifiqueTech(1);
         major.setInteretArtistiqueCreatif(5);
         major.setInteretSocialHumain(3);
@@ -363,7 +363,7 @@ class HybridMatchingStrategyTest {
      */
     private MajorProfileDTO createTestBusinessMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Business Administration");
+        major.setProgram("Business Administration");
         major.setInteretScientifiqueTech(2);
         major.setInteretArtistiqueCreatif(2);
         major.setInteretSocialHumain(4);
@@ -389,7 +389,7 @@ class HybridMatchingStrategyTest {
      */
     private MajorProfileDTO createTestMedecineMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Médecine");
+        major.setProgram("Médecine");
         major.setInteretScientifiqueTech(4);
         major.setInteretArtistiqueCreatif(2);
         major.setInteretSocialHumain(5);

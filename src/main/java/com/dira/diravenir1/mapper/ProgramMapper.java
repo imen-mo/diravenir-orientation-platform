@@ -10,19 +10,24 @@ public class ProgramMapper {
     public ProgramDTO toDTO(Program program) {
         ProgramDTO dto = new ProgramDTO();
         dto.setId(program.getId());
-        dto.setMajorName(program.getMajorName());
-        dto.setUniversityName(program.getUniversityName());
-        dto.setDescription(program.getDescription());
-        dto.setDegreeType(program.getDegreeType());
-        dto.setLocation(program.getLocation());
+        
+        // Nouvelle structure unifiée
         dto.setCampusCity(program.getCampusCity());
+        dto.setUniversities(program.getUniversities());
+        dto.setUniversityRanking(program.getUniversityRanking());
+        dto.setApplyBefore(program.getApplyBefore());
+        dto.setCategory(program.getCategory());
+        dto.setProgram(program.getProgram());
+        dto.setDegreeType(program.getDegreeType());
+        dto.setTuitionFees(program.getTuitionFees());
         dto.setDuration(program.getDuration());
         dto.setLanguage(program.getLanguage());
-        dto.setUniversityRanking(program.getUniversityRanking());
-        dto.setProgramRanking(program.getProgramRanking());
-        dto.setScholarshipAvailable(program.getScholarshipAvailable());
-        dto.setTuitionFees(program.getTuitionFees());
-        dto.setApplyBefore(program.getApplyBefore());
+        dto.setScholarship(program.getScholarship());
+        dto.setDescription(program.getDescription());
+        dto.setAboutThisProgram(program.getAboutThisProgram());
+        dto.setWhyThisProgram(program.getWhyThisProgram());
+        dto.setAboutTheUniversity(program.getAboutTheUniversity());
+        
         dto.setStatus(program.getStatus());
         dto.setProgramImage(program.getProgramImage());
         
@@ -33,11 +38,9 @@ public class ProgramMapper {
         }
         if (program.getUniversite() != null) {
             dto.setUniversiteId(program.getUniversite().getId());
-            dto.setUniversityName(program.getUniversite().getNom());
-        }
-        if (program.getUniversite() != null) {
-            dto.setUniversiteId(program.getUniversite().getId());
             dto.setUniversiteName(program.getUniversite().getNom());
+            // Ajouter l'objet université complet pour accéder au logo_url
+            dto.setUniversite(program.getUniversite());
         }
         
         return dto;
@@ -46,19 +49,24 @@ public class ProgramMapper {
     public Program toEntity(ProgramDTO dto) {
         Program program = new Program();
         program.setId(dto.getId());
-        program.setMajorName(dto.getMajorName());
-        program.setUniversityName(dto.getUniversityName());
-        program.setDescription(dto.getDescription());
-        program.setDegreeType(dto.getDegreeType());
-        program.setLocation(dto.getLocation());
+        
+        // Nouvelle structure unifiée
         program.setCampusCity(dto.getCampusCity());
+        program.setUniversities(dto.getUniversities());
+        program.setUniversityRanking(dto.getUniversityRanking());
+        program.setApplyBefore(dto.getApplyBefore());
+        program.setCategory(dto.getCategory());
+        program.setProgram(dto.getProgram());
+        program.setDegreeType(dto.getDegreeType());
+        program.setTuitionFees(dto.getTuitionFees());
         program.setDuration(dto.getDuration());
         program.setLanguage(dto.getLanguage());
-        program.setUniversityRanking(dto.getUniversityRanking());
-        program.setProgramRanking(dto.getProgramRanking());
-        program.setScholarshipAvailable(dto.getScholarshipAvailable());
-        program.setTuitionFees(dto.getTuitionFees());
-        program.setApplyBefore(dto.getApplyBefore());
+        program.setScholarship(dto.getScholarship());
+        program.setDescription(dto.getDescription());
+        program.setAboutThisProgram(dto.getAboutThisProgram());
+        program.setWhyThisProgram(dto.getWhyThisProgram());
+        program.setAboutTheUniversity(dto.getAboutTheUniversity());
+        
         program.setStatus(dto.getStatus());
         program.setProgramImage(dto.getProgramImage());
         

@@ -11,28 +11,12 @@ public class UtilisateurDTO {
     private String motDePasse;
     private Role role;
     private String languePreferee;
-    
-    // ======================
-    // === NOUVEAUX CHAMPS ===
-    // ======================
     private String photoProfil;
-    private String googleId;
-    private String provider;
-    private String providerId;
     private LocalDateTime dateCreation;
     private LocalDateTime derniereConnexion;
     private boolean compteActif;
-    private boolean emailVerifie;
 
-    // ======================
-    // === STATUT ONLINE/OFFLINE ===
-    // ======================
-    private boolean statutOnline;
-    private LocalDateTime derniereActivite;
-    private boolean sessionActive;
-
-    // Getters et Setters existants
-
+    // Getters et Setters
     public Long getId() {
         return id;
     }
@@ -77,36 +61,11 @@ public class UtilisateurDTO {
         this.languePreferee = languePreferee;
     }
 
-    // ======================
-    // === NOUVEAUX GETTERS/SETTERS ===
-    // ======================
-    
     public String getPhotoProfil() {
         return photoProfil;
     }
     public void setPhotoProfil(String photoProfil) {
         this.photoProfil = photoProfil;
-    }
-    
-    public String getGoogleId() {
-        return googleId;
-    }
-    public void setGoogleId(String googleId) {
-        this.googleId = googleId;
-    }
-    
-    public String getProvider() {
-        return provider;
-    }
-    public void setProvider(String provider) {
-        this.provider = provider;
-    }
-    
-    public String getProviderId() {
-        return providerId;
-    }
-    public void setProviderId(String providerId) {
-        this.providerId = providerId;
     }
     
     public LocalDateTime getDateCreation() {
@@ -128,40 +87,5 @@ public class UtilisateurDTO {
     }
     public void setCompteActif(boolean compteActif) {
         this.compteActif = compteActif;
-    }
-    
-    public boolean isEmailVerifie() {
-        return emailVerifie;
-    }
-    public void setEmailVerifie(boolean emailVerifie) {
-        this.emailVerifie = emailVerifie;
-    }
-
-    // ======================
-    // === STATUT ONLINE/OFFLINE ===
-    // ======================
-    
-    public boolean isStatutOnline() {
-        return statutOnline;
-    }
-    
-    public void setStatutOnline(boolean statutOnline) {
-        this.statutOnline = statutOnline;
-    }
-    
-    public LocalDateTime getDerniereActivite() {
-        return derniereActivite;
-    }
-    
-    public void setDerniereActivite(LocalDateTime derniereActivite) {
-        this.derniereActivite = derniereActivite;
-    }
-    
-    public boolean isSessionActive() {
-        return sessionActive;
-    }
-    
-    public void setSessionActive(boolean sessionActive) {
-        this.sessionActive = sessionActive;
     }
 }

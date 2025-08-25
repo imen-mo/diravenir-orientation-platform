@@ -1,0 +1,124 @@
+/* AuthContext.css - Styles pour le contexte d'authentification */
+
+.auth-context-container {
+    /* Styles de base pour le conteneur d'authentification */
+}
+
+.auth-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.auth-loading-spinner {
+    width: 3rem;
+    height: 3rem;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.auth-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+    text-align: center;
+}
+
+.auth-error-icon {
+    font-size: 4rem;
+    color: #e53e3e;
+    margin-bottom: 1rem;
+}
+
+.auth-error-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.auth-error-message {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 500px;
+}
+
+.auth-error-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.auth-error-button {
+    padding: 0.875rem 2rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.auth-error-button.primary {
+    background: white;
+    color: #667eea;
+}
+
+.auth-error-button.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.3);
+}
+
+.auth-error-button.secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.auth-error-button.secondary:hover {
+    background: white;
+    color: #667eea;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .auth-error-title {
+        font-size: 1.5rem;
+    }
+    
+    .auth-error-message {
+        font-size: 1rem;
+    }
+    
+    .auth-error-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .auth-error-button {
+        width: 100%;
+        max-width: 250px;
+        justify-content: center;
+    }
+}

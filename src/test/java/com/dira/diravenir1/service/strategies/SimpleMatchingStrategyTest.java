@@ -425,7 +425,7 @@ class SimpleMatchingStrategyTest {
      */
     private MajorProfileDTO createTestInformatiqueMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Informatique");
+        major.setProgram("Informatique");
         major.setInteretScientifiqueTech(5);
         major.setInteretArtistiqueCreatif(2);
         major.setInteretSocialHumain(2);
@@ -451,7 +451,7 @@ class SimpleMatchingStrategyTest {
      */
     private MajorProfileDTO createTestArtsMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Arts");
+        major.setProgram("Arts");
         major.setInteretScientifiqueTech(1);
         major.setInteretArtistiqueCreatif(5);
         major.setInteretSocialHumain(3);
@@ -477,7 +477,7 @@ class SimpleMatchingStrategyTest {
      */
     private MajorProfileDTO createTestBusinessMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Business Administration");
+        major.setProgram("Business Administration");
         major.setInteretScientifiqueTech(2);
         major.setInteretArtistiqueCreatif(2);
         major.setInteretSocialHumain(4);
@@ -503,7 +503,7 @@ class SimpleMatchingStrategyTest {
      */
     private MajorProfileDTO createTestMedecineMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Médecine");
+        major.setProgram("Médecine");
         major.setInteretScientifiqueTech(4);
         major.setInteretArtistiqueCreatif(2);
         major.setInteretSocialHumain(5);
@@ -529,7 +529,7 @@ class SimpleMatchingStrategyTest {
      */
     private MajorProfileDTO createTestMajorWithSameScores() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Identique");
+        major.setProgram("Identique");
         major.setInteretScientifiqueTech(4);
         major.setInteretArtistiqueCreatif(2);
         major.setInteretSocialHumain(3);
@@ -555,7 +555,7 @@ class SimpleMatchingStrategyTest {
      */
     private MajorProfileDTO createEmptyMajorProfile() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Vide");
+        major.setProgram("Vide");
         major.setInteretScientifiqueTech(0);
         major.setInteretArtistiqueCreatif(0);
         major.setInteretSocialHumain(0);

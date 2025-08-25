@@ -2,7 +2,8 @@ package com.dira.diravenir1.service;
 
 import com.dira.diravenir1.dto.UserProfileDTO;
 import com.dira.diravenir1.dto.MajorProfileDTO;
-import com.dira.diravenir1.service.interfaces.ScoreCalculator;
+import com.dira.diravenir1.dto.MatchingResultDTO;
+import com.dira.diravenir1.service.calculators.ScoreCalculator;
 import com.dira.diravenir1.service.calculators.EuclideanScoreCalculator;
 import com.dira.diravenir1.service.calculators.ForceAnalysisCalculator;
 import com.dira.diravenir1.service.calculators.CriticalPillarCalculator;
@@ -102,7 +103,8 @@ public class ScoreCalculationService {
      */
     private double calculateEuclideanScore(UserProfileDTO userProfile, MajorProfileDTO majorProfile) {
         try {
-            return euclideanCalculator.calculate(userProfile, majorProfile);
+            List<MatchingResultDTO> results = euclideanCalculator.calculateMatchingScores(userProfile, List.of(majorProfile));
+            return results.isEmpty() ? 0.5 : results.get(0).getMatchingScore() / 100.0;
         } catch (Exception e) {
             log.warn("⚠️ Erreur calculateur euclidien, utilisation du score par défaut");
             return 0.5;
@@ -114,8 +116,9 @@ public class ScoreCalculationService {
      */
     private double calculateForceAnalysisScore(UserProfileDTO userProfile, MajorProfileDTO majorProfile) {
         try {
-            return forceAnalysisCalculator.calculate(userProfile, majorProfile);
-            } catch (Exception e) {
+            List<MatchingResultDTO> results = forceAnalysisCalculator.calculateMatchingScores(userProfile, List.of(majorProfile));
+            return results.isEmpty() ? 0.5 : results.get(0).getMatchingScore() / 100.0;
+        } catch (Exception e) {
             log.warn("⚠️ Erreur calculateur force analysis, utilisation du score par défaut");
             return 0.5;
         }
@@ -126,7 +129,8 @@ public class ScoreCalculationService {
      */
     private double calculateCriticalPillarScore(UserProfileDTO userProfile, MajorProfileDTO majorProfile) {
         try {
-            return criticalPillarCalculator.calculate(userProfile, majorProfile);
+            List<MatchingResultDTO> results = criticalPillarCalculator.calculateMatchingScores(userProfile, List.of(majorProfile));
+            return results.isEmpty() ? 0.5 : results.get(0).getMatchingScore() / 100.0;
         } catch (Exception e) {
             log.warn("⚠️ Erreur calculateur piliers critiques, utilisation du score par défaut");
             return 0.5;
@@ -221,7 +225,7 @@ public class ScoreCalculationService {
      */
     public List<ScoreCalculator> getActiveCalculators() {
         return getAvailableCalculators().stream()
-            .filter(ScoreCalculator::isEnabled)
+            .filter(calc -> calc != null)
             .collect(Collectors.toList());
     }
     
@@ -230,7 +234,7 @@ public class ScoreCalculationService {
      */
     public boolean isCalculatorAvailable(String calculatorName) {
         return getAvailableCalculators().stream()
-            .anyMatch(calc -> calc.getCalculatorName().equals(calculatorName));
+            .anyMatch(calc -> calc.getAlgorithmName().equals(calculatorName));
     }
     
     /**
@@ -266,7 +270,7 @@ public class ScoreCalculationService {
      */
     private MajorProfileDTO createTestMajorProfile() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Test");
+        major.setProgram("Test");
         major.setInteretScientifiqueTech(3);
         major.setInteretLogiqueAnalytique(3);
         return major;

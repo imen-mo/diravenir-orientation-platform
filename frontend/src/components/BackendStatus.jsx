@@ -25,8 +25,8 @@ const BackendStatus = () => {
             
             // Test alternatif - essayer de se connecter au port
             try {
-                const testResponse = await fetch('http://localhost:8084/api/auth/signin', {
-                    method: 'OPTIONS' // Méthode OPTIONS pour tester la connectivité
+                const testResponse = await fetch('http://localhost:8084/api/health', {
+                    method: 'GET' // Méthode GET pour tester la connectivité
                 });
                 
                 setStatus('connected');

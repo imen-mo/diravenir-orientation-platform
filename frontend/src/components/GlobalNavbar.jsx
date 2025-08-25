@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaBars, FaTimes, FaChevronDown, FaUser, FaSignOutAlt } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
+import logoColorful from '../assets/logo-colorfull.png';
 import '../styles/Navbar.css';
-import { useAuth } from '../hooks/useAuth';
-import LogoutConfirmation from './LogoutConfirmation';
+import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 
 const GlobalNavbar = ({ activePage = '' }) => {
-  const { isAuthenticated, user, logout, logoutAll } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
-  const [logoutLoading, setLogoutLoading] = useState(false);
-  const [logoutAllDevices, setLogoutAllDevices] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  
+  const { user, isAuthenticated, logout } = useAuth();
+  const { getText } = useTheme();
+  const navigate = useNavigate();
 
-  // Gestion du scroll pour l'effet de transparence
+  // Gestion du scroll pour l'effet de changement de couleur
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -23,18 +25,6 @@ const GlobalNavbar = ({ activePage = '' }) => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Fermer le dropdown en cliquant à l'extérieur
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (isDropdownOpen && !event.target.closest('.user-profile-section')) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isDropdownOpen]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -44,32 +34,14 @@ const GlobalNavbar = ({ activePage = '' }) => {
     setIsMobileMenuOpen(false);
   };
 
-  const handleLogoutClick = () => {
-    setLogoutAllDevices(false);
-    setShowLogoutConfirmation(true);
-    setIsDropdownOpen(false);
+  const toggleUserMenu = () => {
+    setIsUserMenuOpen(!isUserMenuOpen);
   };
 
-  const handleLogoutConfirm = async () => {
-    setLogoutLoading(true);
-    try {
-      if (logoutAllDevices) {
-        await logoutAll();
-      } else {
-        await logout();
-      }
-      setShowLogoutConfirmation(false);
-      setLogoutAllDevices(false);
-    } catch (error) {
-      console.error('Erreur lors de la déconnexion:', error);
-    } finally {
-      setLogoutLoading(false);
-    }
-  };
-
-  const handleLogoutCancel = () => {
-    setShowLogoutConfirmation(false);
-    setLogoutAllDevices(false);
+  const handleLogout = async () => {
+    await logout();
+    setIsUserMenuOpen(false);
+    navigate('/');
   };
 
   const navItems = [
@@ -89,157 +61,137 @@ const GlobalNavbar = ({ activePage = '' }) => {
       transition={{ duration: 0.6, ease: 'easeOut' }}
     >
       <div className="navbar-container">
-        {/* Logo */}
+        {/* Logo - Tout à gauche */}
         <motion.div 
           className="navbar-brand"
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.2 }}
         >
-          <img 
-            src={logo} 
-            alt="DirAvenir Logo" 
-            className="navbar-logo" 
-            onClick={() => window.location.href = '/'} 
-          />
+          <Link to="/">
+            <img 
+              src={isScrolled ? logo : logoColorful} 
+              alt="DirAvenir Logo" 
+              className="navbar-logo"
+            />
+          </Link>
         </motion.div>
 
-        {/* Navigation Desktop */}
-        <nav className="desktop-nav">
+        {/* Navigation - Centrée */}
+        <nav className="navbar-nav">
           {navItems.map((item) => (
             <motion.a
               key={item.href}
               href={item.href}
-              className={`nav-link ${activePage === item.page ? 'active' : ''}`}
-              whileHover={{ y: -2 }}
+              className={`${activePage === item.page ? 'active' : ''}`}
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={closeMobileMenu}
+              transition={{ duration: 0.2 }}
             >
               {item.label}
             </motion.a>
           ))}
         </nav>
 
-        {/* Boutons d'authentification Desktop */}
-        <div className="desktop-auth">
+        {/* Boutons d'authentification - Tout à droite */}
+        <div className="navbar-buttons">
           {isAuthenticated ? (
-            <div className="user-profile-section">
-              <motion.div
-                className="user-info"
+            <div className="user-menu">
+              <motion.button
+                className="user-menu-button"
+                onClick={toggleUserMenu}
                 whileHover={{ scale: 1.05 }}
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
               >
-                <FaUser className="user-icon" />
-                <span className="user-name">{user?.prenom || 'Utilisateur'}</span>
-                <FaChevronDown className={`dropdown-arrow ${isDropdownOpen ? 'rotated' : ''}`} />
-              </motion.div>
-              
+                <div className="user-avatar">
+                  <FaUser />
+                </div>
+                <div className="user-info">
+                  <span className="user-name">{user?.name || 'Utilisateur'}</span>
+                  <span className="user-email">{user?.email || ''}</span>
+                </div>
+                <FaChevronDown className={`chevron ${isUserMenuOpen ? 'rotated' : ''}`} />
+              </motion.button>
+
               <AnimatePresence>
-                {isDropdownOpen && (
+                {isUserMenuOpen && (
                   <motion.div
-                    className="user-dropdown"
+                    className={`user-dropdown ${isUserMenuOpen ? 'show' : ''}`}
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <motion.a
-                      href="/profile"
-                      className="dropdown-item"
-                      whileHover={{ backgroundColor: '#f3f4f6' }}
-                    >
-                      <FaUser className="dropdown-icon" />
+                    <Link to="/profile" className="user-dropdown-item">
+                      <FaUser />
                       Mon Profil
-                    </motion.a>
-                    <motion.button
-                      onClick={handleLogoutClick}
-                      className="dropdown-item logout-btn"
-                      whileHover={{ backgroundColor: '#fef2f2' }}
-                    >
-                      <FaSignOutAlt className="dropdown-icon" />
+                    </Link>
+                    <Link to="/settings" className="user-dropdown-item">
+                      <FaUser />
+                      Paramètres
+                    </Link>
+                    <button onClick={handleLogout} className="user-dropdown-item logout">
+                      <FaSignOutAlt />
                       Se déconnecter
-                    </motion.button>
-                    <motion.button
-                      onClick={() => {
-                        setShowLogoutConfirmation(true);
-                        setIsDropdownOpen(false);
-                        // Set a flag to indicate this is a logout all
-                        setLogoutAllDevices(true);
-                      }}
-                      className="dropdown-item logout-all-btn"
-                      whileHover={{ backgroundColor: '#fef2f2' }}
-                    >
-                      <FaSignOutAlt className="dropdown-icon" />
-                      Se déconnecter de tous les appareils
-                    </motion.button>
+                    </button>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
           ) : (
-            <>
-              <motion.a
-                href="/signin"
-                className="auth-btn login-btn"
-                whileHover={{ scale: 1.05, y: -2 }}
+            <div className="auth-buttons">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
               >
-                Log In
-              </motion.a>
-              <motion.a
-                href="/signup"
-                className="auth-btn signup-btn"
-                whileHover={{ scale: 1.05, y: -2 }}
+                <Link to="/login" className="navbar-button outline">
+                  Log In
+                </Link>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
               >
-                Create Account
-              </motion.a>
-            </>
+                <Link to="/register" className="navbar-button solid">
+                  Create Account
+                </Link>
+              </motion.div>
+            </div>
           )}
         </div>
 
-        {/* Bouton menu mobile */}
+        {/* Bouton Menu Mobile */}
         <motion.button
-          className="mobile-menu-toggle"
+          className="navbar-mobile-toggle"
           onClick={toggleMobileMenu}
-          whileTap={{ scale: 0.9 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ duration: 0.2 }}
         >
-          <AnimatePresence mode="wait">
-            {isMobileMenuOpen ? (
-              <motion.div
-                key="close"
-                initial={{ rotate: -90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: 90, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <FaTimes />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="menu"
-                initial={{ rotate: 90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: -90, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <FaBars />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
         </motion.button>
-      </div>
 
-      {/* Menu mobile */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            className="mobile-menu"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
-          >
-            <div className="mobile-menu-content">
+        {/* Menu Mobile */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              className="mobile-menu"
+              initial={{ opacity: 0, x: '100%' }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: '100%' }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            >
+              <div className="mobile-menu-header">
+                <img src={logo} alt="DirAvenir Logo" className="mobile-logo" />
+                <button
+                  className="mobile-close-btn"
+                  onClick={closeMobileMenu}
+                >
+                  <FaTimes />
+                </button>
+              </div>
+              
               <nav className="mobile-nav">
                 {navItems.map((item) => (
                   <motion.a
@@ -249,87 +201,37 @@ const GlobalNavbar = ({ activePage = '' }) => {
                     onClick={closeMobileMenu}
                     whileHover={{ x: 10 }}
                     whileTap={{ scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
                   >
                     {item.label}
                   </motion.a>
                 ))}
               </nav>
-              
+
+              {/* Authentification Mobile */}
               <div className="mobile-auth">
                 {isAuthenticated ? (
-                  <>
-                    <motion.a
-                      href="/profile"
-                      className="mobile-auth-btn profile-btn"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={closeMobileMenu}
-                    >
-                      <FaUser className="mobile-icon" />
-                      Mon Profil
-                    </motion.a>
-                    <motion.button
-                      onClick={() => {
-                        handleLogoutClick();
-                        closeMobileMenu();
-                      }}
-                      className="mobile-auth-btn logout-btn"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <FaSignOutAlt className="mobile-icon" />
-                      Se déconnecter
-                    </motion.button>
-                    <motion.button
-                      onClick={() => {
-                        setShowLogoutConfirmation(true);
-                        setLogoutAllDevices(true);
-                        closeMobileMenu();
-                      }}
-                      className="mobile-auth-btn logout-all-btn"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <FaSignOutAlt className="mobile-icon" />
-                      Se déconnecter partout
-                    </motion.button>
-                  </>
+                  <div className="mobile-user-info">
+                    <div className="mobile-user-avatar">
+                      <FaUser />
+                    </div>
+                    <span className="mobile-user-name">{user?.name || 'Utilisateur'}</span>
+                  </div>
                 ) : (
-                  <>
-                    <motion.a
-                      href="/signin"
-                      className="mobile-auth-btn login-btn"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={closeMobileMenu}
-                    >
+                  <div className="mobile-auth-buttons">
+                    <Link to="/login" className="mobile-auth-button login" onClick={closeMobileMenu}>
                       Log In
-                    </motion.a>
-                    <motion.a
-                      href="/signup"
-                      className="mobile-auth-btn signup-btn"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={closeMobileMenu}
-                    >
+                    </Link>
+                    <Link to="/register" className="mobile-auth-button register" onClick={closeMobileMenu}>
                       Create Account
-                    </motion.a>
-                  </>
+                    </Link>
+                  </div>
                 )}
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Logout Confirmation Dialog */}
-      <LogoutConfirmation
-        isOpen={showLogoutConfirmation}
-        onClose={handleLogoutCancel}
-        onConfirm={handleLogoutConfirm}
-        loading={logoutLoading}
-        isLogoutAll={logoutAllDevices}
-      />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </motion.header>
   );
 };

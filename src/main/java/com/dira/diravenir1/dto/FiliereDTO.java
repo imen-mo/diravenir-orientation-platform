@@ -5,22 +5,22 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class FiliereDTO {
+    
     private Long id;
     private String nom;
     private String description;
     private String domaine;
-    private String niveau; // Licence, Master, Doctorat
-    private String duree; // "3 ans", "2 ans"
+    private String niveau;
+    private String duree;
     private String prerequis;
-    private String debouches; // opportunités de carrière
+    private String debouches;
     private Boolean active;
     private String imageUrl;
-    private Double cout; // coût approximatif
-    private String langue; // français, anglais, etc.
+    private String cout;
+    private String langue;
 }

@@ -5,9 +5,8 @@ import { IoMdSend } from 'react-icons/io';
 import { motion, useAnimation, useInView } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import './Contact.css';
-import '../pages/SignUp.css';
 import logo from '../assets/logo.png';
-import Footer from '../components/Footer';
+import GlobalLayout from '../components/GlobalLayout';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -130,7 +129,8 @@ const Contact = () => {
   };
 
   return (
-    <div className="contact-page">
+    <GlobalLayout activePage="contact">
+      <div className="contact-page">
       {/* Éléments décoratifs comme dans l'image */}
       <div className="decorative-dots">
         <div className="dot"></div>
@@ -327,7 +327,8 @@ const Contact = () => {
           </form>
         </div>
       </section>
-    </div>
+      </div>
+    </GlobalLayout>
   );
 };
 

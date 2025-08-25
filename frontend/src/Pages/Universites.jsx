@@ -1,6 +1,6 @@
 import React from "react";
+import GlobalLayout from "../components/GlobalLayout";
 import "./Universites.css";
-import Footer from "../components/Footer";
 
 const universites = [
     {
@@ -42,7 +42,8 @@ const universites = [
 
 const Universites = () => {
     return (
-        <div className="universites-container">
+        <GlobalLayout activePage="universities">
+            <div className="universites-container">
             <h1 className="universites-title">Universités recommandées</h1>
             <div className="universites-list">
                 {universites.map((uni, index) => (
@@ -57,7 +58,8 @@ const Universites = () => {
                     </div>
                 ))}
             </div>
-        </div>
+            </div>
+        </GlobalLayout>
     );
 };
 

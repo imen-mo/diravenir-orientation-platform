@@ -1,530 +1,638 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth';
-import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
+import GlobalLayout from '../components/GlobalLayout';
+import API from '../services/api';
+import notificationService from '../services/notificationService';
+import { defaultSettings, supportedThemes, supportedLanguages, supportedTimezones } from '../config/defaultSettings';
 import './Settings.css';
 
 export default function Settings() {
-    const { user, updateProfile } = useAuth();
-    const [formData, setFormData] = useState({
-        nom: user?.nom || '',
-        prenom: user?.prenom || '',
-        telephone: user?.telephone || '',
-        languePreferee: user?.languePreferee || 'Français',
-        photoProfil: user?.photoProfil || '',
-        email: user?.email || ''
-    });
-    const [newEmail, setNewEmail] = useState('');
-    const [currentPassword, setCurrentPassword] = useState('');
+    const { user } = useAuth();
+    const { currentTheme, currentLanguage, changeTheme, changeLanguage, getText } = useTheme();
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
-    const [showEmailChange, setShowEmailChange] = useState(false);
-    const [photoFile, setPhotoFile] = useState(null);
-    const [photoPreview, setPhotoPreview] = useState(user?.photoProfil || '');
-    const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
-    // Mettre à jour le formData quand l'utilisateur change
+    const [settings, setSettings] = useState({
+        ...defaultSettings,
+        languePreferee: currentLanguage,
+        theme: currentTheme
+    });
+
+    // Charger les paramètres au montage
     useEffect(() => {
         if (user) {
-            setFormData({
-                nom: user.nom || '',
-                prenom: user.prenom || '',
-                telephone: user.telephone || '',
-                languePreferee: user.languePreferee || 'Français',
-                photoProfil: user.photoProfil || '',
-                email: user.email || ''
-            });
-            setPhotoPreview(user.photoProfil || '');
+            loadUserSettings();
         }
     }, [user]);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const handlePhotoChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            // Vérifier le type de fichier
-            if (!file.type.startsWith('image/')) {
-                setMessage({ type: 'error', text: 'Veuillez sélectionner un fichier image valide.' });
-                return;
-            }
-
-            // Vérifier la taille (max 5MB)
-            if (file.size > 5 * 1024 * 1024) {
-                setMessage({ type: 'error', text: 'Le fichier est trop volumineux (max 5MB).' });
-                return;
-            }
-
-            setPhotoFile(file);
+    // Charger les paramètres depuis l'API
+    const loadUserSettings = async () => {
+        try {
+            setLoading(true);
+            const response = await API.get('/auth/settings');
             
-            // Créer un aperçu
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                setPhotoPreview(e.target.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const uploadPhoto = async () => {
-        if (!photoFile) return null;
-
-        setUploadingPhoto(true);
-        try {
-            const formData = new FormData();
-            formData.append('file', photoFile);
-
-            const response = await fetch('http://localhost:8084/api/upload/profile-photo', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: formData
-            });
-
-            if (!response.ok) {
-                throw new Error('Erreur lors de l\'upload de la photo');
-            }
-
-            const photoUrl = await response.text();
-            setMessage({ type: 'success', text: 'Photo uploadée avec succès ! 📸' });
-            return photoUrl;
-
-        } catch (error) {
-            console.error('Erreur upload photo:', error);
-            setMessage({ type: 'error', text: 'Erreur lors de l\'upload de la photo. Veuillez réessayer.' });
-            return null;
-        } finally {
-            setUploadingPhoto(false);
-        }
-    };
-
-    const handleProfileUpdate = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setMessage({ type: '', text: '' });
-
-        try {
-            let finalPhotoUrl = formData.photoProfil;
-
-            // Si une nouvelle photo a été sélectionnée, l'uploader d'abord
-            if (photoFile) {
-                const uploadedPhotoUrl = await uploadPhoto();
-                if (uploadedPhotoUrl) {
-                    finalPhotoUrl = uploadedPhotoUrl;
-                } else {
-                    setLoading(false);
-                    return; // Arrêter si l'upload a échoué
+            if (response.data.status === 'success') {
+                const userSettings = response.data.settings;
+                setSettings(prev => ({
+                    ...prev,
+                    ...userSettings
+                }));
+                
+                // Appliquer les paramètres chargés
+                if (userSettings.theme) {
+                    changeTheme(userSettings.theme);
+                }
+                if (userSettings.languePreferee) {
+                    changeLanguage(userSettings.languePreferee);
                 }
             }
-
-            // Préparer les données à mettre à jour
-            const updateData = {
-                nom: formData.nom,
-                prenom: formData.prenom,
-                telephone: formData.telephone,
-                languePreferee: formData.languePreferee,
-                photoProfil: finalPhotoUrl
-            };
-
-            const updatedProfile = await updateProfile(updateData);
-            
-            // Mettre à jour le formData local avec les nouvelles données
-            setFormData(prev => ({
-                ...prev,
-                ...updatedProfile
-            }));
-            
-            // Réinitialiser la photo
-            setPhotoFile(null);
-            setPhotoPreview(updatedProfile.photoProfil || '');
-            
-            setMessage({ type: 'success', text: 'Profil mis à jour avec succès ! 🎉' });
-            
-            // Effacer le message après 5 secondes
-            setTimeout(() => setMessage({ type: '', text: '' }), 5000);
         } catch (error) {
-            console.error('Erreur de mise à jour du profil:', error);
-            const errorMessage = error.response?.data?.message || 
-                               error.message || 
-                               'Erreur lors de la mise à jour du profil. Veuillez réessayer.';
-            setMessage({ 
-                type: 'error', 
-                text: errorMessage
-            });
+            console.error('Erreur lors du chargement des paramètres:', error);
+            // En cas d'erreur, on garde les valeurs par défaut
         } finally {
             setLoading(false);
         }
     };
 
-    const handleEmailChange = async (e) => {
+    const handleInputChange = async (e) => {
+        const { name, value, type, checked } = e.target;
+        const newValue = type === 'checkbox' ? checked : value;
+        
+        setSettings(prev => ({
+            ...prev,
+            [name]: newValue
+        }));
+
+        // Gérer les changements en temps réel
+        if (name === 'theme') {
+            changeTheme(newValue);
+        } else if (name === 'languePreferee') {
+            changeLanguage(newValue);
+        } else if (name === 'notifications') {
+            // Si on active les notifications, demander la permission
+            if (newValue) {
+                const granted = await notificationService.requestPermission();
+                if (!granted) {
+                    // Si la permission est refusée, remettre à false
+                    setSettings(prev => ({ ...prev, notifications: false }));
+                    setMessage({ type: 'error', text: '❌ Permission de notification refusée' });
+                }
+            }
+        } else if (name === 'pushNotifications' && newValue) {
+            // Demander la permission pour les notifications push
+            const granted = await notificationService.requestPermission();
+            if (!granted) {
+                setSettings(prev => ({ ...prev, pushNotifications: false }));
+                setMessage({ type: 'error', text: '❌ Permission de notification push refusée' });
+            }
+        }
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!newEmail || !currentPassword) {
-            setMessage({ 
-                type: 'error', 
-                text: 'Veuillez remplir tous les champs requis.' 
-            });
-            return;
-        }
-
         setLoading(true);
-        setMessage({ type: '', text: '' });
-
+        
         try {
-            // Ici, vous devrez implémenter l'API de changement d'email
-            // Pour l'instant, on simule la réussite
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            const response = await API.put('/auth/settings', settings);
             
-            setMessage({ 
-                type: 'success', 
-                text: 'Demande de changement d\'email envoyée ! Vérifiez votre nouvelle adresse email.' 
-            });
-            
-            setNewEmail('');
-            setCurrentPassword('');
-            setShowEmailChange(false);
-            
-            setTimeout(() => setMessage({ type: '', text: '' }), 5000);
+            if (response.data.status === 'success') {
+                setMessage({ type: 'success', text: '✅ Paramètres sauvegardés avec succès !' });
+                
+                // Appliquer le thème immédiatement
+                if (settings.theme === 'dark') {
+                    document.documentElement.classList.add('dark-theme');
+                } else {
+                    document.documentElement.classList.remove('dark-theme');
+                }
+                
+                // Appliquer la langue
+                document.documentElement.lang = settings.languePreferee;
+                
+            } else {
+                throw new Error(response.data.message || 'Erreur lors de la sauvegarde');
+            }
         } catch (error) {
-            setMessage({ 
-                type: 'error', 
-                text: 'Erreur lors du changement d\'email. Veuillez réessayer.' 
-            });
+            console.error('Erreur lors de la sauvegarde:', error);
+            setMessage({ type: 'error', text: '❌ Erreur lors de la sauvegarde des paramètres' });
         } finally {
             setLoading(false);
         }
     };
 
-    const languages = [
-        'Français', 'English', 'Español', 'Deutsch', 'Italiano', 
-        'Português', 'Nederlands', 'Русский', '中文', '日本語'
-    ];
+    const resetToDefaults = () => {
+        const defaultSettings = {
+            languePreferee: 'fr',
+            theme: 'light',
+            timezone: 'Europe/Paris',
+            notifications: true,
+            emailNotifications: true,
+            pushNotifications: false,
+            smsNotifications: false,
+            saveTestResults: true,
+            personalizedRecommendations: true,
+            weeklyDigest: false,
+            newProgramsAlert: true,
+            dataAnalytics: false,
+            shareProfile: false,
+            marketingEmails: false,
+            twoFactorAuth: false,
+            loginNotifications: true,
+            sessionTimeout: 30
+        };
+        
+        setSettings(defaultSettings);
+        setMessage({ type: 'info', text: '🔄 Paramètres remis à zéro' });
+    };
 
     if (!user) {
         return (
-            <div className="settings-loading">
-                <div className="loading-spinner"></div>
-                <p>Chargement des paramètres...</p>
+            <div className="settings-container">
+                <GlobalNavbar activePage="settings" />
+                <div className="settings-error">
+                    <h2>🔒 Accès refusé</h2>
+                    <p>Vous devez être connecté pour accéder aux paramètres.</p>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="settings-container">
-            {/* Header avec gradient */}
-            <div className="settings-header">
-                <div className="settings-header-content">
-                    <div className="settings-header-text">
-                        <h1 className="settings-title">
-                            <span className="settings-emoji">⚙️</span>
-                            Paramètres
-                        </h1>
-                        <p className="settings-subtitle">
-                            Personnalisez votre profil et gérez vos préférences
-                        </p>
-                    </div>
-                    <div className="settings-header-decoration">
-                        <div className="floating-gears">
-                            <div className="gear gear-1">⚙️</div>
-                            <div className="gear gear-2">🔧</div>
-                            <div className="gear gear-3">🎛️</div>
-                        </div>
-                    </div>
+        <GlobalLayout activePage="settings">
+            <div className="settings-container">
+            
+            <main className="settings-main">
+                <div className="settings-header">
+                    <h1>⚙️ {getText('settings')}</h1>
+                    <p>Personnalisez votre expérience sur DirAvenir</p>
                 </div>
-            </div>
 
-            <div className="settings-content">
-                {/* Message de notification */}
-                {message.text && (
-                    <div className={`message-banner ${message.type}`}>
-                        <span className="message-icon">
-                            {message.type === 'success' ? '✅' : '❌'}
-                        </span>
-                        <span className="message-text">{message.text}</span>
-                    </div>
-                )}
-
-                {/* Section principale des paramètres */}
-                <div className="settings-main-section">
-                    {/* Carte des informations personnelles */}
-                    <div className="settings-card profile-settings-card">
-                        <div className="card-header">
-                            <div className="card-header-content">
-                                <span className="card-icon">👤</span>
-                                <h2>Informations Personnelles</h2>
-                            </div>
-                            <div className="card-header-decoration">
-                                <div className="decoration-line"></div>
-                            </div>
-                        </div>
+                <div className="settings-content">
+                    <form onSubmit={handleSubmit} className="settings-form">
                         
-                        <form onSubmit={handleProfileUpdate} className="settings-form">
-                            <div className="form-grid">
-                                <div className="form-group">
-                                    <label htmlFor="prenom">
-                                        <span className="label-icon">👨‍🎓</span>
-                                        Prénom
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="prenom"
-                                        name="prenom"
-                                        value={formData.prenom}
-                                        onChange={handleInputChange}
-                                        className="form-input"
-                                        placeholder="Votre prénom"
-                                        required
-                                    />
+                        {/* Section Préférences Générales */}
+                        <div className="settings-section">
+                            <h2>🌍 {getText('generalPreferences')}</h2>
+                            
+                            <div className="form-row">
+                            <div className="form-group">
+                                <label htmlFor="languePreferee">{getText('language')}</label>
+                                <select
+                                    id="languePreferee"
+                                    name="languePreferee"
+                                    value={settings.languePreferee}
+                                    onChange={handleInputChange}
+                                    className="form-select"
+                                >
+                                    <option value="fr">🇫🇷 Français</option>
+                                    <option value="en">🇬🇧 English</option>
+                                    <option value="es">🇪🇸 Español</option>
+                                    <option value="ar">🇸🇦 العربية</option>
+                                    <option value="de">🇩🇪 Deutsch</option>
+                                    <option value="it">🇮🇹 Italiano</option>
+                                </select>
+                                
+                                {/* Statut de la langue */}
+                                <div className="setting-status">
+                                    <span className="status-text">
+                                        {getText('currentLanguage')}: <strong>{currentLanguage.toUpperCase()}</strong>
+                                    </span>
                                 </div>
+                            </div>
 
-                                <div className="form-group">
-                                    <label htmlFor="nom">
-                                        <span className="label-icon">👩‍🎓</span>
-                                        Nom
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="nom"
-                                        name="nom"
-                                        value={formData.nom}
-                                        onChange={handleInputChange}
-                                        className="form-input"
-                                        placeholder="Votre nom"
-                                        required
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label htmlFor="telephone">
-                                        <span className="label-icon">📱</span>
-                                        Téléphone
-                                    </label>
-                                    <input
-                                        type="tel"
-                                        id="telephone"
-                                        name="telephone"
-                                        value={formData.telephone}
-                                        onChange={handleInputChange}
-                                        className="form-input"
-                                        placeholder="Votre numéro de téléphone"
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label htmlFor="languePreferee">
-                                        <span className="label-icon">🌍</span>
-                                        Langue préférée
-                                    </label>
-                                    <select
-                                        id="languePreferee"
-                                        name="languePreferee"
-                                        value={formData.languePreferee}
-                                        onChange={handleInputChange}
-                                        className="form-select"
+                            <div className="form-group">
+                                <label htmlFor="theme">🎨 {getText('theme')}</label>
+                                <select
+                                    id="theme"
+                                    name="theme"
+                                    value={settings.theme}
+                                    onChange={handleInputChange}
+                                    className="form-select"
+                                >
+                                    <option value="light">☀️ {getText('light')}</option>
+                                    <option value="dark">🌙 {getText('dark')}</option>
+                                    <option value="auto">🔄 {getText('auto')}</option>
+                                </select>
+                                
+                                {/* Statut du thème */}
+                                <div className="setting-status">
+                                    <span className="status-text">
+                                        {getText('theme')} {getText('current')}: <strong>{currentTheme}</strong>
+                                    </span>
+                                    <button
+                                        type="button"
+                                        onClick={() => changeTheme(currentTheme === 'light' ? 'dark' : 'light')}
+                                        className="toggle-theme-btn"
                                     >
-                                        {languages.map(lang => (
-                                            <option key={lang} value={lang}>{lang}</option>
-                                        ))}
-                                    </select>
+                                        🔄 {getText('toggle')}
+                                    </button>
                                 </div>
+                            </div>
 
-                                <div className="form-group full-width">
-                                    <label htmlFor="photoProfil">
-                                        <span className="label-icon">📷</span>
-                                        Photo de profil
+                            <div className="form-group">
+                                <label htmlFor="languePreferee">🌍 {getText('language')}</label>
+                                <select
+                                    id="languePreferee"
+                                    name="languePreferee"
+                                    value={settings.languePreferee}
+                                    onChange={handleInputChange}
+                                    className="form-select"
+                                >
+                                    <option value="fr">🇫🇷 Français</option>
+                                    <option value="en">🇬🇧 English</option>
+                                    <option value="es">🇪🇸 Español</option>
+                                </select>
+                                
+                                {/* Statut de la langue */}
+                                <div className="setting-status">
+                                    <span className="status-text">
+                                        {getText('currentLanguage')}: <strong>{currentLanguage.toUpperCase()}</strong>
+                                    </span>
+                                    <button
+                                        type="button"
+                                        onClick={() => changeLanguage(settings.languePreferee)}
+                                        className="toggle-theme-btn"
+                                    >
+                                        🔄 {getText('apply')}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="timezone">{getText('timezone')}</label>
+                                <select
+                                    id="timezone"
+                                    name="timezone"
+                                    value={settings.timezone}
+                                    onChange={handleInputChange}
+                                    className="form-select"
+                                >
+                                    <option value="Europe/Paris">🇫🇷 Paris (UTC+1/+2)</option>
+                                    <option value="Europe/London">🇬🇧 Londres (UTC+0/+1)</option>
+                                    <option value="America/New_York">🇺🇸 New York (UTC-5/-4)</option>
+                                    <option value="Asia/Tokyo">🇯🇵 Tokyo (UTC+9)</option>
+                                    <option value="Australia/Sydney">🇦🇺 Sydney (UTC+10/+11)</option>
+                                    <option value="Africa/Cairo">🇪🇬 Le Caire (UTC+2)</option>
+                                </select>
+                            </div>
+                            </div>
+                        </div>
+
+                        {/* Section Notifications */}
+                        <div className="settings-section">
+                            <h2>🔔 Notifications</h2>
+                            
+                            <div className="form-group checkbox-group">
+                                <label className="checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        name="notifications"
+                                        checked={settings.notifications}
+                                        onChange={handleInputChange}
+                                        className="form-checkbox"
+                                    />
+                                    <span className="checkmark"></span>
+                                    Activer toutes les notifications
+                                </label>
+                                <p className="form-help">Contrôle principal pour toutes les notifications</p>
+                                
+                                {/* Statut des permissions */}
+                                <div className="permission-status">
+                                    <span className={`status-indicator ${notificationService.getPermissionStatus().isAllowed ? 'granted' : 'denied'}`}>
+                                        {notificationService.getPermissionStatus().isAllowed ? '✅ Autorisé' : '❌ Non autorisé'}
+                                    </span>
+                                    <button
+                                        type="button"
+                                        onClick={() => notificationService.requestPermission()}
+                                        className="permission-btn"
+                                    >
+                                        🔐 Demander la permission
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => notificationService.testNotification()}
+                                        className="test-btn"
+                                        disabled={!notificationService.isAllowed()}
+                                    >
+                                        🧪 Tester les notifications
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="form-row">
+                                <div className="form-group checkbox-group">
+                                    <label className="checkbox-label">
+                                        <input
+                                            type="checkbox"
+                                            name="emailNotifications"
+                                            checked={settings.emailNotifications}
+                                            onChange={handleInputChange}
+                                            className="form-checkbox"
+                                            disabled={!settings.notifications}
+                                        />
+                                        <span className="checkmark"></span>
+                                        Notifications par email
                                     </label>
-                                    
-                                    {/* Aperçu de la photo actuelle */}
-                                    {photoPreview && (
-                                        <div className="photo-preview">
-                                            <img 
-                                                src={photoPreview} 
-                                                alt="Photo de profil actuelle" 
-                                                className="current-photo"
-                                            />
-                                        </div>
-                                    )}
-                                    
-                                    {/* Input de fichier */}
-                                    <div className="file-upload-container">
+                                    <p className="form-help">Recevez des mises à jour importantes par email</p>
+                                </div>
+                                
+                                <div className="form-group checkbox-group">
+                                    <label className="checkbox-label">
                                         <input
-                                            type="file"
-                                            id="photoProfil"
-                                            name="photoProfil"
-                                            accept="image/*"
-                                            onChange={handlePhotoChange}
-                                            className="file-input"
-                                            disabled={uploadingPhoto}
+                                            type="checkbox"
+                                            name="pushNotifications"
+                                            checked={settings.pushNotifications}
+                                            onChange={handleInputChange}
+                                            className="form-checkbox"
+                                            disabled={!settings.notifications}
                                         />
-                                        <label htmlFor="photoProfil" className="file-upload-label">
-                                            {uploadingPhoto ? (
-                                                <span className="uploading-text">⏳ Upload en cours...</span>
-                                            ) : photoFile ? (
-                                                <span className="file-selected">📁 {photoFile.name}</span>
-                                            ) : (
-                                                <span className="upload-text">📁 Choisir une photo</span>
-                                            )}
-                                        </label>
-                                    </div>
-                                    
-                                    <p className="upload-hint">
-                                        Formats acceptés: JPG, PNG, GIF. Taille max: 5MB
-                                    </p>
+                                        <span className="checkmark"></span>
+                                        Notifications push
+                                    </label>
+                                    <p className="form-help">Alertes instantanées sur votre appareil</p>
                                 </div>
                             </div>
 
-                            <div className="form-actions">
-                                <button 
-                                    type="submit" 
-                                    className="save-btn"
-                                    disabled={loading}
-                                >
-                                    {loading ? (
-                                        <>
-                                            <span className="loading-dots">⏳</span>
-                                            Sauvegarde...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <span className="btn-icon">💾</span>
-                                            Sauvegarder les modifications
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                    {/* Carte de changement d'email */}
-                    <div className="settings-card email-settings-card">
-                        <div className="card-header">
-                            <div className="card-header-content">
-                                <span className="card-icon">📧</span>
-                                <h2>Changement d'Email</h2>
-                            </div>
-                            <div className="card-header-decoration">
-                                <div className="decoration-line"></div>
+                            <div className="form-group checkbox-group">
+                                <label className="checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        name="smsNotifications"
+                                        checked={settings.smsNotifications}
+                                        onChange={handleInputChange}
+                                        className="form-checkbox"
+                                        disabled={!settings.notifications}
+                                    />
+                                    <span className="checkmark"></span>
+                                    Notifications par SMS
+                                </label>
+                                <p className="form-help">Alertes importantes par message texte</p>
                             </div>
                         </div>
 
-                        <div className="current-email-info">
-                            <div className="email-display">
-                                <span className="email-label">Email actuel :</span>
-                                <span className="email-value">{user.email}</span>
+                        {/* Section Tests et Orientation */}
+                        <div className="settings-section">
+                            <h2>🧠 Tests et Orientation</h2>
+                            
+                            <div className="form-row">
+                            <div className="form-group checkbox-group">
+                                <label className="checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        name="saveTestResults"
+                                            checked={settings.saveTestResults}
+                                            onChange={handleInputChange}
+                                        className="form-checkbox"
+                                    />
+                                    <span className="checkmark"></span>
+                                    Sauvegarder les résultats de tests
+                                </label>
+                                <p className="form-help">Conservez l'historique de vos tests d'orientation</p>
+                            </div>
+
+                            <div className="form-group checkbox-group">
+                                <label className="checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        name="personalizedRecommendations"
+                                            checked={settings.personalizedRecommendations}
+                                            onChange={handleInputChange}
+                                        className="form-checkbox"
+                                    />
+                                    <span className="checkmark"></span>
+                                    Recommandations personnalisées
+                                </label>
+                                <p className="form-help">Recevez des suggestions adaptées à votre profil</p>
+                                </div>
+                            </div>
+
+                            <div className="form-row">
+                                <div className="form-group checkbox-group">
+                                    <label className="checkbox-label">
+                                        <input
+                                            type="checkbox"
+                                            name="weeklyDigest"
+                                            checked={settings.weeklyDigest}
+                                            onChange={handleInputChange}
+                                            className="form-checkbox"
+                                        />
+                                        <span className="checkmark"></span>
+                                        Résumé hebdomadaire
+                                    </label>
+                                    <p className="form-help">Recevez un récapitulatif de vos activités</p>
+                                </div>
+                                
+                                <div className="form-group checkbox-group">
+                                    <label className="checkbox-label">
+                                        <input
+                                            type="checkbox"
+                                            name="newProgramsAlert"
+                                            checked={settings.newProgramsAlert}
+                                            onChange={handleInputChange}
+                                            className="form-checkbox"
+                                        />
+                                        <span className="checkmark"></span>
+                                        Alertes nouveaux programmes
+                                    </label>
+                                    <p className="form-help">Soyez informé des nouveaux programmes disponibles</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Section Confidentialité */}
+                        <div className="settings-section">
+                            <h2>🔒 Confidentialité et Données</h2>
+                            
+                            <div className="form-row">
+                                <div className="form-group checkbox-group">
+                                    <label className="checkbox-label">
+                                        <input
+                                            type="checkbox"
+                                            name="dataAnalytics"
+                                            checked={settings.dataAnalytics}
+                                            onChange={handleInputChange}
+                                            className="form-checkbox"
+                                        />
+                                        <span className="checkmark"></span>
+                                        Partager les données d'utilisation
+                                    </label>
+                                    <p className="form-help">Aidez-nous à améliorer la plateforme (anonymement)</p>
+                                </div>
+                                
+                                <div className="form-group checkbox-group">
+                                    <label className="checkbox-label">
+                                        <input
+                                            type="checkbox"
+                                            name="shareProfile"
+                                            checked={settings.shareProfile}
+                                            onChange={handleInputChange}
+                                            className="form-checkbox"
+                                        />
+                                        <span className="checkmark"></span>
+                                        Profil visible publiquement
+                                    </label>
+                                    <p className="form-help">Permettre aux autres utilisateurs de voir votre profil</p>
+                                </div>
                             </div>
                             
-                            {!showEmailChange ? (
-                                <button 
-                                    className="change-email-btn"
-                                    onClick={() => setShowEmailChange(true)}
-                                >
-                                    <span className="btn-icon">✏️</span>
-                                    Changer l'email
-                                </button>
-                            ) : (
-                                <form onSubmit={handleEmailChange} className="email-change-form">
-                                    <div className="form-group">
-                                        <label htmlFor="newEmail">
-                                            <span className="label-icon">🆕</span>
-                                            Nouvel email
-                                        </label>
-                                        <input
-                                            type="email"
-                                            id="newEmail"
-                                            value={newEmail}
-                                            onChange={(e) => setNewEmail(e.target.value)}
-                                            className="form-input"
-                                            placeholder="nouveau@email.com"
-                                            required
-                                        />
-                                    </div>
+                            <div className="form-group checkbox-group">
+                                <label className="checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        name="marketingEmails"
+                                        checked={settings.marketingEmails}
+                                        onChange={handleInputChange}
+                                        className="form-checkbox"
+                                    />
+                                    <span className="checkmark"></span>
+                                    Emails marketing et promotions
+                                </label>
+                                <p className="form-help">Recevez des offres spéciales et des promotions</p>
+                            </div>
+                        </div>
 
-                                    <div className="form-group">
-                                        <label htmlFor="currentPassword">
-                                            <span className="label-icon">🔐</span>
-                                            Mot de passe actuel
-                                        </label>
+                        {/* Section Sécurité */}
+                        <div className="settings-section">
+                            <h2>🛡️ Sécurité</h2>
+                            
+                            <div className="form-row">
+                                <div className="form-group checkbox-group">
+                                    <label className="checkbox-label">
                                         <input
-                                            type="password"
-                                            id="currentPassword"
-                                            value={currentPassword}
-                                            onChange={(e) => setCurrentPassword(e.target.value)}
-                                            className="form-input"
-                                            placeholder="Votre mot de passe actuel"
-                                            required
+                                            type="checkbox"
+                                            name="twoFactorAuth"
+                                            checked={settings.twoFactorAuth}
+                                            onChange={handleInputChange}
+                                            className="form-checkbox"
                                         />
-                                    </div>
-
-                                    <div className="email-form-actions">
-                                        <button 
-                                            type="submit" 
-                                            className="confirm-email-btn"
-                                            disabled={loading}
+                                        <span className="checkmark"></span>
+                                        Authentification à deux facteurs
+                                    </label>
+                                    <p className="form-help">Sécurisez votre compte avec un code supplémentaire</p>
+                                    
+                                    {/* Statut 2FA */}
+                                    <div className="setting-status">
+                                        <span className="status-indicator disabled">
+                                            ⚠️ Non configuré
+                                        </span>
+                                        <button
+                                            type="button"
+                                            className="configure-btn"
                                         >
-                                            {loading ? (
-                                                <>
-                                                    <span className="loading-dots">⏳</span>
-                                                    Traitement...
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <span className="btn-icon">✅</span>
-                                                    Confirmer le changement
-                                                </>
+                                            ⚙️ Configurer
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div className="form-group checkbox-group">
+                                    <label className="checkbox-label">
+                                        <input
+                                            type="checkbox"
+                                            name="loginNotifications"
+                                            checked={settings.loginNotifications}
+                                            onChange={handleInputChange}
+                                            className="form-checkbox"
+                                        />
+                                        <span className="checkmark"></span>
+                                        Notifications de connexion
+                                    </label>
+                                    <p className="form-help">Recevez une alerte lors de nouvelles connexions</p>
+                                    
+                                    {/* Test de notification de connexion */}
+                                    <div className="setting-status">
+                                        <button
+                                            type="button"
+                                            onClick={() => notificationService.sendNotification(
+                                                '🔐 Nouvelle connexion détectée',
+                                                { body: 'Connexion depuis un nouvel appareil' }
                                             )}
-                                        </button>
-                                        <button 
-                                            type="button" 
-                                            className="cancel-email-btn"
-                                            onClick={() => {
-                                                setShowEmailChange(false);
-                                                setNewEmail('');
-                                                setCurrentPassword('');
-                                            }}
+                                            className="test-btn"
+                                            disabled={!notificationService.isAllowed()}
                                         >
-                                            <span className="btn-icon">❌</span>
-                                            Annuler
+                                            🧪 Tester
                                         </button>
                                     </div>
-                                </form>
-                            )}
-                        </div>
-                    </div>
-
-
-
-                    {/* Carte des actions rapides */}
-                    <div className="settings-card actions-settings-card">
-                        <div className="card-header">
-                            <div className="card-header-content">
-                                <span className="card-icon">🚀</span>
-                                <h2>Actions Rapides</h2>
+                                </div>
                             </div>
-                            <div className="card-header-decoration">
-                                <div className="decoration-line"></div>
+
+                            <div className="form-group">
+                                <label htmlFor="sessionTimeout">Délai d'expiration de session (minutes)</label>
+                                <select
+                                    id="sessionTimeout"
+                                    name="sessionTimeout"
+                                    value={settings.sessionTimeout}
+                                    onChange={handleInputChange}
+                                    className="form-select"
+                                >
+                                    <option value={15}>15 minutes</option>
+                                    <option value={30}>30 minutes</option>
+                                    <option value={60}>1 heure</option>
+                                    <option value={120}>2 heures</option>
+                                    <option value={480}>8 heures</option>
+                                </select>
+                                <p className="form-help">Après ce délai, vous devrez vous reconnecter</p>
                             </div>
                         </div>
 
-                        <div className="quick-actions">
-                            <Link to="/profile" className="quick-action-btn">
-                                <span className="action-icon">👤</span>
-                                <span className="action-text">Voir mon profil</span>
-                            </Link>
+                        {/* Boutons d'action */}
+                        <div className="form-actions">
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="save-btn"
+                            >
+                                {loading ? '💾 Sauvegarde...' : `💾 ${getText('save')}`}
+                            </button>
                             
-                            <Link to="/contact" className="quick-action-btn">
-                                <span className="action-icon">💬</span>
-                                <span className="action-text">Contacter le support</span>
-                            </Link>
+                            <button
+                                type="button"
+                                onClick={resetToDefaults}
+                                className="reset-btn"
+                            >
+                                🔄 Remettre à zéro
+                            </button>
+                            
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    // Test complet des fonctionnalités
+                                    notificationService.testNotification();
+                                    changeTheme(currentTheme === 'light' ? 'dark' : 'light');
+                                    setTimeout(() => changeTheme(currentTheme === 'light' ? 'dark' : 'light'), 1000);
+                                }}
+                                className="test-all-btn"
+                            >
+                                🧪 Tester tout
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    // Test du changement de langue
+                                    const languages = ['fr', 'en', 'es'];
+                                    const currentIndex = languages.indexOf(currentLanguage);
+                                    const nextLanguage = languages[(currentIndex + 1) % languages.length];
+                                    changeLanguage(nextLanguage);
+                                    setMessage({ type: 'success', text: `🌍 Langue changée vers ${nextLanguage.toUpperCase()}` });
+                                }}
+                                className="test-all-btn"
+                                style={{ backgroundColor: '#8b5cf6' }}
+                            >
+                                🌍 Tester Langue
+                            </button>
                         </div>
-                    </div>
+
+                        {/* Messages de feedback */}
+                        {message.text && (
+                            <div className={`message ${message.type}`}>
+                                {message.text}
+                            </div>
+                        )}
+                    </form>
                 </div>
-            </div>
+            </main>
         </div>
+        </GlobalLayout>
     );
 }
 

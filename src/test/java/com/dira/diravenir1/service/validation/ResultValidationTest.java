@@ -327,22 +327,22 @@ class ResultValidationTest {
         
         // Création des objets MatchingResult
         com.dira.diravenir1.dto.MatchingResult resultInfo = new com.dira.diravenir1.dto.MatchingResult();
-        resultInfo.setMajorName("Informatique");
+        resultInfo.setProgram("Informatique");
         resultInfo.setGlobalScore(scoreInformatique);
         results.add(resultInfo);
         
         com.dira.diravenir1.dto.MatchingResult resultArts = new com.dira.diravenir1.dto.MatchingResult();
-        resultArts.setMajorName("Arts");
+        resultArts.setProgram("Arts");
         resultArts.setGlobalScore(scoreArts);
         results.add(resultArts);
         
         com.dira.diravenir1.dto.MatchingResult resultBusiness = new com.dira.diravenir1.dto.MatchingResult();
-        resultBusiness.setMajorName("Business Administration");
+        resultBusiness.setProgram("Business Administration");
         resultBusiness.setGlobalScore(scoreBusiness);
         results.add(resultBusiness);
         
         com.dira.diravenir1.dto.MatchingResult resultMedecine = new com.dira.diravenir1.dto.MatchingResult();
-        resultMedecine.setMajorName("Médecine");
+        resultMedecine.setProgram("Médecine");
         resultMedecine.setGlobalScore(scoreMedecine);
         results.add(resultMedecine);
         
@@ -475,7 +475,7 @@ class ResultValidationTest {
      */
     private MajorProfileDTO createInformatiqueMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Informatique");
+        major.setProgram("Informatique");
         major.setInteretScientifiqueTech(5);
         major.setInteretArtistiqueCreatif(2);
         major.setInteretSocialHumain(2);
@@ -501,7 +501,7 @@ class ResultValidationTest {
      */
     private MajorProfileDTO createArtsMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Arts");
+        major.setProgram("Arts");
         major.setInteretScientifiqueTech(1);
         major.setInteretArtistiqueCreatif(5);
         major.setInteretSocialHumain(3);
@@ -527,7 +527,7 @@ class ResultValidationTest {
      */
     private MajorProfileDTO createBusinessMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Business Administration");
+        major.setProgram("Business Administration");
         major.setInteretScientifiqueTech(2);
         major.setInteretArtistiqueCreatif(2);
         major.setInteretSocialHumain(4);
@@ -553,7 +553,7 @@ class ResultValidationTest {
      */
     private MajorProfileDTO createMedecineMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Médecine");
+        major.setProgram("Médecine");
         major.setInteretScientifiqueTech(4);
         major.setInteretArtistiqueCreatif(2);
         major.setInteretSocialHumain(5);
@@ -579,7 +579,7 @@ class ResultValidationTest {
      */
     private MajorProfileDTO createIdenticalMajor(UserProfileDTO user) {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Identique");
+        major.setProgram("Identique");
         major.setInteretScientifiqueTech(user.getInteretScientifiqueTech());
         major.setInteretArtistiqueCreatif(user.getInteretArtistiqueCreatif());
         major.setInteretSocialHumain(user.getInteretSocialHumain());

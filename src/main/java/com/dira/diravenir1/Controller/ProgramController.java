@@ -1,6 +1,7 @@
 package com.dira.diravenir1.Controller;
 
 import com.dira.diravenir1.dto.ProgramDTO;
+import com.dira.diravenir1.dto.PaginatedProgramsResponse;
 import com.dira.diravenir1.Entities.Program;
 import com.dira.diravenir1.service.ProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/programs")
@@ -62,11 +64,30 @@ public class ProgramController {
 
     @GetMapping("/filter")
     public ResponseEntity<List<ProgramDTO>> getProgramsByFilters(
-            @RequestParam(required = false) String majorName,
-            @RequestParam(required = false) String universityName,
-            @RequestParam(required = false) Program.ProgramStatus status) {
-        List<ProgramDTO> programs = programService.getProgramsByFilters(majorName, universityName, status);
+            @RequestParam(required = false) String searchTerm,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Program.ProgramStatus status,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        List<ProgramDTO> programs = programService.getProgramsByAdvancedFilters(
+            searchTerm, country, category, status, sortBy, page, size);
         return ResponseEntity.ok(programs);
+    }
+
+    @GetMapping("/filter/paginated")
+    public ResponseEntity<PaginatedProgramsResponse> getProgramsByFiltersPaginated(
+            @RequestParam(required = false) String searchTerm,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Program.ProgramStatus status,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        PaginatedProgramsResponse response = programService.getProgramsByAdvancedFiltersPaginated(
+            searchTerm, country, category, status, sortBy, page, size);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/destination/{destinationId}")
@@ -79,5 +100,12 @@ public class ProgramController {
     public ResponseEntity<List<ProgramDTO>> getProgramsByUniversity(@PathVariable Long universityId) {
         List<ProgramDTO> programs = programService.getProgramsByUniversity(universityId);
         return ResponseEntity.ok(programs);
+    }
+
+    // Endpoint pour récupérer les filtres disponibles
+    @GetMapping("/filters/available")
+    public ResponseEntity<Map<String, List<String>>> getAvailableFilters() {
+        Map<String, List<String>> filters = programService.getAvailableFilters();
+        return ResponseEntity.ok(filters);
     }
 } 

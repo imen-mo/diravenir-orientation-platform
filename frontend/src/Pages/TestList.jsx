@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './TestList.css';
-import GlobalNavbar from '../components/GlobalNavbar';
+import GlobalLayout from '../components/GlobalLayout';
 
 export default function TestList() {
     const tests = [
@@ -120,8 +120,8 @@ export default function TestList() {
     };
 
     return (
-        <div className="test-list-page">
-            <GlobalNavbar />
+        <GlobalLayout activePage="test-list">
+            <div className="test-list-page">
             
             {/* HERO SECTION */}
             <section className="test-list-hero">
@@ -261,7 +261,8 @@ export default function TestList() {
                     </div>
                 </div>
             </section>
-        </div>
+            </div>
+        </GlobalLayout>
     );
 }
 

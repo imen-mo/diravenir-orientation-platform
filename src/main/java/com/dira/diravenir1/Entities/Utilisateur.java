@@ -1,20 +1,17 @@
 package com.dira.diravenir1.Entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "utilisateurs")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Utilisateur {
 
     @Id
@@ -22,7 +19,7 @@ public class Utilisateur {
     private Long id;
 
     @NotBlank(message = "Le mot de passe est requis")
-    @Size(min = 60, max = 255, message = "Le mot de passe doit être encodé")
+    @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
     @Column(nullable = false)
     private String password;
 
@@ -64,46 +61,10 @@ public class Utilisateur {
 
     @Column(name = "compte_actif", nullable = false)
     @Builder.Default
-    private boolean compteActif = true;
+    private boolean compteActif = false;
 
-    @Column(name = "email_verifie", nullable = false)
-    @Builder.Default
-    private boolean emailVerifie = false;
-    
-    @Column(name = "compte_verifie", nullable = false)
-    @Builder.Default
-    private boolean compteVerifie = false;
-
-    // ======================
-    // === STATUT ONLINE/OFFLINE ===
-    // ======================
-    
-    @Column(name = "statut_online", nullable = false)
-    @Builder.Default
-    private boolean statutOnline = false;
-    
-    @Column(name = "derniere_activite")
-    private LocalDateTime derniereActivite;
-    
-    @Column(name = "session_active")
-    @Builder.Default
-    private boolean sessionActive = false;
-
-    // ======================
-    // === NOUVEAUX CHAMPS ===
-    // ======================
-    
     @Column(name = "photo_profil", length = 500)
     private String photoProfil;
-
-    @Column(name = "google_id", length = 100)
-    private String googleId;
-
-    @Column(name = "provider", length = 20)
-    private String provider; // "google", "local", etc.
-
-    @Column(name = "provider_id", length = 100)
-    private String providerId;
 
     @ManyToOne
     @JoinColumn(name = "program_id")
@@ -113,7 +74,7 @@ public class Utilisateur {
     protected void onCreate() {
         dateCreation = LocalDateTime.now();
         if (role == null) {
-            role = Role.USER;
+            role = Role.ETUDIANT;
         }
     }
 

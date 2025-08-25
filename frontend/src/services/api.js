@@ -1,301 +1,114 @@
-import axios from "axios";
-import { getToken } from "../utils/auth";
-import { API_CONFIG } from "../config/api";
+import apiClient from '../config/api.js';
 
-// ✅ Définir une seule fois l'URL de base
-const API_BASE = API_CONFIG.BACKEND_URL + API_CONFIG.API_BASE_PATH;
-
-// ✅ Créer une instance Axios réutilisable
-const API = axios.create({
-  baseURL: API_BASE,
-  timeout: 10000, // 10 secondes de timeout
-});
-
-// ✅ Intercepteur pour les requêtes
-API.interceptors.request.use(
-  (config) => {
-    const token = getToken();
-    if (token) {
-      config.headers = config.headers || {};
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    console.log(`🚀 Requête API: ${config.method?.toUpperCase()} ${config.url}`);
-    return config;
-  },
-  (error) => {
-    console.error('❌ Erreur de requête:', error);
-    return Promise.reject(error);
-  }
-);
-
-// ✅ Intercepteur pour les réponses
-API.interceptors.response.use(
-  (response) => {
-    console.log(`✅ Réponse API: ${response.status} ${response.config.url}`);
-    return response;
-  },
-  (error) => {
-    console.error('❌ Erreur de réponse:', {
-      status: error.response?.status,
-      message: error.response?.data?.message || error.response?.data?.error || error.message,
-      url: error.config?.url
-    });
-    
-    // Gestion spécifique des erreurs de connexion
-    if (error.code === 'ERR_NETWORK' || error.code === 'ECONNREFUSED') {
-      console.error('🔌 Erreur de connexion au serveur. Vérifiez que le backend est démarré sur le port 8084.');
-    }
-    
-    // Gestion des erreurs d'authentification
-    if (error.response?.status === 401) {
-      console.warn('🔐 Token expiré ou invalide, nettoyage de l\'authentification');
-      localStorage.removeItem('token');
-      // Rediriger vers la page de connexion si nécessaire
-      if (window.location.pathname !== '/signin') {
-        window.location.href = '/signin';
-      }
-    }
-    
-    // Améliorer la gestion des erreurs pour l'inscription
-    if (error.config?.url?.includes('/auth/signup') && error.response?.status === 500) {
-      // Pour l'inscription, une erreur 500 peut signifier que l'email a échoué mais l'inscription a réussi
-      console.warn('⚠️ Erreur 500 lors de l\'inscription - peut être liée à l\'envoi d\'email');
-    }
-    
-    return Promise.reject(error);
-  }
-);
-
-// ✅ Exporter l'instance par défaut
-export default API;
-
-// ✅ Fonctions pour consommer les endpoints de l'API
-
-// Récupère la liste des filières
-export const fetchFilieres = async () => {
-  const response = await API.get("/filieres");
-  return response.data;
-};
-
-// Récupère la liste des témoignages
-export const fetchTemoignages = async () => {
-  const response = await API.get("/temoignages");
-  return response.data;
-};
-
-// Récupère la liste des destinations
-export const fetchDestinations = async () => {
-  const response = await API.get("/destinations");
-  return response.data;
-};
-
-// Récupère la liste des partenaires
-export const fetchPartenaires = async () => {
-  const response = await API.get("/partenaires");
-  return response.data;
-};
-
-// Services API
-export const authService = {
-  login: async (email, password) => {
-    try {
-      console.log('🔐 Tentative de connexion:', { email, hasPassword: !!password });
-      
-      const response = await API.post('/auth/signin', { email, password });
-      
-      console.log('✅ Connexion réussie:', response.data);
-      return response.data;
-    } catch (error) {
-      console.error('❌ Erreur de connexion détaillée:', {
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data,
-        message: error.message,
-        config: {
-          url: error.config?.url,
-          method: error.config?.method,
-          headers: error.config?.headers
-        }
-      });
-      throw error;
-    }
-  },
-  logout: async () => {
-    try {
-      const response = await API.post('/auth/logout');
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  logoutAll: async () => {
-    try {
-      const response = await API.post('/auth/logout-all');
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  register: async (userData) => {
-    try {
-      const response = await API.post('/auth/signup', userData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  resendVerification: async (email) => {
-    try {
-      const response = await API.post('/auth/resend-verification', { email });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  
-  // ======================
-  // === STATUT UTILISATEUR ===
-  // ======================
-  
-  getUserStatus: async () => {
-    try {
-      const response = await API.get('/auth/status');
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  
-  updateUserActivity: async () => {
-    try {
-      const response = await API.post('/auth/heartbeat');
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  }
-};
-
-export const userService = {
-  getProfile: async () => {
-    try {
-      const response = await API.get('/users/profile');
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  updateProfile: async (profileData) => {
-    try {
-      const response = await API.put('/users/profile', profileData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  }
-};
-
-export const uploadFile = async (file) => {
-  try {
-    const formData = new FormData();
-    formData.append('file', file);
-    
-    const response = await API.post('/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
+// ✅ Service API unifié pour Diravenir
+// Utilise la nouvelle configuration centralisée
 
 // Service pour les programmes
 export const programService = {
   getAll: async () => {
-    try {
-      const response = await API.get('/programs');
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    return await apiClient.get('/programs');
   },
+  
   getById: async (id) => {
-    try {
-      const response = await API.get(`/programs/${id}`);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    return await apiClient.get(`/programs/${id}`);
   },
+  
   create: async (programData) => {
-    try {
-      const response = await API.post('/programs', programData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    return await apiClient.post('/programs', programData);
   },
+  
   update: async (id, programData) => {
-    try {
-      const response = await API.put(`/programs/${id}`, programData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    return await apiClient.put(`/programs/${id}`, programData);
   },
+  
   delete: async (id) => {
-    try {
-      const response = await API.delete(`/programs/${id}`);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    return await apiClient.delete(`/programs/${id}`);
   },
-  search: async (searchTerm) => {
-    try {
-      const response = await API.get(`/programs/search?q=${searchTerm}`);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getByStatus: async (status) => {
-    try {
-      const response = await API.get(`/programs/status/${status}`);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getByFilters: async (majorName, universityName, status) => {
-    try {
-      const params = new URLSearchParams();
-      if (majorName) params.append('majorName', majorName);
-      if (universityName) params.append('universityName', universityName);
-      if (status) params.append('status', status);
-
-      const response = await API.get(`/programs/filter?${params.toString()}`);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  uploadExcel: async (file) => {
+  
+  upload: async (file) => {
     const formData = new FormData();
     formData.append('file', file);
-
-    try {
-      const response = await API.post('/programs/import', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    
+    return await apiClient.post('/programs/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
   }
 };
+
+// Service pour les filières
+export const fetchFilieres = async () => {
+  return await apiClient.get('/filieres');
+};
+
+// Service pour les témoignages
+export const fetchTemoignages = async () => {
+  return await apiClient.get('/temoignages');
+};
+
+// Service pour les destinations
+export const fetchDestinations = async () => {
+  return await apiClient.get('/destinations');
+};
+
+// Service pour les partenaires
+export const fetchPartenaires = async () => {
+  return await apiClient.get('/partenaires');
+};
+
+// Service pour les candidatures
+export const candidatureService = {
+  getAll: async () => {
+    return await apiClient.get('/candidatures');
+  },
+  
+  getById: async (id) => {
+    return await apiClient.get(`/candidatures/${id}`);
+  },
+  
+  create: async (candidatureData) => {
+    return await apiClient.post('/candidatures', candidatureData);
+  },
+  
+  update: async (id, candidatureData) => {
+    return await apiClient.put(`/candidatures/${id}`, candidatureData);
+  },
+  
+  delete: async (id) => {
+    return await apiClient.delete(`/candidatures/${id}`);
+  }
+};
+
+// Service pour les utilisateurs
+export const utilisateurService = {
+  getAll: async () => {
+    return await apiClient.get('/utilisateurs');
+  },
+  
+  getById: async (id) => {
+    return await apiClient.get(`/utilisateurs/${id}`);
+  },
+  
+  update: async (id, userData) => {
+    return await apiClient.put(`/utilisateurs/${id}`, userData);
+  },
+  
+  delete: async (id) => {
+    return await apiClient.delete(`/utilisateurs/${id}`);
+  }
+};
+
+// Service pour les destinations
+export const destinationService = {
+  getAll: async () => {
+    return await apiClient.get('/destinations');
+  },
+  
+  getById: async (id) => {
+    return await apiClient.get(`/destinations/${id}`);
+  }
+};
+
+// Export par défaut pour compatibilité
+export default apiClient;

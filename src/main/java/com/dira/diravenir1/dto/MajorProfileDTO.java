@@ -17,8 +17,8 @@ public class MajorProfileDTO {
     
     // Identifiant de la majeure
     private String majorId;
-    private String majorName;
-    private String majorCategory; // TECHNIQUE, BUSINESS, SOCIAL, etc.
+    private String program;              // Nom du programme (ex: Medicine, Dentistry)
+    private String category;             // Catégorie du programme (ex: Medical and Health Sciences)
     
     // Piliers d'Intérêts (5 piliers)
     private int interetScientifiqueTech;        // 0-100

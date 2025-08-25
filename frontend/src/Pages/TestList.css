@@ -6,7 +6,7 @@
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    background: linear-gradient(135deg, #5C2D6E 0%, #4A1F5A 100%);
+    background: #5C1A6E; /* Palette exacte : violet profond de l'image */
 }
 
 .container {
@@ -26,16 +26,16 @@
 .hero-content h1 {
     font-size: 4rem;
     font-weight: 800;
-    color: #FDCB00;
+    color: #F7C800; /* Palette exacte : jaune doré de l'image */
     margin: 0 0 24px 0;
-    text-shadow: 0 4px 20px rgba(253, 203, 0, 0.3);
+    text-shadow: 0 4px 20px rgba(247, 200, 0, 0.3);
     letter-spacing: -0.02em;
     line-height: 1.1;
 }
 
 .hero-content p {
     font-size: 1.25rem;
-    color: #FFFFFF;
+    color: #FFFFFF; /* Palette exacte : blanc de l'image */
     margin: 0 0 48px 0;
     max-width: 600px;
     margin-left: auto;
@@ -60,13 +60,13 @@
 .stat-number {
     font-size: 3rem;
     font-weight: 800;
-    color: #FDCB00;
-    text-shadow: 0 4px 20px rgba(253, 203, 0, 0.3);
+    color: #F7C800; /* Palette exacte : jaune doré de l'image */
+    text-shadow: 0 4px 20px rgba(247, 200, 0, 0.3);
 }
 
 .stat-label {
     font-size: 1rem;
-    color: #FFFFFF;
+    color: #FFFFFF; /* Palette exacte : blanc de l'image */
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.05em;

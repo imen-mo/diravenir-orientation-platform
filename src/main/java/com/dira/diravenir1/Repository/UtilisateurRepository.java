@@ -13,28 +13,14 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> 
     boolean existsByEmail(String email);
     Optional<Utilisateur> findByEmail(String email);
     
-    // ======================
-    // === STATUT ONLINE/OFFLINE ===
-    // ======================
-    
-    /**
-     * Trouver tous les utilisateurs en ligne
-     */
-    List<Utilisateur> findByStatutOnlineTrue();
-    
     /**
      * Trouver les utilisateurs inactifs depuis une certaine date
      */
-    @Query("SELECT u FROM Utilisateur u WHERE u.derniereActivite < :threshold AND u.statutOnline = true")
-    List<Utilisateur> findByDerniereActiviteBeforeAndStatutOnlineTrue(@Param("threshold") LocalDateTime threshold);
+    @Query("SELECT u FROM Utilisateur u WHERE u.derniereConnexion < :threshold")
+    List<Utilisateur> findByDerniereConnexionBefore(@Param("threshold") LocalDateTime threshold);
     
     /**
-     * Trouver les utilisateurs avec une session active
+     * Compter les utilisateurs actifs
      */
-    List<Utilisateur> findBySessionActiveTrue();
-    
-    /**
-     * Compter les utilisateurs en ligne
-     */
-    long countByStatutOnlineTrue();
+    long countByCompteActifTrue();
 }

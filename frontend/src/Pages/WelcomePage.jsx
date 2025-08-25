@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './WelcomePage.css';
 import './CountdownPage.css';
+import GlobalLayout from '../components/GlobalLayout';
 
 const WelcomePage = () => {
   const [showCountdown, setShowCountdown] = useState(false);
@@ -106,7 +107,8 @@ const WelcomePage = () => {
   }
 
   return (
-    <div className="welcome-container">
+    <GlobalLayout activePage="welcome">
+      <div className="welcome-container">
       {/* Background animé avec effet parallax */}
       <div className="floating-shapes">
         <div 
@@ -257,6 +259,7 @@ const WelcomePage = () => {
         </div>
       </div>
     </div>
+    </GlobalLayout>
   );
 };
 

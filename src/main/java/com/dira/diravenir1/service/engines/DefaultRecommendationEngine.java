@@ -30,7 +30,8 @@ public class DefaultRecommendationEngine implements RecommendationEngine {
             for (int i = 0; i < matchingResults.size(); i++) {
                 MatchingResult result = matchingResults.get(i);
                 Recommendation recommendation = new Recommendation();
-                recommendation.setMajorName(result.getMajorName());
+                recommendation.setProgram(result.getProgram());
+                recommendation.setCategory(result.getCategory());
                 recommendation.setMatchScore(result.getGlobalScore());
                 recommendation.setRank(i + 1);
                 recommendation.setPrimaryReason("Score de correspondance élevé");

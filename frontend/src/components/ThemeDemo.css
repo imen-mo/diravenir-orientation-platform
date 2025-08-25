@@ -1,0 +1,250 @@
+.theme-demo {
+    min-height: 100vh;
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+/* Thème clair */
+.light-theme {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    color: #1f2937;
+}
+
+/* Thème sombre */
+.dark-theme {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    color: #f9fafb;
+}
+
+.demo-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.dark-theme .demo-container {
+    background: #374151;
+    color: #f9fafb;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.demo-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #7c3aed;
+    font-size: 2rem;
+}
+
+.dark-theme .demo-container h2 {
+    color: #8b5cf6;
+}
+
+.demo-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #f9fafb;
+}
+
+.dark-theme .demo-section {
+    border-color: #6b7280;
+    background: #4b5563;
+}
+
+.demo-section h3 {
+    margin-bottom: 1rem;
+    color: #374151;
+    font-size: 1.25rem;
+}
+
+.dark-theme .demo-section h3 {
+    color: #d1d5db;
+}
+
+/* Informations sur le thème */
+.theme-info, .language-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.theme-label, .language-label {
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.dark-theme .theme-label, .dark-theme .language-label {
+    color: #9ca3af;
+}
+
+.theme-value, .language-value {
+    font-weight: 700;
+    color: #7c3aed;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.dark-theme .theme-value, .dark-theme .language-value {
+    color: #8b5cf6;
+}
+
+/* Boutons de démonstration */
+.demo-btn {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    background: white;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.dark-theme .demo-btn {
+    border-color: #6b7280;
+    background: #4b5563;
+    color: #f9fafb;
+}
+
+.demo-btn:hover {
+    border-color: #7c3aed;
+    background: rgba(124, 58, 237, 0.1);
+    transform: translateY(-2px);
+}
+
+.dark-theme .demo-btn:hover {
+    border-color: #8b5cf6;
+    background: rgba(139, 92, 246, 0.2);
+}
+
+.demo-btn.active {
+    background: #7c3aed;
+    color: white;
+    border-color: #7c3aed;
+}
+
+.dark-theme .demo-btn.active {
+    background: #8b5cf6;
+    border-color: #8b5cf6;
+}
+
+/* Options de langue */
+.language-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* Options de thème */
+.theme-options {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Test de contenu */
+.content-test p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.test-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+.dark-theme .test-card {
+    background: #4b5563;
+    border-color: #6b7280;
+}
+
+.test-card h4 {
+    margin-bottom: 0.75rem;
+    color: #374151;
+}
+
+.dark-theme .test-card h4 {
+    color: #f9fafb;
+}
+
+.test-button {
+    background: #7c3aed;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.dark-theme .test-button {
+    background: #8b5cf6;
+}
+
+.test-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
+}
+
+.dark-theme .test-button:hover {
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+}
+
+/* Test des traductions */
+.translations-test p {
+    margin-bottom: 0.5rem;
+    padding: 0.75rem;
+    background: rgba(124, 58, 237, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid #7c3aed;
+}
+
+.dark-theme .translations-test p {
+    background: rgba(139, 92, 246, 0.2);
+    border-left-color: #8b5cf6;
+}
+
+.translations-test strong {
+    color: #7c3aed;
+}
+
+.dark-theme .translations-test strong {
+    color: #8b5cf6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .theme-demo {
+        padding: 1rem;
+    }
+    
+    .demo-container {
+        padding: 1.5rem;
+    }
+    
+    .theme-info, .language-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .theme-options, .language-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .demo-btn {
+        width: 100%;
+        text-align: center;
+    }
+}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import GlobalLayout from '../components/GlobalLayout';
 import './FAQ.css';
 import { FaPlus, FaMinus } from 'react-icons/fa';
 
@@ -53,37 +54,40 @@ export default function FAQ() {
     const toggle = i => setOpenIndex(openIndex === i ? -1 : i);
 
     return (
-        <div className="faq-page">
+        <GlobalLayout activePage="faq">
+            <div className="faq-page">
+                <div className="faq-container">
+                    {/* PAGE TITLE */}
+                    <section className="faq-title">
+                        <div className="title-container">
+                            <h1>Frequently Asked Questions</h1>
+                            <p>Everything you need to know about studying abroad with Diravenir</p>
+                        </div>
+                    </section>
 
-            {/* PAGE TITLE */}
-            <section className="faq-title">
-                <div className="title-container">
-                <h1>Frequently Asked Questions</h1>
-                    <p>Everything you need to know about studying abroad with Diravenir</p>
-                </div>
-            </section>
-
-            {/* ACCORDION */}
-            <section className="faq-accordion">
-                {QUESTIONS.map((item, i) => (
-                    <div
-                        key={i}
-                        className={`faq-item ${openIndex === i ? "open" : ""}`}
-                    >
-                        <button className="faq-question" onClick={() => toggle(i)}>
-                            <div className="question-content">
-                                <span className="question-text">{item.q}</span>
-                                <div className="icon-container">
-                                    {openIndex === i ? <FaMinus /> : <FaPlus />}
+                    {/* ACCORDION */}
+                    <section className="faq-accordion">
+                        {QUESTIONS.map((item, i) => (
+                            <div
+                                key={i}
+                                className={`faq-item ${openIndex === i ? "open" : ""}`}
+                            >
+                                <button className="faq-question" onClick={() => toggle(i)}>
+                                    <div className="question-content">
+                                        <span className="question-text">{item.q}</span>
+                                        <div className="icon-container">
+                                            {openIndex === i ? <FaMinus /> : <FaPlus />}
+                                        </div>
+                                    </div>
+                                </button>
+                                <div className="faq-answer">
+                                    <p>{item.a}</p>
                                 </div>
                             </div>
-                        </button>
-                        <div className="faq-answer">
-                            <p>{item.a}</p>
-                        </div>
-                    </div>
-                ))}
-            </section>
-        </div>
+                        ))}
+                    </section>
+                </div>
+            </div>
+        </GlobalLayout>
     );
 }

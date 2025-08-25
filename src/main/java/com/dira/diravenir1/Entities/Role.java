@@ -1,9 +1,8 @@
 package com.dira.diravenir1.Entities;
 
 public enum Role {
-    USER,           // 4 caractères
-    ADMIN,          // 5 caractères (au lieu de ADMINISTRATEUR)
+    ETUDIANT,       // 8 caractères - rôle par défaut pour les inscriptions
     CONSEILLER,     // 10 caractères
-    ETUDIANT        // 8 caractères
+    ADMIN           // 5 caractères (au lieu de ADMINISTRATEUR)
 }
 

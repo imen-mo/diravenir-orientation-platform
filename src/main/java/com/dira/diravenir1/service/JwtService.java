@@ -1,12 +1,13 @@
 package com.dira.diravenir1.service;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -16,173 +17,99 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-/**
- * Service pour la gestion des jetons JWT (génération, validation, extraction).
- */
-@Slf4j
 @Service
 public class JwtService {
 
-    @Autowired
-    private TokenBlacklistService tokenBlacklistService;
+    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
 
-    @Value("${jwt.secret}")
+    @Value("${application.security.jwt.secret-key:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}")
     private String secretKey;
+    
+    @Value("${application.security.jwt.expiration:86400000}") // 24 hours
+    private long jwtExpiration;
+    
+    @Value("${application.security.jwt.refresh-token.expiration:604800000}") // 7 days
+    private long refreshExpiration;
 
-    @Value("${jwt.expiration}")
-    private long jwtExpirationMs;
-
-    @Value("${app.jwt.refresh-expiration-ms:604800000}")
-    private long refreshExpirationMs;
-
-    /**
-     * Génère un token JWT à partir des informations d'authentification.
-     */
-    public String generateToken(Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return generateToken(new HashMap<>(), userDetails.getUsername());
-    }
-
-    /**
-     * Génère un token JWT pour un nom d'utilisateur.
-     */
-    public String generateToken(String username) {
-        return generateToken(new HashMap<>(), username);
-    }
-
-    /**
-     * Génère un token JWT avec des revendications personnalisées.
-     */
-    private String generateToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
-                .compact();
-    }
-
-    /**
-     * Génère un token de rafraîchissement.
-     */
-    public String generateRefreshToken(String username) {
-        return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + refreshExpirationMs))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
-                .compact();
-    }
-
-    /**
-     * Extrait le nom d'utilisateur à partir d'un token.
-     */
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    /**
-     * Extrait une revendication spécifique d’un token.
-     */
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        Claims claims = extractAllClaims(token);
+        final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    /**
-     * Vérifie si un token est valide.
-     */
-    public boolean isTokenValid(String token, String expectedUsername) {
-        try {
-            // Vérifier d'abord si le token est dans la liste noire
-            if (tokenBlacklistService.isTokenBlacklisted(token)) {
-                log.warn("Token JWT dans la liste noire");
-                return false;
-            }
-            
-            String actualUsername = extractUsername(token);
-            return actualUsername.equals(expectedUsername) && !isTokenExpired(token);
-        } catch (JwtException | IllegalArgumentException e) {
-            log.warn("Token JWT invalide : {}", e.getMessage());
-            return false;
-        }
+    public String generateToken(UserDetails userDetails) {
+        return generateToken(new HashMap<>(), userDetails);
     }
 
-    /**
-     * Vérifie si un token a expiré.
-     */
-    public boolean isTokenExpired(String token) {
-        try {
-            Date expiration = extractClaim(token, Claims::getExpiration);
-            return expiration.before(new Date());
-        } catch (JwtException e) {
-            log.warn("Impossible de vérifier l’expiration du token : {}", e.getMessage());
-            return true; // On considère le token comme expiré
-        }
+    public String generateToken(
+            Map<String, Object> extraClaims,
+            UserDetails userDetails
+    ) {
+        return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
-    /**
-     * Récupère toutes les revendications d’un token.
-     */
+    public String generateRefreshToken(
+            UserDetails userDetails
+    ) {
+        return buildToken(new HashMap<>(), userDetails, refreshExpiration);
+    }
+
+    private String buildToken(
+            Map<String, Object> extraClaims,
+            UserDetails userDetails,
+            long expiration
+    ) {
+        return Jwts
+                .builder()
+                .setClaims(extraClaims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String generateTokenForUser(String username, String role) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", role);
+        
+        return Jwts
+                .builder()
+                .setClaims(claims)
+                .setSubject(username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    }
+
+    private boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    private Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
+
     private Claims extractAllClaims(String token) {
-        try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (ExpiredJwtException e) {
-            log.warn("Le token a expiré : {}", e.getMessage());
-            throw e;
-        } catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
-            log.error("Erreur lors de l'analyse du token : {}", e.getMessage());
-            throw e;
-        }
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
-    /**
-     * Récupère la clé de signature à partir du secret.
-     */
-    private Key getSigningKey() {
-        if (secretKey == null || secretKey.trim().isEmpty() || secretKey.length() < 64) {
-            throw new IllegalStateException("La clé secrète JWT doit contenir au moins 64 caractères.");
-        }
-        return Keys.hmacShaKeyFor(secretKey.getBytes());
-    }
-
-    /**
-     * Retourne le temps restant avant expiration du token (en ms).
-     */
-    public long getRemainingTimeMs(String token) {
-        try {
-            Date expiration = extractClaim(token, Claims::getExpiration);
-            return expiration.getTime() - System.currentTimeMillis();
-        } catch (JwtException e) {
-            log.warn("Erreur lors du calcul du temps restant du token : {}", e.getMessage());
-            return 0;
-        }
-    }
-
-    /**
-     * Retourne la durée de validité du token JWT (en secondes).
-     */
-    public long getExpiration() {
-        return jwtExpirationMs / 1000;
-    }
-
-    /**
-     * Ajoute un token à la liste noire lors de la déconnexion
-     * @param token Le token JWT à blacklister
-     */
-    public void blacklistToken(String token) {
-        try {
-            Claims claims = extractAllClaims(token);
-            long expirationTime = claims.getExpiration().getTime();
-            tokenBlacklistService.blacklistToken(token, expirationTime);
-            log.info("Token JWT ajouté à la liste noire");
-        } catch (Exception e) {
-            log.error("Erreur lors de l'ajout du token à la liste noire: {}", e.getMessage());
-        }
+    private Key getSignInKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }

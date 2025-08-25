@@ -1,55 +1,147 @@
-import React from 'react';
-import { useAuth } from '../hooks/useAuth';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
+import GlobalLayout from '../components/GlobalLayout';
+import API from '../services/api';
 import './Profile.css';
 
 export default function Profile() {
-    const { user } = useAuth();
+    const { user, setUser } = useAuth();
+    const { getText } = useTheme();
+    const [isEditing, setIsEditing] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState({ type: '', text: '' });
+    
+    const [formData, setFormData] = useState({
+        nom: '',
+        prenom: '',
+        email: '',
+        telephone: '',
+        dateNaissance: '',
+        genre: '',
+        nationalite: '',
+        pays: '',
+        ville: '',
+        adresse: '',
+        etablissement: '',
+        niveauEtude: '',
+        anneeEtude: '',
+        specialite: '',
+        languePreferee: 'fr'
+    });
+
+    // Charger les données utilisateur au montage
+    useEffect(() => {
+        if (user) {
+            loadUserProfile();
+        }
+    }, [user]);
+
+    // Charger le profil complet depuis l'API
+    const loadUserProfile = async () => {
+        try {
+            setLoading(true);
+            const response = await API.get('/auth/profile');
+            
+            if (response.data.status === 'success') {
+                const userData = response.data.user;
+                setFormData({
+                    nom: userData.nom || '',
+                    prenom: userData.prenom || '',
+                    email: userData.email || '',
+                    telephone: userData.telephone || '',
+                    dateNaissance: userData.dateNaissance ? userData.dateNaissance.split('T')[0] : '',
+                    genre: userData.genre || '',
+                    nationalite: userData.nationalite || '',
+                    pays: userData.pays || '',
+                    ville: userData.ville || '',
+                    adresse: userData.adresse || '',
+                    etablissement: userData.etablissement || '',
+                    niveauEtude: userData.niveauEtude || '',
+                    anneeEtude: userData.anneeEtude || '',
+                    specialite: userData.specialite || '',
+                    languePreferee: userData.languePreferee || 'fr'
+                });
+            }
+        } catch (error) {
+            console.error('Erreur lors du chargement du profil:', error);
+            setMessage({ type: 'error', text: 'Erreur lors du chargement du profil' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        
+        try {
+            const response = await API.put('/auth/profile', formData);
+            
+            if (response.data.status === 'success') {
+                setMessage({ type: 'success', text: 'Profil mis à jour avec succès ! ✅' });
+                setIsEditing(false);
+                
+                // Mettre à jour le contexte utilisateur
+                if (setUser) {
+                    setUser(prev => ({
+                        ...prev,
+                        nom: formData.nom,
+                        prenom: formData.prenom,
+                        name: `${formData.prenom} ${formData.nom}`.trim()
+                    }));
+                }
+            } else {
+                throw new Error(response.data.message || 'Erreur lors de la mise à jour');
+            }
+        } catch (error) {
+            console.error('Erreur lors de la sauvegarde:', error);
+            setMessage({ type: 'error', text: 'Erreur lors de la sauvegarde du profil' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCancel = () => {
+        setIsEditing(false);
+        loadUserProfile(); // Recharger les données originales
+        setMessage({ type: '', text: '' });
+    };
 
     if (!user) {
         return (
-            <div className="profile-loading">
-                <div className="loading-spinner"></div>
-                <p>Chargement du profil...</p>
+            <div className="profile-container">
+                <GlobalNavbar activePage="profile" />
+                <div className="profile-error">
+                    <h2>🔒 Accès refusé</h2>
+                    <p>Vous devez être connecté pour accéder à votre profil.</p>
+                </div>
             </div>
         );
     }
 
-    const formatDate = (dateString) => {
-        if (!dateString) return 'Non disponible';
-        return new Date(dateString).toLocaleDateString('fr-FR', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-    };
-
-    const getStatusIcon = (status) => {
-        return status ? '✅' : '❌';
-    };
-
-    const getRoleIcon = (role) => {
-        const roleIcons = {
-            'ROLE_ETUDIANT': '🎓',
-            'ROLE_ADMIN': '👑',
-            'ROLE_CONSEILLER': '💼',
-            'ROLE_PARTENAIRE': '🤝'
-        };
-        return roleIcons[role] || '👤';
-    };
-
     return (
-        <div className="profile-container">
+        <GlobalLayout activePage="profile">
+            <div className="profile-container">
+            
             {/* Header avec gradient */}
             <div className="profile-header">
                 <div className="profile-header-content">
                     <div className="profile-header-text">
-                        <h1 className="profile-title">
-                            <span className="profile-emoji">👋</span>
-                            Mon Profil
-                        </h1>
+                                            <h1 className="profile-title">
+                        <span className="profile-emoji">👤</span>
+                        {getText('profile')}
+                    </h1>
                         <p className="profile-subtitle">
-                            Gérez vos informations personnelles et suivez votre parcours
+                            Gérez vos informations personnelles et académiques
                         </p>
                     </div>
                     <div className="profile-header-decoration">
@@ -63,37 +155,25 @@ export default function Profile() {
             </div>
 
             <div className="profile-content">
-                {/* Section principale du profil */}
+                {/* Section principale */}
                 <div className="profile-main-section">
+                    {/* Carte d'information de base */}
                     <div className="profile-card profile-info-card">
                         <div className="profile-photo-section">
                             <div className="profile-photo-container">
-                                {user.photoProfil ? (
-                                    <img 
-                                        src={user.photoProfil} 
-                                        alt="Photo de profil" 
-                                        className="profile-photo-large"
-                                    />
-                                ) : (
-                                    <div className="profile-avatar-large">
-                                        <span className="avatar-initial">
-                                            {user.prenom?.charAt(0) || user.email?.charAt(0) || 'U'}
-                                        </span>
-                                    </div>
-                                )}
-                                <div className="profile-photo-overlay">
-                                    <span className="camera-emoji">📷</span>
+                                <div className="profile-avatar-large">
+                                    <span className="avatar-initial">
+                                        {user.prenom?.charAt(0) || user.name?.charAt(0) || 'U'}
+                                    </span>
                                 </div>
                             </div>
                             <div className="profile-basic-info">
                                 <h2 className="profile-name">
-                                    {user.prenom} {user.nom}
+                                    {user.name || `${user.prenom || ''} ${user.nom || ''}`.trim() || 'Utilisateur'}
                                 </h2>
                                 <div className="profile-role">
-                                    <span className="role-icon">{getRoleIcon(user.role)}</span>
-                                    <span className="role-text">
-                                        {user.role?.replace('ROLE_', '') || 'Utilisateur'}
-                                    </span>
+                                    <span className="role-icon">🎓</span>
+                                    <span className="role-text">{user.role || 'Étudiant'}</span>
                                 </div>
                                 <div className="profile-email">
                                     <span className="email-icon">📧</span>
@@ -101,119 +181,279 @@ export default function Profile() {
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    {/* Grille d'informations détaillées */}
-                    <div className="profile-details-grid">
-                        <div className="detail-card">
-                            <div className="detail-header">
-                                <span className="detail-icon">📱</span>
-                                <h3>Téléphone</h3>
-                            </div>
-                            <div className="detail-content">
-                                {user.telephone || 'Non renseigné'}
-                            </div>
-                        </div>
-
-                        <div className="detail-card">
-                            <div className="detail-header">
-                                <span className="detail-icon">🌍</span>
-                                <h3>Langue préférée</h3>
-                            </div>
-                            <div className="detail-content">
-                                {user.languePreferee || 'Français'}
-                            </div>
-                        </div>
-
-                        <div className="detail-card">
-                            <div className="detail-header">
-                                <span className="detail-icon">📅</span>
-                                <h3>Date de création</h3>
-                            </div>
-                            <div className="detail-content">
-                                {formatDate(user.dateCreation)}
-                            </div>
-                        </div>
-
-                        <div className="detail-card">
-                            <div className="detail-header">
-                                <span className="detail-icon">🕒</span>
-                                <h3>Dernière connexion</h3>
-                            </div>
-                            <div className="detail-content">
-                                {formatDate(user.derniereConnexion)}
-                            </div>
-                        </div>
-
-                        <div className="detail-card status-card">
-                            <div className="detail-header">
-                                <span className="detail-icon">🔐</span>
-                                <h3>Statut du compte</h3>
-                            </div>
-                            <div className="detail-content">
-                                <div className="status-item">
-                                    <span>Compte actif:</span>
-                                    <span className="status-value">
-                                        {getStatusIcon(user.compteActif)}
-                                    </span>
+                        
+                        {/* Boutons d'action */}
+                        <div className="profile-actions">
+                            {!isEditing ? (
+                                <button
+                                    onClick={() => setIsEditing(true)}
+                                    className="edit-btn"
+                                >
+                                    ✏️ {getText('edit')} {getText('profile')}
+                                </button>
+                            ) : (
+                                <div className="edit-actions">
+                                    <button
+                                        onClick={handleSubmit}
+                                        disabled={loading}
+                                        className="save-btn"
+                                    >
+                                        {loading ? '💾 Sauvegarde...' : '💾 Sauvegarder'}
+                                    </button>
+                                    <button
+                                        onClick={handleCancel}
+                                        className="cancel-btn"
+                                    >
+                                        ❌ Annuler
+                                    </button>
                                 </div>
-                                <div className="status-item">
-                                    <span>Email vérifié:</span>
-                                    <span className="status-value">
-                                        {getStatusIcon(user.emailVerifie)}
-                                    </span>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Formulaire de modification */}
+                    <div className="profile-card">
+                        <h3 className="card-title">📝 Informations Personnelles</h3>
+                        
+                        <form onSubmit={handleSubmit} className="profile-form">
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label htmlFor="prenom">Prénom *</label>
+                                    <input
+                                        type="text"
+                                        id="prenom"
+                                        name="prenom"
+                                        value={formData.prenom}
+                                        onChange={handleInputChange}
+                                        disabled={!isEditing}
+                                        className="form-input"
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="nom">Nom de famille *</label>
+                                    <input
+                                        type="text"
+                                        id="nom"
+                                        name="nom"
+                                        value={formData.nom}
+                                        onChange={handleInputChange}
+                                        disabled={!isEditing}
+                                        className="form-input"
+                                        required
+                                    />
                                 </div>
                             </div>
+
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label htmlFor="email">Email *</label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleInputChange}
+                                        disabled={!isEditing}
+                                        className="form-input"
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="telephone">Téléphone</label>
+                                    <input
+                                        type="tel"
+                                        id="telephone"
+                                        name="telephone"
+                                        value={formData.telephone}
+                                        onChange={handleInputChange}
+                                        disabled={!isEditing}
+                                        className="form-input"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label htmlFor="dateNaissance">Date de naissance</label>
+                                    <input
+                                        type="date"
+                                        id="dateNaissance"
+                                        name="dateNaissance"
+                                        value={formData.dateNaissance}
+                                        onChange={handleInputChange}
+                                        disabled={!isEditing}
+                                        className="form-input"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="genre">Genre</label>
+                                    <select
+                                        id="genre"
+                                        name="genre"
+                                        value={formData.genre}
+                                        onChange={handleInputChange}
+                                        disabled={!isEditing}
+                                        className="form-select"
+                                    >
+                                        <option value="">Sélectionner</option>
+                                        <option value="M">Masculin</option>
+                                        <option value="F">Féminin</option>
+                                        <option value="A">Autre</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label htmlFor="nationalite">Nationalité</label>
+                                    <input
+                                        type="text"
+                                        id="nationalite"
+                                        name="nationalite"
+                                        value={formData.nationalite}
+                                        onChange={handleInputChange}
+                                        disabled={!isEditing}
+                                        className="form-input"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="languePreferee">Langue préférée</label>
+                                    <select
+                                        id="languePreferee"
+                                        name="languePreferee"
+                                        value={formData.languePreferee}
+                                        onChange={handleInputChange}
+                                        disabled={!isEditing}
+                                        className="form-select"
+                                    >
+                                        <option value="fr">Français</option>
+                                        <option value="en">English</option>
+                                        <option value="es">Español</option>
+                                        <option value="ar">العربية</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="adresse">Adresse</label>
+                                <input
+                                    type="text"
+                                    id="adresse"
+                                    name="adresse"
+                                    value={formData.adresse}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    className="form-input"
+                                />
+                            </div>
+
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label htmlFor="ville">Ville</label>
+                                    <input
+                                        type="text"
+                                        id="ville"
+                                        name="ville"
+                                        value={formData.ville}
+                                        onChange={handleInputChange}
+                                        disabled={!isEditing}
+                                        className="form-input"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="pays">Pays</label>
+                                    <input
+                                        type="text"
+                                        id="pays"
+                                        name="pays"
+                                        value={formData.pays}
+                                        onChange={handleInputChange}
+                                        disabled={!isEditing}
+                                        className="form-input"
+                                    />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    {/* Informations académiques */}
+                    <div className="profile-card">
+                        <h3 className="card-title">🎓 Informations Académiques</h3>
+                        
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label htmlFor="etablissement">Établissement actuel</label>
+                                <input
+                                    type="text"
+                                    id="etablissement"
+                                    name="etablissement"
+                                    value={formData.etablissement}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    className="form-input"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="niveauEtude">Niveau d'étude</label>
+                                <select
+                                    id="niveauEtude"
+                                    name="niveauEtude"
+                                    value={formData.niveauEtude}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    className="form-select"
+                                >
+                                    <option value="">Sélectionner</option>
+                                    <option value="Bac">Baccalauréat</option>
+                                    <option value="Bac+1">Bac+1</option>
+                                    <option value="Bac+2">Bac+2</option>
+                                    <option value="Bac+3">Bac+3 (Licence)</option>
+                                    <option value="Bac+4">Bac+4</option>
+                                    <option value="Bac+5">Bac+5 (Master)</option>
+                                    <option value="Bac+8">Bac+8 (Doctorat)</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div className="detail-card action-card">
-                            <div className="detail-header">
-                                <span className="detail-icon">⚙️</span>
-                                <h3>Actions</h3>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label htmlFor="anneeEtude">Année d'étude</label>
+                                <input
+                                    type="text"
+                                    id="anneeEtude"
+                                    name="anneeEtude"
+                                    value={formData.anneeEtude}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    className="form-input"
+                                />
                             </div>
-                            <div className="detail-content">
-                                <Link to="/settings" className="edit-profile-btn">
-                                    <span className="btn-icon">✏️</span>
-                                    Modifier le profil
-                                </Link>
+                            <div className="form-group">
+                                <label htmlFor="specialite">Spécialité</label>
+                                <input
+                                    type="text"
+                                    id="specialite"
+                                    name="specialite"
+                                    value={formData.specialite}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    className="form-input"
+                                />
                             </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Section des actions rapides */}
-                <div className="profile-actions-section">
-                    <div className="actions-header">
-                        <h2 className="actions-title">
-                            <span className="actions-emoji">🚀</span>
-                            Actions Rapides
-                        </h2>
-                    </div>
-                    <div className="actions-grid">
-                        <Link to="/programs" className="action-card">
-                            <div className="action-icon">🔍</div>
-                            <h3>Explorer les programmes</h3>
-                            <p>Découvrez les formations disponibles</p>
-                        </Link>
-                        <Link to="/orientation" className="action-card">
-                            <div className="action-icon">🧭</div>
-                            <h3>Test d'orientation</h3>
-                            <p>Évaluez vos compétences</p>
-                        </Link>
-                        <Link to="/contact" className="action-card">
-                            <div className="action-icon">💬</div>
-                            <h3>Contacter un conseiller</h3>
-                            <p>Obtenez de l'aide personnalisée</p>
-                        </Link>
-                        <Link to="/settings" className="action-card">
-                            <div className="action-icon">⚙️</div>
-                            <h3>Paramètres</h3>
-                            <p>Personnalisez votre expérience</p>
-                        </Link>
-                    </div>
+                    {/* Messages de feedback */}
+                    {message.text && (
+                        <div className={`message ${message.type}`}>
+                            {message.text}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
+        </GlobalLayout>
     );
 }
 

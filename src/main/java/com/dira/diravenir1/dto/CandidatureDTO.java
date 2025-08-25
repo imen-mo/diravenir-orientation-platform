@@ -1,18 +1,21 @@
 package com.dira.diravenir1.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CandidatureDTO {
-
+    
     private Long id;
-    private String dateSoumission;
     private String statut;
-    private String suivi;
-    private String programme;
-    private List<Integer> documentIds;
+    private LocalDate dateSoumission;
+    private Long programmeId;
     private Long etudiantId;
 }

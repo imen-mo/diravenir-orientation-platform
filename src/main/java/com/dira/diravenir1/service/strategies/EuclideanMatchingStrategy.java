@@ -37,7 +37,7 @@ public class EuclideanMatchingStrategy implements MatchingStrategy {
                 return 0.0;
             }
             
-            log.debug("🧮 Calcul de la distance euclidienne entre utilisateur et {}", majorProfile.getMajorName());
+            log.debug("🧮 Calcul de la distance euclidienne entre utilisateur et {}", majorProfile.getProgram());
             
             // Récupération des scores des piliers
             int[] userScores = getUserPillarScores(userProfile);

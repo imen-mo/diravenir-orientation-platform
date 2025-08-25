@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth';
 import { programService } from '../services/api';
 import { toast } from 'react-toastify';
 import ExcelUploader from '../components/ExcelUploader';
+import GlobalLayout from '../components/GlobalLayout';
+import BackendConnectivityTest from '../components/BackendConnectivityTest';
+import UserManagement from '../components/UserManagement';
+import ApplicationManagement from '../components/ApplicationManagement';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
-  const { user, isAuthenticated } = useAuth();
   const [programs, setPrograms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('programs');
   const [stats, setStats] = useState({
     total: 0,
     opened: 0,
@@ -17,13 +20,10 @@ const AdminDashboard = () => {
   });
 
   useEffect(() => {
-    if (!isAuthenticated || !user) {
-      toast.error('Accès non autorisé');
-      return;
+    if (activeTab === 'programs') {
+      loadPrograms();
     }
-
-    loadPrograms();
-  }, [isAuthenticated, user]);
+  }, [activeTab]);
 
   const loadPrograms = async () => {
     try {
@@ -75,175 +75,145 @@ const AdminDashboard = () => {
     }
   };
 
-  // Vérifier si l'utilisateur est admin
-  const isAdmin = user && user.role === 'ADMIN';
-  
-  if (!isAuthenticated || !user) {
-    return (
-      <div className="admin-dashboard">
-        <div className="unauthorized">
-          <h2>Accès Non Autorisé</h2>
-          <p>Vous devez être connecté pour accéder à cette page.</p>
-        </div>
-      </div>
-    );
-  }
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'programs':
+        return (
+          <>
+            {/* Statistiques */}
+            <div className="stats-grid">
+              <div className="stat-card">
+                <h3>Total</h3>
+                <span className="stat-number">{stats.total}</span>
+              </div>
+              <div className="stat-card">
+                <h3>Ouverts</h3>
+                <span className="stat-number">{stats.opened}</span>
+              </div>
+              <div className="stat-card">
+                <h3>Bientôt</h3>
+                <span className="stat-number">{stats.comingSoon}</span>
+              </div>
+              <div className="stat-card">
+                <h3>Fermés</h3>
+                <span className="stat-number">{stats.closed}</span>
+              </div>
+            </div>
 
-  if (!isAdmin) {
-    return (
-      <div className="admin-dashboard">
-        <div className="unauthorized">
-          <h2>Accès Refusé</h2>
-          <p>Vous devez avoir les droits d'administrateur pour accéder à cette page.</p>
-          <p>Rôle actuel : {user.role}</p>
-        </div>
-      </div>
-    );
-  }
+            {/* Test de connectivité */}
+            <div className="connectivity-section">
+              <h2>Diagnostic de Connectivité</h2>
+              <BackendConnectivityTest />
+            </div>
+
+            {/* Upload Excel */}
+            <div className="upload-section">
+              <h2>Ajouter des programmes</h2>
+              <ExcelUploader onUploadSuccess={loadPrograms} />
+            </div>
+
+            {/* Liste des programmes */}
+            <div className="programs-section">
+              <h2>Programmes existants</h2>
+              {loading ? (
+                <div className="loading-container">
+                  <div className="loading-spinner"></div>
+                  <p>Chargement des programmes...</p>
+                </div>
+              ) : (
+                <div className="programs-grid">
+                  {programs.map((program) => (
+                    <div key={program.id} className="program-card">
+                      <div className="program-header">
+                        <h3>{program.program || 'Nom du programme'}</h3>
+                        <span className={`status-badge ${program.status?.toLowerCase()}`}>
+                          {program.status}
+                        </span>
+                      </div>
+                      <div className="program-details">
+                        <p><strong>Université:</strong> {program.universities || 'N/A'}</p>
+                        <p><strong>Catégorie:</strong> {program.category || 'N/A'}</p>
+                        <p><strong>Ville:</strong> {program.campusCity || 'N/A'}</p>
+                        <p><strong>Type:</strong> {program.degreeType || 'N/A'}</p>
+                        <p><strong>Durée:</strong> {program.duration || 'N/A'} ans</p>
+                        <p><strong>Langue:</strong> {program.language || 'N/A'}</p>
+                        <p><strong>Frais:</strong> {program.tuitionFees || 'N/A'}</p>
+                        <p><strong>Date limite:</strong> {program.applyBefore || 'N/A'}</p>
+                      </div>
+                      <div className="program-actions">
+                        <select
+                          value={program.status}
+                          onChange={(e) => handleStatusChange(program.id, e.target.value)}
+                          className="status-select"
+                        >
+                          <option value="OPENED">Ouvert</option>
+                          <option value="COMING_SOON">Bientôt</option>
+                          <option value="CLOSED">Fermé</option>
+                        </select>
+                        <button
+                          onClick={() => handleProgramDelete(program.id)}
+                          className="delete-btn"
+                        >
+                          Supprimer
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </>
+        );
+      
+      case 'users':
+        return <UserManagement />;
+      
+      case 'applications':
+        return <ApplicationManagement />;
+      
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className="admin-dashboard">
-      <div className="dashboard-header">
-        <h1>Tableau de Bord Administrateur</h1>
-        <p>Gérez vos programmes et importez de nouvelles données</p>
-      </div>
+    <GlobalLayout activePage="admin">
+      <div className="admin-dashboard">
+        <main className="admin-main">
+          <div className="admin-header">
+            <h1>Tableau de Bord Administrateur</h1>
+            <p>Gérez les programmes, utilisateurs et candidatures de la plateforme</p>
+          </div>
 
-      {/* Statistics Cards */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon total">📊</div>
-          <div className="stat-content">
-            <h3>Total Programmes</h3>
-            <p className="stat-number">{stats.total}</p>
+          {/* Navigation par onglets */}
+          <div className="admin-tabs">
+            <button
+              className={`tab-button ${activeTab === 'programs' ? 'active' : ''}`}
+              onClick={() => setActiveTab('programs')}
+            >
+              📚 Programmes
+            </button>
+            <button
+              className={`tab-button ${activeTab === 'users' ? 'active' : ''}`}
+              onClick={() => setActiveTab('users')}
+            >
+              👥 Utilisateurs
+            </button>
+            <button
+              className={`tab-button ${activeTab === 'applications' ? 'active' : ''}`}
+              onClick={() => setActiveTab('applications')}
+            >
+              📝 Candidatures
+            </button>
           </div>
-        </div>
-        
-        <div className="stat-card">
-          <div className="stat-icon opened">✅</div>
-          <div className="stat-content">
-            <h3>Ouverts</h3>
-            <p className="stat-number">{stats.opened}</p>
-          </div>
-        </div>
-        
-        <div className="stat-card">
-          <div className="stat-icon coming-soon">⏳</div>
-          <div className="stat-content">
-            <h3>Bientôt Disponibles</h3>
-            <p className="stat-number">{stats.comingSoon}</p>
-          </div>
-        </div>
-        
-        <div className="stat-card">
-          <div className="stat-icon closed">❌</div>
-          <div className="stat-content">
-            <h3>Fermés</h3>
-            <p className="stat-number">{stats.closed}</p>
-          </div>
-        </div>
-      </div>
 
-      {/* Excel Upload Section */}
-      <div className="upload-section">
-        <ExcelUploader />
+          {/* Contenu de l'onglet actif */}
+          <div className="tab-content">
+            {renderTabContent()}
+          </div>
+        </main>
       </div>
-
-      {/* Programs List */}
-      <div className="programs-section">
-        <div className="section-header">
-          <h2>Liste des Programmes</h2>
-          <button 
-            className="refresh-btn"
-            onClick={loadPrograms}
-            disabled={loading}
-          >
-            {loading ? 'Chargement...' : 'Actualiser'}
-          </button>
-        </div>
-
-        {loading ? (
-          <div className="loading">
-            <div className="spinner"></div>
-            <p>Chargement des programmes...</p>
-          </div>
-        ) : programs.length === 0 ? (
-          <div className="empty-state">
-            <div className="empty-icon">📚</div>
-            <h3>Aucun programme trouvé</h3>
-            <p>Importez votre premier fichier Excel pour commencer</p>
-          </div>
-        ) : (
-          <div className="programs-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Programme</th>
-                  <th>Université</th>
-                  <th>Statut</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {programs.map((program) => (
-                  <tr key={program.id}>
-                    <td>
-                      <div className="program-info">
-                        <div className="program-image">
-                          <img 
-                            src={program.programImage || '/default-program.jpg'} 
-                            alt={program.majorName}
-                            onError={(e) => {
-                              e.target.src = '/default-program.jpg';
-                            }}
-                          />
-                        </div>
-                        <div className="program-details">
-                          <h4>{program.majorName}</h4>
-                          <p>{program.degreeType}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="university-info">
-                        <h4>{program.universityName}</h4>
-                        <p>{program.location}</p>
-                      </div>
-                    </td>
-                    <td>
-                      <select
-                        value={program.status}
-                        onChange={(e) => handleStatusChange(program.id, e.target.value)}
-                        className={`status-select status-${program.status.toLowerCase()}`}
-                      >
-                        <option value="OPENED">Ouvert</option>
-                        <option value="COMING_SOON">Bientôt Disponible</option>
-                        <option value="CLOSED">Fermé</option>
-                      </select>
-                    </td>
-                    <td>
-                      <div className="actions">
-                        <button 
-                          className="edit-btn"
-                          onClick={() => window.open(`/programs/${program.id}`, '_blank')}
-                        >
-                          👁️ Voir
-                        </button>
-                        <button 
-                          className="delete-btn"
-                          onClick={() => handleProgramDelete(program.id)}
-                        >
-                          🗑️ Supprimer
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-    </div>
+    </GlobalLayout>
   );
 };
 

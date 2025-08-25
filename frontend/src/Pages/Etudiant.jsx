@@ -1,9 +1,11 @@
 import React from "react";
+import GlobalLayout from "../components/GlobalLayout";
 import "./Etudiant.css";
 
 const Etudiant = () => {
     return (
-        <div className="etudiant-container">
+        <GlobalLayout activePage="profile">
+            <div className="etudiant-container">
             <div className="etudiant-header">
                 <img
                     src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
@@ -39,7 +41,8 @@ const Etudiant = () => {
 
                 <button type="submit" className="enregistrer-btn">Enregistrer</button>
             </form>
-        </div>
+            </div>
+        </GlobalLayout>
     );
 };
 

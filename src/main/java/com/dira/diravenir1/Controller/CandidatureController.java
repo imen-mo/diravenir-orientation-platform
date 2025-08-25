@@ -3,39 +3,66 @@ package com.dira.diravenir1.Controller;
 import com.dira.diravenir1.Entities.Candidature;
 import com.dira.diravenir1.service.CandidatureService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/candidatures")
+@CrossOrigin(origins = "*")
 public class CandidatureController {
 
     @Autowired
     private CandidatureService candidatureService;
 
     @PostMapping
-    public Candidature createCandidature(@RequestBody Candidature candidature) {
-        return candidatureService.saveCandidature(candidature);
+    public ResponseEntity<Candidature> createCandidature(@RequestBody Candidature candidature) {
+        try {
+            Candidature created = candidatureService.saveCandidature(candidature);
+            return ResponseEntity.ok(created);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping
-    public List<Candidature> getAllCandidatures() {
-        return candidatureService.getAllCandidatures();
+    public ResponseEntity<List<Candidature>> getAllCandidatures() {
+        try {
+            List<Candidature> candidatures = candidatureService.getAllCandidatures();
+            return ResponseEntity.ok(candidatures);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @GetMapping("/{id}")
-    public Candidature getCandidatureById(@PathVariable int id) {
-        return candidatureService.getCandidatureById(id);
+    public ResponseEntity<Candidature> getCandidatureById(@PathVariable Long id) {
+        try {
+            Candidature candidature = candidatureService.getCandidatureById(id.intValue());
+            return ResponseEntity.ok(candidature);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/{id}")
-    public Candidature updateCandidature(@PathVariable int id, @RequestBody Candidature candidature) {
-        return candidatureService.updateCandidature(id, candidature);
+    public ResponseEntity<Candidature> updateCandidature(@PathVariable Long id, @RequestBody Candidature candidature) {
+        try {
+            Candidature updated = candidatureService.updateCandidature(id.intValue(), candidature);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCandidature(@PathVariable int id) {
-        candidatureService.deleteCandidature(id);
+    public ResponseEntity<Void> deleteCandidature(@PathVariable Long id) {
+        try {
+            candidatureService.deleteCandidature(id.intValue());
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

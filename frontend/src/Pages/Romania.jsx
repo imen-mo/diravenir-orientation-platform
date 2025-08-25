@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import romaniaImage from '../assets/ROMANIA.jpg';
-import Footer from '../components/Footer';
+import GlobalLayout from '../components/GlobalLayout';
 import './CountryPage.css';
 
 const Romania = () => {
@@ -107,30 +107,31 @@ const Romania = () => {
   ];
 
   return (
-    <div className="country-page">
-      {/* Hero Section with Background Image */}
-      <div className="hero-section" style={{ backgroundImage: `url(${romaniaImage})` }}>
-        <div className="hero-overlay">
-          <div className="hero-content">
-            <h1>Study in Romania</h1>
-            <p>Experience European education with rich history and affordable costs</p>
-            <div className="hero-stats">
-              <div className="stat">
-                <span className="stat-number">19M</span>
-                <span className="stat-label">Population</span>
+    <GlobalLayout activePage="programs">
+      <div className="country-page">
+        {/* Hero Section with Background Image */}
+        <div className="hero-section" style={{ backgroundImage: `url(${romaniaImage})` }}>
+          <div className="hero-overlay">
+            <div className="hero-content">
+              <h1>Study in Romania</h1>
+              <p>Experience European education with rich history and affordable costs</p>
+              <div className="hero-stats">
+                <div className="stat">
+                  <span className="stat-number">19M</span>
+                  <span className="stat-label">Population</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-number">100+</span>
+                  <span className="stat-label">Universities</span>
               </div>
-              <div className="stat">
-                <span className="stat-number">100+</span>
-                <span className="stat-label">Universities</span>
-              </div>
-              <div className="stat">
-                <span className="stat-number">30K+</span>
-                <span className="stat-label">International Students</span>
+                <div className="stat">
+                  <span className="stat-number">30K+</span>
+                  <span className="stat-label">International Students</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
       {/* Navigation Tabs */}
       <div className="tab-navigation">
@@ -328,9 +329,8 @@ const Romania = () => {
           </div>
         </div>
       </div>
-
-
-    </div>
+      </div>
+    </GlobalLayout>
   );
 };
 

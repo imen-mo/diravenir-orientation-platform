@@ -1,166 +1,191 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import logo from '../assets/logo.png';
-import '../pages/SignUp.css';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import oauth2Service from '../services/oauth2Service';
+import GlobalLayout from '../components/GlobalLayout';
 
-export default function OAuth2Success() {
+const OAuth2Success = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    const [status, setStatus] = useState('loading');
+    const { login } = useAuth();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [userInfo, setUserInfo] = useState(null);
-    const [countdown, setCountdown] = useState(5);
+    const [success, setSuccess] = useState(false);
 
     useEffect(() => {
-        const email = searchParams.get('email');
-        const name = searchParams.get('name');
-        const provider = searchParams.get('provider');
-        const statusParam = searchParams.get('status');
-
-        if (statusParam === 'success' && email) {
-            setUserInfo({ email, name, provider });
-            setStatus('success');
-            
-            // Redirection automatique vers la page d'accueil après 5 secondes
-            const timer = setInterval(() => {
-                setCountdown(prev => {
-                    if (prev <= 1) {
-                        clearInterval(timer);
-                        navigate('/', { replace: true });
-                        return 0;
+        const handleOAuth2Success = async () => {
+            try {
+                console.log('🔄 Traitement de la redirection OAuth2...');
+                
+                // Traiter la redirection OAuth2 avec le service
+                const oauth2Result = oauth2Service.processOAuth2Redirect();
+                
+                if (!oauth2Result) {
+                    setError("Aucune information OAuth2 trouvée. Veuillez réessayer la connexion.");
+                    setLoading(false);
+                    return;
+                }
+                
+                if (!oauth2Result.success) {
+                    setError(oauth2Result.message || "Erreur lors de l'authentification OAuth2");
+                    setLoading(false);
+                    return;
+                }
+                
+                console.log('✅ Redirection OAuth2 traitée avec succès:', oauth2Result);
+                
+                // Récupérer les informations utilisateur
+                const { user } = oauth2Result;
+                const { email, name, givenName, familyName, picture } = user;
+                
+                console.log('👤 Informations utilisateur OAuth2:', user);
+                
+                // Vérifier le statut côté serveur
+                try {
+                    const serverStatus = await oauth2Service.checkOAuth2Status();
+                    console.log('🔍 Statut serveur OAuth2:', serverStatus);
+                    
+                    if (serverStatus.authenticated) {
+                        console.log('✅ Utilisateur authentifié côté serveur');
+                        
+                        // Créer un objet utilisateur compatible avec le contexte d'authentification
+                        const userData = {
+                            id: Date.now(), // ID temporaire
+                            email: email,
+                            nom: familyName || name.split(' ')[1] || '',
+                            prenom: givenName || name.split(' ')[0] || name,
+                            role: 'ROLE_USER',
+                            picture: picture,
+                            isOAuth2User: true
+                        };
+                        
+                        console.log('👤 Données utilisateur formatées:', userData);
+                        
+                        // Mettre à jour le contexte d'authentification
+                        const loginResult = await login({
+                            oauth2: true,
+                            userData: userData
+                        });
+                        
+                        console.log('🔐 Résultat de la connexion:', loginResult);
+                        
+                        if (loginResult.success) {
+                            setUserInfo(userData);
+                            setSuccess(true);
+                            
+                            // Rediriger vers la page d'accueil après 3 secondes
+                            setTimeout(() => {
+                                console.log('🔄 Redirection vers la page d\'accueil...');
+                                navigate('/');
+                            }, 3000);
+                        } else {
+                            setError(loginResult.message || "Erreur lors de la connexion");
+                        }
+                    } else {
+                        setError("L'utilisateur n'est pas authentifié côté serveur");
                     }
-                    return prev - 1;
-                });
-            }, 1000);
+                } catch (serverError) {
+                    console.error('❌ Erreur lors de la vérification côté serveur:', serverError);
+                    setError("Erreur de communication avec le serveur");
+                }
+                
+            } catch (err) {
+                console.error('❌ Erreur OAuth2:', err);
+                setError("Erreur lors de l'authentification OAuth2. Veuillez réessayer.");
+            } finally {
+                setLoading(false);
+            }
+        };
 
-            return () => clearInterval(timer);
-        } else {
-            setStatus('error');
-        }
-    }, [searchParams, navigate]);
+        handleOAuth2Success();
+    }, [searchParams, navigate, login]);
 
-    if (status === 'loading') {
+    if (loading) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-                <motion.div
-                    className="max-w-md w-full space-y-8 text-center"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                >
-                    <div className="flex justify-center">
-                        <img src={logo} alt="DirAvenir Logo" className="h-16 w-auto" />
-                    </div>
-                    <div>
-                        <h2 className="mt-6 text-3xl font-bold text-gray-900">
-                            Connexion en cours...
-                        </h2>
-                        <div className="mt-4">
-                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+            <GlobalLayout activePage="oauth2-success">
+                <div className="oauth2-success-container">
+                    <div className="oauth2-success-content">
+                        <div className="oauth2-success-loading">
+                            <div className="oauth2-success-spinner"></div>
+                            <h2>🔐 Authentification en cours...</h2>
+                            <p>Veuillez patienter pendant que nous finalisons votre connexion Google.</p>
                         </div>
-                        <p className="mt-4 text-gray-600">
-                            Finalisation de votre connexion Google.
-                        </p>
                     </div>
-                </motion.div>
-            </div>
+                </div>
+            </GlobalLayout>
         );
     }
 
-    if (status === 'error') {
+    if (error) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-                <motion.div
-                    className="max-w-md w-full space-y-8 text-center"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                >
-                    <div className="flex justify-center">
-                        <img src={logo} alt="DirAvenir Logo" className="h-16 w-auto" />
-                    </div>
-                    <div>
-                        <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-                            <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </div>
-                        <h2 className="mt-6 text-3xl font-bold text-gray-900">
-                            Erreur de connexion
-                        </h2>
-                        <p className="mt-4 text-gray-600">
-                            Une erreur s'est produite lors de votre connexion avec Google.
-                        </p>
-                        <div className="mt-6 space-y-3">
-                            <button
-                                onClick={() => navigate('/signin')}
-                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            <GlobalLayout activePage="oauth2-success">
+                <div className="oauth2-success-container">
+                    <div className="oauth2-success-content">
+                        <div className="oauth2-success-error">
+                            <div className="oauth2-success-error-icon">❌</div>
+                            <h2>Erreur d'authentification</h2>
+                            <p>{error}</p>
+                            <button 
+                                onClick={() => navigate('/register')}
+                                className="oauth2-success-retry-button"
                             >
-                                🔐 Réessayer la connexion
-                            </button>
-                            <button
-                                onClick={() => navigate('/')}
-                                className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                            >
-                                🏠 Retour à l'accueil
+                                Réessayer
                             </button>
                         </div>
                     </div>
-                </motion.div>
-            </div>
+                </div>
+            </GlobalLayout>
+        );
+    }
+
+    if (success && userInfo) {
+        return (
+            <GlobalLayout activePage="oauth2-success">
+                <div className="oauth2-success-container">
+                    <div className="oauth2-success-content">
+                        <div className="oauth2-success-success">
+                            <div className="oauth2-success-success-icon">✅</div>
+                            <h2>Authentification réussie !</h2>
+                            <div className="oauth2-success-user-info">
+                                {userInfo.picture && (
+                                    <img 
+                                        src={userInfo.picture} 
+                                        alt="Photo de profil" 
+                                        className="oauth2-success-user-picture"
+                                    />
+                                )}
+                                <div className="oauth2-success-user-details">
+                                    <h3>Bienvenue, {userInfo.prenom} {userInfo.nom} !</h3>
+                                    <p>Email: {userInfo.email}</p>
+                                    <p>Vous allez être redirigé vers la page d'accueil...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </GlobalLayout>
         );
     }
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <motion.div
-                className="max-w-md w-full space-y-8 text-center"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-            >
-                <div className="flex justify-center">
-                    <img src={logo} alt="DirAvenir Logo" className="h-16 w-auto" />
-                </div>
-                <div>
-                    <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-                        <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                    </div>
-                    <h2 className="mt-6 text-3xl font-bold text-gray-900">
-                        Connexion réussie ! 🎉
-                    </h2>
-                    <p className="mt-4 text-gray-600">
-                        Bienvenue <strong>{userInfo?.name || userInfo?.email}</strong> !
-                    </p>
-                    <p className="mt-2 text-sm text-gray-500">
-                        Vous êtes maintenant connecté avec votre compte Google.
-                    </p>
-                    
-                    <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                        <p className="text-sm text-blue-800">
-                            Redirection automatique vers l'accueil dans <span className="font-bold">{countdown}</span> secondes...
-                        </p>
-                    </div>
-
-                    <div className="mt-6 space-y-3">
-                        <button
-                            onClick={() => navigate('/', { replace: true })}
-                            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        <GlobalLayout activePage="oauth2-success">
+            <div className="oauth2-success-container">
+                <div className="oauth2-success-content">
+                    <div className="oauth2-success-unknown">
+                        <h2>État inconnu</h2>
+                        <p>Impossible de déterminer l'état de l'authentification.</p>
+                        <button 
+                            onClick={() => navigate('/register')}
+                            className="oauth2-success-retry-button"
                         >
-                            🏠 Aller à l'accueil maintenant
-                        </button>
-                        
-                        <button
-                            onClick={() => navigate('/signin')}
-                            className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                        >
-                            🔐 Aller à la connexion
+                            Retour à l'inscription
                         </button>
                     </div>
                 </div>
-            </motion.div>
-        </div>
+            </div>
+        </GlobalLayout>
     );
-}
+};
+
+export default OAuth2Success;

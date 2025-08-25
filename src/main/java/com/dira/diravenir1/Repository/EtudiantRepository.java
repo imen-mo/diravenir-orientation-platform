@@ -8,6 +8,9 @@ import java.util.Optional;
 
 @Repository
 public interface EtudiantRepository extends JpaRepository<Etudiant, Long> {
+    // Méthode pour rechercher un étudiant par son email
+    Optional<Etudiant> findByEmail(String email);
+    
     // Méthode pour rechercher un étudiant par son email de test
     Optional<Etudiant> findByEmailTest(String emailTest);
     

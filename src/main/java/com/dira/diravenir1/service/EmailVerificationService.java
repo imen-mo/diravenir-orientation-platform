@@ -1,116 +1,173 @@
 package com.dira.diravenir1.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.dira.diravenir1.Entities.EmailVerificationToken;
+import com.dira.diravenir1.Entities.Utilisateur;
+import com.dira.diravenir1.Repository.EmailVerificationTokenRepository;
+import com.dira.diravenir1.Repository.UtilisateurRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class EmailVerificationService {
 
-    private static final Logger logger = LoggerFactory.getLogger(EmailVerificationService.class);
-    
-    @Autowired
-    private EmailService emailService;
+    private final EmailVerificationTokenRepository tokenRepository;
+    private final UtilisateurRepository utilisateurRepository;
+    private final EmailService emailService;
 
-    private final ConcurrentHashMap<String, VerificationToken> verificationTokens = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, VerificationToken> passwordResetTokens = new ConcurrentHashMap<>();
-    private final SecureRandom secureRandom = new SecureRandom();
+    @Value("${app.email.verification.expiration:24}")
+    private int expirationHours;
 
-    public void sendVerificationEmail(String email) {
-        String token = generateToken();
-        LocalDateTime expiry = LocalDateTime.now().plusHours(24); // 24 heures
-        
-        VerificationToken verificationToken = new VerificationToken(token, email, expiry);
-        verificationTokens.put(token, verificationToken);
-        
-        emailService.sendVerificationEmail(email, token);
-        
-        logger.info("✅ Token de vérification généré pour : {}", email);
-    }
+    /**
+     * Génère et envoie un token de vérification email
+     */
+    @Transactional
+    public boolean generateAndSendVerificationEmail(Utilisateur utilisateur) {
+        try {
+            // Supprimer l'ancien token s'il existe
+            tokenRepository.deleteByUtilisateurId(utilisateur.getId());
 
-    public void sendPasswordResetEmail(String email) {
-        String token = generateToken();
-        LocalDateTime expiry = LocalDateTime.now().plusHours(1); // 1 heure
-        
-        VerificationToken resetToken = new VerificationToken(token, email, expiry);
-        passwordResetTokens.put(token, resetToken);
-        
-        emailService.sendPasswordResetEmail(email, token);
-        
-        logger.info("✅ Token de réinitialisation généré pour : {}", email);
-    }
+            // Créer un nouveau token sécurisé
+            String token = UUID.randomUUID().toString();
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime expirationDate = now.plusHours(expirationHours);
 
-    public boolean verifyEmailToken(String token) {
-        VerificationToken verificationToken = verificationTokens.get(token);
-        
-        if (verificationToken == null) {
-            logger.warn("🚫 Token de vérification invalide : {}", token);
+            System.out.println("🔍 Génération du token: " + token);
+            System.out.println("🔍 Heure de création: " + now);
+            System.out.println("🔍 Expiration: " + expirationDate);
+            System.out.println("🔍 Heures d'expiration configurées: " + expirationHours);
+            System.out.println("🔍 Durée de vie: " + expirationHours + " heures");
+
+            EmailVerificationToken verificationToken = EmailVerificationToken.builder()
+                    .token(token)
+                    .utilisateur(utilisateur)
+                    .expirationDate(expirationDate)
+                    .build();
+
+            tokenRepository.save(verificationToken);
+            System.out.println("🔍 Token sauvegardé avec ID: " + verificationToken.getId());
+
+            // Envoyer l'email de vérification
+            return emailService.sendVerificationEmail(utilisateur.getEmail(), utilisateur.getNom(), token);
+
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors de la génération du token de vérification: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
-        
-        if (verificationToken.isExpired()) {
-            verificationTokens.remove(token);
-            logger.warn("🚫 Token de vérification expiré : {}", token);
-            return false;
-        }
-        
-        // Token valide - le supprimer après utilisation
-        verificationTokens.remove(token);
-        logger.info("✅ Email vérifié avec succès : {}", verificationToken.getEmail());
-        return true;
     }
 
-    public String getEmailFromResetToken(String token) {
-        VerificationToken resetToken = passwordResetTokens.get(token);
-        
-        if (resetToken == null || resetToken.isExpired()) {
-            if (resetToken != null) {
-                passwordResetTokens.remove(token);
+    /**
+     * Vérifie un token de vérification email
+     */
+    @Transactional
+    public boolean verifyEmail(String token) {
+        try {
+            // Validation de sécurité
+            if (token == null || token.trim().isEmpty()) {
+                System.out.println("❌ Token de vérification vide ou null");
+                return false;
             }
-            return null;
+            
+            // Nettoyer le token des caractères indésirables
+            String cleanToken = token.trim();
+            System.out.println("🔍 Vérification du token: " + cleanToken);
+            
+            EmailVerificationToken verificationToken = tokenRepository.findByToken(cleanToken)
+                    .orElse(null);
+
+            if (verificationToken == null) {
+                System.out.println("❌ Token de vérification non trouvé: " + cleanToken);
+                return false;
+            }
+
+            System.out.println("🔍 Token trouvé: " + verificationToken.getToken());
+            System.out.println("🔍 Expiration: " + verificationToken.getExpirationDate());
+            System.out.println("🔍 Utilisé: " + verificationToken.isUsed());
+            System.out.println("🔍 Valide: " + verificationToken.isValid());
+            System.out.println("🔍 Heures restantes: " + java.time.Duration.between(LocalDateTime.now(), verificationToken.getExpirationDate()).toHours());
+
+            if (verificationToken.isUsed()) {
+                System.out.println("❌ Token de vérification déjà utilisé: " + cleanToken);
+                System.out.println("ℹ️  Ce token a déjà été utilisé pour activer le compte: " + verificationToken.getUtilisateur().getEmail());
+                return false;
+            }
+            
+            if (verificationToken.isExpired()) {
+                System.out.println("❌ Token de vérification expiré: " + cleanToken);
+                System.out.println("ℹ️  Expiration: " + verificationToken.getExpirationDate());
+                return false;
+            }
+
+            // Marquer le token comme utilisé
+            verificationToken.setUsed(true);
+            tokenRepository.save(verificationToken);
+
+            // Activer le compte utilisateur
+            Utilisateur utilisateur = verificationToken.getUtilisateur();
+            utilisateur.setCompteActif(true);
+            utilisateurRepository.save(utilisateur);
+
+            System.out.println("✅ Email vérifié avec succès pour: " + utilisateur.getEmail());
+            return true;
+
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors de la vérification email: " + e.getMessage());
+            e.printStackTrace();
+            return false;
         }
-        
-        return resetToken.getEmail();
     }
 
-    public void invalidateResetToken(String token) {
-        passwordResetTokens.remove(token);
-    }
+    /**
+     * Renvoie un email de vérification
+     */
+    @Transactional
+    public boolean resendVerificationEmail(String email) {
+        try {
+            Utilisateur utilisateur = utilisateurRepository.findByEmail(email)
+                    .orElse(null);
 
-    private String generateToken() {
-        byte[] bytes = new byte[32];
-        secureRandom.nextBytes(bytes);
-        StringBuilder token = new StringBuilder();
-        
-        for (byte b : bytes) {
-            token.append(String.format("%02x", b));
-        }
-        
-        return token.toString();
-    }
+            if (utilisateur == null) {
+                System.out.println("❌ Utilisateur non trouvé pour le renvoi: " + email);
+                return false;
+            }
 
-    public static class VerificationToken {
-        private final String token;
-        private final String email;
-        private final LocalDateTime expiry;
+            if (utilisateur.isCompteActif()) {
+                System.out.println("✅ Compte déjà vérifié pour: " + utilisateur);
+                return true;
+            }
 
-        public VerificationToken(String token, String email, LocalDateTime expiry) {
-            this.token = token;
-            this.email = email;
-            this.expiry = expiry;
-        }
+            return generateAndSendVerificationEmail(utilisateur);
 
-        public String getToken() { return token; }
-        public String getEmail() { return email; }
-        public LocalDateTime getExpiry() { return expiry; }
-        
-        public boolean isExpired() {
-            return LocalDateTime.now().isAfter(expiry);
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors du renvoi de l'email de vérification: " + e.getMessage());
+            e.printStackTrace();
+            return false;
         }
     }
-} 
+
+    /**
+     * Nettoyage automatique des tokens expirés (toutes les 6 heures)
+     */
+    @Scheduled(fixedRate = 21600000, initialDelay = 300000) // 6 heures, démarrage après 5 minutes
+    @Transactional
+    public void cleanupExpiredTokens() {
+        try {
+            LocalDateTime now = LocalDateTime.now();
+            tokenRepository.deleteExpiredTokens(now);
+            System.out.println("🧹 Nettoyage des tokens de vérification expirés effectué");
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors du nettoyage des tokens expirés: " + e.getMessage());
+            // Log détaillé pour le débogage
+            if (e.getMessage() != null && e.getMessage().contains("Executing an update/delete query")) {
+                System.out.println("ℹ️  Cette erreur est normale au démarrage, le nettoyage reprendra automatiquement");
+            }
+        }
+    }
+}

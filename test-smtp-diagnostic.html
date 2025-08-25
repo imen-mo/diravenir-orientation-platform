@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Test SMTP - Diravenir</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .test-button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        .test-button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .result {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .success { border-left: 4px solid #00ff88; }
+        .error { border-left: 4px solid #ff4757; }
+        .info { border-left: 4px solid #3742fa; }
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .status.success { background: #00ff88; color: #000; }
+        .status.error { background: #ff4757; color: #fff; }
+        .status.info { background: #3742fa; color: #fff; }
+        .email-form {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .email-form input, .email-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 14px;
+        }
+        .email-form textarea {
+            height: 100px;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test SMTP - Diravenir</h1>
+        
+        <div class="test-section">
+            <h3>🔌 Test de Connexion Serveur</h3>
+            <button class="test-button" onclick="testServerConnection()">Test Connexion Serveur</button>
+            <div id="serverResult" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📧 Test Email SMTP Direct</h3>
+            <button class="test-button" onclick="testSmtpDirect()">Test Email SMTP</button>
+            <div id="smtpResult" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📝 Test Email Personnalisé</h3>
+            <div class="email-form">
+                <input type="email" id="testEmail" placeholder="Email de destination" value="amounaiman836@gmail.com">
+                <input type="text" id="testSubject" placeholder="Sujet" value="🧪 Test Email Personnalisé">
+                <textarea id="testMessage" placeholder="Message">Ceci est un test d'email personnalisé depuis Diravenir.
+
+Timestamp: ${new Date().toLocaleString()}
+
+Si vous recevez cet email, le service SMTP fonctionne correctement !</textarea>
+                <button class="test-button" onclick="testCustomEmail()">Envoyer Email Personnalisé</button>
+            </div>
+            <div id="customEmailResult" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 Diagnostic Complet</h3>
+            <button class="test-button" onclick="runFullDiagnostic()">Lancer Diagnostic Complet</button>
+            <div id="diagnosticResult" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8084/api';
+
+        async function testServerConnection() {
+            const resultDiv = document.getElementById('serverResult');
+            resultDiv.innerHTML = '🔄 Test en cours...';
+            resultDiv.className = 'result info';
+
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `✅ Serveur connecté!\n\n${JSON.stringify(data, null, 2)}`;
+                resultDiv.className = 'result success';
+            } catch (error) {
+                resultDiv.innerHTML = `❌ Erreur de connexion: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function testSmtpDirect() {
+            const resultDiv = document.getElementById('smtpResult');
+            resultDiv.innerHTML = '🔄 Test SMTP en cours...';
+            resultDiv.className = 'result info';
+
+            try {
+                const response = await fetch(`${API_BASE}/test-email`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    resultDiv.innerHTML = `✅ Email SMTP fonctionne!\n\n${JSON.stringify(data, null, 2)}`;
+                    resultDiv.className = 'result success';
+                } else {
+                    resultDiv.innerHTML = `❌ Erreur SMTP:\n\n${JSON.stringify(data, null, 2)}`;
+                    resultDiv.className = 'result error';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `❌ Erreur lors du test SMTP: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function testCustomEmail() {
+            const resultDiv = document.getElementById('customEmailResult');
+            const email = document.getElementById('testEmail').value;
+            const subject = document.getElementById('testSubject').value;
+            const message = document.getElementById('testMessage').value;
+
+            if (!email || !subject || !message) {
+                resultDiv.innerHTML = '❌ Veuillez remplir tous les champs';
+                resultDiv.className = 'result error';
+                return;
+            }
+
+            resultDiv.innerHTML = '🔄 Envoi en cours...';
+            resultDiv.className = 'result info';
+
+            try {
+                const response = await fetch(`${API_BASE}/test-email`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    resultDiv.innerHTML = `✅ Email envoyé avec succès!\n\nDétails:\n- À: ${email}\n- Sujet: ${subject}\n- Message: ${message}\n\nRéponse API: ${JSON.stringify(data, null, 2)}`;
+                    resultDiv.className = 'result success';
+                } else {
+                    resultDiv.innerHTML = `❌ Échec de l'envoi:\n\n${JSON.stringify(data, null, 2)}`;
+                    resultDiv.className = 'result error';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `❌ Erreur lors de l'envoi: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function runFullDiagnostic() {
+            const resultDiv = document.getElementById('diagnosticResult');
+            resultDiv.innerHTML = '🔄 Diagnostic en cours...\n\n';
+            resultDiv.className = 'result info';
+
+            let diagnostic = '🔍 DIAGNOSTIC COMPLET DIRAVENIR\n';
+            diagnostic += '================================\n\n';
+
+            // Test 1: Connexion serveur
+            try {
+                const healthResponse = await fetch(`${API_BASE}/health`);
+                const healthData = await healthResponse.json();
+                diagnostic += `✅ 1. Connexion Serveur: OK\n`;
+                diagnostic += `   - Status: ${healthData.status}\n`;
+                diagnostic += `   - Timestamp: ${healthData.timestamp}\n\n`;
+            } catch (error) {
+                diagnostic += `❌ 1. Connexion Serveur: ÉCHEC\n`;
+                diagnostic += `   - Erreur: ${error.message}\n\n`;
+            }
+
+            // Test 2: Test SMTP
+            try {
+                const smtpResponse = await fetch(`${API_BASE}/test-email`);
+                const smtpData = await smtpResponse.json();
+                diagnostic += `📧 2. Test SMTP: ${smtpData.status === 'success' ? 'OK' : 'ÉCHEC'}\n`;
+                diagnostic += `   - Message: ${smtpData.message}\n`;
+                if (smtpData.connectionTest) {
+                    diagnostic += `   - Connexion: ${smtpData.connectionTest}\n`;
+                }
+                diagnostic += `   - Timestamp: ${smtpData.timestamp || 'N/A'}\n\n`;
+            } catch (error) {
+                diagnostic += `❌ 2. Test SMTP: ÉCHEC\n`;
+                diagnostic += `   - Erreur: ${error.message}\n\n`;
+            }
+
+            // Test 3: Test base de données
+            try {
+                const dbResponse = await fetch(`${API_BASE}/test-database`);
+                const dbData = await dbResponse.json();
+                diagnostic += `🗄️ 3. Test Base de Données: ${dbData.status === 'success' ? 'OK' : 'ÉCHEC'}\n`;
+                diagnostic += `   - Message: ${dbData.message}\n\n`;
+            } catch (error) {
+                diagnostic += `❌ 3. Test Base de Données: ÉCHEC\n`;
+                diagnostic += `   - Erreur: ${error.message}\n\n`;
+            }
+
+            diagnostic += `📊 RÉSUMÉ:\n`;
+            diagnostic += `- Serveur: ${diagnostic.includes('✅ 1. Connexion Serveur: OK') ? '🟢' : '🔴'}\n`;
+            diagnostic += `- SMTP: ${diagnostic.includes('✅ 2. Test SMTP: OK') ? '🟢' : '🔴'}\n`;
+            diagnostic += `- Base: ${diagnostic.includes('✅ 3. Test Base de Données: OK') ? '🟢' : '🔴'}\n\n`;
+            diagnostic += `🕐 Diagnostic terminé: ${new Date().toLocaleString()}`;
+
+            resultDiv.innerHTML = diagnostic;
+            resultDiv.className = 'result info';
+        }
+
+        // Test automatique au chargement
+        window.onload = function() {
+            testServerConnection();
+        };
+    </script>
+</body>
+</html>

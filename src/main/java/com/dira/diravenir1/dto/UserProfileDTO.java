@@ -1,111 +1,149 @@
 package com.dira.diravenir1.dto;
 
-/**
- * DTO pour le profil utilisateur calculé
- * Contient les 17 piliers normalisés sur 100
- */
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserProfileDTO {
     
-    // Piliers d'Intérêts
-    private int interetScientifiqueTech;
-    private int interetArtistiqueCreatif;
-    private int interetSocialHumain;
-    private int interetBusinessGestion;
-    private int interetLogiqueAnalytique;
+    // Propriétés de base du profil
+    private String profilPrincipal;
+    private Integer scoreGlobal;
+    private String description;
+    private String personnalite;
+    private String interets;
+    private String competences;
     
-    // Piliers de Compétences
-    private int competenceResolutionProblemes;
-    private int competenceCommunication;
-    private int competenceOrganisation;
-    private int competenceManuelTechnique;
+    // Piliers d'Intérêts (5 piliers) - Scores sur 100
+    private int interetScientifiqueTech;        // 0-100
+    private int interetArtistiqueCreatif;       // 0-100
+    private int interetSocialHumain;            // 0-100
+    private int interetBusinessGestion;         // 0-100
+    private int interetLogiqueAnalytique;       // 0-100
     
-    // Piliers de Valeurs / Motivations
-    private int valeurImpactSocietal;
-    private int valeurInnovationChallenge;
-    private int valeurStabiliteSecurite;
-    private int valeurAutonomie;
+    // Piliers de Compétences (4 piliers) - Scores sur 100
+    private int competenceResolutionProblemes;  // 0-100
+    private int competenceCommunication;        // 0-100
+    private int competenceOrganisation;         // 0-100
+    private int competenceManuelTechnique;      // 0-100
     
-    // Piliers de Préférence de Travail / Personnalité
-    private int prefTravailEquipeCollab;
-    private int prefTravailAutonome;
-    private int prefPratiqueTerrain;
-    private int prefTheorieRecherche;
-
-    // Constructeurs
-    public UserProfileDTO() {}
-
-    // Getters et Setters
-    public int getInteretScientifiqueTech() { return interetScientifiqueTech; }
-    public void setInteretScientifiqueTech(int interetScientifiqueTech) { this.interetScientifiqueTech = interetScientifiqueTech; }
-
-    public int getInteretArtistiqueCreatif() { return interetArtistiqueCreatif; }
-    public void setInteretArtistiqueCreatif(int interetArtistiqueCreatif) { this.interetArtistiqueCreatif = interetArtistiqueCreatif; }
-
-    public int getInteretSocialHumain() { return interetSocialHumain; }
-    public void setInteretSocialHumain(int interetSocialHumain) { this.interetSocialHumain = interetSocialHumain; }
-
-    public int getInteretBusinessGestion() { return interetBusinessGestion; }
-    public void setInteretBusinessGestion(int interetBusinessGestion) { this.interetBusinessGestion = interetBusinessGestion; }
-
-    public int getInteretLogiqueAnalytique() { return interetLogiqueAnalytique; }
-    public void setInteretLogiqueAnalytique(int interetLogiqueAnalytique) { this.interetLogiqueAnalytique = interetLogiqueAnalytique; }
-
-    public int getCompetenceResolutionProblemes() { return competenceResolutionProblemes; }
-    public void setCompetenceResolutionProblemes(int competenceResolutionProblemes) { this.competenceResolutionProblemes = competenceResolutionProblemes; }
-
-    public int getCompetenceCommunication() { return competenceCommunication; }
-    public void setCompetenceCommunication(int competenceCommunication) { this.competenceCommunication = competenceCommunication; }
-
-    public int getCompetenceOrganisation() { return competenceOrganisation; }
-    public void setCompetenceOrganisation(int competenceOrganisation) { this.competenceOrganisation = competenceOrganisation; }
-
-    public int getCompetenceManuelTechnique() { return competenceManuelTechnique; }
-    public void setCompetenceManuelTechnique(int competenceManuelTechnique) { this.competenceManuelTechnique = competenceManuelTechnique; }
-
-    public int getValeurImpactSocietal() { return valeurImpactSocietal; }
-    public void setValeurImpactSocietal(int valeurImpactSocietal) { this.valeurImpactSocietal = valeurImpactSocietal; }
-
-    public int getValeurInnovationChallenge() { return valeurInnovationChallenge; }
-    public void setValeurInnovationChallenge(int valeurInnovationChallenge) { this.valeurInnovationChallenge = valeurInnovationChallenge; }
-
-    public int getValeurStabiliteSecurite() { return valeurStabiliteSecurite; }
-    public void setValeurStabiliteSecurite(int valeurStabiliteSecurite) { this.valeurStabiliteSecurite = valeurStabiliteSecurite; }
-
-    public int getValeurAutonomie() { return valeurAutonomie; }
-    public void setValeurAutonomie(int valeurAutonomie) { this.valeurAutonomie = valeurAutonomie; }
-
-    public int getPrefTravailEquipeCollab() { return prefTravailEquipeCollab; }
-    public void setPrefTravailEquipeCollab(int prefTravailEquipeCollab) { this.prefTravailEquipeCollab = prefTravailEquipeCollab; }
-
-    public int getPrefTravailAutonome() { return prefTravailAutonome; }
-    public void setPrefTravailAutonome(int prefTravailAutonome) { this.prefTravailAutonome = prefTravailAutonome; }
-
-    public int getPrefPratiqueTerrain() { return prefPratiqueTerrain; }
-    public void setPrefPratiqueTerrain(int prefPratiqueTerrain) { this.prefPratiqueTerrain = prefPratiqueTerrain; }
-
-    public int getPrefTheorieRecherche() { return prefTheorieRecherche; }
-    public void setPrefTheorieRecherche(int prefTheorieRecherche) { this.prefTheorieRecherche = prefTheorieRecherche; }
-
-    @Override
-    public String toString() {
-        return "UserProfileDTO{" +
-                "interetScientifiqueTech=" + interetScientifiqueTech +
-                ", interetArtistiqueCreatif=" + interetArtistiqueCreatif +
-                ", interetSocialHumain=" + interetSocialHumain +
-                ", interetBusinessGestion=" + interetBusinessGestion +
-                ", interetLogiqueAnalytique=" + interetLogiqueAnalytique +
-                ", competenceResolutionProblemes=" + competenceResolutionProblemes +
-                ", competenceCommunication=" + competenceCommunication +
-                ", competenceOrganisation=" + competenceOrganisation +
-                ", competenceManuelTechnique=" + competenceManuelTechnique +
-                ", valeurImpactSocietal=" + valeurImpactSocietal +
-                ", valeurInnovationChallenge=" + valeurInnovationChallenge +
-                ", valeurStabiliteSecurite=" + valeurStabiliteSecurite +
-                ", valeurAutonomie=" + valeurAutonomie +
-                ", prefTravailEquipeCollab=" + prefTravailEquipeCollab +
-                ", prefTravailAutonome=" + prefTravailAutonome +
-                ", prefPratiqueTerrain=" + prefPratiqueTerrain +
-                ", prefTheorieRecherche=" + prefTheorieRecherche +
-                '}';
+    // Piliers de Valeurs/Motivations (4 piliers) - Scores sur 100
+    private int valeurImpactSocietal;           // 0-100
+    private int valeurInnovationChallenge;      // 0-100
+    private int valeurStabiliteSecurite;        // 0-100
+    private int valeurAutonomie;                // 0-100
+    
+    // Piliers de Préférence de Travail/Personnalité (4 piliers) - Scores sur 100
+    private int prefTravailEquipeCollab;        // 0-100
+    private int prefTravailAutonome;            // 0-100
+    private int prefPratiqueTerrain;            // 0-100
+    private int prefTheorieRecherche;           // 0-100
+    
+    /**
+     * Retourne le score d'un pilier par son nom
+     * 
+     * @param pillarName Nom du pilier
+     * @return Score du pilier (0-100) ou -1 si pilier non trouvé
+     */
+    public int getPillarScore(String pillarName) {
+        switch (pillarName.toLowerCase().replaceAll("[^a-zA-Z0-9]", "")) {
+            case "interetscientifiquetech":
+                return interetScientifiqueTech;
+            case "interetartistiquecreatif":
+                return interetArtistiqueCreatif;
+            case "interetsocialhumain":
+                return interetSocialHumain;
+            case "interetbusinessgestion":
+                return interetBusinessGestion;
+            case "interetlogiqueanalytique":
+                return interetLogiqueAnalytique;
+            case "competenceresolutionproblemes":
+                return competenceResolutionProblemes;
+            case "competencecommunication":
+                return competenceCommunication;
+            case "competenceorganisation":
+                return competenceOrganisation;
+            case "competencemanueltechnique":
+                return competenceManuelTechnique;
+            case "valeurimpactsocietal":
+                return valeurImpactSocietal;
+            case "valeurinnovationchallenge":
+                return valeurInnovationChallenge;
+            case "valeurstabilitesecurite":
+                return valeurStabiliteSecurite;
+            case "valeurautonomie":
+                return valeurAutonomie;
+            case "preftravailequipcollab":
+                return prefTravailEquipeCollab;
+            case "preftravailautonome":
+                return prefTravailAutonome;
+            case "prefpratiqueterrain":
+                return prefPratiqueTerrain;
+            case "preftheorierecherche":
+                return prefTheorieRecherche;
+            default:
+                return -1;
+        }
+    }
+    
+    /**
+     * Retourne tous les scores des piliers dans un tableau
+     * 
+     * @return Tableau des 17 scores des piliers
+     */
+    public int[] getAllPillarScores() {
+        return new int[]{
+            interetScientifiqueTech,
+            interetArtistiqueCreatif,
+            interetSocialHumain,
+            interetBusinessGestion,
+            interetLogiqueAnalytique,
+            competenceResolutionProblemes,
+            competenceCommunication,
+            competenceOrganisation,
+            competenceManuelTechnique,
+            valeurImpactSocietal,
+            valeurInnovationChallenge,
+            valeurStabiliteSecurite,
+            valeurAutonomie,
+            prefTravailEquipeCollab,
+            prefTravailAutonome,
+            prefPratiqueTerrain,
+            prefTheorieRecherche
+        };
+    }
+    
+    /**
+     * Vérifie si le profil est valide (tous les scores entre 0-100)
+     * 
+     * @return true si le profil est valide, false sinon
+     */
+    public boolean isValid() {
+        int[] scores = getAllPillarScores();
+        for (int score : scores) {
+            if (score < 0 || score > 100) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * Retourne le score moyen de tous les piliers
+     * 
+     * @return Score moyen (0-100)
+     */
+    public double getAverageScore() {
+        int[] scores = getAllPillarScores();
+        int sum = 0;
+        for (int score : scores) {
+            sum += score;
+        }
+        return (double) sum / scores.length;
     }
 }

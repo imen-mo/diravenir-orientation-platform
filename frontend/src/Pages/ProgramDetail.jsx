@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { programService } from '../services/api';
 import { toast } from 'react-toastify';
+import GlobalLayout from '../components/GlobalLayout';
 import './ProgramDetail.css';
 
 const ProgramDetail = () => {
@@ -35,8 +36,9 @@ const ProgramDetail = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+      <div className="program-detail-loading">
+        <div className="loading-spinner"></div>
+        <p>Chargement du programme...</p>
       </div>
     );
   }
@@ -53,193 +55,207 @@ const ProgramDetail = () => {
   }
 
   return (
-    <div className="program-detail-page">
-      {/* Header avec logo et titre */}
-      <div className="program-header">
-        <div className="program-logo">
-          <img
-            src={program.programImage || '/default-university-logo.png'}
-            alt={`${program.universityName} Logo`}
-            className="university-logo"
-          />
-        </div>
-        <div className="program-title">
-          <h1 className="main-title">
-            <span className="program-name">{program.majorName}</span>
-            <span className="university-name">: Offered by {program.universityName}</span>
-          </h1>
-        </div>
-      </div>
-
-      {/* Contenu principal */}
-      <div className="program-content">
-        <div className="content-left">
-          {/* À propos de l'université */}
-          <section className="info-section">
-            <h2>About The University</h2>
-            <p>
-              {program.universityName} is a top historic university in China, 
-              emphasizing its focus on management, marketing, and entrepreneurship 
-              skills for a global career.
-            </p>
-          </section>
-
-          {/* À propos du programme */}
-          <section className="info-section">
-            <h2>About The Program</h2>
-            <p>
-              {program.description || 
-                `This ${program.majorName} program provides a solid foundation in business, 
-                management, and leadership, blending theory with real-world applications 
-                through case studies and projects.`}
-            </p>
-          </section>
-
-          {/* Pourquoi ce programme */}
-          <section className="info-section">
-            <h2>Why this Program?</h2>
-            <ul className="benefits-list">
-              <li className="benefit-item">
-                <span className="check-icon">✓</span>
-                {program.universityName} is among the top 2% of universities in China
-              </li>
-              <li className="benefit-item">
-                <span className="check-icon">✓</span>
-                Diverse international community from 30+ countries
-              </li>
-              <li className="benefit-item">
-                <span className="check-icon">✓</span>
-                100% business-focused curriculum covering finance, marketing, and management
-              </li>
-              <li className="benefit-item">
-                <span className="check-icon">✓</span>
-                Fully English-speaking academic environment (no Chinese required)
-              </li>
-              <li className="benefit-item">
-                <span className="check-icon">✓</span>
-                Over 85% of graduates find jobs or pursue master's studies within 6 months
-              </li>
-            </ul>
-          </section>
-        </div>
-
-        <div className="content-right">
-          {/* Informations du programme */}
-          <section className="program-info-section">
-            <h2>About this Program</h2>
-            <div className="info-table">
-              <div className="info-row">
-                <span className="info-label">Degree Type:</span>
-                <span className="info-value">{program.degreeType || 'Bachelor'}</span>
-              </div>
-              <div className="info-row">
-                <span className="info-label">Apply Before:</span>
-                <span className="info-value">{program.applyBefore || '19th April'}</span>
-              </div>
-              <div className="info-row">
-                <span className="info-label">Tuition Fees:</span>
-                <span className="info-value">
-                  {program.tuitionFees ? `${program.tuitionFees} RMB` : '23,000 RMB'}
-                </span>
-              </div>
-              <div className="info-row">
-                <span className="info-label">Location:</span>
-                <span className="info-value">{program.location || 'Hangzhou'}</span>
-              </div>
-              <div className="info-row">
-                <span className="info-label">Campus City:</span>
-                <span className="info-value">{program.campusCity || 'Nanjing'}</span>
-              </div>
-              <div className="info-row">
-                <span className="info-label">Duration:</span>
-                <span className="info-value">{program.duration || 4} Years</span>
-              </div>
-              <div className="info-row">
-                <span className="info-label">Language:</span>
-                <span className="info-value">{program.language || 'English'}</span>
-              </div>
-              <div className="info-row">
-                <span className="info-label">University Ranking:</span>
-                <span className="info-value">{program.universityRanking || 'Top 200'}</span>
-              </div>
-              <div className="info-row">
-                <span className="info-label">Program Ranking:</span>
-                <span className="info-value">{program.programRanking || 'TOP 40'}</span>
-              </div>
-              <div className="info-row">
-                <span className="info-label">Scholarship:</span>
-                <span className="info-value scholarship-available">
-                  {program.scholarshipAvailable ? 'Available' : 'Not Available'}
-                </span>
+    <GlobalLayout activePage="programs">
+      <div className="program-detail-page">
+        {/* Header violet avec logo et titre */}
+        <div className="program-header">
+          <div className="header-content">
+            <div className="university-logo-section">
+              <div className="university-logo">
+                <div className="logo-ring">
+                  <div className="logo-text">{program.universities || program.universite?.nom || 'UNIVERSITY'}</div>
+                  <div className="logo-center">
+                    <div className="chinese-text">{program.universite?.nom || 'UNI'}</div>
+                    <div className="building-icon">🏛️</div>
+                    <div className="founding-year">2024</div>
+                  </div>
+                </div>
               </div>
             </div>
-          </section>
+            
+            <div className="program-title-section">
+              <h1 className="program-main-title">
+                <span className="degree-type">{program.degreeType || 'Program'}</span>
+                <span className="degree-name">{program.program || 'Program Name'}:</span>
+                <span className="university-info">Offered by</span>
+                <span className="university-name">{program.universities || program.universite?.nom || 'University'}</span>
+              </h1>
+            </div>
+          </div>
+        </div>
+
+      {/* Contenu principal blanc */}
+      <div className="program-main-content">
+        <div className="content-grid">
+          {/* Colonne gauche - Détails du programme */}
+          <div className="left-column">
+            {/* À propos de l'université */}
+            <section className="info-section">
+              <h2 className="section-title">About The University</h2>
+              <p className="section-text">
+                {program.aboutTheUniversity || 
+                  `Shanxi University is a prestigious institution with a rich history dating back to 1902. 
+                  Located in the heart of China, it offers world-class education with modern facilities, 
+                  experienced faculty, and a diverse international community. Students develop strong 
+                  academic foundations and practical skills for their future careers.`}
+              </p>
+            </section>
+
+            {/* À propos du programme */}
+            <section className="info-section">
+              <h2 className="section-title">About The Program</h2>
+              <p className="section-text">
+                {program.aboutThisProgram || 
+                  `The Bachelor in Business Administration program provides a solid foundation in business 
+                  principles, combining theoretical knowledge with practical applications. Students learn 
+                  essential skills in management, finance, marketing, and entrepreneurship, preparing them 
+                  for successful careers in the global business world.`}
+              </p>
+            </section>
+
+            {/* Pourquoi ce programme */}
+            <section className="info-section">
+              <h2 className="section-title">Why this Program?</h2>
+              <ul className="benefits-list">
+                <li className="benefit-item">
+                  <span className="check-icon">✅</span>
+                  <span className="benefit-text">Shanxi University is among the top 2% of universities in China</span>
+                </li>
+                <li className="benefit-item">
+                  <span className="check-icon">✅</span>
+                  <span className="benefit-text">Diverse international community: Join students from 30+ countries and build global connections.</span>
+                </li>
+                <li className="benefit-item">
+                  <span className="check-icon">✅</span>
+                  <span className="benefit-text">100% business-focused curriculum. It Covers core subjects like finance, marketing, management..</span>
+                </li>
+                <li className="benefit-item">
+                  <span className="check-icon">✅</span>
+                  <span className="benefit-text">No Chinese required! Study in a fully English-speaking academic environment.</span>
+                </li>
+                <li className="benefit-item">
+                  <span className="check-icon">✅</span>
+                  <span className="benefit-text">Over 86% of graduates find jobs or pursue master's studies within 6 months.</span>
+                </li>
+              </ul>
+            </section>
+          </div>
+
+          {/* Colonne droite - Spécificités du programme */}
+          <div className="right-column">
+            {/* À propos de ce programme */}
+            <section className="info-section">
+              <h2 className="section-title">About this Program</h2>
+              <div className="program-details">
+                <div className="detail-row">
+                  <span className="detail-label">Degree Type:</span>
+                  <span className="detail-value degree-badge">Bachelor</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Apply Before:</span>
+                  <span className="detail-value">{program.applyBefore || '16th April'}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Tuition Fees:</span>
+                  <span className="detail-value">{program.tuitionFees || '20 000 RMB'}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Location:</span>
+                  <span className="detail-value">{program.campusCity || 'Hangzhou'}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Campus City:</span>
+                  <span className="detail-value">{program.campusCity || 'Nanjing'}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Duration:</span>
+                  <span className="detail-value">{program.duration ? `${program.duration} Years` : '4 Years'}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Language:</span>
+                  <span className="detail-value">{program.language || 'English'}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">University Ranking:</span>
+                  <span className="detail-value">{program.universityRanking || 'Top 200'}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Program Ranking:</span>
+                  <span className="detail-value">{program.ranking || 'TOP 40'}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Scholarship:</span>
+                  <span className="detail-value scholarship-badge">Available</span>
+                </div>
+              </div>
+            </section>
+
+            {/* Documents nécessaires */}
+            <section className="info-section">
+              <h2 className="section-title">Documents Needed</h2>
+              <div className="documents-grid">
+                <div className="document-card">
+                  <span className="document-icon">🛂</span>
+                  <span className="document-text">Valid Moroccan Passport</span>
+                </div>
+                <div className="document-card">
+                  <span className="document-icon">🎓</span>
+                  <span className="document-text">High school Diploma</span>
+                </div>
+                <div className="document-card">
+                  <span className="document-icon">📜</span>
+                  <span className="document-text">Good Conduct Certificate</span>
+                </div>
+                <div className="document-card">
+                  <span className="document-icon">📷</span>
+                  <span className="document-text">Small Digital photo</span>
+                </div>
+                <div className="document-card">
+                  <span className="document-icon">📄</span>
+                  <span className="document-text">Academic Transcript</span>
+                </div>
+                <div className="document-card">
+                  <span className="document-icon">📝</span>
+                  <span className="document-text">Application Form to Fill</span>
+                </div>
+                <div className="document-card">
+                  <span className="document-icon">📜</span>
+                  <span className="document-text">English Proficiency Certificate</span>
+                </div>
+                <div className="document-card">
+                  <span className="document-icon">📋</span>
+                  <span className="document-text">Academic Study Plan</span>
+                </div>
+              </div>
+            </section>
+          </div>
         </div>
       </div>
 
-      {/* Documents requis */}
-      <section className="documents-section">
-        <h2>Documents Needed</h2>
-        <div className="documents-grid">
-          <div className="document-card">
-            <div className="document-icon">📄</div>
-            <span>Valid Moroccan Passport</span>
-          </div>
-          <div className="document-card">
-            <div className="document-icon">🎓</div>
-            <span>High school Diploma</span>
-          </div>
-          <div className="document-card">
-            <div className="document-icon">📋</div>
-            <span>Good Conduct Certificate</span>
-          </div>
-          <div className="document-card">
-            <div className="document-icon">📸</div>
-            <span>Small Digital photo</span>
-          </div>
-          <div className="document-card">
-            <div className="document-icon">📊</div>
-            <span>Academic Transcript</span>
-          </div>
-          <div className="document-card">
-            <div className="document-icon">📝</div>
-            <span>Application Form to Fill</span>
-          </div>
-          <div className="document-card">
-            <div className="document-icon">🌐</div>
-            <span>English Proficiency Certificate</span>
-          </div>
-          <div className="document-card">
-            <div className="document-icon">📚</div>
-            <span>Academic Study Plan</span>
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="cta-section">
+      {/* Section Call to Action violette */}
+      <div className="cta-section">
         <div className="cta-content">
-          <h2>Interested in this program and ready to get started?</h2>
-          <button onClick={handleApply} className="btn-apply-large">
+          <h2 className="cta-text">Interested in this program and ready to get started?</h2>
+          <button className="cta-button" onClick={handleApply}>
             Apply Now
           </button>
         </div>
-      </section>
+      </div>
 
-      {/* Autres universités */}
-      <section className="other-universities">
-        <h3>Other Universities</h3>
+      {/* Section autres universités */}
+      <div className="other-universities-section">
+        <h2 className="section-title">Other Universities</h2>
         <div className="universities-logos">
-          {/* Logos des autres universités */}
-          <div className="university-logo-small">🏛️</div>
-          <div className="university-logo-small">🎓</div>
-          <div className="university-logo-small">🏫</div>
-          <div className="university-logo-small">🎯</div>
-          <div className="university-logo-small">🌟</div>
-          <div className="university-logo-small">💎</div>
+          <div className="university-logo-item">🏛️</div>
+          <div className="university-logo-item">🎓</div>
+          <div className="university-logo-item">🌍</div>
+          <div className="university-logo-item">🏫</div>
+          <div className="university-logo-item">⭐</div>
+          <div className="university-logo-item">🎯</div>
         </div>
-      </section>
-    </div>
+      </div>
+      </div>
+    </GlobalLayout>
   );
 };
 

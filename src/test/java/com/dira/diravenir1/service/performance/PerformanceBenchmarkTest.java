@@ -3,6 +3,7 @@ package com.dira.diravenir1.service.performance;
 import com.dira.diravenir1.dto.UserProfileDTO;
 import com.dira.diravenir1.dto.MajorProfileDTO;
 import com.dira.diravenir1.dto.MatchingResult;
+import com.dira.diravenir1.dto.MajorRecommendationDTO;
 import com.dira.diravenir1.service.ScoreCalculationService;
 import com.dira.diravenir1.service.RecommendationService;
 import com.dira.diravenir1.service.strategies.HybridMatchingStrategy;
@@ -252,7 +253,7 @@ class PerformanceBenchmarkTest {
                 long startTime = System.nanoTime();
                 // Création des MatchingResult à partir des profils
                 List<MatchingResult> matchingResults = createMatchingResults(user, testMajorProfiles);
-                recommendationService.generateRecommendations(matchingResults);
+                List<MajorRecommendationDTO> recommendations = recommendationService.generateRecommendations(matchingResults);
                 long endTime = System.nanoTime();
                 
                 totalTime += (endTime - startTime) / 1_000_000;
@@ -280,7 +281,7 @@ class PerformanceBenchmarkTest {
                 UserProfileDTO user = testUserProfiles.get(i % testUserProfiles.size());
                 // Création des MatchingResult à partir des profils
                 List<MatchingResult> matchingResults = createMatchingResults(user, largeMajorList);
-                recommendationService.generateRecommendations(matchingResults);
+                List<MajorRecommendationDTO> recommendations = recommendationService.generateRecommendations(matchingResults);
             }
             
             long endTime = System.currentTimeMillis();
@@ -314,7 +315,7 @@ class PerformanceBenchmarkTest {
                 
                 // Génération de recommandations
                 List<MatchingResult> matchingResults = createMatchingResults(user, testMajorProfiles);
-                recommendationService.generateRecommendations(matchingResults);
+                List<MajorRecommendationDTO> recommendations = recommendationService.generateRecommendations(matchingResults);
             }
             
             long endTime = System.currentTimeMillis();
@@ -419,7 +420,7 @@ class PerformanceBenchmarkTest {
         
         for (int i = 0; i < count; i++) {
             MajorProfileDTO profile = new MajorProfileDTO();
-            profile.setMajorName(majorTypes[i % majorTypes.length] + " " + (i + 1));
+            profile.setProgram(majorTypes[i % majorTypes.length] + " " + (i + 1));
             profile.setInteretScientifiqueTech(random.nextInt(5) + 1);
             profile.setInteretArtistiqueCreatif(random.nextInt(5) + 1);
             profile.setInteretSocialHumain(random.nextInt(5) + 1);
@@ -460,9 +461,9 @@ class PerformanceBenchmarkTest {
             double globalScore = (euclideanScore * 0.6 + forceAnalysisScore * 0.25 + criticalPillarScore * 0.15);
             
             MatchingResult result = MatchingResult.builder()
-                .majorId("TEST_" + major.getMajorName().replace(" ", "_"))
-                .majorName(major.getMajorName())
-                .majorCategory("Test")
+                .majorId("TEST_" + major.getProgram().replace(" ", "_"))
+                .program(major.getProgram())
+                .category("Test")
                 .globalScore(globalScore)
                 .euclideanScore(euclideanScore)
                 .forceAnalysisScore(forceAnalysisScore)

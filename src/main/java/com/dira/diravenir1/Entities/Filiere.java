@@ -1,6 +1,5 @@
 package com.dira.diravenir1.Entities;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,31 +13,41 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Filiere {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
+    
+    @Column(name = "nom", nullable = false)
     private String nom;
-
-    @Column(columnDefinition = "TEXT")
+    
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-
+    
+    @Column(name = "domaine", nullable = false)
     private String domaine;
+    
+    @Column(name = "niveau")
     private String niveau;
+    
+    @Column(name = "duree")
     private String duree;
-
-    @Column(columnDefinition = "TEXT")
+    
+    @Column(name = "prerequis", columnDefinition = "TEXT")
     private String prerequis;
-
-    @Column(columnDefinition = "TEXT")
+    
+    @Column(name = "debouches", columnDefinition = "TEXT")
     private String debouches;
-
-    @Builder.Default
-    private Boolean active = true;
-
+    
+    @Column(name = "active")
+    private Boolean active;
+    
+    @Column(name = "image_url")
     private String imageUrl;
-    private Double cout;
+    
+    @Column(name = "cout")
+    private String cout;
+    
+    @Column(name = "langue")
     private String langue;
 }

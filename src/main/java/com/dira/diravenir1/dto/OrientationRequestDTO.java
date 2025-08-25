@@ -1,119 +1,169 @@
 package com.dira.diravenir1.dto;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
 import java.util.List;
 import java.util.Map;
 
 /**
- * DTO pour les réponses du test d'orientation unifié
- * Contient les 14 questions avec leurs réponses
+ * DTO pour les réponses au questionnaire d'orientation des étudiants.
+ * 
+ * Ce DTO contient les 14 questions réparties en 5 catégories :
+ * 1. Intérêts et Passions (Q1-Q3)
+ * 2. Compétences et Aptitudes (Q4-Q6)
+ * 3. Valeurs et Objectifs (Q7-Q10)
+ * 4. Préférences de Travail et Personnalité (Q11-Q13)
+ * 5. Matières et Parcours Académiques Préférés (Q14)
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrientationRequestDTO {
     
-    // Question 1 - Activité idéale (single choice)
+    // ==================== CATÉGORIE 1: INTÉRÊTS ET PASSIONS ====================
+    
+    /**
+     * Question 1: Activité idéale pour une journée parfaite
+     * Options: A, B, C, D, E
+     */
     private String question1;
     
-    // Question 2 - Contenu internet/vidéos (multiple choice, max 3)
+    /**
+     * Question 2: Contenu internet/vidéos préféré (sélection multiple, 3 max)
+     * Options: Découvertes scientifiques, Art et culture, Développement personnel, etc.
+     */
     private List<String> question2;
     
-    // Question 3 - Section magasin (single choice)
+    /**
+     * Question 3: Section de magasin préférée
+     * Options: A, B, C, D, E
+     */
     private String question3;
     
-    // Question 4 - Réaction aux problèmes (single choice)
+    // ==================== CATÉGORIE 2: COMPÉTENCES ET APTITUDES ====================
+    
+    /**
+     * Question 4: Réaction face à un problème complexe
+     * Options: A, B, C, D
+     */
     private String question4;
     
-    // Question 5 - Activités naturelles (drag & drop, top 3)
+    /**
+     * Question 5: Activités naturelles (glisser-déposer, 3 options)
+     * Options: Gérer un budget, Organiser un événement, Écrire un texte, etc.
+     */
     private List<String> question5;
     
-    // Question 6 - Apprentissage préféré (single choice)
+    /**
+     * Question 6: Préférence d'apprentissage
+     * Options: A, B, C, D
+     */
     private String question6;
     
-    // Question 7 - Impact dans le monde (single choice)
+    // ==================== CATÉGORIE 3: VALEURS ET OBJECTIFS ====================
+    
+    /**
+     * Question 7: Type d'impact souhaité
+     * Options: A, B, C, D
+     */
     private String question7;
     
-    // Question 8 - Environnement de travail (single choice)
+    /**
+     * Question 8: Environnement de travail préféré
+     * Options: A, B, C, D, E
+     */
     private String question8;
     
-    // Question 9 - Critères carrière (sliders 0-100)
+    /**
+     * Question 9: Critères de carrière (curseurs 0-5)
+     * Clés: securite, innovation, autonomie, salaire
+     */
     private Map<String, Integer> question9;
     
-    // Question 10 - Motivation résolution problèmes (single choice)
+    /**
+     * Question 10: Motivation pour résoudre un problème
+     * Options: A, B, C, D
+     */
     private String question10;
     
-    // Question 11 - Préférence de travail (single choice)
+    // ==================== CATÉGORIE 4: PRÉFÉRENCES DE TRAVAIL ET PERSONNALITÉ ====================
+    
+    /**
+     * Question 11: Préférence de travail
+     * Options: A, B, C
+     */
     private String question11;
     
-    // Question 12 - Présentation/exposé (single choice)
+    /**
+     * Question 12: Style de présentation
+     * Options: A, B, C
+     */
     private String question12;
     
-    // Question 13 - Prise de décision (single choice)
+    /**
+     * Question 13: Prise de décision
+     * Options: A, B, C
+     */
     private String question13;
     
-    // Question 14 - Matières préférées (multiple choice, max 3)
+    // ==================== CATÉGORIE 5: MATIÈRES ET PARCOURS ACADÉMIQUES ====================
+    
+    /**
+     * Question 14: Matières préférées (sélection multiple, 2-3 max)
+     * Options: Sciences, Littérature et Langues, SHS, Arts et Design, etc.
+     */
     private List<String> question14;
-
-    // Constructeurs
-    public OrientationRequestDTO() {}
-
-    // Getters et Setters
-    public String getQuestion1() { return question1; }
-    public void setQuestion1(String question1) { this.question1 = question1; }
-
-    public List<String> getQuestion2() { return question2; }
-    public void setQuestion2(List<String> question2) { this.question2 = question2; }
-
-    public String getQuestion3() { return question3; }
-    public void setQuestion3(String question3) { this.question3 = question3; }
-
-    public String getQuestion4() { return question4; }
-    public void setQuestion4(String question4) { this.question4 = question4; }
-
-    public List<String> getQuestion5() { return question5; }
-    public void setQuestion5(List<String> question5) { this.question5 = question5; }
-
-    public String getQuestion6() { return question6; }
-    public void setQuestion6(String question6) { this.question6 = question6; }
-
-    public String getQuestion7() { return question7; }
-    public void setQuestion7(String question7) { this.question7 = question7; }
-
-    public String getQuestion8() { return question8; }
-    public void setQuestion8(String question8) { this.question8 = question8; }
-
-    public Map<String, Integer> getQuestion9() { return question9; }
-    public void setQuestion9(Map<String, Integer> question9) { this.question9 = question9; }
-
-    public String getQuestion10() { return question10; }
-    public void setQuestion10(String question10) { this.question10 = question10; }
-
-    public String getQuestion11() { return question11; }
-    public void setQuestion11(String question11) { this.question11 = question11; }
-
-    public String getQuestion12() { return question12; }
-    public void setQuestion12(String question12) { this.question12 = question12; }
-
-    public String getQuestion13() { return question13; }
-    public void setQuestion13(String question13) { this.question13 = question13; }
-
-    public List<String> getQuestion14() { return question14; }
-    public void setQuestion14(List<String> question14) { this.question14 = question14; }
-
-    @Override
-    public String toString() {
-        return "OrientationRequestDTO{" +
-                "question1='" + question1 + '\'' +
-                ", question2=" + question2 +
-                ", question3='" + question3 + '\'' +
-                ", question4='" + question4 + '\'' +
-                ", question5=" + question5 +
-                ", question6='" + question6 + '\'' +
-                ", question7='" + question7 + '\'' +
-                ", question8='" + question8 + '\'' +
-                ", question9=" + question9 +
-                ", question10='" + question10 + '\'' +
-                ", question11='" + question11 + '\'' +
-                ", question12='" + question12 + '\'' +
-                ", question13='" + question13 + '\'' +
-                ", question14=" + question14 +
-                '}';
+    
+    // ==================== MÉTHODES UTILITAIRES ====================
+    
+    /**
+     * Vérifie si toutes les questions ont été répondues
+     */
+    public boolean isComplete() {
+        return question1 != null && !question1.trim().isEmpty() &&
+               question2 != null && !question2.isEmpty() &&
+               question3 != null && !question3.trim().isEmpty() &&
+               question4 != null && !question4.trim().isEmpty() &&
+               question5 != null && !question5.isEmpty() &&
+               question6 != null && !question6.trim().isEmpty() &&
+               question7 != null && !question7.trim().isEmpty() &&
+               question8 != null && !question8.trim().isEmpty() &&
+               question9 != null && !question9.isEmpty() &&
+               question10 != null && !question10.trim().isEmpty() &&
+               question11 != null && !question11.trim().isEmpty() &&
+               question12 != null && !question12.trim().isEmpty() &&
+               question13 != null && !question13.trim().isEmpty() &&
+               question14 != null && !question14.isEmpty();
+    }
+    
+    /**
+     * Retourne le nombre de questions répondues
+     */
+    public int getAnsweredQuestionsCount() {
+        int count = 0;
+        if (question1 != null && !question1.trim().isEmpty()) count++;
+        if (question2 != null && !question2.isEmpty()) count++;
+        if (question3 != null && !question3.trim().isEmpty()) count++;
+        if (question4 != null && !question4.trim().isEmpty()) count++;
+        if (question5 != null && !question5.isEmpty()) count++;
+        if (question6 != null && !question6.trim().isEmpty()) count++;
+        if (question7 != null && !question7.trim().isEmpty()) count++;
+        if (question8 != null && !question8.trim().isEmpty()) count++;
+        if (question9 != null && !question9.isEmpty()) count++;
+        if (question10 != null && !question10.trim().isEmpty()) count++;
+        if (question11 != null && !question11.trim().isEmpty()) count++;
+        if (question12 != null && !question12.trim().isEmpty()) count++;
+        if (question13 != null && !question13.trim().isEmpty()) count++;
+        if (question14 != null && !question14.isEmpty()) count++;
+        return count;
+    }
+    
+    /**
+     * Retourne le pourcentage de completion du questionnaire
+     */
+    public double getCompletionPercentage() {
+        return (double) getAnsweredQuestionsCount() / 14 * 100;
     }
 }

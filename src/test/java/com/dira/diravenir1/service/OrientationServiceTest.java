@@ -1,6 +1,7 @@
 package com.dira.diravenir1.service;
 
 import com.dira.diravenir1.dto.*;
+import com.dira.diravenir1.impl.OrientationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +19,7 @@ public class OrientationServiceTest {
 
     @BeforeEach
     void setUp() {
-        orientationService = new OrientationService();
+        orientationService = new OrientationServiceImpl();
     }
 
     @Test

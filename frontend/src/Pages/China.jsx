@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import chinaImage from '../assets/CHINA.jpg';
-import Footer from '../components/Footer';
+import GlobalLayout from '../components/GlobalLayout';
 import './CountryPage.css';
 
 const China = () => {
@@ -107,30 +107,31 @@ const China = () => {
   ];
 
   return (
-    <div className="country-page">
-      {/* Hero Section with Background Image */}
-      <div className="hero-section" style={{ backgroundImage: `url(${chinaImage})` }}>
-        <div className="hero-overlay">
-          <div className="hero-content">
-            <h1>Study in China</h1>
-            <p>Discover the world's fastest-growing economy and ancient culture</p>
-            <div className="hero-stats">
-              <div className="stat">
-                <span className="stat-number">1.4B</span>
-                <span className="stat-label">Population</span>
-              </div>
-              <div className="stat">
-                <span className="stat-number">2,000+</span>
-                <span className="stat-label">Universities</span>
-              </div>
-              <div className="stat">
-                <span className="stat-number">500K+</span>
-                <span className="stat-label">International Students</span>
+    <GlobalLayout activePage="programs">
+      <div className="country-page">
+        {/* Hero Section with Background Image */}
+        <div className="hero-section" style={{ backgroundImage: `url(${chinaImage})` }}>
+          <div className="hero-overlay">
+            <div className="hero-content">
+              <h1>Study in China</h1>
+              <p>Discover the world's fastest-growing economy and ancient culture</p>
+              <div className="hero-stats">
+                <div className="stat">
+                  <span className="stat-number">1.4B</span>
+                  <span className="stat-label">Population</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-number">2,000+</span>
+                  <span className="stat-label">Universities</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-number">500K+</span>
+                  <span className="stat-label">International Students</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
       {/* Navigation Tabs */}
       <div className="tab-navigation">
@@ -328,9 +329,8 @@ const China = () => {
           </div>
         </div>
       </div>
-
-
-    </div>
+      </div>
+    </GlobalLayout>
   );
 };
 

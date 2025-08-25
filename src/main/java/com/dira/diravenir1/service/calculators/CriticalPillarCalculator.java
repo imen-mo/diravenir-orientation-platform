@@ -2,9 +2,12 @@ package com.dira.diravenir1.service.calculators;
 
 import com.dira.diravenir1.dto.UserProfileDTO;
 import com.dira.diravenir1.dto.MajorProfileDTO;
-import com.dira.diravenir1.service.interfaces.ScoreCalculator;
+import com.dira.diravenir1.dto.MatchingResultDTO;
+import com.dira.diravenir1.service.calculators.ScoreCalculator;
 import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Calculateur de score basé sur la correspondance des piliers critiques.
@@ -28,55 +31,84 @@ import lombok.extern.slf4j.Slf4j;
 public class CriticalPillarCalculator implements ScoreCalculator {
     
     @Override
-    public double calculate(UserProfileDTO userProfile, MajorProfileDTO majorProfile) {
-        try {
-            log.debug("🔑 Analyse des piliers critiques pour {}", majorProfile.getMajorName());
-            
-            // Récupération des scores des piliers
-            int[] userScores = getUserPillarScores(userProfile);
-            int[] majorScores = majorProfile.getAllPillarScores();
-            
-            // Identification des piliers critiques pour cette majeure
-            int[] criticalPillars = getCriticalPillarsForMajor(majorProfile.getMajorName());
-            
-            if (criticalPillars.length == 0) {
-                log.debug("⚠️ Aucun pilier critique défini pour {}, score neutre", majorProfile.getMajorName());
-                return 0.5; // Score neutre si pas de piliers critiques
+    public List<MatchingResultDTO> calculateMatchingScores(UserProfileDTO userProfile, List<MajorProfileDTO> majorProfiles) {
+        List<MatchingResultDTO> results = new ArrayList<>();
+        
+        for (MajorProfileDTO majorProfile : majorProfiles) {
+            try {
+                log.debug("🔑 Analyse des piliers critiques pour {}", majorProfile.getProgram());
+                
+                // Récupération des scores des piliers
+                int[] userScores = getUserPillarScores(userProfile);
+                int[] majorScores = getMajorPillarScores(majorProfile);
+                
+                // Identification des piliers critiques pour cette majeure
+                int[] criticalPillars = getCriticalPillarsForMajor(majorProfile.getProgram());
+                
+                if (criticalPillars.length == 0) {
+                    log.debug("⚠️ Aucun pilier critique défini pour {}, score neutre", majorProfile.getProgram());
+                    // Score neutre si pas de piliers critiques
+                    MatchingResultDTO neutralResult = MatchingResultDTO.builder()
+                        .majorId(majorProfile.getMajorId())
+                        .program(majorProfile.getProgram())
+                        .category(majorProfile.getCategory())
+                        .matchingScore(50.0)
+                        .calculationMethod("Critical Pillar (Neutral)")
+                        .algorithmVersion("2.0")
+                        .build();
+                    results.add(neutralResult);
+                    continue;
+                }
+                
+                // Calcul du score des piliers critiques
+                double criticalScore = calculateCriticalPillarScore(userScores, majorScores, criticalPillars);
+                
+                // Application des pénalités pour incompatibilités majeures
+                double penaltyScore = calculatePenaltyScore(userScores, majorScores, criticalPillars);
+                
+                // Score final avec pénalités
+                double finalScore = Math.max(0.0, criticalScore - penaltyScore);
+                
+                // Conversion en score sur 100
+                double score100 = finalScore * 100;
+                
+                log.debug("🎯 Score piliers critiques : {:.1f}%, Pénalités : {:.1f}%, Final : {:.1f}%", 
+                    criticalScore * 100, penaltyScore * 100, score100);
+                
+                // Création du résultat
+                MatchingResultDTO result = MatchingResultDTO.builder()
+                    .majorId(majorProfile.getMajorId())
+                    .program(majorProfile.getProgram())
+                    .category(majorProfile.getCategory())
+                    .matchingScore(score100)
+                    .calculationMethod("Critical Pillar")
+                    .algorithmVersion("2.0")
+                    .build();
+                
+                results.add(result);
+                
+            } catch (Exception e) {
+                log.error("❌ Erreur lors de l'analyse des piliers critiques pour {} : {}", 
+                    majorProfile.getProgram(), e.getMessage(), e);
+                
+                // Résultat par défaut en cas d'erreur
+                MatchingResultDTO errorResult = MatchingResultDTO.builder()
+                    .majorId(majorProfile.getMajorId())
+                    .program(majorProfile.getProgram())
+                    .category(majorProfile.getCategory())
+                    .matchingScore(0.0)
+                    .calculationMethod("Critical Pillar (Error)")
+                    .algorithmVersion("2.0")
+                    .build();
+                
+                results.add(errorResult);
             }
-            
-            // Calcul du score des piliers critiques
-            double criticalScore = calculateCriticalPillarScore(userScores, majorScores, criticalPillars);
-            
-            // Application des pénalités pour incompatibilités majeures
-            double penaltyScore = calculatePenaltyScore(userScores, majorScores, criticalPillars);
-            
-            // Score final avec pénalités
-            double finalScore = Math.max(0.0, criticalScore - penaltyScore);
-            
-            log.debug("🎯 Score piliers critiques : {:.1f}%, Pénalités : {:.1f}%, Final : {:.1f}%", 
-                criticalScore * 100, penaltyScore * 100, finalScore * 100);
-            
-            return Math.min(1.0, finalScore);
-            
-        } catch (Exception e) {
-            log.error("❌ Erreur lors de l'analyse des piliers critiques : {}", e.getMessage(), e);
-            return 0.0;
         }
-    }
-    
-    @Override
-    public double getWeight() {
-        return 0.15; // 15% du score final
-    }
-    
-    @Override
-    public String getCalculatorName() {
-        return "Critical Pillar Calculator";
-    }
-    
-    @Override
-    public String getDescription() {
-        return "Analyse la correspondance sur les piliers critiques spécifiques à chaque majeure";
+        
+        // Tri par score décroissant
+        results.sort((a, b) -> Double.compare(b.getMatchingScore(), a.getMatchingScore()));
+        
+        return results;
     }
     
     /**
@@ -258,5 +290,93 @@ public class CriticalPillarCalculator implements ScoreCalculator {
             userProfile.getPrefPratiqueTerrain(),
             userProfile.getPrefTheorieRecherche()
         };
+    }
+    
+    /**
+     * Extrait les scores des piliers du profil majeure
+     */
+    private int[] getMajorPillarScores(MajorProfileDTO majorProfile) {
+        return new int[]{
+            majorProfile.getInteretScientifiqueTech(),
+            majorProfile.getInteretArtistiqueCreatif(),
+            majorProfile.getInteretSocialHumain(),
+            majorProfile.getInteretBusinessGestion(),
+            majorProfile.getInteretLogiqueAnalytique(),
+            majorProfile.getCompetenceResolutionProblemes(),
+            majorProfile.getCompetenceCommunication(),
+            majorProfile.getCompetenceOrganisation(),
+            majorProfile.getCompetenceManuelTechnique(),
+            majorProfile.getValeurImpactSocietal(),
+            majorProfile.getValeurInnovationChallenge(),
+            majorProfile.getValeurStabiliteSecurite(),
+            majorProfile.getValeurAutonomie(),
+            majorProfile.getPrefTravailEquipeCollab(),
+            majorProfile.getPrefTravailAutonome(),
+            majorProfile.getPrefPratiqueTerrain(),
+            majorProfile.getPrefTheorieRecherche()
+        };
+    }
+    
+    @Override
+    public String getAlgorithmName() {
+        return "Critical Pillar Calculator";
+    }
+    
+    @Override
+    public String getAlgorithmVersion() {
+        return "2.0";
+    }
+    
+    @Override
+    public String getCalculatorName() {
+        return "CriticalPillarCalculator";
+    }
+    
+    @Override
+    public double getWeight() {
+        return 0.6; // Poids pour les piliers critiques
+    }
+    
+    @Override
+    public String getDescription() {
+        return "Calculateur basé sur l'analyse des piliers critiques";
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return true; // Toujours activé
+    }
+    
+    @Override
+    public double calculate(UserProfileDTO userProfile, MajorProfileDTO majorProfile) {
+        try {
+            // Récupération des scores des piliers
+            int[] userScores = getUserPillarScores(userProfile);
+            int[] majorScores = getMajorPillarScores(majorProfile);
+            
+            // Identification des piliers critiques pour cette majeure
+            int[] criticalPillars = getCriticalPillarsForMajor(majorProfile.getProgram());
+            
+            if (criticalPillars.length == 0) {
+                return 50.0; // Score neutre si pas de piliers critiques
+            }
+            
+            // Calcul du score des piliers critiques
+            double criticalScore = calculateCriticalPillarScore(userScores, majorScores, criticalPillars);
+            
+            // Application des pénalités pour incompatibilités majeures
+            double penaltyScore = calculatePenaltyScore(userScores, majorScores, criticalPillars);
+            
+            // Score final avec pénalités
+            double finalScore = Math.max(0.0, criticalScore - penaltyScore);
+            
+            // Conversion en score sur 100
+            return finalScore * 100;
+            
+        } catch (Exception e) {
+            log.error("❌ Erreur lors du calcul pour {} : {}", 
+                majorProfile.getProgram(), e.getMessage(), e);
+            return 0.0;
+        }
     }
 }

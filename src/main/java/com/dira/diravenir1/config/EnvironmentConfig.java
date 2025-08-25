@@ -39,12 +39,8 @@ public class EnvironmentConfig implements CommandLineRunner {
                 });
                 
                 System.out.println("✅ Variables d'environnement chargées depuis .env");
-                System.out.println("🔐 Configuration JWT: " + (dotenv.get("JWT_SECRET") != null ? "CONFIGURÉE" : "NON CONFIGURÉE"));
                 System.out.println("📧 Configuration Email: " + (dotenv.get("MAIL_USERNAME") != null ? "CONFIGURÉE" : "NON CONFIGURÉE"));
-                System.out.println("🔑 Configuration OAuth2 Google: " + (dotenv.get("GOOGLE_CLIENT_ID") != null ? "CONFIGURÉE" : "NON CONFIGURÉE"));
                 System.out.println("🌐 Configuration CORS: " + (dotenv.get("CORS_ORIGINS") != null ? "CONFIGURÉE" : "NON CONFIGURÉE"));
-                System.out.println("⚡ Configuration Rate Limiting: " + (dotenv.get("RATE_LIMIT_MAX_ATTEMPTS") != null ? "CONFIGURÉE" : "NON CONFIGURÉE"));
-                System.out.println("🧹 Configuration Session Cleanup: " + (dotenv.get("SESSION_CLEANUP_INTERVAL") != null ? "CONFIGURÉE" : "NON CONFIGURÉE"));
             } else {
                 System.out.println("⚠️ Fichier .env non trouvé, utilisation des variables système par défaut");
             }

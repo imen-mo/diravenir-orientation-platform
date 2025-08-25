@@ -17,43 +17,64 @@ public class Program {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Attributs principaux basés sur l'image 3
-    private String majorName;        // Nom du major (ex: "Civil Engineering", "Mechanical Engineering")
-    private String universityName;   // Nom de l'université
-    private String description;      // Description du programme
-
-    // Attributs supplémentaires pour les détails du programme
-    private String degreeType;       // Bachelor, Master, PhD
-    private String location;         // Ville du campus
-    private String campusCity;       // Ville du campus principal
-    private Integer duration;        // Durée en années
-    private String language;         // Langue d'enseignement
-    private String universityRanking; // Classement de l'université
-    private String programRanking;   // Classement du programme
-    private Boolean scholarshipAvailable; // Bourse disponible
-    private BigDecimal tuitionFees;  // Frais de scolarité
-    private String applyBefore;      // Date limite d'inscription
+    // Nouvelle structure unifiée des colonnes
+    @Column(nullable = false)
+    private String campusCity;           // Ville du campus (ex: Nicosia)
+    
+    @Column(nullable = false)
+    private String universities;         // Nom de l'université (ex: Near East University)
+    
+    private String universityRanking;    // Classement de l'université (ex: N/A, Top 2%)
+    private String applyBefore;          // Date limite d'inscription (ex: 31st July)
+    
+    @Column(nullable = false)
+    private String category;             // Catégorie (ex: Medical and Health Sciences)
+    
+    @Column(nullable = false)
+    private String program;              // Nom du programme (ex: Medicine, Dentistry)
+    
+    @Column(nullable = false)
+    private String degreeType;           // Type de diplôme (ex: Bachelor, Master)
+    
+    private String tuitionFees;          // Frais de scolarité (ex: 18,000 RMB/year, 10135$)
+    private Integer duration;            // Durée en années (ex: 6 years)
+    private String language;             // Langue d'enseignement (ex: English)
+    private String scholarship;          // Bourse disponible (ex: Available for eligible international students)
+    
+    @Column(columnDefinition = "LONGTEXT")
+    private String description;          // Description générale du programme
+    
+    @Column(columnDefinition = "LONGTEXT")
+    private String aboutThisProgram;     // À propos de ce programme
+    
+    @Column(columnDefinition = "LONGTEXT")
+    private String whyThisProgram;       // Pourquoi ce programme
+    
+    @Column(columnDefinition = "LONGTEXT")
+    private String aboutTheUniversity;   // À propos de l'université
 
     // Relations
-    @ManyToOne
-    @JoinColumn(name = "destination_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "destination_id", nullable = false)
     private Destination destination;
 
-    // Relation partenaire supprimée
-
-    @ManyToOne
-    @JoinColumn(name = "universite_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "universite_id", nullable = false)
     private Universite universite;
 
     // Statut du programme
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ProgramStatus status = ProgramStatus.OPENED; // OPENED, COMING_SOON, CLOSED
 
     // Image du programme
     private String programImage;     // URL de l'image du programme
 
     // Métadonnées
+    @Column(nullable = false)
     private String createdAt;
+    
+    @Column(nullable = false)
     private String updatedAt;
 
     public enum ProgramStatus {

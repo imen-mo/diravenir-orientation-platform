@@ -3,8 +3,9 @@ package com.dira.diravenir1.service;
 import com.dira.diravenir1.dto.UserProfileDTO;
 import com.dira.diravenir1.dto.MajorProfileDTO;
 import com.dira.diravenir1.dto.MatchingResult;
+import com.dira.diravenir1.dto.MatchingResultDTO;
 import com.dira.diravenir1.service.interfaces.MatchingStrategy;
-import com.dira.diravenir1.service.interfaces.ScoreCalculator;
+import com.dira.diravenir1.service.calculators.ScoreCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
@@ -91,7 +92,7 @@ public class ProfileMatchingService {
                     MatchingResult topResult = results.get(i);
                     log.info("   {}. {} : {:.1f}%", 
                         i + 1, 
-                        topResult.getMajorName(), 
+                        topResult.getProgram(), 
                         topResult.getGlobalScorePercentage());
                 }
             }
@@ -127,7 +128,7 @@ public class ProfileMatchingService {
             double primaryScore = primaryStrategy.execute(userProfile, majorProfile);
             
             log.debug("🔍 Matching utilisateur avec {} : score principal = {:.3f} ({})", 
-                majorProfile.getMajorName(), 
+                majorProfile.getProgram(), 
                 primaryScore, 
                 primaryStrategy.getAlgorithmName());
             
@@ -137,21 +138,24 @@ public class ProfileMatchingService {
             double criticalPillarScore = 0.0;
             
             for (ScoreCalculator calculator : calculators) {
-                if (calculator.isEnabled()) {
-                    double score = calculator.calculate(userProfile, majorProfile);
-                    double weight = calculator.getWeight();
-                    
-                    // Attribution du score selon le type de calculateur
-                    if (calculator.getCalculatorName().contains("Euclidean")) {
-                        euclideanScore = score;
-                    } else if (calculator.getCalculatorName().contains("Force")) {
-                        forceAnalysisScore = score;
-                    } else if (calculator.getCalculatorName().contains("Critical")) {
-                        criticalPillarScore = score;
+                try {
+                    List<MatchingResultDTO> calculatorResults = calculator.calculateMatchingScores(userProfile, List.of(majorProfile));
+                    if (!calculatorResults.isEmpty()) {
+                        double score = calculatorResults.get(0).getMatchingScore() / 100.0; // Conversion en 0-1
+                        
+                        // Attribution du score selon le type de calculateur
+                        if (calculator.getAlgorithmName().contains("Euclidean")) {
+                            euclideanScore = score;
+                        } else if (calculator.getAlgorithmName().contains("Force")) {
+                            forceAnalysisScore = score;
+                        } else if (calculator.getAlgorithmName().contains("Critical")) {
+                            criticalPillarScore = score;
+                        }
+                        
+                        log.debug("   📊 {} : {:.3f}", calculator.getAlgorithmName(), score);
                     }
-                    
-                    log.debug("   📊 {} : {:.3f} (poids: {:.2f})", 
-                        calculator.getCalculatorName(), score, weight);
+                } catch (Exception e) {
+                    log.warn("⚠️ Erreur avec le calculateur {} : {}", calculator.getAlgorithmName(), e.getMessage());
                 }
             }
             
@@ -164,8 +168,8 @@ public class ProfileMatchingService {
             // Création du résultat
             MatchingResult result = MatchingResult.builder()
                 .majorId(majorProfile.getMajorId())
-                .majorName(majorProfile.getMajorName())
-                .majorCategory(majorProfile.getMajorCategory())
+                .program(majorProfile.getProgram())
+                .category(majorProfile.getCategory())
                 .globalScore(finalScore)
                 .euclideanScore(euclideanScore)
                 .forceAnalysisScore(forceAnalysisScore)
@@ -179,7 +183,7 @@ public class ProfileMatchingService {
             
         } catch (Exception e) {
             log.error("❌ Erreur lors du matching avec {} : {}", 
-                majorProfile.getMajorName(), e.getMessage(), e);
+                majorProfile.getProgram(), e.getMessage(), e);
             return null;
         }
     }
@@ -193,41 +197,30 @@ public class ProfileMatchingService {
      * @param calculators Liste des calculateurs avec leurs poids
      * @return Score final pondéré
      */
-    private double calculateWeightedFinalScore(
-            double euclideanScore, 
-            double forceAnalysisScore, 
-            double criticalPillarScore,
-            List<ScoreCalculator> calculators) {
-        
-        double totalWeight = 0.0;
-        double weightedSum = 0.0;
-        
-        for (ScoreCalculator calculator : calculators) {
-            if (calculator.isEnabled()) {
-                double weight = calculator.getWeight();
-                totalWeight += weight;
-                
-                double score = 0.0;
-                if (calculator.getCalculatorName().contains("Euclidean")) {
-                    score = euclideanScore;
-                } else if (calculator.getCalculatorName().contains("Force")) {
-                    score = forceAnalysisScore;
-                } else if (calculator.getCalculatorName().contains("Critical")) {
-                    score = criticalPillarScore;
-                }
-                
-                weightedSum += score * weight;
-            }
-        }
-        
-        // Normalisation si nécessaire
-        if (totalWeight > 0) {
-            return weightedSum / totalWeight;
-        } else {
-            // Fallback : moyenne simple
-            return (euclideanScore + forceAnalysisScore + criticalPillarScore) / 3.0;
-        }
-    }
+         private double calculateWeightedFinalScore(
+             double euclideanScore, 
+             double forceAnalysisScore, 
+             double criticalPillarScore,
+             List<ScoreCalculator> calculators) {
+         
+         // Poids fixes pour chaque type de calculateur
+         double euclideanWeight = 0.65;      // 65% - Distance euclidienne
+         double forceAnalysisWeight = 0.25;  // 25% - Analyse des forces
+         double criticalPillarWeight = 0.10; // 10% - Piliers critiques
+         
+         double totalWeight = euclideanWeight + forceAnalysisWeight + criticalPillarWeight;
+         double weightedSum = (euclideanScore * euclideanWeight) + 
+                             (forceAnalysisScore * forceAnalysisWeight) + 
+                             (criticalPillarScore * criticalPillarWeight);
+         
+         // Normalisation si nécessaire
+         if (totalWeight > 0) {
+             return weightedSum / totalWeight;
+         } else {
+             // Fallback : moyenne simple
+             return (euclideanScore + forceAnalysisScore + criticalPillarScore) / 3.0;
+         }
+     }
     
     /**
      * Retourne les stratégies de matching triées par priorité
@@ -241,37 +234,37 @@ public class ProfileMatchingService {
             .collect(Collectors.toList());
     }
     
-    /**
-     * Retourne les calculateurs de scores triés par poids
-     * 
-     * @return Liste des calculateurs triés
-     */
-    private List<ScoreCalculator> getSortedCalculators() {
-        return scoreCalculators.stream()
-            .filter(ScoreCalculator::isEnabled)
-            .sorted(Comparator.comparing(ScoreCalculator::getWeight).reversed())
-            .collect(Collectors.toList());
-    }
-    
-    /**
-     * Retourne le nombre de stratégies de matching disponibles
-     * 
-     * @return Nombre de stratégies
-     */
-    public int getAvailableStrategiesCount() {
-        return (int) matchingStrategies.stream()
-            .filter(MatchingStrategy::isEnabled)
-            .count();
-    }
-    
-    /**
-     * Retourne le nombre de calculateurs de scores disponibles
-     * 
-     * @return Nombre de calculateurs
-     */
-    public int getAvailableCalculatorsCount() {
-        return (int) scoreCalculators.stream()
-            .filter(ScoreCalculator::isEnabled)
-            .count();
-    }
+         /**
+      * Retourne les calculateurs de scores triés par type
+      * 
+      * @return Liste des calculateurs triés par type
+      */
+     private List<ScoreCalculator> getSortedCalculators() {
+         return scoreCalculators.stream()
+             .filter(calc -> calc != null)
+             .sorted(Comparator.comparing(ScoreCalculator::getAlgorithmName))
+             .collect(Collectors.toList());
+     }
+     
+     /**
+      * Retourne le nombre de stratégies de matching disponibles
+      * 
+      * @return Nombre de stratégies
+      */
+     public int getAvailableStrategiesCount() {
+         return (int) matchingStrategies.stream()
+             .filter(MatchingStrategy::isEnabled)
+             .count();
+     }
+     
+     /**
+      * Retourne le nombre de calculateurs de scores disponibles
+      * 
+      * @return Nombre de calculateurs
+      */
+     public int getAvailableCalculatorsCount() {
+         return (int) scoreCalculators.stream()
+             .filter(calc -> calc != null)
+             .count();
+     }
 }

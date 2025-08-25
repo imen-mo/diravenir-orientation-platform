@@ -16,8 +16,8 @@ public class Recommendation {
     
     // Informations de la majeure recommandée
     private String majorId;
-    private String majorName;
-    private String majorCategory;
+    private String program;              // Nom du programme (ex: Medicine, Dentistry)
+    private String category;             // Catégorie du programme (ex: Medical and Health Sciences)
     
     // Score de correspondance (0-100%)
     private double matchScore;
@@ -97,7 +97,7 @@ public class Recommendation {
     public String getShortDescription() {
         return String.format("%s - %s (%s)", 
             getFormattedRank(), 
-            majorName, 
+            program, 
             getFormattedMatchScore());
     }
     
@@ -109,10 +109,10 @@ public class Recommendation {
     public String getDetailedDescription() {
         StringBuilder description = new StringBuilder();
         description.append(String.format("Recommandation %s : %s\n", 
-            getFormattedRank(), majorName));
+            getFormattedRank(), program));
         description.append(String.format("Score de correspondance : %s\n", 
             getFormattedMatchScore()));
-        description.append(String.format("Catégorie : %s\n", majorCategory));
+        description.append(String.format("Catégorie : %s\n", category));
         
         if (primaryReason != null && !primaryReason.isEmpty()) {
             description.append(String.format("Raison principale : %s\n", primaryReason));

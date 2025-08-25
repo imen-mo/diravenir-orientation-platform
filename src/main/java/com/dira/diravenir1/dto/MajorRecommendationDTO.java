@@ -1,50 +1,61 @@
 package com.dira.diravenir1.dto;
 
-/**
- * DTO pour les recommandations de majeures
- * Contient le nom, le score de correspondance et l'explication
- */
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MajorRecommendationDTO {
     
-    private String name;
-    private int matchingScore;
-    private String explanation;
+    // Propriétés existantes
+    private String nom;
+    private String domaine;
+    private Integer score;
+    private String universite;
     private String description;
-    private UserProfileDTO idealProfile;
-
-    // Constructeurs
-    public MajorRecommendationDTO() {}
-
-    public MajorRecommendationDTO(String name, int matchingScore, String explanation, String description) {
-        this.name = name;
-        this.matchingScore = matchingScore;
-        this.explanation = explanation;
-        this.description = description;
+    private String prerequis;
+    private String debouches;
+    
+    // Propriétés manquantes pour RecommendationService
+    private String name;           // Nom en anglais (alias de nom)
+    private Integer matchingScore; // Score de correspondance
+    private String explanation;    // Explication de la recommandation
+    
+    // Méthodes pour maintenir la compatibilité
+    public String getName() {
+        return name != null ? name : nom;
     }
-
-    // Getters et Setters
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public int getMatchingScore() { return matchingScore; }
-    public void setMatchingScore(int matchingScore) { this.matchingScore = matchingScore; }
-
-    public String getExplanation() { return explanation; }
-    public void setExplanation(String explanation) { this.explanation = explanation; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
-    public UserProfileDTO getIdealProfile() { return idealProfile; }
-    public void setIdealProfile(UserProfileDTO idealProfile) { this.idealProfile = idealProfile; }
-
-    @Override
-    public String toString() {
-        return "MajorRecommendationDTO{" +
-                "name='" + name + '\'' +
-                ", matchingScore=" + matchingScore +
-                ", explanation='" + explanation + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+    
+    public void setName(String name) {
+        this.name = name;
+        if (this.nom == null) {
+            this.nom = name;
+        }
+    }
+    
+    public Integer getMatchingScore() {
+        return matchingScore != null ? matchingScore : score;
+    }
+    
+    public void setMatchingScore(Integer matchingScore) {
+        this.matchingScore = matchingScore;
+        if (this.score == null) {
+            this.score = matchingScore;
+        }
+    }
+    
+    public String getExplanation() {
+        return explanation != null ? explanation : description;
+    }
+    
+    public void setExplanation(String explanation) {
+        this.explanation = explanation;
+        if (this.description == null) {
+            this.description = explanation;
+        }
     }
 }

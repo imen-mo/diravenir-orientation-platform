@@ -298,7 +298,7 @@ class ScoreCalculationServiceIntegrationTest {
      */
     private MajorProfileDTO createTestInformatiqueMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Informatique");
+        major.setProgram("Informatique");
         major.setInteretScientifiqueTech(5);
         major.setInteretArtistiqueCreatif(2);
         major.setInteretSocialHumain(2);
@@ -324,7 +324,7 @@ class ScoreCalculationServiceIntegrationTest {
      */
     private MajorProfileDTO createTestArtsMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Arts");
+        major.setProgram("Arts");
         major.setInteretScientifiqueTech(1);
         major.setInteretArtistiqueCreatif(5);
         major.setInteretSocialHumain(3);
@@ -350,7 +350,7 @@ class ScoreCalculationServiceIntegrationTest {
      */
     private MajorProfileDTO createTestBusinessMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Business Administration");
+        major.setProgram("Business Administration");
         major.setInteretScientifiqueTech(2);
         major.setInteretArtistiqueCreatif(2);
         major.setInteretSocialHumain(4);

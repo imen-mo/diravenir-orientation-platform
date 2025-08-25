@@ -2,9 +2,12 @@ package com.dira.diravenir1.service.calculators;
 
 import com.dira.diravenir1.dto.UserProfileDTO;
 import com.dira.diravenir1.dto.MajorProfileDTO;
-import com.dira.diravenir1.service.interfaces.ScoreCalculator;
+import com.dira.diravenir1.dto.MatchingResultDTO;
+import com.dira.diravenir1.service.calculators.ScoreCalculator;
 import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Calculateur de score basé sur l'analyse des forces dominantes.
@@ -34,51 +37,70 @@ public class ForceAnalysisCalculator implements ScoreCalculator {
     private static final int DOMINANT_FORCE_THRESHOLD = 4;
     
     @Override
-    public double calculate(UserProfileDTO userProfile, MajorProfileDTO majorProfile) {
-        try {
-            log.debug("💪 Analyse des forces dominantes pour {}", majorProfile.getMajorName());
-            
-            // Récupération des scores des piliers
-            int[] userScores = getUserPillarScores(userProfile);
-            int[] majorScores = majorProfile.getAllPillarScores();
-            
-            // Identification des forces dominantes
-            int[] userTopForces = findTopForces(userScores, TOP_FORCES_COUNT);
-            int[] majorTopForces = findTopForces(majorScores, TOP_FORCES_COUNT);
-            
-            // Calcul du score de correspondance des forces
-            double forceMatchScore = calculateForceMatch(userScores, majorScores, userTopForces, majorTopForces);
-            
-            // Bonus pour l'intensité des forces dominantes
-            double intensityBonus = calculateIntensityBonus(userScores, majorScores, userTopForces, majorTopForces);
-            
-            // Score final combiné
-            double finalScore = (forceMatchScore * 0.8) + (intensityBonus * 0.2);
-            
-            log.debug("🎯 Score forces dominantes : {:.1f}%, Bonus intensité : {:.1f}%, Final : {:.1f}%", 
-                forceMatchScore * 100, intensityBonus * 100, finalScore * 100);
-            
-            return Math.min(1.0, Math.max(0.0, finalScore));
-            
-        } catch (Exception e) {
-            log.error("❌ Erreur lors de l'analyse des forces : {}", e.getMessage(), e);
-            return 0.0;
+    public List<MatchingResultDTO> calculateMatchingScores(UserProfileDTO userProfile, List<MajorProfileDTO> majorProfiles) {
+        List<MatchingResultDTO> results = new ArrayList<>();
+        
+        for (MajorProfileDTO majorProfile : majorProfiles) {
+            try {
+                log.debug("💪 Analyse des forces dominantes pour {}", majorProfile.getProgram());
+                
+                // Récupération des scores des piliers
+                int[] userScores = getUserPillarScores(userProfile);
+                int[] majorScores = getMajorPillarScores(majorProfile);
+                
+                // Identification des forces dominantes
+                int[] userTopForces = findTopForces(userScores, TOP_FORCES_COUNT);
+                int[] majorTopForces = findTopForces(majorScores, TOP_FORCES_COUNT);
+                
+                // Calcul du score de correspondance des forces
+                double forceMatchScore = calculateForceMatch(userScores, majorScores, userTopForces, majorTopForces);
+                
+                // Bonus pour l'intensité des forces dominantes
+                double intensityBonus = calculateIntensityBonus(userScores, majorScores, userTopForces, majorTopForces);
+                
+                // Score final combiné
+                double finalScore = (forceMatchScore * 0.8) + (intensityBonus * 0.2);
+                
+                // Conversion en score sur 100
+                double score100 = finalScore * 100;
+                
+                log.debug("🎯 Score forces dominantes : {:.1f}%, Bonus intensité : {:.1f}%, Final : {:.1f}%", 
+                    forceMatchScore * 100, intensityBonus * 100, score100);
+                
+                // Création du résultat
+                MatchingResultDTO result = MatchingResultDTO.builder()
+                    .majorId(majorProfile.getMajorId())
+                    .program(majorProfile.getProgram())
+                    .category(majorProfile.getCategory())
+                    .matchingScore(score100)
+                    .calculationMethod("Force Analysis")
+                    .algorithmVersion("2.0")
+                    .build();
+                
+                results.add(result);
+                
+            } catch (Exception e) {
+                log.error("❌ Erreur lors de l'analyse des forces pour {} : {}", 
+                    majorProfile.getProgram(), e.getMessage(), e);
+                
+                // Résultat par défaut en cas d'erreur
+                MatchingResultDTO errorResult = MatchingResultDTO.builder()
+                    .majorId(majorProfile.getMajorId())
+                    .program(majorProfile.getProgram())
+                    .category(majorProfile.getCategory())
+                    .matchingScore(0.0)
+                    .calculationMethod("Force Analysis (Error)")
+                    .algorithmVersion("2.0")
+                    .build();
+                
+                results.add(errorResult);
+            }
         }
-    }
-    
-    @Override
-    public double getWeight() {
-        return 0.25; // 25% du score final
-    }
-    
-    @Override
-    public String getCalculatorName() {
-        return "Force Analysis Calculator";
-    }
-    
-    @Override
-    public String getDescription() {
-        return "Analyse la correspondance entre les forces dominantes de l'utilisateur et de la majeure";
+        
+        // Tri par score décroissant
+        results.sort((a, b) -> Double.compare(b.getMatchingScore(), a.getMatchingScore()));
+        
+        return results;
     }
     
     /**
@@ -210,5 +232,90 @@ public class ForceAnalysisCalculator implements ScoreCalculator {
             userProfile.getPrefPratiqueTerrain(),
             userProfile.getPrefTheorieRecherche()
         };
+    }
+    
+    /**
+     * Extrait les scores des piliers du profil majeure
+     */
+    private int[] getMajorPillarScores(MajorProfileDTO majorProfile) {
+        return new int[]{
+            majorProfile.getInteretScientifiqueTech(),
+            majorProfile.getInteretArtistiqueCreatif(),
+            majorProfile.getInteretSocialHumain(),
+            majorProfile.getInteretBusinessGestion(),
+            majorProfile.getInteretLogiqueAnalytique(),
+            majorProfile.getCompetenceResolutionProblemes(),
+            majorProfile.getCompetenceCommunication(),
+            majorProfile.getCompetenceOrganisation(),
+            majorProfile.getCompetenceManuelTechnique(),
+            majorProfile.getValeurImpactSocietal(),
+            majorProfile.getValeurInnovationChallenge(),
+            majorProfile.getValeurStabiliteSecurite(),
+            majorProfile.getValeurAutonomie(),
+            majorProfile.getPrefTravailEquipeCollab(),
+            majorProfile.getPrefTravailAutonome(),
+            majorProfile.getPrefPratiqueTerrain(),
+            majorProfile.getPrefTheorieRecherche()
+        };
+    }
+    
+    @Override
+    public String getAlgorithmName() {
+        return "Force Analysis Calculator";
+    }
+    
+    @Override
+    public String getAlgorithmVersion() {
+        return "2.0";
+    }
+    
+    @Override
+    public String getCalculatorName() {
+        return "ForceAnalysisCalculator";
+    }
+    
+    @Override
+    public double getWeight() {
+        return 0.8; // Poids pour l'analyse des forces
+    }
+    
+    @Override
+    public String getDescription() {
+        return "Calculateur basé sur l'analyse des forces dominantes";
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return true; // Toujours activé
+    }
+    
+    @Override
+    public double calculate(UserProfileDTO userProfile, MajorProfileDTO majorProfile) {
+        try {
+            // Récupération des scores des piliers
+            int[] userScores = getUserPillarScores(userProfile);
+            int[] majorScores = getMajorPillarScores(majorProfile);
+            
+            // Identification des forces dominantes
+            int[] userTopForces = findTopForces(userScores, TOP_FORCES_COUNT);
+            int[] majorTopForces = findTopForces(majorScores, TOP_FORCES_COUNT);
+            
+            // Calcul du score de correspondance des forces
+            double forceMatchScore = calculateForceMatch(userScores, majorScores, userTopForces, majorTopForces);
+            
+            // Bonus pour l'intensité des forces dominantes
+            double intensityBonus = calculateIntensityBonus(userScores, majorScores, userTopForces, majorTopForces);
+            
+            // Score final combiné
+            double finalScore = (forceMatchScore * 0.8) + (intensityBonus * 0.2);
+            
+            // Conversion en score sur 100
+            return finalScore * 100;
+            
+        } catch (Exception e) {
+            log.error("❌ Erreur lors du calcul pour {} : {}", 
+                majorProfile.getProgram(), e.getMessage(), e);
+            return 0.0;
+        }
     }
 }

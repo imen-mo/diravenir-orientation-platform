@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import GlobalLayout from '../components/GlobalLayout';
 import './PersonalizedResults.css';
 
 const PersonalizedResults = () => {
@@ -42,25 +43,26 @@ const PersonalizedResults = () => {
   }
 
   return (
-    <div className="personalized-results">
-      {/* En-tête personnalisé avec le nom */}
-      <div className="results-header">
-        <div className="welcome-message">
-          <h1>🎉 Félicitations, {personalInfo.nom} !</h1>
-          <p>Votre test d'orientation est terminé. Voici vos résultats personnalisés :</p>
-        </div>
-        
-        <div className="user-info-card">
-          <div className="user-avatar">
-            <span className="avatar-text">{personalInfo.nom.charAt(0).toUpperCase()}</span>
+    <GlobalLayout activePage="orientation">
+      <div className="personalized-results">
+        {/* En-tête personnalisé avec le nom */}
+        <div className="results-header">
+          <div className="welcome-message">
+            <h1>🎉 Félicitations, {personalInfo.nom} !</h1>
+            <p>Votre test d'orientation est terminé. Voici vos résultats personnalisés :</p>
           </div>
-          <div className="user-details">
-            <h3>{personalInfo.nom}</h3>
-            <p>📧 {personalInfo.email}</p>
-            <p>📱 {personalInfo.telephone}</p>
+          
+          <div className="user-info-card">
+            <div className="user-avatar">
+              <span className="avatar-text">{personalInfo.nom.charAt(0).toUpperCase()}</span>
+            </div>
+            <div className="user-details">
+              <h3>{personalInfo.nom}</h3>
+              <p>📧 {personalInfo.email}</p>
+              <p>📱 {personalInfo.telephone}</p>
+            </div>
           </div>
         </div>
-      </div>
 
       {/* Résultats du test */}
       <div className="results-content">
@@ -173,7 +175,8 @@ const PersonalizedResults = () => {
           🏠 Retour à l'Accueil
         </button>
       </div>
-    </div>
+      </div>
+    </GlobalLayout>
   );
 };
 

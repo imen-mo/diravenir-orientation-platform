@@ -14,13 +14,13 @@ import abdellahImage from '../assets/abdellahlouadi.png';
 import bouchraImage from '../assets/bouchyalyass.png';
 import hamzaImage from '../assets/hamzaaomari.png';
 import wiamImage from '../assets/wiamfarih.png';
-import { FaInstagram } from 'react-icons/fa';
-import Footer from '../components/Footer';
-import GlobalNavbar from '../components/GlobalNavbar';
+import { FaInstagram, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import GlobalLayout from '../components/GlobalLayout';
 
 const About = () => {
   const navigate = useNavigate();
   const [activeCard, setActiveCard] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   const cards = [
     {
@@ -29,7 +29,7 @@ const About = () => {
       title: "Collaboration & Innovation",
       description: "Working together to build the future of education",
       icon: "🤝",
-      color: "#ffd700"
+      color: "#FDCB00"
     },
     {
       id: 2,
@@ -37,7 +37,7 @@ const About = () => {
       title: "Student Success",
       description: "Empowering students to achieve their dreams",
       icon: "🎓",
-      color: "#ff6b6b"
+      color: "#FDCB00"
     },
     {
       id: 3,
@@ -45,26 +45,51 @@ const About = () => {
       title: "Professional Guidance",
       description: "Expert orientation for international studies",
       icon: "🌟",
-      color: "#4ecdc4"
+      color: "#FDCB00"
     }
   ];
 
-  // Auto-rotate cards
+  // Auto-rotate cards avec pause au hover
   useEffect(() => {
+    if (!isAutoPlaying) return;
+    
     const interval = setInterval(() => {
       setActiveCard((prev) => (prev + 1) % cards.length);
-    }, 4000);
+    }, 5000);
 
     return () => clearInterval(interval);
-  }, [cards.length]);
+  }, [cards.length, isAutoPlaying]);
 
   const goToCard = (index) => {
     setActiveCard(index);
+    setIsAutoPlaying(false);
+    
+    // Redémarrer l'auto-play après 10 secondes
+    setTimeout(() => setIsAutoPlaying(true), 10000);
+  };
+
+  const goToPrevious = () => {
+    setActiveCard((prev) => (prev - 1 + cards.length) % cards.length);
+    setIsAutoPlaying(false);
+    setTimeout(() => setIsAutoPlaying(true), 10000);
+  };
+
+  const goToNext = () => {
+    setActiveCard((prev) => (prev + 1) % cards.length);
+    setIsAutoPlaying(false);
+    setTimeout(() => setIsAutoPlaying(true), 10000);
+  };
+
+  const getCardPosition = (index) => {
+    if (index === activeCard) return 'active';
+    if (index === (activeCard - 1 + cards.length) % cards.length) return 'prev';
+    if (index === (activeCard + 1) % cards.length) return 'next';
+    return 'hidden';
   };
 
   return (
-    <div className="about-page-modern">
-
+    <GlobalLayout activePage="about">
+      <div className="about-page-modern">
 
       {/* Main Content */}
       <div className="main-content-modern">
@@ -81,18 +106,35 @@ const About = () => {
           </p>
         </div>
 
-        {/* Right Side - Image Cards */}
+        {/* Right Side - Enhanced Image Cards Carousel */}
         <div className="content-right-modern">
           <div className="cards-container">
+            {/* Navigation Arrows */}
+            <button 
+              className="carousel-nav-btn carousel-prev" 
+              onClick={goToPrevious}
+              aria-label="Previous card"
+            >
+              <FaChevronLeft />
+            </button>
+            
+            <button 
+              className="carousel-nav-btn carousel-next" 
+              onClick={goToNext}
+              aria-label="Next card"
+            >
+              <FaChevronRight />
+            </button>
+
+            {/* Image Cards */}
             {cards.map((card, index) => (
               <div
                 key={card.id}
-                className={`image-card ${index === activeCard ? 'active' : ''}`}
+                className={`image-card ${getCardPosition(index)}`}
                 onClick={() => goToCard(index)}
               >
                 <div className="card-image-container">
                   <img src={card.image} alt={card.title} className="card-image" />
-                  <div className="card-overlay"></div>
                   <div className="card-icon">{card.icon}</div>
                 </div>
                 <div className="card-content">
@@ -120,14 +162,17 @@ const About = () => {
                   key={index}
                   className={`card-dot ${index === activeCard ? 'active' : ''}`}
                   onClick={() => goToCard(index)}
-                  style={{ backgroundColor: index === activeCard ? cards[index].color : 'rgba(255, 255, 255, 0.4)' }}
+                  aria-label={`Go to card ${index + 1}`}
                 />
               ))}
             </div>
 
             {/* Auto-play Indicator */}
             <div className="auto-play-indicator">
-              <div className="indicator-dot active"></div>
+              <div className={`indicator-dot ${isAutoPlaying ? 'active' : ''}`}></div>
+              <span className="indicator-text">
+                {isAutoPlaying ? 'Auto-play' : 'Paused'}
+              </span>
             </div>
           </div>
         </div>
@@ -165,7 +210,7 @@ const About = () => {
         <div className="mission-vision-container">
           <div className="mission-box">
             <div className="mission-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#fb923c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#FDCB00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
               </svg>
@@ -180,7 +225,7 @@ const About = () => {
 
           <div className="vision-box">
             <div className="vision-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#fb923c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#FDCB00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10"></circle>
                 <circle cx="12" cy="12" r="4"></circle>
                 <line x1="4.93" y1="4.93" x2="9.17" y2="9.17"></line>
@@ -276,7 +321,7 @@ const About = () => {
             <span className="team-our">Our</span> <span className="team-team">Team</span>
           </h2>
           
-          {/* Co Founders Row */}
+          {/* Co Founders Row - Cartes plus grandes */}
           <div className="co-founders-row">
             <h3 className="co-founders-title">Co Founders</h3>
             <div className="co-founders-container">
@@ -373,7 +418,8 @@ const About = () => {
       </section>
       
 
-    </div>
+      </div>
+    </GlobalLayout>
   );
 };
 

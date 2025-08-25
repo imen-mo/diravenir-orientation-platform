@@ -1,8 +1,8 @@
 // Configuration API ultra-optimisée pour Diravenir
 const API_CONFIG = {
   // Configuration du backend
-  BACKEND_URL: process.env.REACT_APP_BACKEND_URL || 'http://localhost:8084',
-  API_BASE_PATH: '/api',
+  BACKEND_URL: import.meta.env.VITE_API_URL || 'http://localhost:8084',
+  API_BASE_PATH: import.meta.env.VITE_API_BASE_PATH || '', // CORRIGÉ : Pas de préfixe par défaut
   
   // Timeouts optimisés
   TIMEOUTS: {
@@ -11,11 +11,11 @@ const API_CONFIG = {
     ORIENTATION: 15000,  // 15 secondes pour l'orientation
   },
   
-  // Endpoints principaux
+  // Endpoints principaux - CORRIGÉS pour éviter la duplication
   ENDPOINTS: {
     // Authentification
     AUTH: {
-      SIGNIN: '/auth/signin',
+      SIGNIN: '/auth/login',
       SIGNUP: '/auth/signup',
       VERIFY_EMAIL: '/auth/verify-email',
       FORGOT_PASSWORD: '/auth/forgot-password',
@@ -45,6 +45,10 @@ const API_CONFIG = {
       UPDATE: '/users/update',
       DELETE: '/users/delete',
     },
+    
+    // Santé et tests
+    HEALTH: '/health',
+    TEST: '/test',
   },
   
   // Headers par défaut
@@ -72,10 +76,18 @@ const API_CONFIG = {
 // Classe utilitaire pour les appels API
 class ApiClient {
   constructor() {
-    this.baseURL = API_CONFIG.BACKEND_URL + API_CONFIG.API_BASE_PATH;
+    // CORRECTION : Construction correcte de l'URL de base
+    // Si API_BASE_PATH est vide, on utilise directement BACKEND_URL
+    // Sinon on concatène BACKEND_URL + API_BASE_PATH
+    this.baseURL = API_CONFIG.API_BASE_PATH 
+      ? API_CONFIG.BACKEND_URL + API_CONFIG.API_BASE_PATH
+      : API_CONFIG.BACKEND_URL + '/api'; // Fallback vers /api si pas de configuration
+    
     this.cache = new Map();
     this.requestCount = 0;
     this.startTime = Date.now();
+    
+    console.log('🚀 API Client initialisé avec URL:', this.baseURL);
   }
   
   // Méthode principale pour les appels API
@@ -90,11 +102,12 @@ class ApiClient {
     try {
       const response = await fetch(url, {
         ...options,
-  headers: {
+        headers: {
           ...API_CONFIG.DEFAULT_HEADERS,
           ...options.headers,
         },
         signal: AbortSignal.timeout(API_CONFIG.TIMEOUTS.REQUEST),
+        credentials: 'include', // Important pour les cookies CORS
       });
       
       const responseTime = performance.now() - startTime;

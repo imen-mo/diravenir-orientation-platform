@@ -1,0 +1,240 @@
+/* QuestionStatusDebugger.css - Styles pour le diagnostic des questions */
+
+.question-status-debugger {
+  background: #ffffff;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+}
+
+/* En-tête du diagnostic */
+.debugger-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.debugger-header h3 {
+  color: #441048;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+/* Résumé de progression */
+.progress-summary {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.progress-text {
+  font-weight: 600;
+  color: #441048;
+  font-size: 1.1rem;
+}
+
+.progress-bar {
+  width: 200px;
+  height: 12px;
+  background: #f0f0f0;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(135deg, #F7C800, #FFD700);
+  transition: width 0.3s ease;
+}
+
+.progress-percentage {
+  font-weight: 700;
+  color: #441048;
+  font-size: 1.1rem;
+  min-width: 50px;
+  text-align: center;
+}
+
+/* Grille des questions */
+.questions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.question-status {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  padding: 0.75rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.question-status.current {
+  border-color: #F7C800;
+  background: #fff3cd;
+  transform: scale(1.05);
+}
+
+.question-number {
+  font-weight: 700;
+  color: #441048;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.question-status-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.current-indicator {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #F7C800;
+  color: #441048;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  border: 2px solid #fff;
+}
+
+/* Détails du diagnostic */
+.debug-details {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.detail-section {
+  margin-bottom: 1.5rem;
+}
+
+.detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.detail-section h4 {
+  color: #441048;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.detail-item {
+  background: #ffffff;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-item strong {
+  color: #441048;
+}
+
+/* Boutons d'action */
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.action-btn {
+  background: linear-gradient(135deg, #6c757d, #495057);
+  color: #ffffff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .question-status-debugger {
+    padding: 1rem;
+    margin: 0.5rem 0;
+  }
+  
+  .questions-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 0.5rem;
+  }
+  
+  .progress-summary {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .progress-bar {
+    width: 100%;
+    max-width: 200px;
+  }
+  
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .action-btn {
+    width: 100%;
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .question-status-debugger {
+    padding: 0.75rem;
+  }
+  
+  .questions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .question-status {
+    padding: 0.5rem;
+  }
+  
+  .question-status-text {
+    font-size: 0.8rem;
+  }
+}

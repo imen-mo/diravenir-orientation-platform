@@ -1,280 +1,401 @@
 package com.dira.diravenir1.service;
 
+import com.dira.diravenir1.dto.OrientationRequestDTO;
+import com.dira.diravenir1.dto.UserProfileDTO;
+import com.dira.diravenir1.dto.MajorProfileDTO;
+import com.dira.diravenir1.dto.MatchingResultDTO;
+import com.dira.diravenir1.dto.OrientationRecommendationDTO;
 import com.dira.diravenir1.dto.MajorRecommendationDTO;
 import com.dira.diravenir1.dto.MatchingResult;
-import com.dira.diravenir1.service.engines.DefaultRecommendationEngine;
-import com.dira.diravenir1.service.interfaces.RecommendationEngine;
-import lombok.extern.slf4j.Slf4j;
+import com.dira.diravenir1.service.calculators.EuclideanScoreCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.CacheConfig;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 /**
- * Service ultra-optimisé de génération de recommandations.
+ * Service de recommandations d'orientation selon les spécifications exactes
+ * du "Système d'Orientation des Étudiants".
  * 
- * Ce service génère des recommandations avec un cache ultra-performant
- * et une logique de tri optimisée pour une performance maximale.
- * 
- * Responsabilité : Génération rapide de recommandations avec cache intelligent
+ * Ce service orchestre le processus complet :
+ * 1. Calcul du profil utilisateur à partir des réponses
+ * 2. Matching avec les profils idéaux des majeures
+ * 3. Génération des recommandations personnalisées
+ * 4. Explication des correspondances par pilier
  */
 @Service
 @Slf4j
-@CacheConfig(cacheNames = "recommendations")
 public class RecommendationService {
     
-    // Cache ultra-performant pour les recommandations
-    private final ConcurrentHashMap<String, List<MajorRecommendationDTO>> recommendationCache = new ConcurrentHashMap<>();
-    private final AtomicLong cacheHits = new AtomicLong(0);
-    private final AtomicLong cacheMisses = new AtomicLong(0);
-    
-    // Moteur de recommandation par défaut
-    private final DefaultRecommendationEngine defaultEngine;
-    
-    // Configuration des performances
-    private static final int MAX_RECOMMENDATIONS = 10;
-    private static final int MAX_CACHE_SIZE = 5000;
-    private static final double CACHE_CLEANUP_THRESHOLD = 0.8;
+    @Autowired
+    private ProfileScoringService profileScoringService;
     
     @Autowired
-    public RecommendationService(DefaultRecommendationEngine defaultEngine) {
-        this.defaultEngine = defaultEngine;
-        log.info("🚀 Service de recommandation initialisé avec cache ultra-performant");
-    }
+    private EuclideanScoreCalculator euclideanCalculator;
+    
+    @Autowired
+    private IdealProfileService idealProfileService;
     
     /**
-     * Génère des recommandations ultra-optimisées avec cache intelligent
+     * Génère les recommandations d'orientation complètes selon les spécifications exactes
      */
-    @Cacheable(key = "#matchingResults.hashCode()")
-    public List<MajorRecommendationDTO> generateRecommendations(List<MatchingResult> matchingResults) {
+    public OrientationRecommendationDTO generateRecommendations(OrientationRequestDTO request) {
+        log.info("🚀 Génération des recommandations d'orientation selon les spécifications exactes");
+        
         try {
-            if (matchingResults == null || matchingResults.isEmpty()) {
-                return new ArrayList<>();
-            }
+            // Étape 1: Calcul du profil utilisateur selon la matrice des 17 piliers
+            UserProfileDTO userProfile = profileScoringService.calculateProfileFromResponses(request);
+            log.info("✅ Profil utilisateur calculé avec {} piliers", getProfilePillarCount(userProfile));
             
-            // Vérification du cache ultra-rapide
-            String cacheKey = generateCacheKey(matchingResults);
-            List<MajorRecommendationDTO> cachedRecommendations = recommendationCache.get(cacheKey);
+            // Étape 2: Récupération de tous les profils idéaux des majeures
+            List<MajorProfileDTO> majorProfiles = idealProfileService.getAllMajorProfiles();
+            log.info("✅ {} profils de majeures récupérés", majorProfiles.size());
             
-            if (cachedRecommendations != null) {
-                cacheHits.incrementAndGet();
-                return new ArrayList<>(cachedRecommendations); // Copie défensive
-            }
+            // Étape 3: Calcul des scores de matching avec l'algorithme euclidien pondéré
+            List<MatchingResultDTO> matchingResults = euclideanCalculator.calculateMatchingScores(userProfile, majorProfiles);
+            log.info("✅ Scores de matching calculés pour {} majeures", matchingResults.size());
             
-            cacheMisses.incrementAndGet();
-            
-            // Génération ultra-optimisée des recommandations
-            List<MajorRecommendationDTO> recommendations = generateOptimizedRecommendations(matchingResults);
-            
-            // Mise en cache avec gestion intelligente
-            cacheRecommendations(cacheKey, recommendations);
+            // Étape 4: Génération des recommandations personnalisées
+            OrientationRecommendationDTO recommendations = buildRecommendations(userProfile, matchingResults);
+            log.info("✅ Recommandations générées avec succès");
             
             return recommendations;
             
         } catch (Exception e) {
-            log.error("❌ Erreur lors de la génération des recommandations : {}", e.getMessage());
-            return generateFallbackRecommendations(matchingResults);
+            log.error("❌ Erreur lors de la génération des recommandations", e);
+            throw new RuntimeException("Erreur lors de la génération des recommandations d'orientation", e);
         }
     }
     
     /**
-     * Génération ultra-optimisée des recommandations
+     * Construit l'objet de recommandations final selon les spécifications exactes
      */
-    private List<MajorRecommendationDTO> generateOptimizedRecommendations(List<MatchingResult> matchingResults) {
-        // Tri ultra-rapide par score décroissant
-            List<MatchingResult> sortedResults = matchingResults.stream()
-            .sorted((r1, r2) -> Double.compare(r2.getGlobalScore(), r1.getGlobalScore()))
-            .limit(MAX_RECOMMENDATIONS)
+    private OrientationRecommendationDTO buildRecommendations(UserProfileDTO userProfile, 
+                                                           List<MatchingResultDTO> matchingResults) {
+        
+        OrientationRecommendationDTO recommendations = new OrientationRecommendationDTO();
+        recommendations.setUserId("user_" + System.currentTimeMillis()); // ID temporaire
+        recommendations.setTimestamp(new Date());
+        recommendations.setUserProfile(userProfile);
+        
+        // Top 3 recommandations selon les spécifications
+        List<MatchingResultDTO> top3 = matchingResults.stream()
+            .limit(3)
                 .collect(Collectors.toList());
             
-        // Conversion optimisée en recommandations
-        List<MajorRecommendationDTO> recommendations = new ArrayList<>(sortedResults.size());
+        recommendations.setTopRecommendations(top3);
         
-        for (MatchingResult result : sortedResults) {
-            MajorRecommendationDTO recommendation = createOptimizedRecommendation(result);
-                recommendations.add(recommendation);
-            }
+        // Toutes les recommandations classées
+        recommendations.setAllRecommendations(matchingResults);
+        
+        // Statistiques du profil utilisateur
+        recommendations.setProfileStatistics(calculateProfileStatistics(userProfile));
+        
+        // Explications personnalisées pour chaque recommandation
+        recommendations.setRecommendationExplanations(
+            generatePersonalizedExplanations(userProfile, top3));
+        
+        log.info("🏆 Top 3 recommandations : {} ({}%), {} ({}%), {} ({}%)", 
+            top3.get(0).getProgram(), Math.round(top3.get(0).getMatchingScore()),
+            top3.get(1).getProgram(), Math.round(top3.get(1).getMatchingScore()),
+            top3.get(2).getProgram(), Math.round(top3.get(2).getMatchingScore()));
             
             return recommendations;
     }
     
     /**
-     * Création ultra-rapide d'une recommandation
+     * Calcule les statistiques du profil utilisateur pour l'analyse
      */
-    private MajorRecommendationDTO createOptimizedRecommendation(MatchingResult result) {
-        MajorRecommendationDTO recommendation = new MajorRecommendationDTO();
-        recommendation.setName(result.getMajorName());
-        recommendation.setMatchingScore((int) (result.getGlobalScore() * 100));
-        recommendation.setExplanation(generateOptimizedExplanation(result));
-        return recommendation;
+    private Map<String, Object> calculateProfileStatistics(UserProfileDTO userProfile) {
+        Map<String, Object> stats = new HashMap<>();
+        
+        // Scores moyens par catégorie selon les spécifications
+        double avgInterets = calculateAverage(
+            userProfile.getInteretScientifiqueTech(),
+            userProfile.getInteretArtistiqueCreatif(),
+            userProfile.getInteretSocialHumain(),
+            userProfile.getInteretBusinessGestion(),
+            userProfile.getInteretLogiqueAnalytique()
+        );
+        
+        double avgCompetences = calculateAverage(
+            userProfile.getCompetenceResolutionProblemes(),
+            userProfile.getCompetenceCommunication(),
+            userProfile.getCompetenceOrganisation(),
+            userProfile.getCompetenceManuelTechnique()
+        );
+        
+        double avgValeurs = calculateAverage(
+            userProfile.getValeurImpactSocietal(),
+            userProfile.getValeurInnovationChallenge(),
+            userProfile.getValeurStabiliteSecurite(),
+            userProfile.getValeurAutonomie()
+        );
+        
+        double avgPreferences = calculateAverage(
+            userProfile.getPrefTravailEquipeCollab(),
+            userProfile.getPrefTravailAutonome(),
+            userProfile.getPrefPratiqueTerrain(),
+            userProfile.getPrefTheorieRecherche()
+        );
+        
+        stats.put("moyenneInterets", Math.round(avgInterets * 100.0) / 100.0);
+        stats.put("moyenneCompetences", Math.round(avgCompetences * 100.0) / 100.0);
+        stats.put("moyenneValeurs", Math.round(avgValeurs * 100.0) / 100.0);
+        stats.put("moyennePreferences", Math.round(avgPreferences * 100.0) / 100.0);
+        
+        // Piliers dominants (scores > 70)
+        List<String> piliersDominants = new ArrayList<>();
+        if (userProfile.getInteretScientifiqueTech() > 70) 
+            piliersDominants.add("Intérêt Scientifique & Tech");
+        if (userProfile.getInteretArtistiqueCreatif() > 70) 
+            piliersDominants.add("Intérêt Artistique & Créatif");
+        if (userProfile.getInteretSocialHumain() > 70) 
+            piliersDominants.add("Intérêt Social & Humain");
+        if (userProfile.getInteretBusinessGestion() > 70) 
+            piliersDominants.add("Intérêt Business & Gestion");
+        if (userProfile.getInteretLogiqueAnalytique() > 70) 
+            piliersDominants.add("Intérêt Logique & Analytique");
+        
+        stats.put("piliersDominants", piliersDominants);
+        stats.put("nombrePiliersDominants", piliersDominants.size());
+        
+        return stats;
     }
     
     /**
-     * Génération ultra-rapide d'explication
+     * Génère des explications personnalisées pour chaque recommandation
+     * selon les spécifications du "Système d'Orientation des Étudiants"
      */
-    private String generateOptimizedExplanation(MatchingResult result) {
-        double score = result.getGlobalScore();
+    private Map<String, String> generatePersonalizedExplanations(UserProfileDTO userProfile, 
+                                                               List<MatchingResultDTO> topRecommendations) {
         
-        if (score > 0.8) {
-            return "Excellente correspondance - Profil très compatible";
-        } else if (score > 0.6) {
-            return "Bonne correspondance - Profil compatible";
-        } else if (score > 0.4) {
-            return "Correspondance moyenne - Profil partiellement compatible";
+        Map<String, String> explanations = new HashMap<>();
+        
+        for (MatchingResultDTO recommendation : topRecommendations) {
+            String explanation = buildPersonalizedExplanation(userProfile, recommendation);
+            explanations.put(recommendation.getMajorId(), explanation);
+        }
+        
+        return explanations;
+    }
+    
+    /**
+     * Construit une explication personnalisée pour une recommandation spécifique
+     * Identifie les piliers où les scores de l'utilisateur et de la majeure sont les plus élevés
+     */
+    private String buildPersonalizedExplanation(UserProfileDTO userProfile, MatchingResultDTO recommendation) {
+        StringBuilder explanation = new StringBuilder();
+        explanation.append("Votre profil correspond parfaitement à cette filière grâce à plusieurs points forts : ");
+        
+        // Analyse des correspondances par pilier
+        List<String> correspondances = new ArrayList<>();
+        
+        // Intérêts
+        if (isHighCorrespondence(userProfile.getInteretScientifiqueTech(), recommendation, "Interet_Scientifique_Tech")) {
+            correspondances.add("votre passion pour la technologie et les sciences");
+        }
+        if (isHighCorrespondence(userProfile.getInteretArtistiqueCreatif(), recommendation, "Interet_Artistique_Creatif")) {
+            correspondances.add("votre créativité et votre sens artistique");
+        }
+        if (isHighCorrespondence(userProfile.getInteretSocialHumain(), recommendation, "Interet_Social_Humain")) {
+            correspondances.add("votre intérêt pour les relations humaines et l'aide aux autres");
+        }
+        if (isHighCorrespondence(userProfile.getInteretBusinessGestion(), recommendation, "Interet_Business_Gestion")) {
+            correspondances.add("votre goût pour la gestion et les affaires");
+        }
+        if (isHighCorrespondence(userProfile.getInteretLogiqueAnalytique(), recommendation, "Interet_Logique_Analytique")) {
+            correspondances.add("votre capacité d'analyse et de raisonnement logique");
+        }
+        
+        // Compétences
+        if (isHighCorrespondence(userProfile.getCompetenceResolutionProblemes(), recommendation, "Competence_Resolution_Problemes")) {
+            correspondances.add("votre aptitude à résoudre des problèmes complexes");
+        }
+        if (isHighCorrespondence(userProfile.getCompetenceCommunication(), recommendation, "Competence_Communication")) {
+            correspondances.add("vos excellentes compétences en communication");
+        }
+        if (isHighCorrespondence(userProfile.getCompetenceOrganisation(), recommendation, "Competence_Organisation")) {
+            correspondances.add("votre sens de l'organisation et de la planification");
+        }
+        if (isHighCorrespondence(userProfile.getCompetenceManuelTechnique(), recommendation, "Competence_Manuel_Technique")) {
+            correspondances.add("votre habileté manuelle et technique");
+        }
+        
+        // Valeurs
+        if (isHighCorrespondence(userProfile.getValeurImpactSocietal(), recommendation, "Valeur_Impact_Societal")) {
+            correspondances.add("votre désir d'avoir un impact positif sur la société");
+        }
+        if (isHighCorrespondence(userProfile.getValeurInnovationChallenge(), recommendation, "Valeur_Innovation_Challenge")) {
+            correspondances.add("votre goût pour l'innovation et les défis");
+        }
+        if (isHighCorrespondence(userProfile.getValeurStabiliteSecurite(), recommendation, "Valeur_Stabilite_Securite")) {
+            correspondances.add("votre recherche de stabilité et de sécurité");
+        }
+        if (isHighCorrespondence(userProfile.getValeurAutonomie(), recommendation, "Valeur_Autonomie")) {
+            correspondances.add("votre besoin d'autonomie et de liberté");
+        }
+        
+        // Préférences de travail
+        if (isHighCorrespondence(userProfile.getPrefTravailEquipeCollab(), recommendation, "Pref_Travail_Equipe_Collab")) {
+            correspondances.add("votre préférence pour le travail en équipe");
+        }
+        if (isHighCorrespondence(userProfile.getPrefTravailAutonome(), recommendation, "Pref_Travail_Autonome")) {
+            correspondances.add("votre capacité à travailler de manière autonome");
+        }
+        if (isHighCorrespondence(userProfile.getPrefPratiqueTerrain(), recommendation, "Pref_Pratique_Terrain")) {
+            correspondances.add("votre goût pour le travail pratique et sur le terrain");
+        }
+        if (isHighCorrespondence(userProfile.getPrefTheorieRecherche(), recommendation, "Pref_Theorie_Recherche")) {
+            correspondances.add("votre intérêt pour la recherche théorique");
+        }
+        
+        // Construction de l'explication finale
+        if (correspondances.isEmpty()) {
+            explanation.append("vos compétences générales et votre polyvalence.");
         } else {
-            return "Correspondance limitée - Profil peu compatible";
+            // Limiter à 3-4 correspondances pour la lisibilité
+            List<String> topCorrespondances = correspondances.stream()
+                .limit(4)
+                .collect(Collectors.toList());
+            
+            for (int i = 0; i < topCorrespondances.size(); i++) {
+                if (i == 0) {
+                    explanation.append(topCorrespondances.get(i));
+                } else if (i == topCorrespondances.size() - 1) {
+                    explanation.append(" et ").append(topCorrespondances.get(i));
+                } else {
+                    explanation.append(", ").append(topCorrespondances.get(i));
+                }
+            }
+            explanation.append(".");
         }
+        
+        explanation.append(" Ces qualités font de vous un candidat idéal pour cette formation.");
+        
+        return explanation.toString();
     }
     
     /**
-     * Recommandations de fallback en cas d'erreur
+     * Vérifie si il y a une correspondance élevée entre le profil utilisateur et la majeure
+     * pour un pilier spécifique
      */
-    private List<MajorRecommendationDTO> generateFallbackRecommendations(List<MatchingResult> matchingResults) {
-        try {
-            // Utilisation du moteur par défaut
-            List<com.dira.diravenir1.dto.Recommendation> fallbackRecommendations = defaultEngine.generate(matchingResults);
-            
-            if (fallbackRecommendations != null && !fallbackRecommendations.isEmpty()) {
-                return fallbackRecommendations.stream()
-                    .limit(MAX_RECOMMENDATIONS)
-                    .map(this::convertRecommendationToMajorRecommendation)
-                    .collect(Collectors.toList());
-                    }
-                    
-                } catch (Exception e) {
-            log.warn("⚠️ Erreur avec le moteur de fallback : {}", e.getMessage());
+    private boolean isHighCorrespondence(Integer userScore, MatchingResultDTO recommendation, String pillarName) {
+        if (userScore == null || userScore < 70) {
+            return false;
         }
         
-        // Recommandations minimales en dernier recours
-        return matchingResults.stream()
-            .limit(3)
-            .map(this::createMinimalRecommendation)
+        // Vérifier si le pilier est important pour cette majeure (score > 70)
+        Map<String, Double> pillarScores = recommendation.getPillarScores();
+        if (pillarScores != null && pillarScores.containsKey(pillarName)) {
+            Double pillarScore = pillarScores.get(pillarName);
+            return pillarScore != null && pillarScore < 20; // Différence faible = bonne correspondance
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Calcule la moyenne d'une liste de scores
+     */
+    private double calculateAverage(Integer... scores) {
+        return Arrays.stream(scores)
+            .filter(Objects::nonNull)
+            .mapToInt(Integer::intValue)
+            .average()
+            .orElse(0.0);
+    }
+    
+    /**
+     * Compte le nombre de piliers dans le profil utilisateur
+     */
+    private int getProfilePillarCount(UserProfileDTO userProfile) {
+        int count = 0;
+        if (userProfile.getInteretScientifiqueTech() > 0) count++;
+        if (userProfile.getInteretArtistiqueCreatif() > 0) count++;
+        if (userProfile.getInteretSocialHumain() > 0) count++;
+        if (userProfile.getInteretBusinessGestion() > 0) count++;
+        if (userProfile.getInteretLogiqueAnalytique() > 0) count++;
+        if (userProfile.getCompetenceResolutionProblemes() > 0) count++;
+        if (userProfile.getCompetenceCommunication() > 0) count++;
+        if (userProfile.getCompetenceOrganisation() > 0) count++;
+        if (userProfile.getCompetenceManuelTechnique() > 0) count++;
+        if (userProfile.getValeurImpactSocietal() > 0) count++;
+        if (userProfile.getValeurInnovationChallenge() > 0) count++;
+        if (userProfile.getValeurStabiliteSecurite() > 0) count++;
+        if (userProfile.getValeurAutonomie() > 0) count++;
+        if (userProfile.getPrefTravailEquipeCollab() > 0) count++;
+        if (userProfile.getPrefTravailAutonome() > 0) count++;
+        if (userProfile.getPrefPratiqueTerrain() > 0) count++;
+        if (userProfile.getPrefTheorieRecherche() > 0) count++;
+        return count;
+    }
+    
+    /**
+     * Récupère les recommandations par catégorie
+     */
+    public Map<String, List<MatchingResultDTO>> getRecommendationsByCategory(List<MatchingResultDTO> allRecommendations) {
+        return allRecommendations.stream()
+            .collect(Collectors.groupingBy(MatchingResultDTO::getCategory));
+    }
+    
+    /**
+     * Filtre les recommandations par score minimum
+     */
+    public List<MatchingResultDTO> filterRecommendationsByScore(List<MatchingResultDTO> recommendations, double minScore) {
+        return recommendations.stream()
+            .filter(r -> r.getMatchingScore() >= minScore)
             .collect(Collectors.toList());
     }
     
     /**
-     * Création d'une recommandation minimale
+     * Génère des recommandations à partir d'une liste de résultats de matching
+     * Cette méthode est utilisée par les tests pour valider la logique
      */
-    private MajorRecommendationDTO createMinimalRecommendation(MatchingResult result) {
-        MajorRecommendationDTO recommendation = new MajorRecommendationDTO();
-        recommendation.setName(result.getMajorName());
-        recommendation.setMatchingScore((int) (result.getGlobalScore() * 100));
-        recommendation.setExplanation("Recommandation basée sur le score de correspondance");
-        return recommendation;
-    }
-    
-    /**
-     * Conversion d'une Recommendation vers MajorRecommendationDTO
-     */
-    private MajorRecommendationDTO convertRecommendationToMajorRecommendation(com.dira.diravenir1.dto.Recommendation recommendation) {
-        MajorRecommendationDTO majorRecommendation = new MajorRecommendationDTO();
-        majorRecommendation.setName(recommendation.getMajorName());
-        majorRecommendation.setMatchingScore((int) (recommendation.getMatchScore() * 100));
-        majorRecommendation.setExplanation(recommendation.getPrimaryReason());
-        return majorRecommendation;
-    }
-    
-    /**
-     * Génération de clé de cache ultra-rapide
-     */
-    private String generateCacheKey(List<MatchingResult> matchingResults) {
-        // Clé basée sur le hash des scores et noms des majeures
-        return matchingResults.stream()
-            .mapToInt(result -> Objects.hash(result.getMajorName(), result.getGlobalScore()))
-            .sum() + "_" + matchingResults.size();
-    }
-    
-    /**
-     * Mise en cache intelligente avec gestion de la taille
-     */
-    private void cacheRecommendations(String key, List<MajorRecommendationDTO> recommendations) {
-        if (recommendationCache.size() >= MAX_CACHE_SIZE) {
-            cleanupCache();
+    public List<MajorRecommendationDTO> generateRecommendations(List<MatchingResult> matchingResults) {
+        log.info("🚀 Génération des recommandations à partir de {} résultats de matching", matchingResults.size());
+        
+        List<MajorRecommendationDTO> recommendations = new ArrayList<>();
+        
+        for (MatchingResult result : matchingResults) {
+            MajorRecommendationDTO recommendation = MajorRecommendationDTO.builder()
+                .name(result.getProgram())
+                .domaine(result.getCategory())
+                .matchingScore((int) (result.getGlobalScore() * 100)) // Conversion en pourcentage
+                .explanation(generateExplanationFromMatchingResult(result))
+                .build();
+            
+            recommendations.add(recommendation);
         }
         
-        recommendationCache.put(key, new ArrayList<>(recommendations)); // Copie défensive
+        // Tri par score décroissant
+        recommendations.sort((a, b) -> Integer.compare(b.getMatchingScore(), a.getMatchingScore()));
+        
+        log.info("✅ {} recommandations générées avec succès", recommendations.size());
+        return recommendations;
     }
     
     /**
-     * Nettoyage intelligent du cache
+     * Génère une explication basée sur le résultat de matching
      */
-    private void cleanupCache() {
-        if (recommendationCache.size() > MAX_CACHE_SIZE * CACHE_CLEANUP_THRESHOLD) {
-            int entriesToRemove = (int) (recommendationCache.size() * 0.3);
-            
-            recommendationCache.entrySet().stream()
-                .limit(entriesToRemove)
-                .forEach(entry -> recommendationCache.remove(entry.getKey()));
-            
-            log.debug("🧹 Cache des recommandations nettoyé, {} entrées supprimées", entriesToRemove);
+    private String generateExplanationFromMatchingResult(MatchingResult result) {
+        StringBuilder explanation = new StringBuilder();
+        explanation.append("Cette filière correspond à votre profil avec un score de ");
+        explanation.append(String.format("%.1f", result.getGlobalScore() * 100));
+        explanation.append("%. ");
+        
+        if (result.getEuclideanScore() > 0.7) {
+            explanation.append("Vos intérêts et compétences correspondent parfaitement aux exigences de cette formation. ");
+        } else if (result.getEuclideanScore() > 0.5) {
+            explanation.append("Vos intérêts et compétences correspondent bien aux exigences de cette formation. ");
+        } else {
+            explanation.append("Cette formation pourrait vous intéresser malgré quelques différences dans votre profil. ");
         }
-    }
-    
-    /**
-     * Statistiques de performance du cache
-     */
-    public String getCacheStats() {
-        long hits = cacheHits.get();
-        long misses = cacheMisses.get();
-        long total = hits + misses;
-        double hitRate = total > 0 ? (double) hits / total * 100 : 0;
         
-        return String.format("📊 Cache Stats - Hits: %d, Misses: %d, Hit Rate: %.1f%%, Size: %d", 
-            hits, misses, hitRate, recommendationCache.size());
-    }
-    
-    /**
-     * Vide le cache pour les tests ou maintenance
-     */
-    public void clearCache() {
-        recommendationCache.clear();
-        cacheHits.set(0);
-        cacheMisses.set(0);
-        log.info("🗑️ Cache des recommandations vidé");
-    }
-    
-    /**
-     * Vérifie la santé du service
-     */
-    public boolean isHealthy() {
-        try {
-            // Test rapide avec des résultats de test
-            List<MatchingResult> testResults = createTestMatchingResults();
-            List<MajorRecommendationDTO> recommendations = generateRecommendations(testResults);
-            
-            return recommendations != null && !recommendations.isEmpty();
-            
-        } catch (Exception e) {
-            log.error("❌ Service de recommandation non sain : {}", e.getMessage());
-            return false;
-        }
-    }
-    
-    /**
-     * Crée des résultats de test pour la vérification de santé
-     */
-    private List<MatchingResult> createTestMatchingResults() {
-        List<MatchingResult> testResults = new ArrayList<>();
+        explanation.append("L'algorithme utilisé est ").append(result.getAlgorithmUsed()).append(".");
         
-        // Création d'un résultat de test
-        MatchingResult testResult = MatchingResult.builder()
-            .majorName("Test Major")
-            .globalScore(0.75)
-            .build();
-        
-        testResults.add(testResult);
-        return testResults;
-    }
-    
-    /**
-     * Récupère les recommandations du cache (pour debug)
-     */
-    public Map<String, List<MajorRecommendationDTO>> getCachedRecommendations() {
-        return new HashMap<>(recommendationCache);
+        return explanation.toString();
     }
 }

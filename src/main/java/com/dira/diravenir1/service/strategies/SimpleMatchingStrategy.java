@@ -39,7 +39,7 @@ public class SimpleMatchingStrategy implements MatchingStrategy {
                 return 0.0;
             }
             
-            log.debug("📊 Exécution de la stratégie simple pour {}", majorProfile.getMajorName());
+            log.debug("📊 Exécution de la stratégie simple pour {}", majorProfile.getProgram());
             
             // Récupération des scores des piliers
             int[] userScores = getUserPillarScores(userProfile);

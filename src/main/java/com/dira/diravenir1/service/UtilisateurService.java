@@ -1,19 +1,15 @@
 package com.dira.diravenir1.service;
 
 import com.dira.diravenir1.dto.UtilisateurDTO;
-import com.dira.diravenir1.payload.SignupRequest;
-import jakarta.validation.Valid;
 
 import java.util.List;
 
 public interface UtilisateurService {
     List<UtilisateurDTO> getAll();
     UtilisateurDTO create(UtilisateurDTO utilisateurDTO);
-
-    void createUser(SignupRequest request);
-
-    // Ajoute cette méthode pour vérifier l'existence par email
+    UtilisateurDTO getById(Long id);
+    UtilisateurDTO update(Long id, UtilisateurDTO utilisateurDTO);
+    void delete(Long id);
     boolean existsByEmail(String email);
-
-    void registerUser(@Valid SignupRequest request);
+    UtilisateurDTO findByEmail(String email);
 }

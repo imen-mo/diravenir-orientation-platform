@@ -1,13 +1,18 @@
-/* CountdownPage.css - Page de compte à rebours magique et choquante */
+/* CountdownPage.css - Page de compte à rebours avec la palette exacte de la page FAQ */
 
 .countdown-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #441048 0%, #430F48 50%, #400C49 100%);
+  width: 100vw;
+  height: 100vh;
+  background: rgba(75, 1, 75, 0.95); /* Palette exacte de la page FAQ */
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
   overflow: hidden;
+  z-index: 1000;
 }
 
 /* Particules magiques flottantes */
@@ -30,33 +35,33 @@
 .particle-0 {
   width: 4px;
   height: 4px;
-  background: rgba(255, 215, 0, 0.9);
+  background: rgba(253, 203, 0, 0.9); /* Palette exacte de la page FAQ */
   animation-delay: 0s;
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+  box-shadow: 0 0 10px rgba(253, 203, 0, 0.6);
 }
 
 .particle-1 {
   width: 6px;
   height: 6px;
-  background: rgba(255, 165, 0, 0.9);
+  background: rgba(253, 203, 0, 0.9); /* Palette exacte de la page FAQ */
   animation-delay: 2s;
-  box-shadow: 0 0 15px rgba(255, 165, 0, 0.7);
+  box-shadow: 0 0 15px rgba(253, 203, 0, 0.7);
 }
 
 .particle-2 {
   width: 3px;
   height: 3px;
-  background: rgba(255, 140, 0, 0.8);
+  background: rgba(253, 203, 0, 0.8); /* Palette exacte de la page FAQ */
   animation-delay: 4s;
-  box-shadow: 0 0 8px rgba(255, 140, 0, 0.5);
+  box-shadow: 0 0 8px rgba(253, 203, 0, 0.5);
 }
 
 .particle-3 {
   width: 5px;
   height: 5px;
-  background: rgba(255, 215, 0, 0.9);
+  background: rgba(253, 203, 0, 0.9); /* Palette exacte de la page FAQ */
   animation-delay: 6s;
-  box-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+  box-shadow: 0 0 12px rgba(253, 203, 0, 0.6);
 }
 
 .particle:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
@@ -108,8 +113,8 @@
   width: 100%;
   height: 100%;
   background-image: 
-    radial-gradient(circle, rgba(255, 215, 0, 0.1) 1px, transparent 1px),
-    radial-gradient(circle, rgba(255, 165, 0, 0.08) 1px, transparent 1px);
+    radial-gradient(circle, rgba(253, 203, 0, 0.1) 1px, transparent 1px), /* Palette exacte de la page FAQ */
+    radial-gradient(circle, rgba(253, 203, 0, 0.08) 1px, transparent 1px);
   background-size: 50px 50px, 80px 80px;
   background-position: 0 0, 25px 25px;
   animation: gridMove 20s linear infinite;
@@ -130,14 +135,10 @@
 .countdown-number {
   font-size: 20rem;
   font-weight: 900;
-  color: white;
-  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  color: #FDCB00; /* Palette exacte de la page FAQ - couleur directe */
+  text-shadow: 0 10px 40px rgba(253, 203, 0, 0.6); /* Palette exacte de la page FAQ */
   margin-bottom: 2rem;
   animation: countdownPulse 1s ease-in-out infinite;
-  background: linear-gradient(45deg, #FFD700, #FFA500, #FF8C00);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   position: relative;
 }
 
@@ -148,7 +149,7 @@
   left: 50%;
   width: 120%;
   height: 120%;
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(253, 203, 0, 0.1) 0%, transparent 70%); /* Palette exacte de la page FAQ */
   border-radius: 50%;
   transform: translate(-50%, -50%);
   animation: numberGlow 2s ease-in-out infinite;
@@ -170,14 +171,14 @@
 }
 
 .magic-quote {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(253, 203, 0, 0.1); /* Palette exacte de la page FAQ - fond jaune doré transparent */
   backdrop-filter: blur(20px);
-  border: 2px solid rgba(255, 215, 0, 0.3);
+  border: 2px solid rgba(253, 203, 0, 0.6); /* Palette exacte de la page FAQ - bordure plus visible */
   border-radius: 30px;
   padding: 3rem;
   margin-bottom: 3rem;
   max-width: 800px;
-  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 25px 80px rgba(253, 203, 0, 0.2); /* Palette exacte de la page FAQ */
   animation: quoteSlideIn 0.8s ease-out;
   position: relative;
   overflow: hidden;
@@ -190,21 +191,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+  background: linear-gradient(45deg, transparent, rgba(253, 203, 0, 0.2), transparent); /* Palette exacte de la page FAQ - plus visible */
   animation: shimmer 3s ease-in-out infinite;
 }
 
 .magic-quote::after {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg, #FFD700, #FFA500, #FF8C00, #FFD700);
-  border-radius: 30px;
-  z-index: -1;
-  animation: borderRotate 4s linear infinite;
+  display: none;
 }
 
 @keyframes borderRotate {
@@ -219,7 +211,7 @@
 
 .quote-text {
   font-size: 2rem;
-  color: white;
+  color: #FFFFFF; /* Palette exacte : blanc de l'image */
   line-height: 1.6;
   font-weight: 600;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
@@ -228,7 +220,7 @@
 
 .quote-author {
   font-size: 1.2rem;
-  color: rgba(255, 215, 0, 0.9);
+  color: rgba(253, 203, 0, 0.9); /* Palette exacte de la page FAQ */
   font-style: italic;
   text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
 }
@@ -240,7 +232,7 @@
   border-radius: 6px;
   overflow: hidden;
   margin: 0 auto;
-  border: 2px solid rgba(255, 215, 0, 0.3);
+  border: 2px solid rgba(253, 203, 0, 0.5); /* Palette exacte de la page FAQ */
   position: relative;
 }
 
@@ -251,7 +243,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+  background: linear-gradient(90deg, transparent, rgba(253, 203, 0, 0.1), transparent); /* Palette exacte de la page FAQ */
   animation: progressShimmer 2s ease-in-out infinite;
 }
 
@@ -262,10 +254,10 @@
 
 .progress-bar {
   height: 100%;
-  background: linear-gradient(45deg, #FFD700, #FFA500, #FF8C00, #FFD700);
+  background: #FDCB00; /* Palette exacte de la page FAQ */
   border-radius: 4px;
   transition: width 3s ease;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+  box-shadow: 0 0 20px rgba(253, 203, 0, 0.6);
   position: relative;
 }
 
@@ -276,7 +268,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(253, 203, 0, 0.3), transparent); /* Palette exacte de la page FAQ */
   animation: progressGlow 1s ease-in-out infinite;
 }
 
@@ -298,7 +290,7 @@
   left: -50px;
   right: -50px;
   bottom: -50px;
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(253, 203, 0, 0.1) 0%, transparent 70%); /* Palette exacte de la page FAQ */
   border-radius: 50%;
   animation: readyGlow 3s ease-in-out infinite;
   z-index: -1;
@@ -312,10 +304,10 @@
 .ready-text {
   font-size: 8rem;
   font-weight: 900;
-  color: white;
+  color: #FFFFFF; /* Palette exacte : blanc de l'image */
   text-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   margin-bottom: 1rem;
-  background: linear-gradient(45deg, #FFD700, #FFA500, #FF8C00);
+  background: #FDCB00; /* Palette exacte de la page FAQ */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -330,7 +322,7 @@
   left: 50%;
   width: 110%;
   height: 110%;
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(253, 203, 0, 0.1) 0%, transparent 70%); /* Palette exacte de la page FAQ */
   border-radius: 50%;
   transform: translate(-50%, -50%);
   animation: readyTextGlow 2s ease-in-out infinite;
@@ -345,7 +337,7 @@
 .lets-begin-text {
   font-size: 4rem;
   font-weight: 700;
-  color: rgba(255, 215, 0, 0.9);
+  color: rgba(253, 203, 0, 0.9); /* Palette exacte de la page FAQ */
   text-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
   margin-bottom: 2rem;
   animation: letsBeginSlideIn 1s ease-out 0.3s both;
@@ -354,7 +346,7 @@
 .ready-emoji {
   font-size: 6rem;
   animation: emojiBounce 2s ease-in-out infinite;
-  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+  filter: drop-shadow(0 0 20px rgba(253, 203, 0, 0.5)); /* Palette exacte de la page FAQ */
 }
 
 @keyframes readyPulse {

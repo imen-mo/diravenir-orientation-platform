@@ -1,56 +1,62 @@
 package com.dira.diravenir1.Entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "candidatures")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Candidature {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String dateSoumission;
-
+    
+    @Column(name = "statut", nullable = false)
     private String statut;
-
+    
+    @Column(name = "date_soumission", nullable = false)
+    private LocalDate dateSoumission;
+    
+    // Suivi de la candidature
+    @Column(columnDefinition = "TEXT")
     private String suivi;
-
-    private String programme;
-
+    
+    // Documents associés
     @OneToMany(mappedBy = "candidature", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude // Pour éviter récursion infinie dans toString
-    @EqualsAndHashCode.Exclude // Pareil pour equals et hashCode
     private List<Document> documents = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "etudiant_id", nullable = false)
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "programme_id")
+    private Program programme;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "etudiant_id")
     private Etudiant etudiant;
-
-    // Ajout d'un constructeur personnalisé sans 'id' ni 'documents' (optionnel, plus lisible)
-    @Builder
-    public Candidature(LocalDate dateSoumission, String statut, String suivi, String programme, Etudiant etudiant) {
-        this.dateSoumission = String.valueOf(dateSoumission);
-        this.statut = statut;
-        this.suivi = suivi;
-        this.programme = programme;
-        this.etudiant = etudiant;
-    }
-
-    // Méthodes utilitaires pour gérer la relation bidirectionnelle avec Document
+    
+    // Méthodes utilitaires
     public void addDocument(Document document) {
+        if (documents == null) {
+            documents = new ArrayList<>();
+        }
         documents.add(document);
         document.setCandidature(this);
     }
-
+    
     public void removeDocument(Document document) {
-        documents.remove(document);
-        document.setCandidature(null);
+        if (documents != null) {
+            documents.remove(document);
+            document.setCandidature(null);
+        }
     }
 }

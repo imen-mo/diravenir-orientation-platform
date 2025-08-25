@@ -1,46 +1,39 @@
 package com.dira.diravenir1.mapper;
 
-import com.dira.diravenir1.dto.CandidatureDTO;
 import com.dira.diravenir1.Entities.Candidature;
+import com.dira.diravenir1.dto.CandidatureDTO;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Component
 public class CandidatureMapper {
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
     public CandidatureDTO toDTO(Candidature candidature) {
-        CandidatureDTO dto = new CandidatureDTO();
-        dto.setId(candidature.getId());
-        dto.setStatut(candidature.getStatut());
-
-        // ✅ Convertir LocalDate -> String avec sécurité null
-        if (candidature.getDateSoumission() != null) {
-            dto.setDateSoumission(candidature.getDateSoumission().format(String.valueOf(formatter)));
-        } else {
-            dto.setDateSoumission(null);
+        if (candidature == null) {
+            return null;
         }
 
-        dto.setProgramme(candidature.getProgramme());
-        return dto;
+        return CandidatureDTO.builder()
+            .id(candidature.getId())
+            .statut(candidature.getStatut())
+            .dateSoumission(candidature.getDateSoumission())
+            .programmeId(candidature.getProgramme() != null ? candidature.getProgramme().getId() : null)
+            .etudiantId(candidature.getEtudiant() != null ? candidature.getEtudiant().getId() : null)
+            .build();
     }
 
     public Candidature toEntity(CandidatureDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
         Candidature candidature = new Candidature();
         candidature.setId(dto.getId());
         candidature.setStatut(dto.getStatut());
-
-        // ✅ Convertir String -> LocalDate avec sécurité null
-        if (dto.getDateSoumission() != null && !dto.getDateSoumission().isEmpty()) {
-            candidature.setDateSoumission(String.valueOf(LocalDate.parse(dto.getDateSoumission(), formatter)));
-        } else {
-            candidature.setDateSoumission(null);
-        }
-
-        candidature.setProgramme(dto.getProgramme());
+        candidature.setDateSoumission(dto.getDateSoumission());
+        
+        // Note: Les relations programme et etudiant devront être définies séparément
+        // car elles nécessitent des objets complets, pas seulement des IDs
+        
         return candidature;
     }
 }

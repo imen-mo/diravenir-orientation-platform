@@ -1,21 +1,38 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './TestWelcome.css';
+import CountdownPage from './CountdownPage';
+import GlobalLayout from '../components/GlobalLayout';
 
 const TestWelcome = () => {
   const navigate = useNavigate();
   const [isStarting, setIsStarting] = useState(false);
+  const [showCountdown, setShowCountdown] = useState(false);
 
   const handleStartTest = () => {
     setIsStarting(true);
-    // Animation de chargement avant de naviguer vers le test
+    // Animation de chargement avant d'afficher le compte à rebours
     setTimeout(() => {
-      navigate('/orientation/test');
+      setShowCountdown(true);
     }, 2000);
   };
 
+  const handleCountdownComplete = () => {
+    navigate('/orientation/test');
+  };
+
+  // Si le compte à rebours est en cours, l'afficher
+  if (showCountdown) {
+    return (
+      <GlobalLayout activePage="test-welcome">
+        <CountdownPage onComplete={handleCountdownComplete} initialCount={5} />
+      </GlobalLayout>
+    );
+  }
+
   return (
-    <div className="test-welcome-container">
+    <GlobalLayout activePage="test-welcome">
+      <div className="test-welcome-container">
       <div className="welcome-background">
         <div className="gradient-overlay"></div>
         <div className="floating-elements">
@@ -178,6 +195,7 @@ const TestWelcome = () => {
         </div>
       </div>
     </div>
+    </GlobalLayout>
   );
 };
 

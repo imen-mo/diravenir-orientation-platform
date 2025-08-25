@@ -16,8 +16,8 @@ public class MatchingResult {
     
     // Informations de la majeure
     private String majorId;
-    private String majorName;
-    private String majorCategory;
+    private String program;              // Nom du programme (ex: Medicine, Dentistry)
+    private String category;             // Catégorie du programme (ex: Medical and Health Sciences)
     
     // Score de correspondance global (0-100%)
     private double globalScore;

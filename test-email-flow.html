@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Flux Email - Diravenir</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            background: #f8f9fa;
+        }
+        .test-section h3 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+        .test-button {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 123, 255, 0.3);
+        }
+        .test-button.danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+        .test-button.success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+        .result {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-online { background: #28a745; }
+        .status-offline { background: #dc3545; }
+        .status-unknown { background: #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Flux Email - Diravenir</h1>
+        
+        <!-- Test de Connexion Serveur -->
+        <div class="test-section">
+            <h3>🔌 Test de Connexion Serveur</h3>
+            <button class="test-button" onclick="testServerConnection()">Test Connexion Serveur</button>
+            <div id="server-result" class="result info" style="display: none;"></div>
+        </div>
+
+        <!-- Test Email -->
+        <div class="test-section">
+            <h3>📧 Test Email SMTP</h3>
+            <button class="test-button" onclick="testEmailSMTP()">Test Email SMTP</button>
+            <div id="email-result" class="result info" style="display: none;"></div>
+        </div>
+
+        <!-- Test Inscription -->
+        <div class="test-section">
+            <h3>🚀 Test Inscription Utilisateur</h3>
+            <div class="form-group">
+                <label for="test-nom">Nom:</label>
+                <input type="text" id="test-nom" value="Test" placeholder="Nom de test">
+            </div>
+            <div class="form-group">
+                <label for="test-prenom">Prénom:</label>
+                <input type="text" id="test-prenom" value="User" placeholder="Prénom de test">
+            </div>
+            <div class="form-group">
+                <label for="test-email">Email:</label>
+                <input type="email" id="test-email" value="test" placeholder="Email de test">
+            </div>
+            <div class="form-group">
+                <label for="test-password">Mot de passe:</label>
+                <input type="password" id="test-password" value="Test123!" placeholder="Mot de passe">
+            </div>
+            <button class="test-button success" onclick="testUserRegistration()">Test Inscription</button>
+            <div id="registration-result" class="result info" style="display: none;"></div>
+        </div>
+
+        <!-- Test Vérification Email -->
+        <div class="test-section">
+            <h3>🔐 Test Vérification Email</h3>
+            <div class="form-group">
+                <label for="verification-token">Token de Vérification:</label>
+                <input type="text" id="verification-token" placeholder="Collez le token ici">
+            </div>
+            <button class="test-button" onclick="testEmailVerification()">Test Vérification</button>
+            <div id="verification-result" class="result info" style="display: none;"></div>
+        </div>
+
+        <!-- Test Connexion -->
+        <div class="test-section">
+            <h3>🔑 Test Connexion</h3>
+            <div class="form-group">
+                <label for="login-email">Email:</label>
+                <input type="email" id="login-email" placeholder="Email pour connexion">
+            </div>
+            <div class="form-group">
+                <label for="login-password">Mot de passe:</label>
+                <input type="password" id="login-password" placeholder="Mot de passe">
+            </div>
+            <button class="test-button" onclick="testUserLogin()">Test Connexion</button>
+            <div id="login-result" class="result info" style="display: none;"></div>
+        </div>
+
+        <!-- Nettoyage -->
+        <div class="test-section">
+            <h3>🧹 Nettoyage Base de Données</h3>
+            <button class="test-button danger" onclick="cleanupTestUsers()">Nettoyer Utilisateurs de Test</button>
+            <div id="cleanup-result" class="result info" style="display: none;"></div>
+        </div>
+
+        <!-- Statut des Services -->
+        <div class="test-section">
+            <h3>📊 Statut des Services</h3>
+            <div id="services-status">
+                <p><span class="status-indicator status-unknown"></span>Serveur Spring Boot: <span id="spring-status">Inconnu</span></p>
+                <p><span class="status-indicator status-unknown"></span>Base de données: <span id="db-status">Inconnu</span></p>
+                <p><span class="status-indicator status-unknown"></span>Service Email: <span id="email-status">Inconnu</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8084/api';
+        
+        // Test de connexion serveur
+        async function testServerConnection() {
+            const resultDiv = document.getElementById('server-result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = '🔄 Test de connexion en cours...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `✅ Serveur connecté!\n\n${JSON.stringify(data, null, 2)}`;
+                    updateServiceStatus('spring-status', 'Online', 'online');
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `❌ Erreur serveur: ${response.status}\n\n${JSON.stringify(data, null, 2)}`;
+                    updateServiceStatus('spring-status', 'Offline', 'offline');
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Erreur de connexion: ${error.message}`;
+                updateServiceStatus('spring-status', 'Offline', 'offline');
+            }
+        }
+
+        // Test Email SMTP
+        async function testEmailSMTP() {
+            const resultDiv = document.getElementById('email-result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = '🔄 Test email SMTP en cours...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/test-email`);
+                const data = await response.json();
+                
+                if (response.ok && data.status === 'success') {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `✅ Email SMTP fonctionne!\n\n${JSON.stringify(data, null, 2)}`;
+                    updateServiceStatus('email-status', 'Online', 'online');
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `❌ Erreur email SMTP:\n\n${JSON.stringify(data, null, 2)}`;
+                    updateServiceStatus('email-status', 'Offline', 'offline');
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Erreur de connexion: ${error.message}`;
+                updateServiceStatus('email-status', 'Offline', 'offline');
+            }
+        }
+
+        // Test inscription utilisateur
+        async function testUserRegistration() {
+            const resultDiv = document.getElementById('registration-result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = '🔄 Test inscription en cours...';
+            
+            const userData = {
+                nom: document.getElementById('test-nom').value,
+                prenom: document.getElementById('test-prenom').value,
+                email: document.getElementById('test-email').value + '@test.com',
+                password: document.getElementById('test-password').value,
+                telephone: '+1234567890'
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `✅ Inscription réussie!\n\nUtilisateur créé: ${userData.email}\n\nRéponse: ${JSON.stringify(data, null, 2)}`;
+                    
+                    // Mettre à jour l'email de connexion
+                    document.getElementById('login-email').value = userData.email;
+                    document.getElementById('login-password').value = userData.password;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `❌ Erreur inscription:\n\n${JSON.stringify(data, null, 2)}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Erreur de connexion: ${error.message}`;
+            }
+        }
+
+        // Test vérification email
+        async function testEmailVerification() {
+            const resultDiv = document.getElementById('verification-result');
+            const token = document.getElementById('verification-token').value;
+            
+            if (!token) {
+                resultDiv.style.display = 'block';
+                resultDiv.className = 'result error';
+                resultDiv.textContent = '❌ Veuillez entrer un token de vérification';
+                return;
+            }
+            
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = '🔄 Test vérification en cours...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/verify-email?token=${token}`);
+                const data = await response.json();
+                
+                if (response.ok && data.status === 'success') {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `✅ Email vérifié avec succès!\n\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `❌ Erreur vérification:\n\n${JSON.stringify(data, null, 2)}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Erreur de connexion: ${error.message}`;
+            }
+        }
+
+        // Test connexion utilisateur
+        async function testUserLogin() {
+            const resultDiv = document.getElementById('login-result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = '🔄 Test connexion en cours...';
+            
+            const loginData = {
+                email: document.getElementById('login-email').value,
+                password: document.getElementById('login-password').value
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(loginData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `✅ Connexion réussie!\n\nUtilisateur: ${loginData.email}\n\nRéponse: ${JSON.stringify(data, null, 2)}`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `❌ Erreur connexion:\n\n${JSON.stringify(data, null, 2)}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Erreur de connexion: ${error.message}`;
+            }
+        }
+
+        // Nettoyage utilisateurs de test
+        async function cleanupTestUsers() {
+            const resultDiv = document.getElementById('cleanup-result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = '🔄 Nettoyage en cours...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/test-database`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `✅ Nettoyage effectué!\n\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `❌ Erreur nettoyage:\n\n${JSON.stringify(data, null, 2)}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Erreur de connexion: ${error.message}`;
+            }
+        }
+
+        // Mise à jour du statut des services
+        function updateServiceStatus(elementId, status, statusClass) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = status;
+                element.className = statusClass;
+            }
+        }
+
+        // Test automatique au chargement
+        window.onload = function() {
+            setTimeout(() => {
+                testServerConnection();
+                setTimeout(() => {
+                    testEmailSMTP();
+                }, 1000);
+            }, 500);
+        };
+    </script>
+</body>
+</html>

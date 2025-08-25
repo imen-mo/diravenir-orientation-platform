@@ -74,7 +74,7 @@ class ProfileMatchingServiceTest {
                 "Les scores doivent être entre 0.0 et 1.0"
             );
             
-            assertNotNull(result.getMajorName(), "Le nom de la majeure ne doit pas être null");
+            assertNotNull(result.getProgram(), "Le nom de la majeure ne doit pas être null");
             assertNotNull(result.getAlgorithmUsed(), "L'algorithme utilisé ne doit pas être null");
         }
         
@@ -84,7 +84,7 @@ class ProfileMatchingServiceTest {
             MatchingResult result = results.get(i);
             System.out.printf("   %d. %s : %.1f%%%n", 
                 i + 1, 
-                result.getMajorName(), 
+                result.getProgram(), 
                 result.getGlobalScorePercentage());
         }
     }
@@ -147,8 +147,8 @@ class ProfileMatchingServiceTest {
         // 1. Génie Civil (profil technique - devrait bien correspondre)
         MajorProfileDTO genieCivil = MajorProfileDTO.builder()
             .majorId("GC001")
-            .majorName("Génie Civil")
-            .majorCategory("TECHNIQUE")
+            .program("Génie Civil")
+            .category("TECHNIQUE")
             .interetScientifiqueTech(90)
             .interetArtistiqueCreatif(40)
             .interetSocialHumain(50)
@@ -171,8 +171,8 @@ class ProfileMatchingServiceTest {
         // 2. Informatique (profil technique - devrait bien correspondre)
         MajorProfileDTO informatique = MajorProfileDTO.builder()
             .majorId("INFO001")
-            .majorName("Informatique")
-            .majorCategory("TECHNIQUE")
+            .program("Informatique")
+            .category("TECHNIQUE")
             .interetScientifiqueTech(98)
             .interetArtistiqueCreatif(40)
             .interetSocialHumain(30)
@@ -195,8 +195,8 @@ class ProfileMatchingServiceTest {
         // 3. Marketing (profil business - devrait moins correspondre)
         MajorProfileDTO marketing = MajorProfileDTO.builder()
             .majorId("MKT001")
-            .majorName("Marketing et Management")
-            .majorCategory("BUSINESS")
+            .program("Marketing et Management")
+            .category("BUSINESS")
             .interetScientifiqueTech(20)
             .interetArtistiqueCreatif(80)
             .interetSocialHumain(90)

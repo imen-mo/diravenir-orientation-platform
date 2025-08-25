@@ -1,157 +1,228 @@
-import React, { Suspense, lazy } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import './styles/GlobalColors.css';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
+import ProtectedRoute, { PublicRoute } from './components/ProtectedRoute';
+import { initCookieService } from './services/cookieService';
+
+// Styles globaux
+import './styles/globalTheme.css';
+
+// Pages d'authentification
+import Login from './pages/Login';
+import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import VerifyEmail from './pages/VerifyEmail';
+import VerifyEmailSent from './pages/VerifyEmailSent';
+import OAuth2Success from './pages/OAuth2Success';
+import OAuth2Failure from './pages/OAuth2Failure';
+
+// Pages protégées - Dashboard supprimé
+
+// Pages existantes originales
+import HomePage from './pages/HomePage';
+import UnifiedOrientationTest from './components/UnifiedOrientationTest';
+import OrientationTest from './components/OrientationTest';
+import OrientationResults from './pages/OrientationResults';
+import ThemeDemo from './components/ThemeDemo';
+import WelcomePage from './pages/WelcomePage';
+import TestWelcome from './pages/TestWelcome';
+import TestList from './pages/TestList';
+import TestPage from './pages/TestPage';
+import HeaderTest from './pages/HeaderTest';
+import NavbarTest from './pages/NavbarTest';
+import SimpleNavbarTest from './pages/SimpleNavbarTest';
+
+// Autres pages existantes
+import About from './pages/About';
+import Contact from './pages/Contact';
+import FAQ from './pages/FAQ';
+import Programs from './pages/Programs';
+import ProgramDetail from './pages/ProgramDetail';
+import Apply from './pages/Apply';
+import DestinationPage from './pages/DestinationPage';
+import China from './pages/China';
+import Cyprus from './pages/Cyprus';
+import Romania from './pages/Romania';
+import Universites from './pages/Universites';
+import Etudiant from './pages/Etudiant';
+import PersonalizedResults from './pages/PersonalizedResults';
+import AdminDashboard from './pages/AdminDashboard';
+import Dashboard from './pages/Dashboard';
+import StudentDashboard from './pages/StudentDashboard';
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
+import NotFound from './pages/NotFound';
+
+const App = () => {
+  // Initialiser le service de cookies au démarrage de l'application
+  useEffect(() => {
+    initCookieService();
+  }, []);
+
+  return (
+    <AuthProvider>
+      <ThemeProvider>
+        <Router>
+          <div className="App">
+            <Routes>
+            {/* Routes publiques existantes */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/programs" element={<Programs />} />
+            <Route path="/program/:id" element={<ProgramDetail />} />
+            <Route path="/apply" element={<Apply />} />
+            <Route path="/destination/:id" element={<DestinationPage />} />
+            <Route path="/china" element={<China />} />
+            <Route path="/cyprus" element={<Cyprus />} />
+            <Route path="/romania" element={<Romania />} />
+            <Route path="/universities" element={<Universites />} />
+            <Route path="/etudiant" element={<Etudiant />} />
+            <Route path="/personalized-results" element={<PersonalizedResults />} />
+            <Route path="/orientation" element={<UnifiedOrientationTest />} />
+            <Route path="/orientation/test" element={<UnifiedOrientationTest />} />
+            <Route path="/orientation/results" element={<OrientationResults />} />
+            <Route path="/orientation-test" element={<OrientationTest />} />
+            <Route path="/results" element={<OrientationResults />} />
+            <Route path="/theme-demo" element={<ThemeDemo />} />
+            <Route path="/welcome" element={<WelcomePage />} />
+            <Route path="/test-welcome" element={<TestWelcome />} />
+            <Route path="/test-list" element={<TestList />} />
+            <Route path="/test" element={<TestPage />} />
+            <Route path="/header-test" element={<HeaderTest />} />
+            <Route path="/navbar-test" element={<NavbarTest />} />
+            <Route path="/simple-navbar-test" element={<SimpleNavbarTest />} />
+            
+            {/* Routes d'authentification publiques */}
+            <Route 
+              path="/login" 
+              element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              } 
+            />
+            <Route 
+              path="/register" 
+              element={
+                <PublicRoute>
+                  <Register />
+                </PublicRoute>
+              } 
+            />
+            <Route 
+              path="/forgot-password" 
+              element={
+                <PublicRoute>
+                  <ForgotPassword />
+                </PublicRoute>
+              } 
+            />
+            <Route 
+              path="/reset-password" 
+              element={
+                <PublicRoute>
+                  <ResetPassword />
+                </PublicRoute>
+              } 
+            />
+            <Route 
+              path="/verify-email" 
+              element={
+                <PublicRoute>
+                  <VerifyEmail />
+                </PublicRoute>
+              } 
+            />
+            <Route 
+              path="/verify-email-sent" 
+              element={
+                <PublicRoute>
+                  <VerifyEmailSent />
+                </PublicRoute>
+              } 
+            />
+            
+            {/* Routes OAuth2 Google */}
+            <Route 
+              path="/oauth2-success" 
+              element={
+                <PublicRoute>
+                  <OAuth2Success />
+                </PublicRoute>
+              } 
+            />
+            <Route 
+              path="/oauth2-failure" 
+              element={
+                <PublicRoute>
+                  <OAuth2Failure />
+                </PublicRoute>
+              } 
+            />
+
+            {/* Routes protégées - Dashboard supprimé car redirection vers HOMEPAGE */}
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/settings" 
+              element={
+                <ProtectedRoute>
+                  <Settings />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Route Admin - AJOUTÉE ! */}
+            <Route 
+              path="/admin" 
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Routes pour les tableaux de bord */}
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/student-dashboard" 
+              element={
+                <ProtectedRoute>
+                  <StudentDashboard />
+                </ProtectedRoute>
+              } 
+            />
 
 
-// Auth context
-import { AuthProvider, useAuth } from "./hooks/useAuth";
 
-// Composants globaux
-import GlobalNavbar from "./components/GlobalNavbar";
-import Footer from "./components/Footer";
-
-// Composants de chargement
-const LoadingSpinner = () => (
-    <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-    </div>
-);
-
-const LoadingFallback = () => (
-    <div className="flex items-center justify-center min-h-screen">
-        <LoadingSpinner />
-    </div>
-);
-
-// Gestion simple des erreurs
-const ErrorBoundary = ({ children }) => <>{children}</>;
-
-// Pages
-const SignIn = lazy(() => import("./pages/Signin"));
-const SignUp = lazy(() => import("./pages/SignUp"));
-const SignUpSuccess = lazy(() => import("./pages/SignUpSuccess"));
-const EmailVerification = lazy(() => import("./pages/EmailVerification"));
-const OAuth2Success = lazy(() => import("./pages/OAuth2Success"));
-const HomePage = lazy(() => import("./pages/HomePage"));
-const About = lazy(() => import("./pages/About"));
-const Contact = lazy(() => import("./pages/Contact"));
-const FAQ = lazy(() => import("./pages/FAQ"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const Universites = lazy(() => import("./pages/Universites"));
-const StudentDashboard = lazy(() => import("./pages/StudentDashboard"));
-const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
-const Programs = lazy(() => import("./pages/Programs"));
-const ProgramDetail = lazy(() => import("./pages/ProgramDetail"));
-const Profile = lazy(() => import("./pages/Profile"));
-const Settings = lazy(() => import("./pages/Settings"));
-
-// Orientation and Test Pages
-const UnifiedOrientationTest = lazy(() => import("./components/UnifiedOrientationTest"));
-const OrientationResults = lazy(() => import("./pages/OrientationResults"));
-const TestWelcome = lazy(() => import("./pages/TestWelcome"));
-const TestList = lazy(() => import("./pages/TestList"));
-const WelcomePage = lazy(() => import("./pages/WelcomePage"));
-
-
-
-// Test Page
-const TestPage = lazy(() => import("./pages/TestPage"));
-
-// Country Pages
-const China = lazy(() => import("./pages/China"));
-const Cyprus = lazy(() => import("./pages/Cyprus"));
-const Romania = lazy(() => import("./pages/Romania"));
-
-// Layouts
-const MainLayout = () => (
-    <div className="flex flex-col min-h-screen">
-        <GlobalNavbar />
-        <main className="flex-grow">
-            <Outlet />
-        </main>
-        <Footer />
-    </div>
-);
-
-const AuthLayout = () => (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-        <Outlet />
-    </div>
-);
-
-// Route protégée
-const PrivateRoute = () => {
-    const { user, loading } = useAuth();
-    if (loading) return <LoadingFallback />;
-    return user ? <Outlet /> : <Navigate to="/signin" replace />;
+            {/* Route 404 */}
+            <Route path="/404" element={<NotFound />} />
+            
+            {/* Redirection par défaut */}
+            <Route path="*" element={<NotFound />} />
+                      </Routes>
+          </div>
+        </Router>
+      </ThemeProvider>
+      </AuthProvider>
+  );
 };
-
-function App() {
-    return (
-        <AuthProvider>
-            <Router>
-                <Suspense fallback={<LoadingFallback />}>
-                    <ToastContainer />
-                    <ErrorBoundary>
-                        <Routes>
-                            {/* Auth routes */}
-                            <Route element={<AuthLayout />}>
-                                    <Route path="/signin" element={<SignIn />} />
-                                    <Route path="/signup" element={<SignUp />} />
-                                    <Route path="/signup-success" element={<SignUpSuccess />} />
-                                    <Route path="/verify-email" element={<EmailVerification />} />
-                                    <Route path="/oauth2-success" element={<OAuth2Success />} />
-                                </Route>
-
-                                {/* Main routes */}
-                                <Route element={<MainLayout />}>
-                                    <Route path="/" element={<HomePage />} />
-                                    <Route path="/about" element={<About />} />
-                                    <Route path="/faq" element={<FAQ />} />
-                                    <Route path="/contact" element={<Contact />} />
-                                    <Route path="/universites" element={<Universites />} />
-                                    <Route path="/programs" element={<Programs />} />
-                                    <Route path="/programs/:id" element={<ProgramDetail />} />
-                                    
-                                    {/* Orientation and Test Routes */}
-                                    <Route path="/orientation" element={<WelcomePage />} />
-                                    <Route path="/orientation/welcome" element={<WelcomePage />} />
-                                    <Route path="/orientation/test" element={<UnifiedOrientationTest />} />
-                                    <Route path="/orientation/results" element={<OrientationResults />} />
-                                    <Route path="/test" element={<TestWelcome />} />
-                                    <Route path="/test/welcome" element={<TestWelcome />} />
-                                    <Route path="/test/list" element={<TestList />} />
-                                    
-
-                                    
-                                    {/* Test Route */}
-                                    <Route path="/test-page" element={<TestPage />} />
-
-                                    {/* Country Routes */}
-                                    <Route path="/destinations/china" element={<China />} />
-                                    <Route path="/destinations/cyprus" element={<Cyprus />} />
-                                    <Route path="/destinations/romania" element={<Romania />} />
-
-                                    {/* Protected */}
-                                    <Route element={<PrivateRoute />}>
-                                        <Route path="/dashboard" element={<Dashboard />} />
-                                        <Route path="/student-dashboard" element={<StudentDashboard />} />
-                                        <Route path="/admin" element={<AdminDashboard />} />
-                                        <Route path="/profile" element={<Profile />} />
-                                        <Route path="/settings" element={<Settings />} />
-                                    </Route>
-
-                                    <Route path="*" element={<NotFound />} />
-                                </Route>
-                            </Routes>
-                        </ErrorBoundary>
-                    </Suspense>
-                </Router>
-            </AuthProvider>
-    );
-}
 
 export default App;

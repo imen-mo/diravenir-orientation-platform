@@ -1,0 +1,27 @@
+/* === LAYOUT GLOBAL DIRAVENIR === */
+
+.global-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: 140px; /* Espace pour la navbar fixe (100px + 20px margin + 20px padding) */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 120px; /* Moins d'espace sur mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding-top: 100px; /* Encore moins d'espace sur très petit écran */
+  }
+}

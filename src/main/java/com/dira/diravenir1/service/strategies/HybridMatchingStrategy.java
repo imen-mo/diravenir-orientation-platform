@@ -36,7 +36,7 @@ public class HybridMatchingStrategy implements MatchingStrategy {
     @Override
     public double execute(UserProfileDTO userProfile, MajorProfileDTO majorProfile) {
         try {
-            log.debug("🔄 Exécution de la stratégie hybride pour {}", majorProfile.getMajorName());
+            log.debug("🔄 Exécution de la stratégie hybride pour {}", majorProfile.getProgram());
             
             // 1. Calcul de la distance euclidienne (60%)
             double euclideanScore = calculateEuclideanScore(userProfile, majorProfile);
@@ -109,7 +109,7 @@ public class HybridMatchingStrategy implements MatchingStrategy {
      */
     private double calculateCriticalPillarScore(UserProfileDTO userProfile, MajorProfileDTO majorProfile) {
         // Piliers critiques pour chaque type de majeure
-        int[] criticalPillars = getCriticalPillarsForMajor(majorProfile.getMajorName());
+        int[] criticalPillars = getCriticalPillarsForMajor(majorProfile.getProgram());
         
         if (criticalPillars.length == 0) {
             return 0.5; // Score neutre si pas de piliers critiques définis

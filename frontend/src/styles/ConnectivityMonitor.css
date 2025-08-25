@@ -1,0 +1,399 @@
+/* ConnectivityMonitor.css - Styles pour le moniteur de connectivité */
+
+.connectivity-monitor {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    border: 2px solid #f0f0f0;
+}
+
+/* En-tête du moniteur */
+.monitor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.monitor-header h3 {
+    color: #441048;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.monitor-controls {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.monitor-button {
+    background: linear-gradient(135deg, #F7C800, #FFD700);
+    color: #441048;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(247, 200, 0, 0.3);
+    white-space: nowrap;
+}
+
+.monitor-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(247, 200, 0, 0.4);
+}
+
+.monitor-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Statut de connectivité principal */
+.connection-status-main {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border: 2px solid #dee2e6;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.status-icon {
+    font-size: 3rem;
+    animation: pulse 2s infinite;
+}
+
+.status-info {
+    flex: 1;
+}
+
+.status-text {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #441048;
+    margin-bottom: 0.5rem;
+}
+
+.status-details {
+    font-size: 1.1rem;
+    color: #6c757d;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.retry-info {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+    color: #856404;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Détails de connectivité */
+.connection-details {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.detail-section {
+    margin-bottom: 2rem;
+}
+
+.detail-section:last-child {
+    margin-bottom: 0;
+}
+
+.detail-section h4 {
+    color: #441048;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.detail-item {
+    background: #ffffff;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detail-item strong {
+    color: #441048;
+}
+
+/* Tests d'endpoints */
+.endpoint-tests {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.endpoint-test {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 1rem;
+    border: 2px solid;
+    transition: all 0.3s ease;
+}
+
+.endpoint-test.success {
+    border-color: #28a745;
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+}
+
+.endpoint-test.failure {
+    border-color: #dc3545;
+    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+}
+
+.test-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.test-method {
+    background: #441048;
+    color: #ffffff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    min-width: 60px;
+    text-align: center;
+}
+
+.test-path {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: #495057;
+    flex: 1;
+    margin: 0 1rem;
+}
+
+.test-status {
+    font-size: 1.2rem;
+}
+
+.test-success, .test-failure {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.test-success {
+    color: #155724;
+}
+
+.test-failure {
+    color: #721c24;
+}
+
+/* Actions de diagnostic */
+.diagnostic-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.diagnostic-button {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: #ffffff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.diagnostic-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
+}
+
+/* Indicateur en temps réel */
+.realtime-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.indicator-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+/* Classes de statut */
+.status-connected .status-icon {
+    color: #28a745;
+}
+
+.status-retrying .status-icon {
+    color: #ffc107;
+}
+
+.status-failed .status-icon {
+    color: #dc3545;
+}
+
+.status-disconnected .status-icon {
+    color: #6c757d;
+}
+
+.status-unknown .status-icon {
+    color: #6c757d;
+}
+
+.status-connected .indicator-dot {
+    background: #28a745;
+}
+
+.status-retrying .indicator-dot {
+    background: #ffc107;
+}
+
+.status-failed .indicator-dot {
+    background: #dc3545;
+}
+
+.status-disconnected .indicator-dot {
+    background: #6c757d;
+}
+
+.status-unknown .indicator-dot {
+    background: #6c757d;
+}
+
+/* Animation de pulsation */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .connectivity-monitor {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .monitor-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .monitor-controls {
+        justify-content: center;
+    }
+    
+    .status-indicator {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .status-text {
+        font-size: 1.5rem;
+    }
+    
+    .status-details {
+        justify-content: center;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .test-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: stretch;
+    }
+    
+    .test-path {
+        margin: 0;
+        text-align: center;
+    }
+    
+    .diagnostic-actions {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .connectivity-monitor {
+        margin: 0.5rem;
+        padding: 1rem;
+    }
+    
+    .monitor-button, .diagnostic-button {
+        width: 100%;
+        padding: 12px 16px;
+    }
+    
+    .connection-status-main {
+        padding: 1.5rem;
+    }
+    
+    .connection-details {
+        padding: 1.5rem;
+    }
+}

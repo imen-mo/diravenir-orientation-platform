@@ -2,7 +2,6 @@ package com.dira.diravenir1.service.calculators;
 
 import com.dira.diravenir1.dto.UserProfileDTO;
 import com.dira.diravenir1.dto.MajorProfileDTO;
-import com.dira.diravenir1.service.calculators.EuclideanScoreCalculator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -302,10 +301,10 @@ class EuclideanScoreCalculatorTest {
         @DisplayName("Le calculateur doit respecter le principe OCP")
         void testRespectsOCP() {
             // Test que le calculateur peut être utilisé polymorphiquement
-            assertTrue(calculator instanceof com.dira.diravenir1.service.interfaces.ScoreCalculator);
+            assertTrue(calculator instanceof com.dira.diravenir1.service.calculators.ScoreCalculator);
             
             // Test que l'interface est respectée
-            com.dira.diravenir1.service.interfaces.ScoreCalculator interfaceCalculator = calculator;
+            com.dira.diravenir1.service.calculators.ScoreCalculator interfaceCalculator = calculator;
             double score = interfaceCalculator.calculate(userProfile, majorProfile);
             assertTrue(score >= 0.0 && score <= 1.0);
             
@@ -322,7 +321,7 @@ class EuclideanScoreCalculatorTest {
         @DisplayName("Le calculateur doit être extensible sans modification")
         void testExtensibility() {
             // Test que le calculateur peut être étendu via l'interface
-            com.dira.diravenir1.service.interfaces.ScoreCalculator baseCalculator = calculator;
+            com.dira.diravenir1.service.calculators.ScoreCalculator baseCalculator = calculator;
             
             // Test que toutes les méthodes de l'interface sont implémentées
             assertDoesNotThrow(() -> {
@@ -437,7 +436,7 @@ class EuclideanScoreCalculatorTest {
      */
     private MajorProfileDTO createTestInformatiqueMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Informatique");
+        major.setProgram("Informatique");
         major.setInteretScientifiqueTech(5);
         major.setInteretArtistiqueCreatif(2);
         major.setInteretSocialHumain(2);
@@ -463,7 +462,7 @@ class EuclideanScoreCalculatorTest {
      */
     private MajorProfileDTO createTestArtsMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Arts");
+        major.setProgram("Arts");
         major.setInteretScientifiqueTech(1);
         major.setInteretArtistiqueCreatif(5);
         major.setInteretSocialHumain(3);
@@ -489,7 +488,7 @@ class EuclideanScoreCalculatorTest {
      */
     private MajorProfileDTO createTestBusinessMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Business Administration");
+        major.setProgram("Business Administration");
         major.setInteretScientifiqueTech(2);
         major.setInteretArtistiqueCreatif(2);
         major.setInteretSocialHumain(4);
@@ -515,7 +514,7 @@ class EuclideanScoreCalculatorTest {
      */
     private MajorProfileDTO createTestMedecineMajor() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Médecine");
+        major.setProgram("Médecine");
         major.setInteretScientifiqueTech(4);
         major.setInteretArtistiqueCreatif(2);
         major.setInteretSocialHumain(5);
@@ -541,7 +540,7 @@ class EuclideanScoreCalculatorTest {
      */
     private MajorProfileDTO createTestMajorWithSameScores() {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Identique");
+        major.setProgram("Identique");
         major.setInteretScientifiqueTech(4);
         major.setInteretArtistiqueCreatif(2);
         major.setInteretSocialHumain(3);
@@ -592,7 +591,7 @@ class EuclideanScoreCalculatorTest {
      */
     private MajorProfileDTO createMajorProfileFromUser(UserProfileDTO user) {
         MajorProfileDTO major = new MajorProfileDTO();
-        major.setMajorName("Miroir Utilisateur");
+        major.setProgram("Miroir Utilisateur");
         major.setInteretScientifiqueTech(user.getInteretScientifiqueTech());
         major.setInteretArtistiqueCreatif(user.getInteretArtistiqueCreatif());
         major.setInteretSocialHumain(user.getInteretSocialHumain());
