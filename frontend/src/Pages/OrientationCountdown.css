@@ -1,0 +1,176 @@
+.orientation-countdown {
+  min-height: 100vh;
+  background: #DDC9DB;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Poppins', sans-serif;
+}
+
+.countdown-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.countdown-content {
+  text-align: center;
+  background: white;
+  border-radius: 25px;
+  padding: 4rem 6rem;
+  box-shadow: 0 25px 50px rgba(84, 22, 82, 0.15);
+  border: 1px solid #f0f0f0;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+.countdown-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #541652;
+  margin-bottom: 2rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.countdown-number {
+  font-size: 8rem;
+  font-weight: 800;
+  color: #FCBE1C;
+  margin: 2rem 0;
+  font-family: 'Poppins', sans-serif;
+  text-shadow: 0 4px 8px rgba(252, 190, 28, 0.3);
+  animation: countdownGlow 2s ease-in-out infinite;
+  position: relative;
+}
+
+.countdown-number::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #FCBE1C;
+  filter: blur(20px);
+  opacity: 0.2;
+  z-index: -1;
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+.countdown-subtitle {
+  font-size: 1.3rem;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+}
+
+.countdown-success {
+  margin: 2rem 0;
+}
+
+.success-icon {
+  font-size: 6rem;
+  color: #FCBE1C;
+  background: #541652;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  animation: successBounce 0.6s ease-out;
+  box-shadow: 0 10px 30px rgba(84, 22, 82, 0.4);
+  position: relative;
+}
+
+.success-icon::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: #FCBE1C;
+  border-radius: 50%;
+  z-index: -1;
+  animation: rotateGradient 3s linear infinite;
+}
+
+/* Animations avec vos couleurs */
+@keyframes countdownGlow {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes successBounce {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1) rotate(0deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes rotateGradient {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .countdown-container {
+    padding: 1rem;
+  }
+  
+  .countdown-content {
+    padding: 3rem 2rem;
+    min-height: 300px;
+  }
+  
+  .countdown-title {
+    font-size: 2.5rem;
+  }
+  
+  .countdown-number {
+    font-size: 6rem;
+  }
+  
+  .success-icon {
+    width: 100px;
+    height: 100px;
+    font-size: 4rem;
+  }
+}

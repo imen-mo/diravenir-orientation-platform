@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from 'react-router-dom';
 import './About.css';
 import orientationImage from '../assets/orientation.png';
 import etudiantImage from '../assets/etudiant.png';
@@ -14,412 +14,292 @@ import abdellahImage from '../assets/abdellahlouadi.png';
 import bouchraImage from '../assets/bouchyalyass.png';
 import hamzaImage from '../assets/hamzaaomari.png';
 import wiamImage from '../assets/wiamfarih.png';
-import { FaInstagram, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+
 import GlobalLayout from '../components/GlobalLayout';
+import { useTheme } from '../contexts/ThemeContext';
 
 const About = () => {
   const navigate = useNavigate();
-  const [activeCard, setActiveCard] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-
-  const cards = [
-    {
-      id: 1,
-      image: meetingImage,
-      title: "Collaboration & Innovation",
-      description: "Working together to build the future of education",
-      icon: "🤝",
-      color: "#FDCB00"
-    },
-    {
-      id: 2,
-      image: etudiantImage,
-      title: "Student Success",
-      description: "Empowering students to achieve their dreams",
-      icon: "🎓",
-      color: "#FDCB00"
-    },
-    {
-      id: 3,
-      image: orientationImage,
-      title: "Professional Guidance",
-      description: "Expert orientation for international studies",
-      icon: "🌟",
-      color: "#FDCB00"
-    }
-  ];
-
-  // Auto-rotate cards avec pause au hover
-  useEffect(() => {
-    if (!isAutoPlaying) return;
-    
-    const interval = setInterval(() => {
-      setActiveCard((prev) => (prev + 1) % cards.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [cards.length, isAutoPlaying]);
-
-  const goToCard = (index) => {
-    setActiveCard(index);
-    setIsAutoPlaying(false);
-    
-    // Redémarrer l'auto-play après 10 secondes
-    setTimeout(() => setIsAutoPlaying(true), 10000);
-  };
-
-  const goToPrevious = () => {
-    setActiveCard((prev) => (prev - 1 + cards.length) % cards.length);
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 10000);
-  };
-
-  const goToNext = () => {
-    setActiveCard((prev) => (prev + 1) % cards.length);
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 10000);
-  };
-
-  const getCardPosition = (index) => {
-    if (index === activeCard) return 'active';
-    if (index === (activeCard - 1 + cards.length) % cards.length) return 'prev';
-    if (index === (activeCard + 1) % cards.length) return 'next';
-    return 'hidden';
-  };
+  const { getText } = useTheme();
 
   return (
-    <GlobalLayout activePage="about">
-      <div className="about-page-modern">
+      <GlobalLayout activePage="about">
+        <div className="about-page-modern">
 
-      {/* Main Content */}
-      <div className="main-content-modern">
-        {/* Left Side - Text Content */}
-        <div className="content-left-modern">
-          <div className="section-title-modern">ABOUT US</div>
-          <h1 className="main-title-modern">
-            The Platform For<br />
-            The Next Future<br />
-            Makers
-          </h1>
-          <p className="subtitle-modern">
-            Transforming education for the next generation of students & learners
-          </p>
-        </div>
+          {/* Main Content - Images à gauche, Textes à droite */}
+          <div className="main-content-modern">
+            {/* Left Side - Text Content */}
+            <div className="content-left-modern">
+              <div className="section-title-modern">{getText('aboutUs')}</div>
+              <h1 className="main-title-modern">
+                {getText('platformForNext')}<br />
+                {getText('futureMakers')}<br />
+                {getText('makers')}
+              </h1>
+              <p className="subtitle-modern">
+                {getText('transformingEducation')}
+              </p>
+            </div>
 
-        {/* Right Side - Enhanced Image Cards Carousel */}
-        <div className="content-right-modern">
-          <div className="cards-container">
-            {/* Navigation Arrows */}
-            <button 
-              className="carousel-nav-btn carousel-prev" 
-              onClick={goToPrevious}
-              aria-label="Previous card"
-            >
-              <FaChevronLeft />
-            </button>
-            
-            <button 
-              className="carousel-nav-btn carousel-next" 
-              onClick={goToNext}
-              aria-label="Next card"
-            >
-              <FaChevronRight />
-            </button>
-
-            {/* Image Cards */}
-            {cards.map((card, index) => (
-              <div
-                key={card.id}
-                className={`image-card ${getCardPosition(index)}`}
-                onClick={() => goToCard(index)}
-              >
-                <div className="card-image-container">
-                  <img src={card.image} alt={card.title} className="card-image" />
-                  <div className="card-icon">{card.icon}</div>
+            {/* Right Side - Three Static Images */}
+            <div className="content-right-modern">
+              <div className="fixed-images-container">
+                <div className="fixed-image meeting-image">
+                  <img src={meetingImage} alt="Collaboration & Innovation" />
                 </div>
-                <div className="card-content">
-                  <h3 className="card-title" style={{ color: card.color }}>
-                    {card.title}
-                  </h3>
-                  <p className="card-description">{card.description}</p>
-                  <div className="card-progress">
-                    <div 
-                      className="progress-bar" 
-                      style={{ 
-                        width: `${((index + 1) / cards.length) * 100}%`,
-                        backgroundColor: card.color 
-                      }}
-                    ></div>
+                <div className="fixed-image etudiant-image">
+                  <img src={etudiantImage} alt="Étudiant" />
+                </div>
+                <div className="fixed-image orientation-image">
+                  <img src={orientationImage} alt="Professional Guidance" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Our Story Section - Background blanc, image ronde et petite */}
+          <section className="our-story-section">
+            <div className="story-container">
+              <div className="story-content">
+                <div className="story-content-inner">
+                  <h2 className="story-subtitle">{getText('ourStory')}</h2>
+                  <h3 className="story-title">{getText('innovateNewWays')}</h3>
+                  <p className="story-text">
+                    {getText('ourStoryText1')}
+                    <br /><br />
+                    {getText('ourStoryText2')}
+                    <br /><br />
+                    {getText('ourStoryText3')}
+                  </p>
+                  <div className="story-decoration">
+                    <div className="decoration-dot"></div>
+                    <div className="decoration-line"></div>
                   </div>
                 </div>
               </div>
-            ))}
-
-            {/* Navigation Dots */}
-            <div className="cards-dots">
-              {cards.map((_, index) => (
-                <button
-                  key={index}
-                  className={`card-dot ${index === activeCard ? 'active' : ''}`}
-                  onClick={() => goToCard(index)}
-                  aria-label={`Go to card ${index + 1}`}
-                />
-              ))}
-            </div>
-
-            {/* Auto-play Indicator */}
-            <div className="auto-play-indicator">
-              <div className={`indicator-dot ${isAutoPlaying ? 'active' : ''}`}></div>
-              <span className="indicator-text">
-                {isAutoPlaying ? 'Auto-play' : 'Paused'}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Our Story Section */}
-      <section className="our-story-section">
-        <div className="story-container">
-          <div className="story-content">
-            <div className="story-content-inner">
-              <h2 className="story-subtitle">OUR STORY</h2>
-              <h3 className="story-title">Innovate in New Ways to Guide Students</h3>
-              <p className="story-text">
-                We believe in the power of purpose-driven learning and bold imagination. We see no limits to what we can build when curiosity meets community, when dreams are backed by action.
-                <br /><br />
-                We are not just educating the next generation, we are co-creating the future with them. Each scholar is a builder, a thinker, a doer. Together, we are shaping futures that matter.
-                <br /><br />
-                This is more than a platform. This is a movement for those who dare to dream and work to build.
-              </p>
-              <div className="story-decoration">
-                <div className="decoration-dot"></div>
-                <div className="decoration-line"></div>
+              <div className="story-image">
+                <img src={fondatriceImage} alt="Fondatrice" className="founder-image" />
+                {/* Motif de chevrons pointant vers le haut */}
+                <div className="chevrons-pattern-left">
+                  <div className="chevron">&lt;</div>
+                  <div className="chevron">&lt;</div>
+                  <div className="chevron">&lt;</div>
+                  <div className="chevron">&lt;</div>
+                  <div className="chevron">&lt;</div>
+                </div>
+                {/* Motif de plus à gauche de l'image fondatrice */}
+                <div className="plus-pattern-left">
+                  <div className="plus">+</div>
+                  <div className="plus">+</div>
+                  <div className="plus">+</div>
+                  <div className="plus">+</div>
+                </div>
+                {/* 4 plus supplémentaires à côté */}
+                <div className="plus-pattern-additional">
+                  <div className="plus">+</div>
+                  <div className="plus">+</div>
+                  <div className="plus">+</div>
+                  <div className="plus">+</div>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="story-image">
-            <img src={fondatriceImage} alt="Fondatrice" className="founder-image" />
-            <div className="image-decoration"></div>
-          </div>
-        </div>
-      </section>
+          </section>
 
-      {/* Mission & Vision Section */}
-      <section className="mission-vision-section">
-        <div className="mission-vision-container">
-          <div className="mission-box">
-            <div className="mission-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#FDCB00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
-            </div>
-            <div className="mission-content">
-              <h2 className="section-title">Our <span className="highlight">Mission</span></h2>
-              <p className="section-text">
-                We aspire to empower students to succeed in life, offering not only academic orientation but also the hope and inspiration to realize their dreams abroad through international scholarships, global internships, volunteering opportunities & many more.
-              </p>
-            </div>
-          </div>
-
-          <div className="vision-box">
-            <div className="vision-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#FDCB00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <circle cx="12" cy="12" r="4"></circle>
-                <line x1="4.93" y1="4.93" x2="9.17" y2="9.17"></line>
-                <line x1="14.83" y1="14.83" x2="19.07" y2="19.07"></line>
-                <line x1="14.83" y1="9.17" x2="19.07" y2="4.93"></line>
-                <line x1="4.93" y1="19.07" x2="9.17" y2="14.83"></line>
-              </svg>
-            </div>
-            <div className="vision-content">
-              <h2 className="section-title">Our <span className="highlight">Vision</span></h2>
-              <p className="section-text">
-                We build students futures by providing comprehensive academic guidance, international scholarships ensuring they have the support and resources needed to succeed and realize their dreams abroad.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Our Values Section */}
-      <section className="values-section">
-        <div className="container">
-          <h2 className="values-title">
-            <span className="values-our">Our</span> <span className="values-values">Values</span>
-          </h2>
-          
-          <div className="values-grid">
-            {/* Honesty Card */}
-            <div className="value-card">
-              <div className="value-icon-wrapper">
-                <svg className="value-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                  <path d="M12 8v4"></path>
-                  <path d="M12 16h.01"></path>
-                </svg>
+          {/* Mission & Vision Section */}
+          <section className="mission-vision-section">
+            <div className="mission-vision-container">
+              <div className="mission-box">
+                <div className="mission-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#FDCB00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                </div>
+                <div className="mission-content">
+                  <h2 className="section-title">{getText('ourMission')} <span className="highlight">{getText('mission')}</span></h2>
+                  <p className="section-text">
+                    {getText('missionText')}
+                  </p>
+                </div>
               </div>
-              <h3 className="value-card-title">Honesty</h3>
-              <p className="value-card-text">
-                We deliver on our promises to students with integrity, transparency, and a genuine commitment to their success.
-              </p>
-            </div>
 
-            {/* Students Focus Card */}
-            <div className="value-card">
-              <div className="value-icon-wrapper">
-                <svg className="value-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="9" cy="7" r="4"></circle>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
+              <div className="vision-box">
+                <div className="vision-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#FDCB00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <circle cx="12" cy="12" r="4"></circle>
+                    <line x1="4.93" y1="4.93" x2="9.17" y2="9.17"></line>
+                    <line x1="14.83" y1="14.83" x2="19.07" y2="19.07"></line>
+                    <line x1="14.83" y1="9.17" x2="19.07" y2="4.93"></line>
+                    <line x1="4.93" y1="19.07" x2="9.17" y2="14.83"></line>
+                  </svg>
+                </div>
+                <div className="vision-content">
+                  <h2 className="section-title">{getText('ourVision')} <span className="highlight">{getText('vision')}</span></h2>
+                  <p className="section-text">
+                    {getText('visionText')}
+                  </p>
+                </div>
               </div>
-              <h3 className="value-card-title">Students Focus</h3>
-              <p className="value-card-text">
-                We keep students at the heart of everything we do because their success is what matters most.
-              </p>
             </div>
+          </section>
 
-            {/* Growth Oriented Card */}
-            <div className="value-card">
-              <div className="value-icon-wrapper">
-                <svg className="value-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M17 2.1l4 4-4 4"></path>
-                  <path d="M3 12.2v-2a4 4 0 0 1 4-4h12.8M7 21.9l-4-4 4-4"></path>
-                  <path d="M21 11.8v2a4 4 0 0 1-4 4H4.2"></path>
-                </svg>
+          {/* Our Values Section */}
+          <section className="values-section">
+            <div className="container">
+              <h2 className="values-title">
+                <span className="values-our">{getText('ourValues')}</span> <span className="values-values">{getText('values')}</span>
+              </h2>
+
+              <div className="values-grid">
+                {/* Honesty Card */}
+                <div className="value-card">
+                  <div className="value-icon-wrapper">
+                    <svg className="value-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path>
+                      <path d="M9 12l2 2 4-4"></path>
+                    </svg>
+                  </div>
+                  <h3 className="value-card-title">{getText('honesty')}</h3>
+                  <p className="value-card-text">
+                    {getText('honestyText')}
+                  </p>
+                </div>
+
+                {/* Students Focus Card */}
+                <div className="value-card">
+                  <div className="value-icon-wrapper">
+                    <svg className="value-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                      <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                    </svg>
+                  </div>
+                  <h3 className="value-card-title">{getText('studentsFocus')}</h3>
+                  <p className="value-card-text">
+                    {getText('studentsFocusText')}
+                  </p>
+                </div>
+
+                {/* Growth Oriented Card */}
+                <div className="value-card">
+                  <div className="value-icon-wrapper">
+                    <svg className="value-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 3v18h18"></path>
+                      <path d="m9 12 2 2 4-4"></path>
+                      <path d="M18 9v3a2 2 0 0 1-2 2h-2"></path>
+                    </svg>
+                  </div>
+                  <h3 className="value-card-title">{getText('growthOriented')}</h3>
+                  <p className="value-card-text">
+                    {getText('growthOrientedText')}
+                  </p>
+                </div>
+
+                {/* Believe Card */}
+                <div className="value-card">
+                  <div className="value-icon-wrapper">
+                    <svg className="value-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                  </div>
+                  <h3 className="value-card-title">{getText('believe')}</h3>
+                  <p className="value-card-text">
+                    {getText('believeText')}
+                  </p>
+                </div>
               </div>
-              <h3 className="value-card-title">Growth Oriented</h3>
-              <p className="value-card-text">
-                We aspire to cultivate a Moroccan generation that values education on a global scale.
-              </p>
             </div>
+          </section>
 
-            {/* Believe Card */}
-            <div className="value-card">
-              <div className="value-icon-wrapper">
-                <svg className="value-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
-                </svg>
-              </div>
-              <h3 className="value-card-title">Believe</h3>
-              <p className="value-card-text">
-                We believe in our students, regardless of their academic grades, skills, or past challenges.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+          {/* Our Team Section */}
+          <section className="team-section">
+            <div className="container">
+              <h2 className="team-title">
+                <span className="team-our">{getText('ourTeam')}</span> <span className="team-team">{getText('team')}</span>
+              </h2>
 
-      {/* Our Team Section */}
-      <section className="team-section">
-        <div className="container">
-          <h2 className="team-title">
-            <span className="team-our">Our</span> <span className="team-team">Team</span>
-          </h2>
-          
-          {/* Co Founders Row - Cartes plus grandes */}
-          <div className="co-founders-row">
-            <h3 className="co-founders-title">Co Founders</h3>
-            <div className="co-founders-container">
-              {/* Meryem Derni */}
-              <div className="team-member co-founder">
-                <a href="https://www.instagram.com/meryemderni?igsh=YmJuZGtweXB3NG00" target="_blank" rel="noopener noreferrer" className="team-member-link">
-                  <div className="team-image-container">
-                    <img src={meryemImage} alt="Meryem Derni" className="team-image" />
-                    <div className="instagram-overlay">
-                      <FaInstagram className="instagram-icon" />
+              {/* All Team Members in one horizontal scrollable row */}
+              <div className="team-members-row">
+                <div className="team-members-scroll">
+                  {/* Meryem Derni - Co Founder */}
+                  <div className="team-member">
+                    <div className="team-image-container">
+                      <img src={meryemImage} alt="Meryem Derni" className="team-image" />
                     </div>
+                    <h3 className="team-member-name">Meryem Derni</h3>
+                    <p className="team-member-role">{getText('coFounder')}</p>
                   </div>
-                </a>
-                <h3 className="team-member-name">Meryem Derni</h3>
-                <p className="team-member-role">Co Founder</p>
-              </div>
 
-              {/* Nadia Boukdir */}
-              <div className="team-member co-founder">
-                <a href="https://www.instagram.com/nadia.boukdir?igsh=aDJ1eXRjdWlkdmR1" target="_blank" rel="noopener noreferrer" className="team-member-link">
-                  <div className="team-image-container">
-                    <img src={nadiaImage} alt="Nadia Boukdir" className="team-image" />
-                    <div className="instagram-overlay">
-                      <FaInstagram className="instagram-icon" />
+                  {/* Nadia Boukdir - Co Founder */}
+                  <div className="team-member">
+                    <div className="team-image-container">
+                      <img src={nadiaImage} alt="Nadia Boukdir" className="team-image" />
                     </div>
+                    <h3 className="team-member-name">Nadia Boukdir</h3>
+                    <p className="team-member-role">{getText('coFounder')}</p>
                   </div>
-                </a>
-                <h3 className="team-member-name">Nadia Boukdir</h3>
-                <p className="team-member-role">Co Founder</p>
+
+                  {/* Abdellah Louadi */}
+                  <div className="team-member">
+                    <div className="team-image-container">
+                      <img src={abdellahImage} alt="Abdellah Louadi" className="team-image" />
+                    </div>
+                    <h3 className="team-member-name">Abdellah Louadi</h3>
+                    <p className="team-member-role">{getText('educationalConsultant')}</p>
+                  </div>
+
+                  {/* Hamza Aomari */}
+                  <div className="team-member">
+                    <div className="team-image-container">
+                      <img src={hamzaImage} alt="Hamza Aomari" className="team-image" />
+                    </div>
+                    <h3 className="team-member-name">Hamza Aomari</h3>
+                    <p className="team-member-role">{getText('educationalConsultant')}</p>
+                  </div>
+
+                  {/* Wiam Farih */}
+                  <div className="team-member">
+                    <div className="team-image-container">
+                      <img src={wiamImage} alt="Wiam Farih" className="team-image" />
+                    </div>
+                    <h3 className="team-member-name">Wiam Farih</h3>
+                    <p className="team-member-role">{getText('educationalConsultant')}</p>
+                  </div>
+
+                  {/* Marouane Zahid */}
+                  <div className="team-member">
+                    <div className="team-image-container">
+                      <img src={marouaneImage} alt="Marouane Zahid" className="team-image" />
+                    </div>
+                    <h3 className="team-member-name">Marouane Zahid</h3>
+                    <p className="team-member-role">{getText('educationalConsultant')}</p>
+                  </div>
+
+                  {/* Rania Jamoudi */}
+                  <div className="team-member">
+                    <div className="team-image-container">
+                      <img src={raniaImage} alt="Rania Jamoudi" className="team-image" />
+                    </div>
+                    <h3 className="team-member-name">Rania Jamoudi</h3>
+                    <p className="team-member-role">{getText('admissionCoordinator')}</p>
+                  </div>
+
+                  {/* Bouchra Lyass */}
+                  <div className="team-member">
+                    <div className="team-image-container">
+                      <img src={bouchraImage} alt="Bouchra Lyass" className="team-image" />
+                    </div>
+                    <h3 className="team-member-name">Bouchra Lyass</h3>
+                    <p className="team-member-role">{getText('marketingCoordinator')}</p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </section>
 
-          {/* Team Members Row */}
-          <div className="team-members-row">
-            <h3 className="team-members-title">Our Team</h3>
-            <div className="team-members-scroll">
-              {/* Abdellah Louadi */}
-              <div className="team-member">
-                <div className="team-image-container">
-                  <img src={abdellahImage} alt="Abdellah Louadi" className="team-image" />
-                </div>
-                <h3 className="team-member-name">Abdellah Louadi</h3>
-                <p className="team-member-role">Educational Consultant</p>
-              </div>
 
-              {/* Hamza Aomari */}
-              <div className="team-member">
-                <div className="team-image-container">
-                  <img src={hamzaImage} alt="Hamza Aomari" className="team-image" />
-                </div>
-                <h3 className="team-member-name">Hamza Aomari</h3>
-                <p className="team-member-role">Educational Consultant</p>
-              </div>
-
-              {/* Wiam Farih */}
-              <div className="team-member">
-                <div className="team-image-container">
-                  <img src={wiamImage} alt="Wiam Farih" className="team-image" />
-                </div>
-                <h3 className="team-member-name">Wiam Farih</h3>
-                <p className="team-member-role">Educational Consultant</p>
-              </div>
-
-              {/* Marouane Zahid */}
-              <div className="team-member">
-                <div className="team-image-container">
-                  <img src={marouaneImage} alt="Marouane Zahid" className="team-image" />
-                </div>
-                <h3 className="team-member-name">Marouane Zahid</h3>
-                <p className="team-member-role">Educational Consultant</p>
-              </div>
-
-              {/* Rania Jamoudi */}
-              <div className="team-member">
-                <div className="team-image-container">
-                  <img src={raniaImage} alt="Rania Jamoudi" className="team-image" />
-                </div>
-                <h3 className="team-member-name">Rania Jamoudi</h3>
-                <p className="team-member-role">Admission Coordinator</p>
-              </div>
-
-              {/* Bouchra Lyass */}
-              <div className="team-member">
-                <div className="team-image-container">
-                  <img src={bouchraImage} alt="Bouchra Lyass" className="team-image" />
-                </div>
-                <h3 className="team-member-name">Bouchra Lyass</h3>
-                <p className="team-member-role">Marketing Coordinator</p>
-              </div>
-            </div>
-          </div>
         </div>
-      </section>
-      
-
-      </div>
-    </GlobalLayout>
+      </GlobalLayout>
   );
 };
 

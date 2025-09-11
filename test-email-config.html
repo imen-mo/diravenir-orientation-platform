@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Configuration Email</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>📧 Test Configuration Email</h1>
+    
+    <div class="test-section info">
+        <h3>🧪 Test Email Simple</h3>
+        <button onclick="testSimpleEmail()">Tester l'envoi d'email simple</button>
+        <div id="email-test-result"></div>
+    </div>
+    
+    <div class="test-section info">
+        <h3>🎯 Test Orientation sans Email</h3>
+        <button onclick="testOrientationWithoutEmail()">Test sans envoi d'email</button>
+        <div id="orientation-test-result"></div>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost:8084';
+        
+        async function testSimpleEmail() {
+            const resultDiv = document.getElementById('email-test-result');
+            resultDiv.innerHTML = '<p>🔄 Test d\'envoi d\'email en cours...</p>';
+            
+            try {
+                // Test avec un endpoint simple qui envoie juste un email de bienvenue
+                const response = await fetch(`${BASE_URL}/api/orientation/complete`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        "q1": "A", "q2": "B", "q3": "C", "q4": "A", "q5": "B",
+                        "q6": "C", "q7": "A", "q8": "B", "q9": "{\"security\": 50, \"innovation\": 60, \"autonomy\": 70, \"salary\": 80}",
+                        "q10": "C", "q11": "A", "q12": "B", "q13": "C", "q14": "A",
+                        "studentInfo": {
+                            "fullName": "Test Email Simple",
+                            "email": "test.email@example.com",
+                            "phone": "+33123456789"
+                        }
+                    })
+                });
+                
+                const responseText = await response.text();
+                console.log('📄 Raw Response:', responseText);
+                
+                if (response.ok) {
+                    const result = JSON.parse(responseText);
+                    resultDiv.innerHTML = `
+                        <div class="test-section success">
+                            <h4>✅ Test Email Réussi!</h4>
+                            <p><strong>Status:</strong> ${response.status}</p>
+                            <p><strong>Test UUID:</strong> ${result.testUuid}</p>
+                            <p><strong>Message:</strong> ${result.message}</p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="test-section error">
+                            <h4>❌ Erreur HTTP ${response.status}</h4>
+                            <pre>${responseText}</pre>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="test-section error">
+                        <h4>❌ Erreur</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testOrientationWithoutEmail() {
+            const resultDiv = document.getElementById('orientation-test-result');
+            resultDiv.innerHTML = '<p>🔄 Test d\'orientation sans email en cours...</p>';
+            
+            try {
+                // Test sans email pour éviter le problème d'envoi
+                const response = await fetch(`${BASE_URL}/api/orientation/complete`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        "q1": "A", "q2": "B", "q3": "C", "q4": "A", "q5": "B",
+                        "q6": "C", "q7": "A", "q8": "B", "q9": "{\"security\": 50, \"innovation\": 60, \"autonomy\": 70, \"salary\": 80}",
+                        "q10": "C", "q11": "A", "q12": "B", "q13": "C", "q14": "A",
+                        "studentInfo": {
+                            "fullName": "Test Sans Email",
+                            "email": "test.sans.email@example.com",
+                            "phone": "+33123456789"
+                        }
+                    })
+                });
+                
+                const responseText = await response.text();
+                console.log('📄 Raw Response:', responseText);
+                
+                if (response.ok) {
+                    const result = JSON.parse(responseText);
+                    resultDiv.innerHTML = `
+                        <div class="test-section success">
+                            <h4>✅ Test Orientation Réussi!</h4>
+                            <p><strong>Status:</strong> ${response.status}</p>
+                            <p><strong>Test UUID:</strong> ${result.testUuid}</p>
+                            <p><strong>Meilleure Recommandation:</strong> ${result.results?.topRecommendationMajor}</p>
+                            <p><strong>Score:</strong> ${result.results?.topRecommendationScore?.toFixed(2)}</p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="test-section error">
+                            <h4>❌ Erreur HTTP ${response.status}</h4>
+                            <pre>${responseText}</pre>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="test-section error">
+                        <h4>❌ Erreur</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

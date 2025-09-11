@@ -1,228 +1,247 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+// Correction du layout global
+import './styles/fix-layout.css';
+
+// Contexts
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
-import ProtectedRoute, { PublicRoute } from './components/ProtectedRoute';
-import { initCookieService } from './services/cookieService';
+import { LanguageProvider } from './contexts/LanguageContext';
 
-// Styles globaux
-import './styles/globalTheme.css';
+// Layout Components
+import GlobalLayout from './components/GlobalLayout';
+import ProtectedRoute, { AdminRoute } from './components/ProtectedRoute';
 
-// Pages d'authentification
+// Main Pages
+import HomePage from './pages/HomePage';
+import WelcomePage from './pages/WelcomePage';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import FAQ from './pages/FAQ';
+import NotFound from './pages/NotFound';
+
+// Authentication Pages
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import VerifyEmail from './pages/VerifyEmail';
+import VerifyEmailSimple from './pages/VerifyEmailSimple';
+import VerifyEmailBlocked from './pages/VerifyEmailBlocked';
 import VerifyEmailSent from './pages/VerifyEmailSent';
-import OAuth2Success from './pages/OAuth2Success';
-import OAuth2Failure from './pages/OAuth2Failure';
+import OAuth2Callback from './pages/OAuth2Callback';
 
-// Pages protégées - Dashboard supprimé
+// User Pages
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
+import StudentDashboard from './pages/StudentDashboard';
+import StudentDashboardModern from './pages/StudentDashboardModern';
 
-// Pages existantes originales
-import HomePage from './pages/HomePage';
-import UnifiedOrientationTest from './components/UnifiedOrientationTest';
-import OrientationTest from './components/OrientationTest';
-import OrientationResults from './pages/OrientationResults';
-import ThemeDemo from './components/ThemeDemo';
-import WelcomePage from './pages/WelcomePage';
-import TestWelcome from './pages/TestWelcome';
-import TestList from './pages/TestList';
-import TestPage from './pages/TestPage';
-import HeaderTest from './pages/HeaderTest';
-import NavbarTest from './pages/NavbarTest';
-import SimpleNavbarTest from './pages/SimpleNavbarTest';
-
-// Autres pages existantes
-import About from './pages/About';
-import Contact from './pages/Contact';
-import FAQ from './pages/FAQ';
+// Programs Pages
 import Programs from './pages/Programs';
+import ProgramsPage from './pages/ProgramsPage';
 import ProgramDetail from './pages/ProgramDetail';
 import Apply from './pages/Apply';
-import DestinationPage from './pages/DestinationPage';
+import ApplicationSuccess from './pages/ApplicationSuccess';
+
+// Orientation System Pages
+import OrientationWelcome from './pages/OrientationWelcome';
+import OrientationChoice from './pages/OrientationChoice';
+import OrientationCountdown from './pages/OrientationCountdown';
+import OrientationQuestion from './pages/OrientationQuestion';
+import OrientationQuestion2 from './pages/OrientationQuestion2';
+import OrientationQuestion3 from './pages/OrientationQuestion3';
+import OrientationQuestion4 from './pages/OrientationQuestion4';
+import OrientationQuestion5 from './pages/OrientationQuestion5';
+import OrientationQuestion6 from './pages/OrientationQuestion6';
+import OrientationQuestion7 from './pages/OrientationQuestion7';
+import OrientationQuestion8 from './pages/OrientationQuestion8';
+import OrientationQuestion9 from './pages/OrientationQuestion9';
+import OrientationQuestion10 from './pages/OrientationQuestion10';
+import OrientationQuestion11 from './pages/OrientationQuestion11';
+import OrientationQuestion12 from './pages/OrientationQuestion12';
+import OrientationQuestion13 from './pages/OrientationQuestion13';
+import OrientationQuestion14 from './pages/OrientationQuestion14';
+import OrientationQuestion15 from './pages/OrientationQuestion15';
+import OrientationResults from './pages/OrientationResults';
+import MajorResults from './pages/MajorResults';
+
+// Country Pages
 import China from './pages/China';
 import Cyprus from './pages/Cyprus';
 import Romania from './pages/Romania';
+import DestinationPage from './pages/DestinationPage';
+import CountryPage from './pages/CountryPage';
+import MyTestResults from './pages/MyTestResults';
+
+// University Pages
 import Universites from './pages/Universites';
 import Etudiant from './pages/Etudiant';
-import PersonalizedResults from './pages/PersonalizedResults';
+
+// Admin Pages
 import AdminDashboard from './pages/AdminDashboard';
-import Dashboard from './pages/Dashboard';
-import StudentDashboard from './pages/StudentDashboard';
-import Profile from './pages/Profile';
-import Settings from './pages/Settings';
-import NotFound from './pages/NotFound';
+import AdminDashboardModern from './pages/AdminDashboardModern';
 
-const App = () => {
-  // Initialiser le service de cookies au démarrage de l'application
-  useEffect(() => {
-    initCookieService();
-  }, []);
+// Payment Pages
+import PaymentSuccess from './pages/PaymentSuccess';
 
+// Test Pages
+import CountdownPage from './pages/CountdownPage';
+import AuthTestPage from './pages/AuthTestPage';
+import DashboardTest from './pages/DashboardTest';
+import DashboardTestModern from './pages/DashboardTestModern';
+import DashboardTestComplete from './pages/DashboardTestComplete';
+import AdminDashboardModernComplete from './pages/AdminDashboardModernComplete';
+import AdminLoginFlow from './pages/AdminLoginFlow';
+import EmailDebugPage from './pages/EmailDebugPage';
+import EmailTestPage from './pages/EmailTestPage';
+
+function App() {
   return (
-    <AuthProvider>
+    <LanguageProvider>
       <ThemeProvider>
-        <Router>
+        <AuthProvider>
+          <Router>
           <div className="App">
+            <GlobalLayout>
             <Routes>
-            {/* Routes publiques existantes */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/programs" element={<Programs />} />
-            <Route path="/program/:id" element={<ProgramDetail />} />
-            <Route path="/apply" element={<Apply />} />
-            <Route path="/destination/:id" element={<DestinationPage />} />
-            <Route path="/china" element={<China />} />
-            <Route path="/cyprus" element={<Cyprus />} />
-            <Route path="/romania" element={<Romania />} />
-            <Route path="/universities" element={<Universites />} />
-            <Route path="/etudiant" element={<Etudiant />} />
-            <Route path="/personalized-results" element={<PersonalizedResults />} />
-            <Route path="/orientation" element={<UnifiedOrientationTest />} />
-            <Route path="/orientation/test" element={<UnifiedOrientationTest />} />
-            <Route path="/orientation/results" element={<OrientationResults />} />
-            <Route path="/orientation-test" element={<OrientationTest />} />
-            <Route path="/results" element={<OrientationResults />} />
-            <Route path="/theme-demo" element={<ThemeDemo />} />
-            <Route path="/welcome" element={<WelcomePage />} />
-            <Route path="/test-welcome" element={<TestWelcome />} />
-            <Route path="/test-list" element={<TestList />} />
-            <Route path="/test" element={<TestPage />} />
-            <Route path="/header-test" element={<HeaderTest />} />
-            <Route path="/navbar-test" element={<NavbarTest />} />
-            <Route path="/simple-navbar-test" element={<SimpleNavbarTest />} />
-            
-            {/* Routes d'authentification publiques */}
-            <Route 
-              path="/login" 
-              element={
-                <PublicRoute>
-                  <Login />
-                </PublicRoute>
-              } 
-            />
-            <Route 
-              path="/register" 
-              element={
-                <PublicRoute>
-                  <Register />
-                </PublicRoute>
-              } 
-            />
-            <Route 
-              path="/forgot-password" 
-              element={
-                <PublicRoute>
-                  <ForgotPassword />
-                </PublicRoute>
-              } 
-            />
-            <Route 
-              path="/reset-password" 
-              element={
-                <PublicRoute>
-                  <ResetPassword />
-                </PublicRoute>
-              } 
-            />
-            <Route 
-              path="/verify-email" 
-              element={
-                <PublicRoute>
-                  <VerifyEmail />
-                </PublicRoute>
-              } 
-            />
-            <Route 
-              path="/verify-email-sent" 
-              element={
-                <PublicRoute>
-                  <VerifyEmailSent />
-                </PublicRoute>
-              } 
-            />
-            
-            {/* Routes OAuth2 Google */}
-            <Route 
-              path="/oauth2-success" 
-              element={
-                <PublicRoute>
-                  <OAuth2Success />
-                </PublicRoute>
-              } 
-            />
-            <Route 
-              path="/oauth2-failure" 
-              element={
-                <PublicRoute>
-                  <OAuth2Failure />
-                </PublicRoute>
-              } 
-            />
+                {/* Main Routes */}
+              <Route path="/" element={<HomePage />} />
+              <Route path="/welcome" element={<WelcomePage />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/faq" element={<FAQ />} />
 
-            {/* Routes protégées - Dashboard supprimé car redirection vers HOMEPAGE */}
-            <Route 
-              path="/profile" 
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/settings" 
-              element={
-                <ProtectedRoute>
-                  <Settings />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Route Admin - AJOUTÉE ! */}
-            <Route 
-              path="/admin" 
-              element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Routes pour les tableaux de bord */}
-            <Route 
-              path="/dashboard" 
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/student-dashboard" 
-              element={
-                <ProtectedRoute>
-                  <StudentDashboard />
-                </ProtectedRoute>
-              } 
-            />
+                {/* Authentication Routes */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
+              <Route path="/verify-email-simple" element={<VerifyEmailSimple />} />
+              <Route path="/verify-email-blocked" element={<VerifyEmailBlocked />} />
+              <Route path="/verify-email-sent" element={<VerifyEmailSent />} />
+              <Route path="/oauth2/callback" element={<OAuth2Callback />} />
 
+                {/* Protected User Routes */}
+                <Route path="/profile" element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                } />
+                <Route path="/settings" element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                } />
+                <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <StudentDashboardModern />
+                  </ProtectedRoute>
+                } />
 
+                {/* Programs Routes */}
+              <Route path="/programs" element={<Programs />} />
+              <Route path="/programs-page" element={<ProgramsPage />} />
+              <Route path="/program/:id" element={<ProgramDetail />} />
+                <Route path="/apply/:programId" element={
+                  <ProtectedRoute>
+                    <Apply />
+                  </ProtectedRoute>
+                } />
+                <Route path="/apply" element={
+                  <ProtectedRoute>
+                    <Apply />
+                  </ProtectedRoute>
+                } />
+                <Route path="/application-success" element={
+                  <ProtectedRoute>
+                    <ApplicationSuccess />
+                  </ProtectedRoute>
+                } />
 
-            {/* Route 404 */}
-            <Route path="/404" element={<NotFound />} />
+                {/* Orientation System Routes */}
+                <Route path="/orientation" element={<OrientationChoice />} />
+                <Route path="/orientation/welcome" element={<OrientationWelcome />} />
+                <Route path="/orientation/countdown" element={<OrientationCountdown />} />
+                <Route path="/orientation/question/1" element={<OrientationQuestion />} />
+                <Route path="/orientation/question/2" element={<OrientationQuestion2 />} />
+                <Route path="/orientation/question/3" element={<OrientationQuestion3 />} />
+                <Route path="/orientation/question/4" element={<OrientationQuestion4 />} />
+                <Route path="/orientation/question/5" element={<OrientationQuestion5 />} />
+                <Route path="/orientation/question/6" element={<OrientationQuestion6 />} />
+                <Route path="/orientation/question/7" element={<OrientationQuestion7 />} />
+                <Route path="/orientation/question/8" element={<OrientationQuestion8 />} />
+                <Route path="/orientation/question/9" element={<OrientationQuestion9 />} />
+                <Route path="/orientation/question/10" element={<OrientationQuestion10 />} />
+                <Route path="/orientation/question/11" element={<OrientationQuestion11 />} />
+                <Route path="/orientation/question/12" element={<OrientationQuestion12 />} />
+                <Route path="/orientation/question/13" element={<OrientationQuestion13 />} />
+                <Route path="/orientation/question/14" element={<OrientationQuestion14 />} />
+                <Route path="/orientation/question/15" element={<OrientationQuestion15 />} />
+                <Route path="/orientation/results" element={<OrientationResults />} />
+                <Route path="/major-results" element={<MajorResults />} />
+                <Route path="/my-test-results" element={<MyTestResults />} />
+
+                {/* Country Routes */}
+              <Route path="/china" element={<China />} />
+              <Route path="/cyprus" element={<Cyprus />} />
+              <Route path="/romania" element={<Romania />} />
+                <Route path="/destination/:country" element={<DestinationPage />} />
+                <Route path="/country/:countryCode" element={<CountryPage />} />
+
+                {/* University Routes */}
+                <Route path="/universities" element={<Universites />} />
+                <Route path="/etudiant" element={<Etudiant />} />
+
+                {/* Admin Routes */}
+                <Route path="/admin" element={
+                  <AdminRoute>
+                    <AdminDashboardModern />
+                  </AdminRoute>
+                } />
+
+                {/* Payment Routes */}
+                <Route path="/payment/success" element={<PaymentSuccess />} />
+
+                {/* Test Routes */}
+                <Route path="/test/countdown" element={<CountdownPage />} />
+                <Route path="/test/auth" element={<AuthTestPage />} />
+                <Route path="/test/dashboards" element={<DashboardTest />} />
+                <Route path="/test/dashboards-modern" element={<DashboardTestModern />} />
+          <Route path="/test/dashboards-complete" element={<DashboardTestComplete />} />
+          <Route path="/admin-complete" element={<AdminDashboardModernComplete />} />
+          <Route path="/admin" element={<AdminLoginFlow />} />
+          <Route path="/debug/email" element={<EmailDebugPage />} />
+          <Route path="/test/email" element={<EmailTestPage />} />
+
+                {/* 404 Route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            </GlobalLayout>
             
-            {/* Redirection par défaut */}
-            <Route path="*" element={<NotFound />} />
-                      </Routes>
+            {/* Toast Notifications */}
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
           </div>
         </Router>
+        </AuthProvider>
       </ThemeProvider>
-      </AuthProvider>
+    </LanguageProvider>
   );
-};
+}
 
 export default App;

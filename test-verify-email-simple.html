@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Simple - Vérification Email</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .url-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: monospace;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Simple - Vérification Email</h1>
+        
+        <div class="info">
+            <h3>📋 Instructions</h3>
+            <p>1. Cliquez sur "Tester avec votre token"</p>
+            <p>2. Vous serez redirigé vers la page de vérification</p>
+            <p>3. Après vérification, vous serez redirigé vers login</p>
+        </div>
+
+        <div class="url-box" id="current-url">
+            URL actuelle : <span id="url-display"></span>
+        </div>
+
+        <div id="token-info" class="info" style="display: none;">
+            <strong>Token trouvé :</strong> <span id="token-display"></span>
+        </div>
+
+        <button class="test-button" onclick="testWithToken()">
+            🚀 Tester avec votre token
+        </button>
+
+        <button class="test-button" onclick="testBackend()">
+            🔧 Tester le backend
+        </button>
+
+        <div id="results"></div>
+
+        <div class="info">
+            <h3>🎯 Flux Attendu</h3>
+            <ol style="text-align: left;">
+                <li><strong>Inscription</strong> → Stockage en base + Email envoyé</li>
+                <li><strong>Clique sur le lien email</strong> → Page de vérification</li>
+                <li><strong>Vérification automatique</strong> → Message de succès</li>
+                <li><strong>Redirection automatique</strong> → Page de login</li>
+                <li><strong>Connexion</strong> → Utilisateur authentifié</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Afficher l'URL actuelle
+        document.getElementById('url-display').textContent = window.location.href;
+        
+        // Vérifier s'il y a un token dans l'URL
+        const url = new URL(window.location.href);
+        const token = url.searchParams.get('token');
+        
+        if (token) {
+            document.getElementById('token-info').style.display = 'block';
+            document.getElementById('token-display').textContent = token;
+        }
+
+        function showResult(message, type = 'info') {
+            const resultsDiv = document.getElementById('results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = type;
+            resultDiv.innerHTML = message;
+            resultsDiv.appendChild(resultDiv);
+        }
+
+        function testWithToken() {
+            const token = document.getElementById('token-display').textContent;
+            
+            if (!token) {
+                showResult('❌ Aucun token trouvé dans l\'URL. Utilisez le lien de votre email.', 'error');
+                return;
+            }
+
+            // Rediriger vers la page de vérification React
+            const verifyUrl = `http://localhost:3000/verify-email?token=${token}`;
+            showResult(`🔄 Redirection vers : <br><code>${verifyUrl}</code>`, 'info');
+            
+            setTimeout(() => {
+                window.location.href = verifyUrl;
+            }, 2000);
+        }
+
+        async function testBackend() {
+            const token = document.getElementById('token-display').textContent;
+            
+            if (!token) {
+                showResult('❌ Aucun token pour tester le backend', 'error');
+                return;
+            }
+
+            try {
+                showResult('🔄 Test du backend en cours...', 'info');
+                
+                const response = await fetch(`http://localhost:8084/api/auth/verify-email?token=${token}`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showResult(`✅ Backend OK : ${data.message}`, 'success');
+                } else {
+                    showResult(`❌ Backend Error : ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Erreur de connexion : ${error.message}`, 'error');
+            }
+        }
+
+        // Test automatique si un token est présent
+        if (token) {
+            showResult('✅ Token détecté ! Vous pouvez tester la vérification.', 'success');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Responsivité Mobile - Diravenir</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            color: #333;
+        }
+        
+        .test-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: #f8f9fa;
+        }
+        
+        .test-title {
+            color: #541652;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .test-description {
+            color: #666;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .device-test {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .device-frame {
+            border: 3px solid #333;
+            border-radius: 20px;
+            padding: 10px;
+            background: #000;
+            position: relative;
+        }
+        
+        .device-frame::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+        }
+        
+        .device-screen {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .mobile-frame {
+            width: 320px;
+            height: 568px;
+        }
+        
+        .tablet-frame {
+            width: 768px;
+            height: 1024px;
+        }
+        
+        .desktop-frame {
+            width: 1200px;
+            height: 800px;
+        }
+        
+        .device-label {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #541652;
+        }
+        
+        .responsive-test {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 10px;
+        }
+        
+        .navbar-test {
+            background: #541652;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 15px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-menu li {
+            padding: 5px 10px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .hero-section {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #541652 0%, #8B5CF6 100%);
+            color: white;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .hero-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        
+        .hero-subtitle {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #FDCB00;
+            color: #541652;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .content-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .card-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #541652;
+            margin-bottom: 10px;
+        }
+        
+        .card-description {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .test-results {
+            background: #e8f5e8;
+            border: 2px solid #4caf50;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .test-results h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+        
+        .test-results ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .test-results li {
+            margin-bottom: 8px;
+            color: #388e3c;
+        }
+        
+        .issues-found {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .issues-found h3 {
+            color: #c62828;
+            margin-bottom: 15px;
+        }
+        
+        .issues-found ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .issues-found li {
+            margin-bottom: 8px;
+            color: #d32f2f;
+        }
+        
+        /* Media Queries pour tester la responsivité */
+        @media (max-width: 768px) {
+            .device-test {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .desktop-frame {
+                display: none;
+            }
+            
+            .tablet-frame {
+                width: 100%;
+                max-width: 400px;
+                height: 600px;
+            }
+            
+            .hero-title {
+                font-size: 24px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 200px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .test-container {
+                padding: 10px;
+            }
+            
+            .mobile-frame {
+                width: 100%;
+                max-width: 300px;
+                height: 500px;
+            }
+            
+            .tablet-frame {
+                display: none;
+            }
+            
+            .hero-title {
+                font-size: 20px;
+            }
+            
+            .hero-subtitle {
+                font-size: 14px;
+            }
+            
+            .content-card {
+                padding: 15px;
+            }
+            
+            .card-icon {
+                font-size: 36px;
+            }
+            
+            .card-title {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-section">
+            <h1 class="test-title">Test de Responsivité Mobile - Diravenir</h1>
+            <p class="test-description">
+                Cette page teste la responsivité de l'interface Diravenir sur différents appareils.
+                Redimensionnez votre navigateur ou utilisez les outils de développement pour tester.
+            </p>
+            
+            <div class="device-test">
+                <div class="device-frame mobile-frame">
+                    <div class="device-screen">
+                        <div class="responsive-test">
+                            <div class="navbar-test">
+                                <div class="logo">DIRAVENIR</div>
+                                <ul class="nav-menu">
+                                    <li>Accueil</li>
+                                    <li>Programmes</li>
+                                    <li>Contact</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="hero-section">
+                                <h2 class="hero-title">Votre Avenir Commence Ici</h2>
+                                <p class="hero-subtitle">Découvrez les meilleurs programmes d'études à l'international</p>
+                                <div class="hero-buttons">
+                                    <button class="btn btn-primary">Commencer</button>
+                                    <button class="btn btn-secondary">En savoir plus</button>
+                                </div>
+                            </div>
+                            
+                            <div class="content-grid">
+                                <div class="content-card">
+                                    <div class="card-icon">🎓</div>
+                                    <h3 class="card-title">Programmes</h3>
+                                    <p class="card-description">Découvrez nos programmes d'études</p>
+                                </div>
+                                <div class="content-card">
+                                    <div class="card-icon">🌍</div>
+                                    <h3 class="card-title">Destinations</h3>
+                                    <p class="card-description">Explorez le monde</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="device-label">Mobile (320px)</div>
+                </div>
+                
+                <div class="device-frame tablet-frame">
+                    <div class="device-screen">
+                        <div class="responsive-test">
+                            <div class="navbar-test">
+                                <div class="logo">DIRAVENIR</div>
+                                <ul class="nav-menu">
+                                    <li>Accueil</li>
+                                    <li>Orientation</li>
+                                    <li>Programmes</li>
+                                    <li>À propos</li>
+                                    <li>Contact</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="hero-section">
+                                <h2 class="hero-title">Votre Avenir Commence Ici</h2>
+                                <p class="hero-subtitle">Découvrez les meilleurs programmes d'études à l'international</p>
+                                <div class="hero-buttons">
+                                    <button class="btn btn-primary">Commencer</button>
+                                    <button class="btn btn-secondary">En savoir plus</button>
+                                </div>
+                            </div>
+                            
+                            <div class="content-grid">
+                                <div class="content-card">
+                                    <div class="card-icon">🎓</div>
+                                    <h3 class="card-title">Programmes</h3>
+                                    <p class="card-description">Découvrez nos programmes d'études</p>
+                                </div>
+                                <div class="content-card">
+                                    <div class="card-icon">🌍</div>
+                                    <h3 class="card-title">Destinations</h3>
+                                    <p class="card-description">Explorez le monde</p>
+                                </div>
+                                <div class="content-card">
+                                    <div class="card-icon">📊</div>
+                                    <h3 class="card-title">Orientation</h3>
+                                    <p class="card-description">Trouvez votre voie</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="device-label">Tablet (768px)</div>
+                </div>
+                
+                <div class="device-frame desktop-frame">
+                    <div class="device-screen">
+                        <div class="responsive-test">
+                            <div class="navbar-test">
+                                <div class="logo">DIRAVENIR</div>
+                                <ul class="nav-menu">
+                                    <li>Accueil</li>
+                                    <li>Orientation</li>
+                                    <li>Programmes</li>
+                                    <li>À propos</li>
+                                    <li>FAQ</li>
+                                    <li>Contact</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="hero-section">
+                                <h2 class="hero-title">Votre Avenir Commence Ici</h2>
+                                <p class="hero-subtitle">Découvrez les meilleurs programmes d'études à l'international</p>
+                                <div class="hero-buttons">
+                                    <button class="btn btn-primary">Commencer</button>
+                                    <button class="btn btn-secondary">En savoir plus</button>
+                                </div>
+                            </div>
+                            
+                            <div class="content-grid">
+                                <div class="content-card">
+                                    <div class="card-icon">🎓</div>
+                                    <h3 class="card-title">Programmes</h3>
+                                    <p class="card-description">Découvrez nos programmes d'études</p>
+                                </div>
+                                <div class="content-card">
+                                    <div class="card-icon">🌍</div>
+                                    <h3 class="card-title">Destinations</h3>
+                                    <p class="card-description">Explorez le monde</p>
+                                </div>
+                                <div class="content-card">
+                                    <div class="card-icon">📊</div>
+                                    <h3 class="card-title">Orientation</h3>
+                                    <p class="card-description">Trouvez votre voie</p>
+                                </div>
+                                <div class="content-card">
+                                    <div class="card-icon">💼</div>
+                                    <h3 class="card-title">Carrières</h3>
+                                    <p class="card-description">Développez votre carrière</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="device-label">Desktop (1200px)</div>
+                </div>
+            </div>
+            
+            <div class="test-results">
+                <h3>✅ Points Positifs Identifiés</h3>
+                <ul>
+                    <li>Media queries présentes dans les fichiers CSS</li>
+                    <li>Utilisation de Flexbox et Grid pour la mise en page</li>
+                    <li>Navigation responsive avec menu mobile</li>
+                    <li>Grilles adaptatives avec auto-fit</li>
+                    <li>Tailles de police et espacements ajustés</li>
+                    <li>Boutons et éléments interactifs adaptés</li>
+                </ul>
+            </div>
+            
+            <div class="issues-found">
+                <h3>⚠️ Problèmes Potentiels Identifiés</h3>
+                <ul>
+                    <li>Certains éléments peuvent déborder sur mobile</li>
+                    <li>Images non optimisées pour mobile</li>
+                    <li>Espacement parfois trop important sur petits écrans</li>
+                    <li>Navigation mobile pourrait être améliorée</li>
+                    <li>Certains textes peuvent être trop petits</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Test de responsivité en JavaScript
+        function testResponsiveness() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            console.log(`Taille de l'écran: ${width}x${height}`);
+            
+            if (width <= 480) {
+                console.log('Mode: Mobile');
+            } else if (width <= 768) {
+                console.log('Mode: Tablet');
+            } else {
+                console.log('Mode: Desktop');
+            }
+        }
+        
+        window.addEventListener('resize', testResponsiveness);
+        testResponsiveness();
+    </script>
+</body>
+</html>

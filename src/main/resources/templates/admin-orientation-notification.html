@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouveau test d'orientation - Diravenir</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .title {
+            font-size: 20px;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #718096;
+            font-size: 14px;
+        }
+        .content {
+            margin-bottom: 30px;
+        }
+        .info-section {
+            background-color: #f7fafc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+        .info-value {
+            color: #2d3748;
+        }
+        .recommendations {
+            background-color: #edf2f7;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .recommendation-item {
+            background-color: #ffffff;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .recommendation-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+        .recommendation-score {
+            color: #667eea;
+            font-size: 14px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #667eea;
+            color: #ffffff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .cta-button:hover {
+            background-color: #5a67d8;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #718096;
+            font-size: 12px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #718096;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Diravenir</div>
+            <div class="title">Nouveau test d'orientation complété</div>
+            <div class="subtitle" th:text="${formattedDate}">Date</div>
+        </div>
+
+        <div class="content">
+            <p>Un étudiant a complété son test d'orientation avec succès. Voici les détails :</p>
+
+            <div class="info-section">
+                <h3>Informations du test</h3>
+                <div class="info-row">
+                    <span class="info-label">UUID du test :</span>
+                    <span class="info-value" th:text="${test.testUuid}">UUID</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email étudiant :</span>
+                    <span class="info-value" th:text="${result.userEmail}">Email</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Nom étudiant :</span>
+                    <span class="info-value" th:text="${result.userName}">Nom</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Questions répondues :</span>
+                    <span class="info-value" th:text="${result.totalQuestionsAnswered + '/14'}">Questions</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Temps de completion :</span>
+                    <span class="info-value" th:text="${result.testCompletionTimeMinutes + ' minutes'}">Temps</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Méthode de calcul :</span>
+                    <span class="info-value" th:text="${result.calculationMethod}">Méthode</span>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" th:text="${#numbers.formatDecimal(result.highestMatchingScore, 1, 1)}">95.0</div>
+                    <div class="stat-label">Meilleur score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" th:text="${#numbers.formatDecimal(result.averageMatchingScore, 1, 1)}">75.0</div>
+                    <div class="stat-label">Score moyen</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" th:text="${#numbers.formatDecimal(result.lowestMatchingScore, 1, 1)}">45.0</div>
+                    <div class="stat-label">Score minimum</div>
+                </div>
+            </div>
+
+            <div class="recommendations">
+                <h3>Top 3 recommandations</h3>
+                <div th:each="rec, iterStat : ${result.top3Recommendations}" class="recommendation-item">
+                    <div class="recommendation-title" th:text="${rec.majorName}">Nom de la majeure</div>
+                    <div class="recommendation-score" th:text="${rec.matchingScore + '% de correspondance'}">Score</div>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <a th:href="${companyWebsite + '/admin/orientation/' + test.testUuid}" class="cta-button">
+                    Voir les détails complets
+                </a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Cet email a été envoyé automatiquement par le système Diravenir.</p>
+            <p>Pour toute question, contactez l'équipe technique.</p>
+        </div>
+    </div>
+</body>
+</html>

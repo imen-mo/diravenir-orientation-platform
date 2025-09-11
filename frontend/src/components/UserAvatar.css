@@ -1,0 +1,96 @@
+.user-avatar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.user-avatar:hover {
+    transform: scale(1.05);
+}
+
+.avatar-circle {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.avatar-circle:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.avatar-small {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+}
+
+.avatar-medium {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+}
+
+.avatar-large {
+    width: 64px;
+    height: 64px;
+    font-size: 24px;
+}
+
+.avatar-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+}
+
+/* Mode sombre */
+.dark .avatar-name {
+    color: #E5E7EB;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .avatar-name {
+        display: none;
+    }
+    
+    .user-avatar {
+        gap: 4px;
+    }
+}
+
+/* Animation pour les interactions */
+.user-avatar:active {
+    transform: scale(0.95);
+}
+
+/* Style pour les avatars dans la navbar */
+.navbar .user-avatar .avatar-circle {
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar .user-avatar:hover .avatar-circle {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Style pour les avatars dans les cartes de profil */
+.profile-card .user-avatar .avatar-circle {
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.profile-card .user-avatar:hover .avatar-circle {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}

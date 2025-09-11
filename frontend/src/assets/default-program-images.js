@@ -1,84 +1,186 @@
-// Images par défaut pour les programmes
-// L'utilisateur pourra les remplacer par ses propres images
+// Images par défaut pour les programmes selon leur catégorie
+// Ces images sont utilisées quand l'image du programme ou le logo de l'université n'est pas disponible
 
-export const defaultProgramImages = {
-  // Images pour différents types de programmes
-  engineering: [
-    'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=300&h=300&fit=crop&crop=center'
-  ],
-  business: [
-    'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=300&h=300&fit=crop&crop=center'
-  ],
-  medicine: [
-    'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=300&h=300&fit=crop&crop=center'
-  ],
-  arts: [
-    'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=300&h=300&fit=crop&crop=center'
-  ],
-  science: [
-    'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=300&h=300&fit=crop&crop=center'
-  ],
-  technology: [
-    'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=300&fit=crop&crop=center'
-  ],
-  law: [
-    'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=300&h=300&fit=crop&crop=center'
-  ],
-  education: [
-    'https://images.unsplash.com/photo-1523050854058-8df90110c9a1?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1523050854058-8df90110c9a1?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1523050854058-8df90110c9a1?w=300&h=300&fit=crop&crop=center'
-  ],
-  default: [
-    'https://images.unsplash.com/photo-1523050854058-8df90110c9a1?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1523050854058-8df90110c9a1?w=300&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1523050854058-8df90110c9a1?w=300&h=300&fit=crop&crop=center'
-  ]
+export const getDefaultProgramImage = (category) => {
+  if (!category) return getDefaultImage('default');
+  
+  const categoryLower = category.toLowerCase();
+  
+  // Médecine et santé
+  if (categoryLower.includes('medical') || 
+      categoryLower.includes('health') || 
+      categoryLower.includes('medicine') ||
+      categoryLower.includes('dental') ||
+      categoryLower.includes('pharmacy') ||
+      categoryLower.includes('nursing')) {
+    return getDefaultImage('medicine');
+  }
+  
+  // Business et management
+  if (categoryLower.includes('business') || 
+      categoryLower.includes('management') ||
+      categoryLower.includes('administration') ||
+      categoryLower.includes('economics') ||
+      categoryLower.includes('finance') ||
+      categoryLower.includes('marketing')) {
+    return getDefaultImage('business');
+  }
+  
+  // Ingénierie et technologie
+  if (categoryLower.includes('engineering') || 
+      categoryLower.includes('technology') ||
+      categoryLower.includes('computer') ||
+      categoryLower.includes('software') ||
+      categoryLower.includes('mechanical') ||
+      categoryLower.includes('electrical') ||
+      categoryLower.includes('civil')) {
+    return getDefaultImage('engineering');
+  }
+  
+  // Arts et design
+  if (categoryLower.includes('arts') || 
+      categoryLower.includes('design') ||
+      categoryLower.includes('creative') ||
+      categoryLower.includes('visual') ||
+      categoryLower.includes('graphic') ||
+      categoryLower.includes('fashion')) {
+    return getDefaultImage('arts');
+  }
+  
+  // Sciences
+  if (categoryLower.includes('science') || 
+      categoryLower.includes('physics') ||
+      categoryLower.includes('chemistry') ||
+      categoryLower.includes('biology') ||
+      categoryLower.includes('mathematics') ||
+      categoryLower.includes('statistics')) {
+    return getDefaultImage('science');
+  }
+  
+  // Droit
+  if (categoryLower.includes('law') || 
+      categoryLower.includes('legal') ||
+      categoryLower.includes('justice')) {
+    return getDefaultImage('law');
+  }
+  
+  // Éducation
+  if (categoryLower.includes('education') || 
+      categoryLower.includes('teaching') ||
+      categoryLower.includes('pedagogy')) {
+    return getDefaultImage('education');
+  }
+  
+  // Architecture
+  if (categoryLower.includes('architecture') || 
+      categoryLower.includes('urban') ||
+      categoryLower.includes('planning')) {
+    return getDefaultImage('architecture');
+  }
+  
+  // Agriculture
+  if (categoryLower.includes('agriculture') || 
+      categoryLower.includes('farming') ||
+      categoryLower.includes('veterinary')) {
+    return getDefaultImage('agriculture');
+  }
+  
+  // Communication et médias
+  if (categoryLower.includes('communication') || 
+      categoryLower.includes('media') ||
+      categoryLower.includes('journalism') ||
+      categoryLower.includes('public relations')) {
+    return getDefaultImage('communication');
+  }
+  
+  // Psychologie
+  if (categoryLower.includes('psychology') || 
+      categoryLower.includes('counseling') ||
+      categoryLower.includes('therapy')) {
+    return getDefaultImage('psychology');
+  }
+  
+  // Image par défaut si aucune catégorie ne correspond
+  return getDefaultImage('default');
 };
 
-// Fonction pour obtenir une image par défaut basée sur le nom du programme
-export const getDefaultProgramImage = (programName) => {
-  const name = programName?.toLowerCase() || '';
+// Fonction pour obtenir l'URL de l'image par défaut
+const getDefaultImage = (type) => {
+  // Utiliser des emojis ou des icônes SVG comme images par défaut
+  // Vous pouvez remplacer ces URLs par des vraies images plus tard
   
-  if (name.includes('engineering') || name.includes('civil') || name.includes('mechanical') || name.includes('electrical')) {
-    return defaultProgramImages.engineering[Math.floor(Math.random() * defaultProgramImages.engineering.length)];
+  const defaultImages = {
+    medicine: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE5IDNIMTVDMTMuODkgMyAxMyAzLjg5IDEzIDVWMTlDMTMgMjAuMTEgMTMuODkgMjEgMTUgMjFIMTlDMjAuMTEgMjEgMjEgMjAuMTEgMjEgMTlWNUMyMSAzLjg5IDIwLjExIDMgMTkgM1pNMTcgMTlIMTVWNUgxOVYxOVoiIGZpbGw9IiM0Q0FGNTAiLz4KPHBhdGggZD0iTTEyIDdMMTAgMTJMMTIgMTdMMTQgMTJMMTIgN1oiIGZpbGw9IiM0Q0FGNTAiLz4KPC9zdmc+',
+    business: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwIDRINGMtMS4xMSAwLTEuOTkuODktMS45OSAyTDIgNnYxMmMwIDEuMTEuODkgMiAyIDJoMTZjMS4xMSAwIDItLjg5IDItMlY2YzAtMS4xMS0uODktMi0yLTJabS0yIDJoLTR2Mmg0djJoLTR2Mmg0djJoLTR2Mmg0djJoLTR2Mmg0djJoLTR2Mmg0djJoLTR2Mmg0djJoLTR2Mmg0djJoLTR2Mmg0djJoLTR2Mkg0VjZoMTZ2MTJaIiBmaWxsPSIjRkZDNzAwIi8+Cjwvc3ZnPg==',
+    engineering: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMiA3djEwYzAgMS4xMS44OSAyIDIgMmgxNmMxLjExIDAgMi0uODkgMi0yVjdMMTIgMlpNMTIgMTlsLTgtNC41VjlsOC00LjV2MTQuNXoiIGZpbGw9IiM2NjZFRUEiLz4KPC9zdmc+',
+    arts: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJjNS41MiAwIDEwIDQuNDggMTAgMTBzLTQuNDggMTAtMTAgMTBTMiAxNy41MiAyIDEyUzYuNDggMiAxMiAyem0wIDJjLTQuNDIgMC04IDMuNTgtOCA4czMuNTggOCA4IDggOC0zLjU4IDgtOC0zLjU4LTgtOC04em0wIDJjMy4zMSAwIDYgMi42OSA2IDZzLTIuNjkgNi02IDYtNi0yLjY5LTYtNiAyLjY5LTYgNi02eiIgZmlsbD0iI0Y0NzM2MCIvPgo8L3N2Zz4=',
+    science: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMiA3djEwYzAgMS4xMS44OSAyIDIgMmgxNmMxLjExIDAgMi0uODkgMi0yVjdMMTIgMlpNMTIgMTlsLTgtNC41VjlsOC00LjV2MTQuNXoiIGZpbGw9IiM4QjVGRkYiLz4KPC9zdmc+',
+    law: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMiA3djEwYzAgMS4xMS44OSAyIDIgMmgxNmMxLjExIDAgMi0uODkgMi0yVjdMMTIgMlpNMTIgMTlsLTgtNC41VjlsOC00LjV2MTQuNXoiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+',
+    education: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMiA3djEwYzAgMS4xMS44OSAyIDIgMmgxNmMxLjExIDAgMi0uODkgMi0yVjdMMTIgMlpNMTIgMTlsLTgtNC41VjlsOC00LjV2MTQuNXoiIGZpbGw9IiM2NjZFRUEiLz4KPC9zdmc+',
+    architecture: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMiA3djEwYzAgMS4xMS44OSAyIDIgMmgxNmMxLjExIDAgMi0uODkgMi0yVjdMMTIgMlpNMTIgMTlsLTgtNC41VjlsOC00LjV2MTQuNXoiIGZpbGw9IiM2QjIxQjEiLz4KPC9zdmc+',
+    agriculture: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMiA3djEwYzAgMS4xMS44OSAyIDIgMmgxNmMxLjExIDAgMi0uODkgMi0yVjdMMTIgMlpNMTIgMTlsLTgtNC41VjlsOC00LjV2MTQuNXoiIGZpbGw9IiM0Q0FGNTAiLz4KPC9zdmc+',
+    communication: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMiA3djEwYzAgMS4xMS44OSAyIDIgMmgxNmMxLjExIDAgMi0uODkgMi0yVjdMMTIgMlpNMTIgMTlsLTgtNC41VjlsOC00LjV2MTQuNXoiIGZpbGw9IiNGNDczNjAiLz4KPC9zdmc+',
+    psychology: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMiA3djEwYzAgMS4xMS44OSAyIDIgMmgxNmMxLjExIDAgMi0uODkgMi0yVjdMMTIgMlpNMTIgMTlsLTgtNC41VjlsOC00LjV2MTQuNXoiIGZpbGw9IiM2NjZFRUEiLz4KPC9zdmc+',
+    default: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMiA3djEwYzAgMS4xMS44OSAyIDIgMmgxNmMxLjExIDAgMi0uODkgMi0yVjdMMTIgMlpNMTIgMTlsLTgtNC41VjlsOC00LjV2MTQuNXoiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+'
+  };
+  
+  return defaultImages[type] || defaultImages.default;
+};
+
+// Fonction utilitaire pour obtenir une image par défaut basée sur le nom du programme
+export const getDefaultImageByProgramName = (programName) => {
+  if (!programName) return getDefaultImage('default');
+  
+  const nameLower = programName.toLowerCase();
+  
+  // Détecter le type de programme par son nom
+  if (nameLower.includes('medicine') || nameLower.includes('medical')) {
+    return getDefaultImage('medicine');
   }
-  if (name.includes('business') || name.includes('management') || name.includes('economics') || name.includes('finance')) {
-    return defaultProgramImages.business[Math.floor(Math.random() * defaultProgramImages.business.length)];
+  if (nameLower.includes('business') || nameLower.includes('management')) {
+    return getDefaultImage('business');
   }
-  if (name.includes('medicine') || name.includes('health') || name.includes('nursing') || name.includes('pharmacy')) {
-    return defaultProgramImages.medicine[Math.floor(Math.random() * defaultProgramImages.medicine.length)];
+  if (nameLower.includes('engineering') || nameLower.includes('computer')) {
+    return getDefaultImage('engineering');
   }
-  if (name.includes('art') || name.includes('design') || name.includes('music') || name.includes('drama')) {
-    return defaultProgramImages.arts[Math.floor(Math.random() * defaultProgramImages.arts.length)];
+  if (nameLower.includes('arts') || nameLower.includes('design')) {
+    return getDefaultImage('arts');
   }
-  if (name.includes('science') || name.includes('biology') || name.includes('chemistry') || name.includes('physics')) {
-    return defaultProgramImages.science[Math.floor(Math.random() * defaultProgramImages.science.length)];
+  if (nameLower.includes('science') || nameLower.includes('physics')) {
+    return getDefaultImage('science');
   }
-  if (name.includes('computer') || name.includes('software') || name.includes('it') || name.includes('technology')) {
-    return defaultProgramImages.technology[Math.floor(Math.random() * defaultProgramImages.technology.length)];
+  if (nameLower.includes('law') || nameLower.includes('legal')) {
+    return getDefaultImage('law');
   }
-  if (name.includes('law') || name.includes('legal') || name.includes('justice')) {
-    return defaultProgramImages.law[Math.floor(Math.random() * defaultProgramImages.law.length)];
-  }
-  if (name.includes('education') || name.includes('teaching') || name.includes('pedagogy')) {
-    return defaultProgramImages.education[Math.floor(Math.random() * defaultProgramImages.education.length)];
+  if (nameLower.includes('education') || nameLower.includes('teaching')) {
+    return getDefaultImage('education');
   }
   
-  // Image par défaut
-  return defaultProgramImages.default[Math.floor(Math.random() * defaultProgramImages.default.length)];
+  return getDefaultImage('default');
+};
+
+// Fonction pour obtenir une image par défaut basée sur l'université
+export const getDefaultImageByUniversity = (universityName) => {
+  if (!universityName) return getDefaultImage('default');
+  
+  const nameLower = universityName.toLowerCase();
+  
+  // Détecter le type d'université par son nom
+  if (nameLower.includes('medical') || nameLower.includes('health')) {
+    return getDefaultImage('medicine');
+  }
+  if (nameLower.includes('business') || nameLower.includes('management')) {
+    return getDefaultImage('business');
+  }
+  if (nameLower.includes('technology') || nameLower.includes('engineering')) {
+    return getDefaultImage('engineering');
+  }
+  if (nameLower.includes('arts') || nameLower.includes('design')) {
+    return getDefaultImage('arts');
+  }
+  if (nameLower.includes('science') || nameLower.includes('research')) {
+    return getDefaultImage('science');
+  }
+  
+  return getDefaultImage('default');
 }; 

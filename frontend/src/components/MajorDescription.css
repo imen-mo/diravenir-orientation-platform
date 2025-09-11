@@ -1,0 +1,107 @@
+.major-description {
+  margin: 20px 0;
+  padding: 15px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF !important;
+}
+
+/* Force tous les textes en blanc */
+.major-description * {
+  color: #FFFFFF !important;
+}
+
+.major-description h1,
+.major-description h2,
+.major-description h3,
+.major-description h4,
+.major-description h5,
+.major-description h6 {
+  color: #FFFFFF !important;
+}
+
+.major-description p {
+  color: #FFFFFF !important;
+}
+
+.major-description span {
+  color: #FFFFFF !important;
+}
+
+.major-description div {
+  color: #FFFFFF !important;
+}
+
+/* Styles pour mobile */
+.mobile-description {
+  padding: 10px;
+}
+
+.mobile-description .short-desc {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #FFFFFF !important;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Styles pour desktop */
+.desktop-description {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 20px;
+}
+
+.desktop-description h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #FFFFFF !important;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.desktop-description .english-desc {
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  padding-right: 20px;
+}
+
+.desktop-description .french-desc {
+  padding-left: 20px;
+}
+
+.desktop-description p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #FFFFFF !important;
+  margin: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .major-description {
+    margin: 15px 0;
+    padding: 12px;
+  }
+  
+  .mobile-description {
+    padding: 8px;
+  }
+  
+  .mobile-description .short-desc {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .major-description {
+    margin: 10px 0;
+    padding: 10px;
+  }
+  
+  .mobile-description .short-desc {
+    font-size: 12px;
+  }
+}

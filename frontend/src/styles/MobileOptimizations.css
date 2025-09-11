@@ -1,0 +1,494 @@
+/* === OPTIMISATIONS MOBILE GLOBALES === */
+
+/* Empêcher le débordement horizontal sur tous les éléments */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Optimisation des images pour mobile */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Images responsives avec différentes tailles */
+.responsive-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Images de héros optimisées */
+.hero-image img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Images de cartes optimisées */
+.card-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
+}
+
+@media (max-width: 768px) {
+  .card-image {
+    height: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-image {
+    height: 120px;
+  }
+}
+
+/* Optimisation des conteneurs */
+.container {
+  width: 100%;
+  max-width: 100vw;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 10px;
+  }
+}
+
+/* Grilles responsives améliorées */
+.responsive-grid {
+  display: grid;
+  gap: 20px;
+  width: 100%;
+}
+
+.responsive-grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.responsive-grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.responsive-grid-4 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+@media (max-width: 768px) {
+  .responsive-grid {
+    gap: 15px;
+  }
+  
+  .responsive-grid-2,
+  .responsive-grid-3,
+  .responsive-grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .responsive-grid {
+    gap: 10px;
+  }
+}
+
+/* Flexbox responsif */
+.responsive-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .responsive-flex {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .responsive-flex {
+    gap: 10px;
+  }
+}
+
+/* Textes responsifs */
+.responsive-text {
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.responsive-text h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.responsive-text h2 {
+  font-size: 2rem;
+  line-height: 1.3;
+  margin-bottom: 0.8rem;
+}
+
+.responsive-text h3 {
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 0.6rem;
+}
+
+.responsive-text p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .responsive-text h1 {
+    font-size: 2rem;
+  }
+  
+  .responsive-text h2 {
+    font-size: 1.8rem;
+  }
+  
+  .responsive-text h3 {
+    font-size: 1.3rem;
+  }
+  
+  .responsive-text p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .responsive-text h1 {
+    font-size: 1.8rem;
+  }
+  
+  .responsive-text h2 {
+    font-size: 1.5rem;
+  }
+  
+  .responsive-text h3 {
+    font-size: 1.2rem;
+  }
+  
+  .responsive-text p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Boutons responsifs */
+.responsive-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  min-height: 44px; /* Taille minimale pour le touch */
+  min-width: 44px;
+}
+
+@media (max-width: 768px) {
+  .responsive-button {
+    padding: 10px 20px;
+    font-size: 15px;
+    min-height: 48px; /* Plus grand sur mobile pour faciliter le touch */
+  }
+}
+
+@media (max-width: 480px) {
+  .responsive-button {
+    padding: 12px 16px;
+    font-size: 14px;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    display: block;
+  }
+}
+
+/* Formulaires responsifs */
+.responsive-form {
+  width: 100%;
+  max-width: 100%;
+}
+
+.responsive-form .form-group {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.responsive-form input,
+.responsive-form textarea,
+.responsive-form select {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px; /* Empêche le zoom sur iOS */
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
+  min-height: 44px;
+}
+
+.responsive-form input:focus,
+.responsive-form textarea:focus,
+.responsive-form select:focus {
+  outline: none;
+  border-color: #541652;
+}
+
+@media (max-width: 480px) {
+  .responsive-form input,
+  .responsive-form textarea,
+  .responsive-form select {
+    padding: 14px 16px;
+    font-size: 16px;
+    min-height: 48px;
+  }
+}
+
+/* Cartes responsives */
+.responsive-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .responsive-card {
+    padding: 15px;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .responsive-card {
+    padding: 12px;
+    margin-bottom: 15px;
+  }
+}
+
+/* Navigation mobile améliorée */
+.mobile-nav-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-nav-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  max-width: 100vw;
+}
+
+.mobile-nav-logo {
+  font-weight: 700;
+  font-size: 18px;
+  color: #541652;
+}
+
+.mobile-nav-toggle {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #541652;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.mobile-nav-toggle:hover {
+  background: #f8f9fa;
+}
+
+/* Menu mobile slide */
+.mobile-menu-slide {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 280px;
+  height: 100vh;
+  background: white;
+  z-index: 1001;
+  transition: right 0.3s ease;
+  overflow-y: auto;
+  box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-menu-slide.show {
+  right: 0;
+}
+
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Optimisation des tableaux pour mobile */
+.responsive-table {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.responsive-table table {
+  width: 100%;
+  min-width: 600px; /* Largeur minimale pour maintenir la lisibilité */
+  border-collapse: collapse;
+}
+
+@media (max-width: 768px) {
+  .responsive-table {
+    font-size: 14px;
+  }
+  
+  .responsive-table th,
+  .responsive-table td {
+    padding: 8px 4px;
+  }
+}
+
+/* Masquer les éléments sur mobile si nécessaire */
+.mobile-hidden {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .mobile-hidden {
+    display: none;
+  }
+}
+
+/* Afficher seulement sur mobile */
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: block;
+  }
+}
+
+/* Optimisation des vidéos */
+.responsive-video {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  overflow: hidden;
+}
+
+.responsive-video iframe,
+.responsive-video video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Amélioration de l'accessibilité tactile */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 480px) {
+  .touch-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
+
+/* Optimisation des animations pour mobile */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Amélioration des performances sur mobile */
+.mobile-optimized {
+  will-change: auto;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Correction des problèmes de zoom sur iOS */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  select,
+  textarea,
+  input[type="text"],
+  input[type="password"],
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="date"],
+  input[type="month"],
+  input[type="time"],
+  input[type="week"],
+  input[type="number"],
+  input[type="email"],
+  input[type="url"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="color"] {
+    font-size: 16px;
+  }
+}

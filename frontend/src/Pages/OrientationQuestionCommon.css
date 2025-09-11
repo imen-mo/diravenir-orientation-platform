@@ -1,0 +1,535 @@
+/* Styles communs pour toutes les questions d'orientation - CENTRAGE PARFAIT */
+
+/* Conteneur principal - Centrage parfait */
+.orientation-question {
+  min-height: 100vh;
+  background: #DDC9DB;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Poppins', sans-serif;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Conteneur de la question - Centrage vertical et horizontal */
+.question-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  width: 100%;
+  margin: 0;
+}
+
+/* Contenu de la question - Centrage parfait */
+.question-content {
+  background: #541652;
+  border-radius: 43px;
+  padding: 3rem 4rem;
+  box-shadow: 0px 4px 17px 3px rgba(0, 0, 0, 0.19);
+  width: 100%;
+  max-width: 1400px;
+  position: relative;
+  overflow: hidden;
+  min-height: 700px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.question-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #FCBE1C, #541652, #DDC9DB);
+}
+
+/* En-tête de la question - Centrage parfait */
+.question-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.question-number {
+  position: absolute;
+  top: -20px;
+  left: 20px;
+  background: #FCBE1C;
+  color: #541652;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  box-shadow: 0 6px 16px rgba(252, 190, 28, 0.3);
+  border: 2px solid #FFFFFF;
+}
+
+.question-title {
+  font-size: 32px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  max-width: 1000px;
+  text-align: center;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-family: 'Poppins', sans-serif;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.question-instruction {
+  font-size: 20px;
+  color: #FFFFFF;
+  font-weight: 300;
+  margin: 0;
+  text-align: center;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Grille des réponses - CENTRAGE PARFAIT ET ORGANISATION INTELLIGENTE */
+.answers-grid {
+  display: grid;
+  gap: 2.5rem;
+  margin-bottom: 3rem;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1rem;
+}
+
+/* ORGANISATION INTELLIGENTE SELON LE NOMBRE DE CARTES */
+
+/* 1 carte - Centrée */
+.answers-grid:has(.answer-card:nth-child(1):last-child) {
+  grid-template-columns: 1fr;
+  max-width: 500px;
+  justify-items: center;
+}
+
+/* 2 cartes - Horizontalement centrées */
+.answers-grid:has(.answer-card:nth-child(2):last-child) {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 800px;
+  justify-items: center;
+}
+
+/* 3 cartes - Horizontalement centrées */
+.answers-grid:has(.answer-card:nth-child(3):last-child) {
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 1000px;
+  justify-items: center;
+}
+
+/* 4 cartes - 2x2 centrées */
+.answers-grid:has(.answer-card:nth-child(4):last-child) {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 800px;
+  justify-items: center;
+}
+
+/* 5 cartes - 3 en haut, 2 en bas centrées */
+.answers-grid:has(.answer-card:nth-child(5):last-child) {
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 1000px;
+  justify-items: center;
+}
+
+/* 6 cartes - 3x2 centrées */
+.answers-grid:has(.answer-card:nth-child(6):last-child) {
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 1000px;
+  justify-items: center;
+}
+
+/* 7 cartes - 4 en haut, 3 en bas centrées */
+.answers-grid:has(.answer-card:nth-child(7):last-child) {
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 1200px;
+  justify-items: center;
+}
+
+/* 8 cartes - 4x2 centrées */
+.answers-grid:has(.answer-card:nth-child(8):last-child) {
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 1200px;
+  justify-items: center;
+}
+
+/* Centrage parfait des cartes dans la grille */
+.answers-grid .answer-card {
+  justify-self: center;
+  align-self: center;
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Style des cartes de réponse - CENTRAGE PARFAIT */
+.answer-card {
+  background: #541652;
+  backdrop-filter: blur(10px);
+  border-radius: 25px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  min-width: 280px;
+  max-width: 350px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.answer-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(252, 190, 28, 0.05), rgba(84, 22, 82, 0.05));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Effet hover */
+.answer-card:hover {
+  background: #541652;
+  border: 3px solid #FCBE1C;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(252, 190, 28, 0.3);
+}
+
+.answer-card:hover::before {
+  opacity: 1;
+}
+
+/* Style de sélection */
+.answer-card.selected {
+  background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(252, 190, 28, 0.4);
+}
+
+.answer-card.selected::before {
+  opacity: 0 !important;
+}
+
+/* Emojis - Centrés */
+.answer-emoji {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  display: block;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* Texte des réponses - Centré */
+.answer-text {
+  font-family: 'Poppins', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 0.02em;
+  color: #FFFFFF;
+  max-width: 300px;
+  word-wrap: break-word;
+  hyphens: auto;
+  white-space: pre-line;
+  justify-content: center;
+}
+
+.answer-card.selected .answer-text {
+  color: #541652;
+  font-weight: 700;
+}
+
+/* Contenu des réponses pour les cartes complexes */
+.answer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.answer-description {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 0.5rem;
+  line-height: 1.3;
+}
+
+.answer-card.selected .answer-description {
+  color: rgba(84, 22, 82, 0.8);
+}
+
+/* Checkbox pour les cartes avec sélection */
+.answer-checkbox {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.answer-card.selected .answer-checkbox {
+  background: rgba(84, 22, 82, 0.2);
+  border-color: #541652;
+}
+
+.checkbox-selected, .checkbox-unselected {
+  color: #FFFFFF;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.answer-card.selected .checkbox-selected {
+  color: #541652;
+}
+
+/* Navigation - Centrée */
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  position: relative;
+}
+
+.btn-back {
+  background: transparent;
+  border: none;
+  color: #FFFFFF;
+  padding: 0.8rem 2rem;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  line-height: 130%;
+  letter-spacing: 0.02em;
+}
+
+.btn-next {
+  background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%);
+  border: none;
+  color: #541652;
+  padding: 0.8rem 2rem;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  line-height: 130%;
+  letter-spacing: 0.02em;
+  box-shadow: -6px -6px 16px rgba(255, 255, 255, 0.1), 6px 9px 40px rgba(138, 55, 55, 0.54);
+}
+
+.btn-next:hover {
+  transform: translateY(-2px);
+  box-shadow: -8px -8px 20px rgba(255, 255, 255, 0.15), 8px 12px 50px rgba(138, 55, 55, 0.6);
+}
+
+.btn-next:disabled {
+  background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%);
+  color: rgba(84, 22, 82, 0.5);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-next:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-back:hover {
+  background: #541652;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(84, 22, 82, 0.3);
+}
+
+/* Responsive Design - CENTRAGE MAINTENU */
+@media (max-width: 1200px) {
+  .question-content {
+    max-width: 100%;
+    padding: 2.5rem 3rem;
+  }
+  
+  .answers-grid {
+    max-width: 1000px;
+  }
+}
+
+@media (max-width: 768px) {
+  .question-container {
+    padding: 1rem;
+  }
+  
+  .question-content {
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+    max-width: 100%;
+    min-height: 600px;
+  }
+  
+  .question-title {
+    font-size: 24px;
+    text-align: center;
+  }
+  
+  .question-instruction {
+    font-size: 18px;
+    text-align: center;
+  }
+  
+  .question-number {
+    position: relative;
+    top: 0;
+    left: 0;
+    transform: none;
+    margin: 0 auto 1rem;
+  }
+  
+  /* Mobile: Toutes les cartes en une colonne centrée */
+  .answers-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem;
+    padding: 0.5rem;
+    max-width: 100%;
+    justify-items: center;
+  }
+  
+  .answer-card {
+    height: 150px;
+    padding: 1.5rem 2rem;
+    border-radius: 20px;
+    max-width: 100%;
+    min-width: 280px;
+  }
+  
+  .answer-emoji {
+    font-size: 3rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .answer-text {
+    font-size: 16px;
+    max-width: 280px;
+  }
+  
+  .navigation {
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .question-container {
+    padding: 0.5rem;
+  }
+  
+  .question-content {
+    padding: 1.5rem 1rem;
+    border-radius: 15px;
+    max-width: 100%;
+    min-height: 500px;
+  }
+  
+  .question-title {
+    font-size: 20px;
+  }
+  
+  .question-instruction {
+    font-size: 16px;
+  }
+  
+  .answer-card {
+    height: 120px;
+    padding: 1rem 1.5rem;
+    min-width: 250px;
+  }
+  
+  .answer-emoji {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .answer-text {
+    font-size: 14px;
+    max-width: 220px;
+  }
+}
+
+/* Animation d'apparition des cartes */
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.answer-card {
+  animation: cardAppear 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.answer-card:nth-child(1) { animation-delay: 0.1s; }
+.answer-card:nth-child(2) { animation-delay: 0.2s; }
+.answer-card:nth-child(3) { animation-delay: 0.3s; }
+.answer-card:nth-child(4) { animation-delay: 0.4s; }
+.answer-card:nth-child(5) { animation-delay: 0.5s; }
+.answer-card:nth-child(6) { animation-delay: 0.6s; }
+.answer-card:nth-child(7) { animation-delay: 0.7s; }
+.answer-card:nth-child(8) { animation-delay: 0.8s; }

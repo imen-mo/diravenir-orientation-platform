@@ -1,6 +1,0 @@
-majorName,universityName,description,degreeType,location,campusCity,duration,language,universityRanking,programRanking,scholarshipAvailable,tuitionFees,applyBefore,status,programImage
-Computer Science,Stanford University,Advanced program in computer science and software engineering,Bachelor,California,Stanford,48,English,Top 5,Top 10,true,50000,2024-05-15,OPENED,https://example.com/stanford-cs.jpg
-Business Administration,Harvard University,Comprehensive business management program,Bachelor,Massachusetts,Cambridge,48,English,Top 3,Top 5,true,60000,2024-04-30,OPENED,https://example.com/harvard-business.jpg
-Engineering,ETH Zurich,World-class engineering education,Master,Zurich,Zurich,24,German,Top 10,Top 15,true,45000,2024-06-01,OPENED,https://example.com/eth-engineering.jpg
-Medicine,Oxford University,Medical degree program,Bachelor,Oxford,Oxford,72,English,Top 2,Top 3,false,70000,2024-03-15,OPENED,https://example.com/oxford-medicine.jpg
-Data Science,MIT,Data science and analytics program,Master,Massachusetts,Cambridge,24,English,Top 1,Top 5,true,55000,2024-05-01,COMING_SOON,https://example.com/mit-data.jpg 

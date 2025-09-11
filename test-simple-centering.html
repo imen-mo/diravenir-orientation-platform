@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Centrage Questions Orientation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Styles de base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #DDC9DB;
+            min-height: 100vh;
+        }
+        
+        .test-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .test-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #541652;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        /* Styles communs pour les questions */
+        .orientation-question {
+            min-height: 100vh;
+            background: #DDC9DB;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Poppins', sans-serif;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .question-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            width: 100%;
+            margin: 0;
+        }
+
+        .question-content {
+            background: #541652;
+            border-radius: 43px;
+            padding: 3rem 4rem;
+            box-shadow: 0px 4px 17px 3px rgba(0, 0, 0, 0.19);
+            width: 100%;
+            max-width: 1400px;
+            position: relative;
+            overflow: hidden;
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .question-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #FCBE1C, #541652, #DDC9DB);
+        }
+
+        .question-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .question-number {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #FCBE1C;
+            color: #541652;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            box-shadow: 0 6px 16px rgba(252, 190, 28, 0.3);
+            border: 2px solid #FFFFFF;
+        }
+
+        .question-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            max-width: 1000px;
+            text-align: center;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            font-family: 'Poppins', sans-serif;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .question-instruction {
+            font-size: 20px;
+            color: #FFFFFF;
+            font-weight: 300;
+            margin: 0;
+            text-align: center;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Grille des réponses - CENTRAGE PARFAIT */
+        .answers-grid {
+            display: grid;
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1rem;
+        }
+
+        /* 3 cartes - Horizontalement centrées */
+        .answers-grid.three-cards {
+            grid-template-columns: repeat(3, 1fr);
+            max-width: 1000px;
+            justify-items: center;
+        }
+
+        /* 4 cartes - 2x2 centrées */
+        .answers-grid.four-cards {
+            grid-template-columns: repeat(2, 1fr);
+            max-width: 800px;
+            justify-items: center;
+        }
+
+        /* 5 cartes - 3+2 centrées */
+        .answers-grid.five-cards {
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: auto auto;
+            max-width: 1000px;
+            justify-items: center;
+            gap: 2rem;
+        }
+
+        .answers-grid.five-cards .answer-card:nth-child(4) {
+            grid-column: 1;
+            grid-row: 2;
+            justify-self: center;
+        }
+
+        .answers-grid.five-cards .answer-card:nth-child(5) {
+            grid-column: 3;
+            grid-row: 2;
+            justify-self: center;
+        }
+
+        /* 8 cartes - 4x2 centrées */
+        .answers-grid.eight-cards {
+            grid-template-columns: repeat(4, 1fr);
+            max-width: 1200px;
+            justify-items: center;
+        }
+
+        /* Cartes de réponse */
+        .answer-card {
+            background: #541652;
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            min-width: 280px;
+            max-width: 350px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .answer-card:hover {
+            background: #541652;
+            border: 3px solid #FCBE1C;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(252, 190, 28, 0.3);
+        }
+
+        .answer-card.selected {
+            background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%) !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(252, 190, 28, 0.4);
+        }
+
+        .answer-emoji {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+            line-height: 1;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .answer-text {
+            font-family: 'Poppins', sans-serif;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 18px;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            letter-spacing: 0.02em;
+            color: #FFFFFF;
+            max-width: 300px;
+            word-wrap: break-word;
+            hyphens: auto;
+            white-space: pre-line;
+            justify-content: center;
+        }
+
+        .answer-card.selected .answer-text {
+            color: #541652;
+            font-weight: 700;
+        }
+
+        .answer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+        }
+
+        .answer-description {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .answer-card.selected .answer-description {
+            color: rgba(84, 22, 82, 0.8);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .answers-grid.three-cards,
+            .answers-grid.four-cards,
+            .answers-grid.five-cards,
+            .answers-grid.eight-cards {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem;
+            }
+            
+            .answers-grid.five-cards .answer-card:nth-child(n) {
+                grid-column: 1 !important;
+                grid-row: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="test-title">Test de Centrage des Questions d'Orientation</h1>
+        
+        <!-- Test 1: 3 Réponses -->
+        <div class="orientation-question">
+            <div class="question-container">
+                <div class="question-content">
+                    <div class="question-header">
+                        <div class="question-number">1</div>
+                        <h1 class="question-title">3 RÉPONSES - HORIZONTALEMENT</h1>
+                        <p class="question-instruction">(SÉLECTIONNEZ UNE SEULE RÉPONSE)</p>
+                    </div>
+                    <div class="answers-grid three-cards">
+                        <div class="answer-card">
+                            <div class="answer-emoji">🔨</div>
+                            <span class="answer-text">Réponse A</span>
+                        </div>
+                        <div class="answer-card">
+                            <div class="answer-emoji">🔬</div>
+                            <span class="answer-text">Réponse B</span>
+                        </div>
+                        <div class="answer-card">
+                            <div class="answer-emoji">🤝</div>
+                            <span class="answer-text">Réponse C</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 2: 4 Réponses -->
+        <div class="orientation-question">
+            <div class="question-container">
+                <div class="question-content">
+                    <div class="question-header">
+                        <div class="question-number">2</div>
+                        <h1 class="question-title">4 RÉPONSES - 2x2 CENTRÉES</h1>
+                        <p class="question-instruction">(SÉLECTIONNEZ UNE SEULE RÉPONSE)</p>
+                    </div>
+                    <div class="answers-grid four-cards">
+                        <div class="answer-card">
+                            <div class="answer-emoji">🔨</div>
+                            <span class="answer-text">Réponse A</span>
+                        </div>
+                        <div class="answer-card">
+                            <div class="answer-emoji">🔬</div>
+                            <span class="answer-text">Réponse B</span>
+                        </div>
+                        <div class="answer-card">
+                            <div class="answer-emoji">🤝</div>
+                            <span class="answer-text">Réponse C</span>
+                        </div>
+                        <div class="answer-card">
+                            <div class="answer-emoji">📊</div>
+                            <span class="answer-text">Réponse D</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 3: 5 Réponses -->
+        <div class="orientation-question">
+            <div class="question-container">
+                <div class="question-content">
+                    <div class="question-header">
+                        <div class="question-number">3</div>
+                        <h1 class="question-title">5 RÉPONSES - 3+2 CENTRÉES</h1>
+                        <p class="question-instruction">(SÉLECTIONNEZ UNE SEULE RÉPONSE)</p>
+                    </div>
+                    <div class="answers-grid five-cards">
+                        <div class="answer-card">
+                            <div class="answer-emoji">🔨</div>
+                            <span class="answer-text">Réponse A</span>
+                        </div>
+                        <div class="answer-card">
+                            <div class="answer-emoji">🔬</div>
+                            <span class="answer-text">Réponse B</span>
+                        </div>
+                        <div class="answer-card">
+                            <div class="answer-emoji">🤝</div>
+                            <span class="answer-text">Réponse C</span>
+                        </div>
+                        <div class="answer-card">
+                            <div class="answer-emoji">📊</div>
+                            <span class="answer-text">Réponse D</span>
+                        </div>
+                        <div class="answer-card">
+                            <div class="answer-emoji">🎨</div>
+                            <span class="answer-text">Réponse E</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 4: 8 Réponses -->
+        <div class="orientation-question">
+            <div class="question-container">
+                <div class="question-content">
+                    <div class="question-header">
+                        <div class="question-number">4</div>
+                        <h1 class="question-title">8 RÉPONSES - 4x2 CENTRÉES</h1>
+                        <p class="question-instruction">(SÉLECTIONNEZ UNE SEULE RÉPONSE)</p>
+                    </div>
+                    <div class="answers-grid eight-cards">
+                        <div class="answer-card">
+                            <div class="answer-emoji">💰</div>
+                            <div class="answer-content">
+                                <span class="answer-text">Gérer un budget</span>
+                                <span class="answer-description">Planification financière</span>
+                            </div>
+                        </div>
+                        <div class="answer-card">
+                            <div class="answer-emoji">📅</div>
+                            <div class="answer-content">
+                                <span class="answer-text">Organiser un événement</span>
+                                <span class="answer-description">Coordination et planification</span>
+                            </div>
+                        </div>
+                        <div class="answer-card">
+                            <div class="answer-emoji">✍️</div>
+                            <div class="answer-content">
+                                <span class="answer-text">Écrire un texte clair</span>
+                                <span class="answer-description">Communication écrite</span>
+                            </div>
+                        </div>
+                        <div class="answer-card">
+                            <div class="answer-emoji">🔧</div>
+                            <div class="answer-content">
+                                <span class="answer-text">Réparer un appareil</span>
+                                <span class="answer-description">Travail manuel technique</span>
+                            </div>
+                        </div>
+                        <div class="answer-card">
+                            <div class="answer-emoji">🎨</div>
+                            <div class="answer-content">
+                                <span class="answer-text">Dessiner ou peindre</span>
+                                <span class="answer-description">Expression artistique</span>
+                            </div>
+                        </div>
+                        <div class="answer-card">
+                            <div class="answer-emoji">🧮</div>
+                            <div class="answer-content">
+                                <span class="answer-text">Résoudre une équation</span>
+                                <span class="answer-description">Analyse mathématique</span>
+                            </div>
+                        </div>
+                        <div class="answer-card">
+                            <div class="answer-emoji">💬</div>
+                            <div class="answer-content">
+                                <span class="answer-text">Convaincre quelqu'un</span>
+                                <span class="answer-description">Persuasion et communication</span>
+                            </div>
+                        </div>
+                        <div class="answer-card">
+                            <div class="answer-emoji">👂</div>
+                            <div class="answer-content">
+                                <span class="answer-text">Écouter et conseiller</span>
+                                <span class="answer-description">Écoute et conseil</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Ajouter l'interactivité pour tester les sélections
+        document.querySelectorAll('.answer-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Retirer la sélection des autres cartes du même groupe
+                const grid = this.closest('.answers-grid');
+                grid.querySelectorAll('.answer-card').forEach(c => c.classList.remove('selected'));
+                
+                // Ajouter la sélection à la carte cliquée
+                this.classList.add('selected');
+            });
+        });
+    </script>
+</body>
+</html>

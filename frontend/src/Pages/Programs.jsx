@@ -1,320 +1,438 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { programService } from '../services/api';
 import { toast } from 'react-toastify';
-import { getDefaultProgramImage } from '../assets/default-program-images';
-import ProgramCard from '../components/ProgramCard';
-import DebugProgramData from '../components/DebugProgramData';
+import { useLocation } from 'react-router-dom';
+import { useTheme } from '../contexts/ThemeContext';
+import ProgramCardFixed from '../components/ProgramCardFixed';
 import GlobalLayout from '../components/GlobalLayout';
+import { programService, healthService } from '../services/api';
 import './Programs.css';
 
 const Programs = () => {
+  const location = useLocation();
+  const { getText: t } = useTheme();
   const [programs, setPrograms] = useState([]);
   const [filteredPrograms, setFilteredPrograms] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeFilter, setActiveFilter] = useState('OPENED');
-  const [sortBy, setSortBy] = useState('popular');
-  const [savedPrograms, setSavedPrograms] = useState(new Set()); // Programmes sauvegardés
-  
-  // États pour la pagination
+  const [error, setError] = useState(null);
+  const [backendStatus, setBackendStatus] = useState('checking');
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [pageSize] = useState(40); // 40 programmes par page
+  const [programsPerPage] = useState(40);
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('popularity');
+  const [savedPrograms, setSavedPrograms] = useState([]);
+  const [orientationFilter, setOrientationFilter] = useState(null);
 
+  // Vérifier la santé du backend au chargement
   useEffect(() => {
-    loadPrograms();
+    checkBackendHealth();
   }, []);
 
+  // Charger les programmes
   useEffect(() => {
-    filterAndSortPrograms();
-  }, [programs, searchTerm, activeFilter, sortBy, currentPage, savedPrograms]);
+    if (backendStatus === 'up') {
+      loadPrograms();
+    }
+  }, [backendStatus]);
 
+  // Vérifier les paramètres d'orientation au chargement
+  useEffect(() => {
+    if (location.state) {
+      const { searchTerm: orientationSearch, filterByMajor } = location.state;
+      if (orientationSearch || filterByMajor) {
+        setOrientationFilter({
+          searchTerm: orientationSearch,
+          filterByMajor
+        });
+        setSearchTerm(orientationSearch || '');
+      }
+    }
+  }, [location.state]);
+
+  // Vérifier la santé du backend
+  const checkBackendHealth = async () => {
+    try {
+      setBackendStatus('checking');
+      const health = await healthService.checkHealth();
+      
+      if (health.status === 'UP') {
+        setBackendStatus('up');
+        console.log('✅ Backend accessible');
+      } else {
+        setBackendStatus('down');
+        setError(t('loading'));
+        console.log('⚠️ Backend en cours de démarrage');
+      }
+    } catch (error) {
+      setBackendStatus('down');
+      setError(t('connectionError'));
+      console.error('❌ Erreur de connexion au backend:', error);
+    }
+  };
+
+  // Charger les programmes depuis l'API
   const loadPrograms = async () => {
     try {
       setLoading(true);
+      setError(null);
       
-      // Charger tous les programmes
+      console.log('🔄 Chargement des programmes...');
       const data = await programService.getAll();
+      
+      if (data && Array.isArray(data)) {
       setPrograms(data);
+        setFilteredPrograms(data);
+        console.log(`✅ ${data.length} programmes chargés avec succès`);
+      } else {
+        throw new Error('Format de données invalide reçu du serveur');
+      }
     } catch (error) {
-      console.error('Erreur lors du chargement des programmes:', error);
-      toast.error('Erreur lors du chargement des programmes');
+      console.error('❌ Erreur lors du chargement des programmes:', error);
+      
+      if (error.message.includes('Impossible de se connecter')) {
+        setError(t('connectionError'));
+        setBackendStatus('down');
+      } else {
+        setError(`${t('errorLoadingPrograms')}: ${error.message}`);
+      }
+      
+      // Réessayer de se connecter après 5 secondes
+      setTimeout(() => {
+        checkBackendHealth();
+      }, 5000);
     } finally {
       setLoading(false);
     }
   };
 
-  const filterAndSortPrograms = async () => {
-    try {
-      // Utiliser la nouvelle logique de filtrage
-      let filtered = getFilteredPrograms();
-      
-      // Tri
-      if (sortBy === 'popular') {
-        filtered.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
-      } else if (sortBy === 'name') {
-        filtered.sort((a, b) => (a.program || '').localeCompare(b.program || ''));
-      }
-      
-      // Pagination
-      const startIndex = (currentPage - 1) * pageSize;
-      const endIndex = startIndex + pageSize;
-      const paginatedPrograms = filtered.slice(startIndex, endIndex);
-      
-      setFilteredPrograms(paginatedPrograms);
-      setTotalPages(Math.ceil(filtered.length / pageSize));
-    } catch (error) {
-      console.error('Erreur lors du filtrage:', error);
-      setFilteredPrograms(programs);
-    }
-  };
-
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1);
-  };
-
+  // Gérer le changement de filtre
   const handleFilterChange = (filter) => {
     setActiveFilter(filter);
     setCurrentPage(1);
+    applyFiltersAndSearch(filter, searchTerm);
   };
 
-  const handleSortChange = (e) => {
-    setSortBy(e.target.value);
+  // Gérer la recherche
+  const handleSearchChange = (e) => {
+    const term = e.target.value;
+    console.log('🔍 Recherche modifiée:', term);
+    console.log('🎯 Input element:', e.target);
+    console.log('🎯 Input value:', e.target.value);
+    console.log('🎯 Input type:', e.target.type);
+    console.log('🎯 Input disabled:', e.target.disabled);
+    console.log('🎯 Input readOnly:', e.target.readOnly);
+    setSearchTerm(term);
     setCurrentPage(1);
+    applyFiltersAndSearch(activeFilter, term);
   };
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  // Appliquer les filtres et la recherche
+  const applyFiltersAndSearch = (filter, search) => {
+    let filtered = [...programs];
+
+    // Appliquer le filtre de statut
+    if (filter === 'opened') {
+      filtered = filtered.filter(p => p.status === 'OPENED');
+    } else if (filter === 'coming-soon') {
+      filtered = filtered.filter(p => p.status === 'COMING_SOON');
+    } else if (filter === 'favorites') {
+      filtered = filtered.filter(p => savedPrograms.includes(p.id));
+    }
+
+    // Appliquer le filtre d'orientation si présent
+    if (orientationFilter?.filterByMajor) {
+      filtered = filtered.filter(program =>
+        program.majorCode === orientationFilter.filterByMajor ||
+        program.program?.toLowerCase().includes(orientationFilter.filterByMajor.toLowerCase())
+      );
+    }
+
+    // Appliquer la recherche
+    if (search.trim()) {
+      const searchLower = search.toLowerCase();
+      filtered = filtered.filter(program =>
+        program.program?.toLowerCase().includes(searchLower) ||
+        program.universities?.toLowerCase().includes(searchLower) ||
+        program.category?.toLowerCase().includes(searchLower) ||
+        program.description?.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Appliquer le tri
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'name':
+          return (a.program || '').localeCompare(b.program || '');
+        case 'university':
+          return (a.universities || '').localeCompare(b.universities || '');
+        case 'popularity':
+        default:
+          return 0; // Pas de tri par popularité pour l'instant
+      }
+    });
+
+    setFilteredPrograms(filtered);
   };
 
-  // Fonction pour sauvegarder/retirer un programme
+  // Gérer le changement de tri
+  const handleSortChange = (e) => {
+    const sort = e.target.value;
+    setSortBy(sort);
+    applyFiltersAndSearch(activeFilter, searchTerm);
+  };
+
+  // Gérer la sauvegarde d'un programme
   const handleSaveProgram = (programId) => {
     setSavedPrograms(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(programId)) {
-        newSet.delete(programId);
+      if (prev.includes(programId)) {
+        toast.success(t('programRemoved'));
+        return prev.filter(id => id !== programId);
       } else {
-        newSet.add(programId);
+        toast.success(t('programAdded'));
+        return [...prev, programId];
       }
-      return newSet;
     });
   };
 
-  // Fonction pour vérifier si un programme est sauvegardé
-  const isProgramSaved = (programId) => {
-    return savedPrograms.has(programId);
+  // Gérer la navigation des pages
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Fonction pour voir les détails d'un programme
-  const handleViewDetails = (programId) => {
-    // Navigation vers la page de détails
-    window.location.href = `/programs/${programId}`;
-  };
+  // Calculer les programmes de la page courante
+  const indexOfLastProgram = currentPage * programsPerPage;
+  const indexOfFirstProgram = indexOfLastProgram - programsPerPage;
+  const currentPrograms = filteredPrograms.slice(indexOfFirstProgram, indexOfLastProgram);
+  const totalPages = Math.ceil(filteredPrograms.length / programsPerPage);
 
-  // Fonction pour obtenir les programmes selon le filtre
-  const getFilteredPrograms = () => {
-    let filtered = [...programs];
-    
-    // Filtre par recherche
-    if (searchTerm) {
-      filtered = filtered.filter(program => 
-        program.program?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        program.description?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-    
-    // Filtre par statut
-    if (activeFilter === 'SAVED') {
-      filtered = filtered.filter(program => savedPrograms.has(program.id));
-    } else if (activeFilter !== 'ALL') {
-      filtered = filtered.filter(program => program.status === activeFilter);
-    }
-    
-    return filtered;
-  };
-
-  const getDefaultImage = (program) => {
-    if (program.programImage) {
-      return program.programImage;
-    }
-    
-    // Utiliser la catégorie pour déterminer l'image par défaut
-    if (program.category) {
-      const categoryLower = program.category.toLowerCase();
-      if (categoryLower.includes('medical') || categoryLower.includes('health')) {
-        return getDefaultProgramImage('medicine');
-      } else if (categoryLower.includes('business') || categoryLower.includes('management')) {
-        return getDefaultProgramImage('business');
-      } else if (categoryLower.includes('engineering') || categoryLower.includes('technology')) {
-        return getDefaultProgramImage('engineering');
-      } else if (categoryLower.includes('arts') || categoryLower.includes('design')) {
-        return getDefaultProgramImage('arts');
-      } else if (categoryLower.includes('science')) {
-        return getDefaultProgramImage('science');
-      } else if (categoryLower.includes('law')) {
-        return getDefaultProgramImage('law');
-      } else if (categoryLower.includes('education')) {
-        return getDefaultProgramImage('education');
-      }
-    }
-    
-    return getDefaultProgramImage('default');
-  };
-
-  if (loading) {
+  // Afficher le statut du backend
+  if (backendStatus === 'checking') {
     return (
-      <div className="programs-loading">
-        <div className="loading-spinner"></div>
-        <p>Chargement des programmes...</p>
-      </div>
+      <GlobalLayout activePage="programs">
+        <div className="programs-page">
+          <div className="programs-loading">
+            <div className="loading-spinner"></div>
+            <p>{t('checkingServerConnection')}</p>
+          </div>
+        </div>
+      </GlobalLayout>
+    );
+  }
+
+  // Afficher l'erreur de connexion
+  if (backendStatus === 'down') {
+    return (
+      <GlobalLayout activePage="programs">
+        <div className="programs-page">
+          <div className="backend-error">
+            <h2>🔌 {t('backendServerNotAccessible')}</h2>
+            <p>{error}</p>
+            <div className="error-actions">
+              <button onClick={checkBackendHealth} className="retry-btn">
+                🔄 {t('retryConnection')}
+              </button>
+              <button onClick={() => window.location.reload()} className="reload-btn">
+                🔄 {t('reloadPage')}
+              </button>
+            </div>
+            <div className="troubleshooting">
+              <h3>🔧 {t('troubleshooting')}:</h3>
+              <ol>
+                <li>Vérifiez que le serveur Spring Boot est démarré</li>
+                <li>Exécutez <code>mvn spring-boot:run</code> dans le dossier backend</li>
+                <li>Vérifiez que le serveur écoute sur le port 8084</li>
+                <li>Vérifiez les logs du serveur pour d'éventuelles erreurs</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </GlobalLayout>
     );
   }
 
   return (
     <GlobalLayout activePage="programs">
-      <div className="programs-container">
-        <div className="programs-header">
-          <h1>Nos Programmes</h1>
-          <p>Découvrez nos programmes d'études à l'étranger</p>
-        </div>
+      <div className="programs-page">
+        {/* En-tête */}
+          <div className="programs-header">
+          <h1 className="programs-title">
+            <span className="title-liste">{t('listOf')}</span>
+            <span className="title-des-programmes"> {t('programs')}</span>
+          </h1>
+          
+          {/* Statistiques */}
+          <div className="programs-stats">
+            <div className="stat-item">
+              <strong>{t('totalPrograms')}:</strong> {programs.length}
+            </div>
+            <div className="stat-item">
+              <strong>{t('filtered')}:</strong> {filteredPrograms.length}
+            </div>
+            <div className="stat-item">
+              <strong>{t('favorites')}:</strong> {savedPrograms.length}
+            </div>
+          </div>
+          </div>
 
-      {/* Composant de debug temporaire */}
-      <DebugProgramData />
-
-      {/* Filtres et recherche */}
-      <div className="programs-filters">
+      {/* Contrôles */}
+      <div className="programs-controls">
+        {/* Recherche */}
         <div className="search-section">
             <div className="search-container">
               <input
                 type="text"
-                placeholder="Search the Programs Here"
-                value={searchTerm}
-                onChange={handleSearch}
                 className="search-input"
+                placeholder={`${t('searchPrograms')} ${programs.length} ${t('programsAvailable')}...`}
+                value={searchTerm}
+                onChange={handleSearchChange}
+                aria-label="Rechercher des programmes"
+                autoComplete="off"
+                spellCheck="false"
+                data-testid="program-search-input"
               />
-              <span className="search-icon">🔍</span>
+              <span className="search-icon" aria-hidden="true">🔍</span>
             </div>
           </div>
           
           {/* Filtres */}
           <div className="filter-tabs">
             <button
-              className={`filter-tab ${activeFilter === 'ALL' ? 'active' : ''}`}
-              onClick={() => handleFilterChange('ALL')}
+            className={`filter-tab ${activeFilter === 'all' ? 'active' : ''}`}
+            onClick={() => handleFilterChange('all')}
             >
-              All
+            {t('allPrograms')} ({programs.length})
             </button>
             <button
-              className={`filter-tab ${activeFilter === 'OPENED' ? 'active' : ''}`}
-              onClick={() => handleFilterChange('OPENED')}
+            className={`filter-tab ${activeFilter === 'opened' ? 'active' : ''}`}
+            onClick={() => handleFilterChange('opened')}
             >
-              Opened
+            {t('openPrograms')} ({programs.filter(p => p.status === 'OPENED').length})
             </button>
             <button
-              className={`filter-tab ${activeFilter === 'COMING_SOON' ? 'active' : ''}`}
-              onClick={() => handleFilterChange('COMING_SOON')}
+            className={`filter-tab ${activeFilter === 'coming-soon' ? 'active' : ''}`}
+            onClick={() => handleFilterChange('coming-soon')}
             >
-              Coming soon
+            {t('comingSoon')} ({programs.filter(p => p.status === 'COMING_SOON').length})
             </button>
             <button
-              className={`filter-tab ${activeFilter === 'SAVED' ? 'active' : ''}`}
-              onClick={() => handleFilterChange('SAVED')}
+            className={`filter-tab ${activeFilter === 'favorites' ? 'active' : ''}`}
+            onClick={() => handleFilterChange('favorites')}
             >
-              Saved
+            {t('favorites')} ({savedPrograms.length})
             </button>
           </div>
           
           {/* Tri */}
           <div className="sort-section">
-            <select value={sortBy} onChange={handleSortChange} className="sort-select">
-              <option value="popular">Sort by Popular Programs</option>
-              <option value="name">Sort by Name</option>
-              <option value="university">Sort by University</option>
+          <select
+            className="sort-select"
+            value={sortBy}
+            onChange={handleSortChange}
+          >
+            <option value="popularity">{t('popularity')}</option>
+            <option value="name">{t('name')} A-Z</option>
+            <option value="university">{t('university')}</option>
             </select>
           </div>
       </div>
 
+      {/* Contenu principal */}
+      {loading ? (
+        <div className="programs-loading">
+          <div className="loading-spinner"></div>
+          <p>{t('loadingPrograms')}</p>
+        </div>
+      ) : error ? (
+        <div className="error-message">
+          <h3>❌ {t('error')}</h3>
+          <p>{error}</p>
+          <button onClick={loadPrograms} className="retry-btn">
+            🔄 {t('tryAgain')}
+          </button>
+        </div>
+      ) : filteredPrograms.length === 0 ? (
+        <div className="no-programs">
+          <div className="no-programs-icon">📚</div>
+          <h3>{t('noProgramsFound')}</h3>
+          <p>
+            {searchTerm || activeFilter !== 'all' 
+              ? t('noProgramsFound')
+              : t('noProgramsFound')
+            }
+          </p>
+          {(searchTerm || activeFilter !== 'all') && (
+            <button 
+              onClick={() => {
+                setSearchTerm('');
+                setActiveFilter('all');
+                setCurrentPage(1);
+                applyFiltersAndSearch('all', '');
+              }} 
+              className="reset-filters-btn"
+            >
+              {t('reset')}
+            </button>
+          )}
+        </div>
+      ) : (
+        <>
+          {/* Grille des programmes */}
       <div className="programs-grid">
-        {filteredPrograms.map((program) => (
-          <ProgramCard 
+            {currentPrograms.map((program) => (
+          <ProgramCardFixed 
             key={program.id} 
             program={program}
-            isSaved={isProgramSaved(program.id)}
-            onSaveProgram={() => handleSaveProgram(program.id)}
-            onViewDetails={() => handleViewDetails(program.id)}
+            onSaveProgram={handleSaveProgram}
+            isSaved={savedPrograms.includes(program.id)}
+            onViewDetails={(id) => console.log('Voir détails du programme:', id)}
+            imageFit="contain" // Options: "contain", "stretch", "crop"
           />
         ))}
       </div>
 
-      {filteredPrograms.length === 0 && !loading && (
-        <div className="no-programs">
-          <p>Aucun programme trouvé</p>
-        </div>
-      )}
-
-      {/* Pagination - Style pro avec navigation */}
+          {/* Pagination */}
       {totalPages > 1 && (
         <div className="pagination-container">
-          {/* Indicateur de page */}
           <div className="pagination-info">
-            Page {currentPage} sur {totalPages} • {filteredPrograms.length} programmes affichés
+                {t('page')} {currentPage} {t('of')} {totalPages} - {filteredPrograms.length} {t('programs')}
           </div>
           
-          <div className="pagination">
-            {/* Bouton Précédent */}
-            {currentPage > 1 && (
+              <div className="pagination-controls">
               <button
                 className="pagination-btn"
                 onClick={() => handlePageChange(currentPage - 1)}
-                title="Page précédente"
+                  disabled={currentPage === 1}
               >
                 ←
               </button>
-            )}
-            
-            {/* Pages numérotées */}
-            {Array.from({ length: totalPages }, (_, i) => i + 1)
-              .filter(page => {
-                // Afficher seulement 4 pages maximum
-                if (totalPages <= 4) return true;
-                if (page === 1 || page === totalPages) return true;
-                if (page >= currentPage - 1 && page <= currentPage + 1) return true;
-                return false;
-              })
-              .map((page, index, array) => {
-                // Ajouter des ellipses si nécessaire
-                const prevPage = array[index - 1];
-                const showEllipsis = prevPage && page - prevPage > 1;
+                
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  const page = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
+                  if (page > totalPages) return null;
                 
                 return (
-                  <React.Fragment key={page}>
-                    {showEllipsis && (
-                      <span className="pagination-ellipsis">...</span>
-                    )}
                     <button
+                      key={page}
                       className={`pagination-btn ${page === currentPage ? 'active' : ''}`}
                       onClick={() => handlePageChange(page)}
                     >
                       {page}
                     </button>
-                  </React.Fragment>
                 );
               })}
             
-            {/* Bouton Suivant */}
-            {currentPage < totalPages && (
               <button
                 className="pagination-btn"
                 onClick={() => handlePageChange(currentPage + 1)}
-                title="Page suivante"
+                  disabled={currentPage === totalPages}
               >
                 →
               </button>
-            )}
           </div>
         </div>
+          )}
+        </>
       )}
       </div>
     </GlobalLayout>

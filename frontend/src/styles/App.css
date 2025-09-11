@@ -1,1 +1,73 @@
 /* Styles pour l'application */
+
+/* Import des optimisations mobile */
+@import './MobileOptimizations.css';
+
+/* Correction globale du débordement horizontal */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Optimisation des images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Correction des textes trop petits sur mobile */
+@media (max-width: 480px) {
+  body {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  h1 {
+    font-size: 1.8rem !important;
+  }
+  
+  h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  h3 {
+    font-size: 1.3rem !important;
+  }
+  
+  p {
+    font-size: 0.95rem !important;
+  }
+  
+  button {
+    min-height: 44px;
+    font-size: 16px;
+  }
+  
+  input, textarea, select {
+    font-size: 16px;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 360px) {
+  body {
+    font-size: 15px;
+  }
+  
+  h1 {
+    font-size: 1.6rem !important;
+  }
+  
+  h2 {
+    font-size: 1.4rem !important;
+  }
+  
+  h3 {
+    font-size: 1.2rem !important;
+  }
+}

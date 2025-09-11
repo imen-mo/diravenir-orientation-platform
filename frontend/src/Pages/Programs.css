@@ -1,39 +1,153 @@
-/* Programs.css - Design basé sur l'image avec palette violet foncé */
+/* Programs.css - Design EXACT de l'image de référence */
 
-/* Conteneur principal pour centrer la grille */
+/* Masquer tous les éléments de défilement globaux */
 .programs-page {
   min-height: 100vh;
   background: white;
   padding: 2rem;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centrer le contenu */
+  align-items: center;
+  
+  /* Masquer tous les éléments de défilement */
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-/* En-tête de la page */
+/* Masquer les scrollbars WebKit */
+.programs-page::-webkit-scrollbar,
+.programs-page::-webkit-scrollbar-track,
+.programs-page::-webkit-scrollbar-thumb,
+.programs-page::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* En-tête de la page - Style EXACT de l'image */
 .programs-header {
   text-align: center;
   margin-bottom: 3rem;
   width: 100%;
-  max-width: 1600px; /* Même largeur que la grille */
+  max-width: 1600px;
+  padding-top: 20px; /* Espace pour éviter que le titre soit caché sous la navbar */
 }
 
 .programs-title {
   font-size: 3rem;
   font-weight: 800;
   margin-bottom: 2rem;
+  color: #541652; /* Violet exact de l'image */
+  margin-top: 0; /* S'assurer que le titre est visible */
 }
 
-.title-programs {
-  color: #441048;
+.title-liste {
+  color: #FCBE1C; /* Jaune exact de l'image */
 }
 
-.title-list {
-  color: #430F48;
+.title-des-programmes {
+  color: #541652; /* Violet exact de l'image */
 }
 
-/* Contrôles de la page */
+/* Statistiques des programmes - Cartes plus petites et alignées */
+.programs-stats {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: nowrap; /* Forcer une seule ligne */
+}
+
+.stat-item {
+  background: #541652 !important; /* Violet exact de l'image - FORCER */
+  color: white !important; /* Texte blanc - FORCER */
+  padding: 0.8rem 1.2rem; /* Padding légèrement augmenté */
+  border-radius: 20px; /* Réduire le border-radius */
+  font-size: 0.9rem; /* Taille de police légèrement augmentée */
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(84, 22, 82, 0.4); /* Ombre plus prononcée */
+  min-width: 140px; /* Largeur minimale légèrement augmentée */
+  text-align: center; /* Centrer le texte */
+  transition: all 0.3s ease; /* Animation au hover */
+  border: none !important; /* Pas de bordure */
+  
+  /* Masquer tous les éléments de défilement et flèches */
+  overflow: hidden;
+  position: relative;
+}
+
+.stat-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(84, 22, 82, 0.5);
+}
+
+/* Masquer les pseudo-éléments qui pourraient créer des flèches */
+.stat-item::before,
+.stat-item::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Masquer les scrollbars et éléments de défilement */
+.stat-item::-webkit-scrollbar,
+.stat-item::-webkit-scrollbar-track,
+.stat-item::-webkit-scrollbar-thumb,
+.stat-item::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Masquer les éléments de défilement Firefox */
+.stat-item {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Masquer tous les éléments enfants qui pourraient créer des flèches */
+.stat-item * {
+  overflow: visible !important;
+}
+
+.stat-item *::before,
+.stat-item *::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Masquer spécifiquement les éléments de défilement sur tous les navigateurs */
+.stat-item,
+.stat-item * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.stat-item strong {
+  font-size: 1rem; /* Réduire la taille du texte en gras */
+  margin-right: 0.3rem;
+  color: white !important; /* FORCER le texte en blanc */
+}
+
+/* Styles spécifiques pour forcer les cartes violettes */
+.programs-page .stat-item {
+  background: #541652 !important;
+  color: white !important;
+  border: none !important;
+}
+
+.programs-page .stat-item * {
+  color: white !important;
+}
+
+.programs-page .stat-item strong {
+  color: white !important;
+}
+
+/* Contrôles de la page - Style EXACT de l'image */
 .programs-controls {
   display: flex;
   justify-content: space-between;
@@ -42,10 +156,10 @@
   flex-wrap: wrap;
   gap: 1rem;
   width: 100%;
-  max-width: 1600px; /* Même largeur que la grille */
+  max-width: 1600px;
 }
 
-/* Section de recherche */
+/* Section de recherche - Style EXACT de l'image */
 .search-section {
   flex: 1;
   max-width: 400px;
@@ -60,17 +174,23 @@
 .search-input {
   width: 100%;
   padding: 1rem 1.5rem;
-  border: none;
+  border: none; /* Supprimer le cadre */
   border-radius: 25px;
-  background: #f5f5f5;
+  background: #ffffff; /* Blanc comme demandé */
   font-size: 1rem;
   color: #333;
   padding-right: 3rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Ombre comme demandé */
+  transition: all 0.3s ease;
 }
 
 .search-input:focus {
   outline: none;
-  background: #f0f0f0;
+  background: #ffffff; /* Reste blanc au focus */
+  border: none; /* Pas de bordure au focus */
+  box-shadow: 0 6px 20px rgba(252, 190, 28, 0.3); /* Ombre plus prononcée au focus */
+  transform: translateY(-2px);
 }
 
 .search-input::placeholder {
@@ -84,314 +204,238 @@
   font-size: 1.2rem;
 }
 
-/* Filtres */
+/* Filtres - Style EXACT de l'image */
 .filter-tabs {
   display: flex;
-  gap: 0.5rem;
+  gap: 0;
+  background: #f8f9fa;
+  border-radius: 25px;
+  padding: 0.25rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .filter-tab {
   padding: 0.75rem 1.5rem;
   border: none;
   background: transparent;
-  color: #441048;
-  font-weight: 600;
+  color: #666;
   font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   border-radius: 20px;
   transition: all 0.3s ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  white-space: nowrap;
 }
 
 .filter-tab:hover {
-  background: rgba(68, 16, 72, 0.1);
+  color: #541752;
 }
 
 .filter-tab.active {
-  background: #430F48;
-  color: white;
+  background: #F8BA1C; /* Jaune exact de l'image */
+  color: #541752;
+  box-shadow: 0 2px 8px rgba(248, 186, 28, 0.3);
 }
 
-/* Section de tri */
+/* Tri - Style EXACT de l'image */
 .sort-section {
-  min-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .sort-select {
-  width: 100%;
   padding: 0.75rem 1rem;
-  border: none;
-  border-radius: 10px;
-  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
   color: #333;
   font-size: 0.9rem;
   cursor: pointer;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .sort-select:focus {
   outline: none;
-  background: #f0f0f0;
+  border-color: #F8BA1C;
 }
 
-/* Grille des programmes */
+/* Grille des programmes - Style EXACT de l'image (4 colonnes) */
 .programs-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Exactement 4 cartes par ligne */
+  grid-template-columns: repeat(4, 1fr); /* Exactement 4 colonnes comme l'image */
   gap: 2rem;
-  margin-bottom: 3rem;
-  max-width: 1600px; /* Augmenté de 1400px à 1600px */
-  margin-left: 0; /* Supprimé l'auto */
-  margin-right: 0; /* Supprimé l'auto */
-  padding: 0; /* Supprimé le padding */
-}
-
-.program-card {
-  background: transparent; /* Fond transparent pour la carte entière */
-  border-radius: 20px;
-  padding: 0; /* Supprimé le padding */
-  text-align: center;
-  color: white;
-  transition: transform 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  min-height: 450px; /* Hauteur augmentée */
-  min-width: 320px;
-  box-shadow: 0 8px 25px rgba(68, 16, 72, 0.15); /* Ombre subtile */
-}
-
-.program-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 35px rgba(68, 16, 72, 0.25);
-}
-
-/* Section supérieure violette avec logo */
-.program-card-top {
-  background: #441048;
-  padding: 2rem 1.5rem 1.5rem 1.5rem;
-  border-radius: 20px 20px 0 0;
-  position: relative;
-}
-
-/* Logo du programme - Style amélioré */
-.program-logo {
-  margin-bottom: 1.5rem;
-  display: flex;
-  justify-content: center;
-}
-
-.program-logo img {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: white;
-  padding: 1.2rem;
-  object-fit: contain;
-  border: 3px solid #00CED1; /* Bordure teal comme dans l'image */
-  box-shadow: 0 4px 15px rgba(0, 206, 209, 0.3);
-}
-
-/* Nom du programme - Section violette */
-.program-name {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-/* Section inférieure blanche */
-.program-card-bottom {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 0 0 20px 20px;
-  color: #441048;
-  min-height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-/* Description du programme - Section blanche */
-.program-description {
-  font-size: 0.9rem;
-  line-height: 1.5;
-  margin-bottom: 1.5rem;
-  color: #333; /* Texte noir sur fond blanc */
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-height: 4.5em;
-  text-align: center;
-}
-
-/* Actions du programme */
-.program-actions {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  flex-direction: row; /* Boutons côte à côte en haut */
-}
-
-.action-btn {
-  width: auto; /* Largeur automatique pour le texte */
-  height: auto;
-  padding: 0.6rem 1.2rem; /* Padding plus petit pour les boutons du haut */
-  border: 2px solid #FFD700; /* Bordure jaune */
-  background: white; /* Fond blanc */
-  border-radius: 25px; /* Coins très arrondis */
-  color: #441048; /* Texte violet foncé */
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  gap: 0.5rem; /* Espace entre icône et texte */
-  flex: 1; /* Boutons de même largeur */
-  max-width: 140px; /* Largeur maximale pour l'uniformité */
-}
-
-.action-btn:hover {
-  background: #FFD700; /* Jaune au survol */
-  color: #441048;
-  transform: translateY(-2px);
-}
-
-/* Icônes des boutons d'action */
-.action-icon {
-  font-size: 1rem;
-  color: #FFD700; /* Icône jaune */
-}
-
-.action-btn:hover .action-icon {
-  color: #441048; /* Icône violet au survol */
-}
-
-/* Bouton de sauvegarde - État actif */
-.action-btn.save-btn.saved {
-  background: #FFD700;
-  color: #441048;
-  border-color: #FFD700;
-}
-
-.action-btn.save-btn.saved:hover {
-  background: #FFC800;
-  border-color: #FFC800;
-}
-
-.action-btn.save-btn.saved .action-icon {
-  color: #441048; /* Icône violet quand sauvegardé */
-}
-
-/* Pagination - Style pro avec jaune et violet */
-.pagination-container {
-  text-align: center;
-  margin-top: 3rem;
-  margin-bottom: 2rem;
-}
-
-.pagination-info {
-  margin-bottom: 1rem;
-  color: #441048;
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.pagination-btn {
-  width: 50px;
-  height: 50px;
-  border: none;
-  border-radius: 10px;
-  background: white;
-  color: #441048;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 2px solid #FFD700; /* Bordure jaune */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pagination-btn:hover {
-  background: #FFD700; /* Jaune au survol */
-  color: #441048;
-  border-color: #FFD700;
-  transform: translateY(-2px);
-}
-
-.pagination-btn.active {
-  background: #FFD700; /* Jaune pour la page active */
-  color: #441048;
-  border-color: #FFD700;
-  font-weight: 700;
-  box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
-}
-
-/* Ellipses de pagination */
-.pagination-ellipsis {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  color: #441048;
-  font-weight: 600;
-  font-size: 1.2rem;
-}
-
-/* Bouton Apply Now - Jaune, large et en bas */
-.apply-now-btn {
   width: 100%;
-  padding: 1.2rem 1.5rem; /* Padding plus grand */
-  border: none;
-  border-radius: 30px; /* Coins très arrondis */
-  background: #FFD700; /* Jaune */
-  color: #441048; /* Violet foncé pour le texte */
-  font-weight: 700;
-  font-size: 1.1rem; /* Texte plus grand */
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: auto; /* Pousse le bouton vers le bas */
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+  max-width: 1600px;
+  justify-items: center;
 }
 
-.apply-now-btn:hover {
-  background: #FFC800; /* Jaune plus foncé au survol */
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+/* Responsive pour la grille */
+@media (max-width: 1400px) {
+  .programs-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
-/* État de chargement */
+@media (max-width: 1100px) {
+  .programs-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .programs-page {
+    padding: 1rem;
+  }
+  
+  .programs-header {
+    margin-bottom: 2rem;
+  }
+  
+  .programs-title {
+    font-size: 2.5rem;
+  }
+  
+  .programs-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .programs-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  
+  .search-section {
+    max-width: 100%;
+  }
+  
+  .filter-tabs {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .filter-tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .sort-section {
+    justify-content: center;
+  }
+  
+  .sort-select {
+    width: 100%;
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .programs-page {
+    padding: 0.5rem;
+  }
+  
+  .programs-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .programs-title {
+    font-size: 2rem;
+  }
+  
+  .programs-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  
+  .stat-item {
+    width: 100%;
+    max-width: 200px;
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .programs-controls {
+    gap: 0.8rem;
+  }
+  
+  .search-input {
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .filter-tabs {
+    gap: 0.3rem;
+  }
+  
+  .filter-tab {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+  }
+  
+  .programs-grid {
+    gap: 1rem;
+  }
+  
+  .pagination-controls {
+    gap: 0.3rem;
+  }
+  
+  .pagination-btn {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+    min-width: 35px;
+  }
+}
+
+@media (max-width: 360px) {
+  .programs-page {
+    padding: 0.3rem;
+  }
+  
+  .programs-title {
+    font-size: 1.8rem;
+  }
+  
+  .stat-item {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.75rem;
+  }
+  
+  .search-input {
+    padding: 0.7rem 0.8rem;
+    font-size: 0.85rem;
+  }
+  
+  .filter-tab {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+  }
+  
+  .programs-grid {
+    gap: 0.8rem;
+  }
+}
+
+/* États de chargement et d'erreur */
 .programs-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 50vh;
-  color: #441048;
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #666;
 }
 
 .loading-spinner {
   width: 50px;
   height: 50px;
   border: 4px solid #f3f3f3;
-  border-top: 4px solid #441048;
+  border-top: 4px solid #F8BA1C;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
+  margin: 0 auto 1rem;
 }
 
 @keyframes spin {
@@ -399,108 +443,227 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Message d'absence de programmes */
+.error-message {
+  text-align: center;
+  padding: 2rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #dc2626;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.retry-btn {
+  background: #F8BA1C;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+  background: #f0b210;
+  transform: translateY(-2px);
+}
+
+/* Message "Aucun programme" */
 .no-programs {
   text-align: center;
-  padding: 3rem;
-  color: #441048;
-  font-size: 1.2rem;
+  padding: 4rem 2rem;
+  color: #666;
 }
 
-/* Responsive Design */
-@media (max-width: 1400px) {
-  .programs-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-    max-width: 1400px;
-  }
-  
-  .programs-controls,
-  .programs-header {
-    max-width: 1400px;
-  }
+.no-programs-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
 }
 
-@media (max-width: 1200px) {
-  .programs-grid {
-    grid-template-columns: repeat(3, 1fr); /* 3 cartes sur écran moyen */
-    gap: 1.5rem;
-    max-width: 1200px;
-  }
-  
-  .programs-controls,
-  .programs-header {
-    max-width: 1200px;
-  }
+.reset-filters-btn {
+  background: #F8BA1C;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
 }
 
-@media (max-width: 1024px) {
-  .programs-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 cartes sur tablette */
-    gap: 1.5rem;
-    max-width: 1000px;
-  }
-  
-  .programs-controls,
-  .programs-header {
-    max-width: 1000px;
-  }
-  
-  .programs-controls {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .search-section {
-    max-width: 100%;
-  }
+.reset-filters-btn:hover {
+  background: #f0b210;
+  transform: translateY(-2px);
 }
 
-@media (max-width: 768px) {
-  .programs-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 cartes sur mobile */
-    gap: 1rem;
-    max-width: 700px;
-  }
-  
-  .programs-controls,
-  .programs-header {
-    max-width: 700px;
-  }
-  
-  .programs-page {
-    padding: 1rem;
-  }
-  
-  .programs-title {
-    font-size: 2rem;
-  }
-  
-  .program-card {
-    padding: 2rem;
-    min-width: 280px;
-  }
+/* Pagination - Style EXACT de l'image */
+.pagination-container {
+  margin-top: 3rem;
+  text-align: center;
+  width: 100%;
+  max-width: 1600px;
 }
 
-@media (max-width: 480px) {
-  .programs-grid {
-    grid-template-columns: 1fr; /* 1 carte sur très petit écran */
-    gap: 1rem;
-    max-width: 350px;
+.pagination-info {
+  margin-bottom: 1rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  padding: 0.75rem 1rem;
+  border: 1px solid #ddd;
+  background: white;
+  color: #333;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-width: 40px;
+}
+
+.pagination-btn:hover {
+  border-color: #F8BA1C;
+  color: #F8BA1C;
+}
+
+.pagination-btn.active {
+  background: #F8BA1C;
+  color: white;
+  border-color: #F8BA1C;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Styles spécifiques pour éviter les conflits CSS */
+.programs-page .search-input {
+  /* Forcer les styles spécifiques */
+  width: 100% !important;
+  padding: 1rem 1.5rem !important;
+  border: none !important; /* Supprimer le cadre */
+  border-radius: 25px !important;
+  background: #ffffff !important; /* Blanc comme demandé */
+  font-size: 1rem !important;
+  color: #333 !important;
+  padding-right: 3rem !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important; /* Ombre comme demandé */
+  position: relative !important;
+  z-index: 10 !important;
+  cursor: text !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  box-sizing: border-box !important;
+  display: block !important;
+  line-height: normal !important;
+  vertical-align: baseline !important;
+  text-align: left !important;
+  white-space: normal !important;
+  word-wrap: normal !important;
+  overflow: visible !important;
+  resize: none !important;
+  outline: none !important;
+}
+
+.programs-page .search-input:focus {
+  outline: none !important;
+  border: none !important; /* Pas de bordure au focus */
+  background: #ffffff !important; /* Reste blanc au focus */
+  box-shadow: 0 6px 20px rgba(252, 190, 28, 0.3) !important; /* Ombre plus prononcée */
+  transform: translateY(-2px) !important;
+}
+
+.programs-page .search-input:hover {
+  border: none !important; /* Pas de bordure au hover */
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15) !important;
+}
+
+.programs-page .search-input::placeholder {
+  color: #999 !important;
+  opacity: 1 !important;
+}
+
+.programs-page .search-input:focus::placeholder {
+  color: #ccc !important;
+}
+
+/* Assurer que l'input est cliquable et saisissable */
+.programs-page .search-container {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  z-index: 10 !important;
+  pointer-events: auto !important;
+}
+
+.programs-page .search-section {
+  flex: 1 !important;
+  max-width: 400px !important;
+  position: relative !important;
+  z-index: 10 !important;
+  pointer-events: auto !important;
+}
+
+/* Masquer les styles qui pourraient interférer */
+.programs-page .search-input::-webkit-search-decoration,
+.programs-page .search-input::-webkit-search-cancel-button,
+.programs-page .search-input::-webkit-search-results-button,
+.programs-page .search-input::-webkit-search-results-decoration {
+  display: none !important;
+}
+
+/* Assurer que l'input est visible et accessible */
+.programs-page .search-input:not([type="hidden"]) {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* Indicateur de statut de recherche */
+.search-status {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #F8BA1C;
+  color: #541752;
+  padding: 0.5rem 1rem;
+  border-radius: 0 0 15px 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 0.25rem;
+  box-shadow: 0 2px 8px rgba(248, 186, 28, 0.3);
+  z-index: 5;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
   }
-  
-  .programs-controls,
-  .programs-header {
-    max-width: 350px;
-  }
-  
-  .filter-tabs {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .program-card {
-    padding: 1.5rem;
-    min-width: 250px;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

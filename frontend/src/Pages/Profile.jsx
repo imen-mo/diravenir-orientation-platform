@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import GlobalLayout from '../components/GlobalLayout';
+import UserAvatar from '../components/UserAvatar';
 import API from '../services/api';
 import './Profile.css';
 
@@ -161,11 +162,7 @@ export default function Profile() {
                     <div className="profile-card profile-info-card">
                         <div className="profile-photo-section">
                             <div className="profile-photo-container">
-                                <div className="profile-avatar-large">
-                                    <span className="avatar-initial">
-                                        {user.prenom?.charAt(0) || user.name?.charAt(0) || 'U'}
-                                    </span>
-                                </div>
+                                <UserAvatar user={user} size="large" />
                             </div>
                             <div className="profile-basic-info">
                                 <h2 className="profile-name">

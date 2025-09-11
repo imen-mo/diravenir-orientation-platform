@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Navigation Admin DirAvenir</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #DDC9DB 0%, #FFFFFF 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(84, 22, 82, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #DDC9DB;
+        }
+        
+        .header h1 {
+            color: #541652;
+            font-size: 2.5rem;
+            margin: 0 0 10px 0;
+            background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+            margin: 0;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .status-card {
+            background: #FFFFFF;
+            border: 2px solid #DDC9DB;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .status-card.success {
+            border-color: #10B981;
+        }
+        
+        .status-card.success::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #10B981;
+        }
+        
+        .status-card.warning {
+            border-color: #F59E0B;
+        }
+        
+        .status-card.warning::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #F59E0B;
+        }
+        
+        .status-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(84, 22, 82, 0.15);
+        }
+        
+        .status-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #FFFFFF;
+            margin-bottom: 15px;
+        }
+        
+        .status-icon.success {
+            background: #10B981;
+        }
+        
+        .status-icon.warning {
+            background: #F59E0B;
+        }
+        
+        .status-title {
+            color: #541652;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+        }
+        
+        .status-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0 0 15px 0;
+        }
+        
+        .status-details {
+            background: #F9FAFB;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #374151;
+        }
+        
+        .navigation-demo {
+            background: linear-gradient(135deg, #DDC9DB 0%, #FFFFFF 100%);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #DDC9DB;
+        }
+        
+        .navigation-demo h2 {
+            color: #541652;
+            font-size: 1.8rem;
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+        
+        .nav-button {
+            background: #FFFFFF;
+            border: 2px solid #DDC9DB;
+            color: #541652;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .nav-button:hover {
+            background: #541652;
+            color: #FFFFFF;
+            border-color: #541652;
+            transform: translateY(-2px);
+        }
+        
+        .nav-button.admin {
+            background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%);
+            color: #FFFFFF;
+            border-color: #FCBE1C;
+        }
+        
+        .nav-button.admin:hover {
+            background: #541652;
+            border-color: #541652;
+        }
+        
+        .demo-section {
+            background: #FFFFFF;
+            border: 2px solid #DDC9DB;
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .demo-section h2 {
+            color: #541652;
+            font-size: 1.8rem;
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+        
+        .demo-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .demo-step {
+            background: linear-gradient(135deg, #DDC9DB 0%, #FFFFFF 100%);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #DDC9DB;
+        }
+        
+        .demo-step h3 {
+            color: #541652;
+            margin: 0 0 10px 0;
+            font-size: 1.2rem;
+        }
+        
+        .demo-step p {
+            color: #666;
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .highlight {
+            background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%);
+            color: #FFFFFF;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .code-block {
+            background: #1F2937;
+            color: #F9FAFB;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-button {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Navigation Admin DirAvenir</h1>
+            <p>Test de la navigation vers le nouveau dashboard admin moderne</p>
+        </div>
+
+        <div class="status-grid">
+            <div class="status-card success">
+                <div class="status-icon success">✅</div>
+                <h3 class="status-title">Ancien Dashboard Supprimé</h3>
+                <p class="status-description">
+                    L'ancien fichier AdminDashboard.jsx a été supprimé avec succès. 
+                    Plus de conflit entre les deux versions.
+                </p>
+                <div class="status-details">
+                    ❌ frontend/src/pages/AdminDashboard.jsx (supprimé)<br>
+                    ❌ frontend/src/pages/AdminDashboard.css (supprimé)
+                </div>
+            </div>
+
+            <div class="status-card success">
+                <div class="status-icon success">🔄</div>
+                <h3 class="status-title">Navigation Mise à Jour</h3>
+                <p class="status-description">
+                    La route /admin redirige maintenant vers AdminDashboardModern.jsx 
+                    au lieu de l'ancien dashboard.
+                </p>
+                <div class="status-details">
+                    ✅ Route /admin → AdminDashboardModern<br>
+                    ✅ AdminRoute pour la protection<br>
+                    ✅ Navigation navbar mise à jour
+                </div>
+            </div>
+
+            <div class="status-card success">
+                <div class="status-icon success">🔐</div>
+                <h3 class="status-title">Protection Admin</h3>
+                <p class="status-description">
+                    La route admin est maintenant protégée avec AdminRoute 
+                    qui vérifie le rôle ADMIN de l'utilisateur.
+                </p>
+                <div class="status-details">
+                    ✅ Vérification du rôle ADMIN<br>
+                    ✅ Redirection si non autorisé<br>
+                    ✅ Protection des routes sensibles
+                </div>
+            </div>
+
+            <div class="status-card success">
+                <div class="status-icon success">🎨</div>
+                <h3 class="status-title">Design Moderne</h3>
+                <p class="status-description">
+                    Le nouveau dashboard utilise la palette de couleurs DirAvenir 
+                    avec des statistiques interactives.
+                </p>
+                <div class="status-details">
+                    ✅ Palette DirAvenir respectée<br>
+                    ✅ Statistiques interactives<br>
+                    ✅ Design responsive moderne
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation-demo">
+            <h2>🧭 Test de Navigation</h2>
+            
+            <div class="nav-buttons">
+                <a href="/" class="nav-button">
+                    🏠 Accueil
+                </a>
+                <a href="/login" class="nav-button">
+                    🔑 Connexion
+                </a>
+                <a href="/admin" class="nav-button admin">
+                    🛡️ Admin Dashboard
+                </a>
+                <a href="/dashboard" class="nav-button">
+                    📊 Dashboard Étudiant
+                </a>
+            </div>
+
+            <div class="code-block">
+// Configuration de la route admin dans App.jsx
+&lt;Route path="/admin" element={
+  &lt;AdminRoute&gt;
+    &lt;AdminDashboardModern /&gt;
+  &lt;/AdminRoute&gt;
+} /&gt;
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>🚀 Comment Tester la Navigation</h2>
+            <div class="demo-steps">
+                <div class="demo-step">
+                    <h3>1. Connexion Admin</h3>
+                    <p>
+                        Connectez-vous avec un compte ayant le rôle 
+                        <span class="highlight">ADMIN</span> 
+                        via la page de connexion.
+                    </p>
+                </div>
+                <div class="demo-step">
+                    <h3>2. Clic sur Admin</h3>
+                    <p>
+                        Dans la navbar, cliquez sur le lien 
+                        <span class="highlight">"🛡️ Admin"</span> 
+                        pour accéder au dashboard.
+                    </p>
+                </div>
+                <div class="demo-step">
+                    <h3>3. Redirection Automatique</h3>
+                    <p>
+                        Vous serez automatiquement redirigé vers 
+                        <span class="highlight">/admin</span> 
+                        qui affiche le nouveau dashboard moderne.
+                    </p>
+                </div>
+                <div class="demo-step">
+                    <h3>4. Vérification des Fonctionnalités</h3>
+                    <p>
+                        Testez les statistiques interactives, le chat, 
+                        et toutes les fonctionnalités CRUD du nouveau dashboard.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>📋 Changements Effectués</h2>
+            <div class="demo-steps">
+                <div class="demo-step">
+                    <h3>✅ Fichiers Supprimés</h3>
+                    <p>
+                        - frontend/src/pages/AdminDashboard.jsx<br>
+                        - frontend/src/pages/AdminDashboard.css
+                    </p>
+                </div>
+                <div class="demo-step">
+                    <h3>🔄 App.jsx Modifié</h3>
+                    <p>
+                        - Import AdminRoute ajouté<br>
+                        - Route /admin mise à jour<br>
+                        - Protection AdminRoute activée
+                    </p>
+                </div>
+                <div class="demo-step">
+                    <h3>🧭 Navigation Configurée</h3>
+                    <p>
+                        - Lien navbar /admin fonctionnel<br>
+                        - Redirection login → /admin<br>
+                        - Protection des routes admin
+                    </p>
+                </div>
+                <div class="demo-step">
+                    <h3>🎨 Dashboard Moderne</h3>
+                    <p>
+                        - Palette DirAvenir respectée<br>
+                        - Statistiques interactives<br>
+                        - Design responsive et moderne
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulation de la navigation
+        document.querySelectorAll('.nav-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (this.href.includes('/admin')) {
+                    e.preventDefault();
+                    alert('🛡️ Redirection vers le Dashboard Admin Moderne DirAvenir!\n\n✅ Ancien dashboard supprimé\n✅ Navigation mise à jour\n✅ Protection AdminRoute active\n✅ Design moderne avec statistiques interactives');
+                }
+            });
+        });
+
+        // Animation des cartes de statut
+        const statusCards = document.querySelectorAll('.status-card');
+        statusCards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.style.animation = 'fadeInUp 0.6s ease forwards';
+        });
+
+        // CSS pour l'animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

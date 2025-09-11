@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import logo from "../assets/logo-colorfull.png";
-import illustration from "../assets/illustration.png";
-import meeting from "../assets/meeting.png";
+import { useTranslations } from "../hooks/useTranslations";
+
+import logo from "../assets/logo_diravenir.png";
+import fille from "../assets/fille.png";
 import orientation from "../assets/orientation.png";
 import chinaImage from "../assets/CHINA.jpg";
 import cyprusImage from "../assets/chypre.jpg";
@@ -10,13 +11,29 @@ import romaniaImage from "../assets/ROMANIA.jpg";
 import bauImage from "../assets/BAU.png";
 import cyprusUniImage from "../assets/Cyprus International University.png";
 import finalUniImage from "../assets/Final International University.png";
+import programSelectorImage from "../assets/programselector.png";
+import scenarioImage from "../assets/scenario.png";
+import quizzesImage from "../assets/quizstests.png";
+import gamificationImage from "../assets/gamification.png";
+import image1 from "../assets/image1.png";
+import image2 from "../assets/image2.png";
+import image3 from "../assets/image3.png";
+import image4 from "../assets/image4.png";
+import careerOrientation from "../assets/CareerOrientation.png";
+import how1 from "../assets/how1.png";
+import how2 from "../assets/how2.png";
+import avatarA from "../assets/avatarA.png";
+import avatarB from "../assets/avatarB.png";
+import avatarC from "../assets/avatarC.png";
 import { fetchFilieres, fetchTemoignages, fetchDestinations, fetchPartenaires } from "../services/api";
 import GlobalLayout from "../components/GlobalLayout";
+
 import "./HomePage.css";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { t } = useTranslations();
   const [programs, setPrograms] = useState([]);
   const [temoignages, setTemoignages] = useState([]);
   const [destinations, setDestinations] = useState([]);
@@ -24,25 +41,43 @@ const HomePage = () => {
   const [oauth2Success, setOauth2Success] = useState(false);
   const [oauth2Email, setOauth2Email] = useState('');
   const [oauth2Token, setOauth2Token] = useState('');
+  const [currentAICard, setCurrentAICard] = useState(0);
 
   console.log('🔍 HomePage composant rendu');
 
+  // Fonctions pour le carousel AI
+  const nextAICard = () => {
+    setCurrentAICard((prev) => (prev + 1) % 4);
+  };
+
+  const prevAICard = () => {
+    setCurrentAICard((prev) => (prev - 1 + 4) % 4);
+  };
+
+  // Auto-play désactivé - le carousel ne change que manuellement
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setCurrentAICard((prev) => (prev + 1) % 4);
+  //   }, 4000);
+  //   return () => clearInterval(interval);
+  // }, []);
+
   useEffect(() => {
     console.log('🔍 HomePage useEffect exécuté');
-    
+
     // Détecter la connexion OAuth2 réussie
     const oauth2Param = searchParams.get('oauth2');
     const emailParam = searchParams.get('email');
     const tokenParam = searchParams.get('token');
-    
+
     if (oauth2Param === 'success' && emailParam && tokenParam) {
       setOauth2Success(true);
       setOauth2Email(emailParam);
       setOauth2Token(tokenParam);
-      
+
       // Stocker le token dans localStorage pour l'authentification
       localStorage.setItem('token', tokenParam);
-      
+
       // Nettoyer l'URL après 5 secondes
       setTimeout(() => {
         setOauth2Success(false);
@@ -52,502 +87,868 @@ const HomePage = () => {
 
     // Charger les programmes
     fetchFilieres()
-      .then(data => {
-        console.log('✅ Programmes chargés:', data);
-        setPrograms(data);
-      })
-      .catch(err => console.error("❌ Erreur lors du chargement des filières:", err));
+        .then(data => {
+          console.log('✅ Programmes chargés:', data);
+          setPrograms(data);
+        })
+        .catch(err => console.error("❌ Erreur lors du chargement des filières:", err));
 
     // Charger les témoignages
     fetchTemoignages()
-      .then(data => {
-        console.log('✅ Témoignages chargés:', data);
-        setTemoignages(data);
-      })
-      .catch(err => console.error("❌ Erreur lors du chargement des témoignages:", err));
+        .then(data => {
+          console.log('✅ Témoignages chargés:', data);
+          setTemoignages(data);
+        })
+        .catch(err => console.error("❌ Erreur lors du chargement des témoignages:", err));
 
     // Charger les destinations
     fetchDestinations()
-      .then(data => {
-        console.log('✅ Destinations chargées:', data);
-        setDestinations(data);
-      })
+        .then(data => {
+          console.log('✅ Destinations chargées:', data);
+          setDestinations(data);
+        })
       .catch(err => console.error("❌ Erreur lors du chargement des destinations:", err));
 
     // Charger les partenaires
     fetchPartenaires()
-      .then(data => {
-        console.log('✅ Partenaires chargés:', data);
-        setPartenaires(data);
-      })
-      .catch(err => console.error("❌ Erreur lors du chargement des partenaires:", err));
+        .then(data => {
+          console.log('✅ Partenaires chargés:', data);
+          setPartenaires(data);
+        })
+        .catch(err => console.error("❌ Erreur lors du chargement des partenaires:", err));
   }, [searchParams, navigate]);
 
   return (
-    <GlobalLayout activePage="home">
-      <div className="home-page">
-        {/* Hero Section */}
-        <section className="hero-section">
-          {/* Message de bienvenue OAuth2 */}
-          {oauth2Success && (
-            <div className="oauth2-welcome-banner">
-              <div className="oauth2-welcome-content">
-                <div className="oauth2-welcome-icon">🎉</div>
-                <div className="oauth2-welcome-text">
+      <GlobalLayout activePage="home">
+        <div className="home-page">
+          {/* Hero Section */}
+          <section className="hero-section">
+            {/* Message de bienvenue OAuth2 */}
+            {oauth2Success && (
+                <div className="oauth2-welcome-banner">
+                  <div className="oauth2-welcome-content">
+                    <div className="oauth2-welcome-icon">🎉</div>
+                    <div className="oauth2-welcome-text">
                   <h3>Bienvenue !</h3>
                   <p>Vous êtes maintenant connecté avec votre compte Google ({oauth2Email})</p>
-                  <div className="oauth2-actions">
-                    <button 
-                      onClick={() => navigate('/profile')}
-                      className="oauth2-profile-btn"
-                    >
+                      <div className="oauth2-actions">
+                        <button
+                            onClick={() => navigate('/profile')}
+                            className="oauth2-profile-btn"
+                        >
                       Voir mon profil
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          <div className="hero-content">
-            <div className="hero-text">
-              <h1>Guide Your Way Up To Success With Us</h1>
-              <p>Get the guidance you need for the future of work.</p>
-              <div className="search-container">
-                <input type="text" placeholder="Search the program you want" className="search-input" />
-                <button className="search-btn">Search</button>
-              </div>
-              <div className="tags">
-                <span className="tag active">Cloud Computing</span>
-                <span className="tag">Cyber Security</span>
-                <span className="tag">DevOps</span>
-                <span className="tag">Data Science</span>
-                <span className="tag">Software Testing</span>
-              </div>
-              <div className="hero-buttons">
-                <button className="hero-btn primary" onClick={() => navigate('/programs/data-analyst')}>
-                  Data Analyst
-                </button>
-                <button className="hero-btn secondary" onClick={() => navigate('/programs/website-design')}>
-                  Website Design
-                </button>
-              </div>
-            </div>
-            <div className="hero-image">
-              <img src={illustration} alt="Student Success" className="main-illustration" />
-              <div className="floating-card">
-                <div className="card-header">
-                  <span className="card-title">Best programs</span>
-                </div>
-                <div className="card-content">
-                  <div className="program-item">
-                    <div className="program-icon purple">📊</div>
-                    <div className="program-info">
-                      <span className="program-name">Data Analyst</span>
-                      <span className="program-reviews">280 Reviews</span>
-                    </div>
-                  </div>
-                  <div className="program-item">
-                    <div className="program-icon yellow">🎨</div>
-                    <div className="program-info">
-                      <span className="program-name">Website Design</span>
-                      <span className="program-reviews">216 Reviews</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Our Story Section */}
-        <section className="our-story-section">
-          <div className="story-container">
-            <div className="story-content">
-              <h2 className="story-subtitle">OUR STORY</h2>
-              <h3 className="story-title">Innovate in New Ways to Guide Students</h3>
-              <p className="story-text">
-                We believe in the power of purpose-driven learning and bold imagination. We see no limits to what we can build when curiosity meets community, when dreams are backed by action.
-                <br /><br />
-                We are not just educating the next generation, we are co-creating the future with them. Each scholar is a builder, a thinker, a doer. Together, we are shaping futures that matter.
-                <br /><br />
-                This is more than a platform. This is a movement for those who dare to dream and work to build.
-              </p>
-            </div>
-            <div className="story-image">
-              {/* Replace with your actual image path */}
-              <img src={meeting} alt="Founder" className="founder-image" />
-            </div>
-          </div>
-        </section>
-
-        {/* AI Based Sections */}
-        <section className="ai-sections">
-          <div className="section-header">
-            <h2>Morocco's First AI Based Orientation Platform</h2>
-          </div>
-          <div className="ai-cards-container">
-            <div className="ai-card" onClick={() => navigate('/program-selector')}>
-              <div className="card-icon">
-                <div className="icon-container">
-                  <div className="brain-icon">🧠</div>
-                  <div className="server-icon">🖥</div>
-                </div>
-              </div>
-              <h3>AI Based Program Selector</h3>
-              <p>Find your perfect program with our intelligent matching system</p>
-            </div>
-            <div className="ai-card" onClick={() => navigate('/scenarios')}>
-              <div className="card-icon">
-                <div className="icon-container">
-                  <div className="scenario-icon">📋</div>
-                  <div className="gear-icon">⚙</div>
-                </div>
-              </div>
-              <h3>AI Based Scenarios</h3>
-              <p>Explore real-world scenarios to understand your career path</p>
-            </div>
-            <div className="ai-card" onClick={() => navigate('/quizzes')}>
-              <div className="card-icon">
-                <div className="icon-container">
-                  <div className="quiz-icon">❓</div>
-                  <div className="brain-icon">🧠</div>
-                </div>
-              </div>
-              <h3>AI Based Quizzes/Tests</h3>
-              <p>Test your knowledge and skills with our adaptive assessments</p>
-            </div>
-            <div className="ai-card" onClick={() => navigate('/goals')}>
-              <div className="card-icon">
-                <div className="icon-container">
-                  <div className="code-icon">💻</div>
-                  <div className="tech-icons">🔧</div>
-                </div>
-              </div>
-              <h3>AI Based Gamification</h3>
-              <p>Set and track your career goals with personalized insights</p>
-            </div>
-          </div>
-        </section>
-
-        {/* Who Can Join */}
-        <section className="who-can-join">
-          <h2>Career Orientation Schemes For All</h2>
-          <div className="target-groups">
-            <div className="group-card">
-              <div className="group-icon">🎓</div>
-              <h3>Colleges/Universities</h3>
-            </div>
-            <div className="group-card">
-              <div className="group-icon">👨‍🎓</div>
-              <h3>Students</h3>
-            </div>
-            <div className="group-card">
-              <div className="group-icon">🔄</div>
-              <h3>Career Changers</h3>
-            </div>
-            <div className="group-card">
-              <div className="group-icon">🏫</div>
-              <h3>Educational Institutions</h3>
-            </div>
-          </div>
-        </section>
-
-        {/* How It Works */}
-        <section className="how-it-works">
-          <h2>How It Works</h2>
-          <div className="steps-container">
-            <div className="step-item">
-              <div className="step-number">1</div>
-              <div className="step-content">
-                <h3>Orientation Aptitude Tests and diagrams</h3>
-              </div>
-            </div>
-            <div className="step-item">
-              <div className="step-number">2</div>
-              <div className="step-content">
-                <h3>Program Cases matching your profil</h3>
-              </div>
-            </div>
-            <div className="step-item">
-              <div className="step-number">3</div>
-              <div className="step-content">
-                <h3>Opportunities selection in universities</h3>
-              </div>
-            </div>
-            <div className="step-item">
-              <div className="step-number">4</div>
-              <div className="step-content">
-                <h3>Application to a chosen opportunity</h3>
-              </div>
-            </div>
-            <div className="step-item">
-              <div className="step-number">5</div>
-              <div className="step-content">
-                <h3>Real Time Tracking of your application</h3>
-              </div>
-            </div>
-            <div className="step-item">
-              <div className="step-number">6</div>
-              <div className="step-content">
-                <h3>Application guidance & Monitoring</h3>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Popular Programs */}
-        <section className="popular-programs">
-          <h2>Popular Programs</h2>
-          <div className="programs-grid">
-            {Array.isArray(programs) && programs.length > 0 ? (
-              programs.map((prog, idx) => (
-                <div key={idx} className="program-card">
-                  <h3>{prog.nom}</h3>
-                  <p>{prog.domaine}</p>
-                  <div className="program-price">Starting from $2,500</div>
-                  <button onClick={() => navigate('/apply')}>Apply Now</button>
-                </div>
-              ))
-            ) : (
-              // Fallback cards si pas de données
-              <>
-                <div className="program-card">
-                  <h3>Computer Science</h3>
-                  <p>Technology & Engineering</p>
-                  <button onClick={() => navigate('/apply')}>Apply Now</button>
-                </div>
-                <div className="program-card">
-                  <h3>Business Administration</h3>
-                  <p>Business & Management</p>
-                  <button onClick={() => navigate('/apply')}>Apply Now</button>
-                </div>
-                <div className="program-card">
-                  <h3>Data Science</h3>
-                  <p>Technology & Analytics</p>
-                  <button onClick={() => navigate('/apply')}>Apply Now</button>
-                </div>
-              </>
             )}
-          </div>
-          <button className="view-all-btn" onClick={() => navigate('/programs')}>View All Programs</button>
-        </section>
 
-        {/* Achievements */}
-        <section className="achievements">
-          <h2>Our Achievements</h2>
-          <div className="stats">
-            <div className="stat-item">
-              <div className="stat-number">200</div>
-              <div className="stat-label">Students Abroad</div>
+            <div className="hero-content">
+              <div className="hero-text">
+                <h1>
+                <span className="line-1">{t('guideYourWay')}</span>
+                <span className="line-2">{t('upToSuccess')}</span>
+                <span className="line-3">{t('withUs')}</span>
+                </h1>
+              <p>{t('getGuidance')}</p>
+                <div className="search-container">
+                <input type="text" placeholder={t('searchProgram')} className="search-input" />
+                <button className="search-btn">{t('search')}</button>
+                </div>
+                <div className="tags">
+                <span className="tag active">{t('cloudComputing')}</span>
+                <span className="tag">{t('cyberSecurity')}</span>
+                <span className="tag">{t('devOps')}</span>
+                <span className="tag">{t('dataScience')}</span>
+                <span className="tag">{t('softwareTesting')}</span>
+                </div>
+              </div>
+              <div className="hero-image">
+                <img src={fille} alt="Student Success" className="main-illustration" />
+              </div>
             </div>
-            <div className="stat-item">
-              <div className="stat-number">70</div>
-              <div className="stat-label">Programs Available</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">90%</div>
-              <div className="stat-label">Students Satisfied</div>
-            </div>
-          </div>
-        </section>
+          </section>
 
-        {/* Testimonials */}
-        <section className="testimonials">
-          <h2>From Dreamers to Achievers & doers</h2>
-          <div className="testimonials-list">
-            {Array.isArray(temoignages) && temoignages.length > 0 ? (
-              temoignages.map((t, idx) => (
-                <div key={idx} className="testimonial-card">
-                  <h4>{t.nom}</h4>
-                  <div>{t.programme}</div>
-                  <p>{t.texte}</p>
-                  <div>{'★'.repeat(t.etoiles)}</div>
-                </div>
-              ))
-            ) : (
-              // Fallback testimonials
-              <>
-                <div className="testimonial-card">
-                  <h4>Anir chentre</h4>
-                  <div>Business Administration</div>
-                  <p>J'ai adoré l'expérience avec DirAvenir. Ils m'ont guidé vers le bon programme.</p>
-                  <div>★★★★★</div>
-                </div>
-                <div className="testimonial-card">
-                  <h4>Fatimazahra Naim</h4>
-                  <div>Cyber Security</div>
-                  <p>I highly recommend DirAvenir for anyone looking to study abroad.</p>
-                  <div>★★★★★</div>
-                </div>
-                <div className="testimonial-card">
-                  <h4>El Abbadi Hind</h4>
-                  <div>Architecture</div>
-                  <p>J'ai hâte de commencer mon programme grâce à leur orientation.</p>
-                  <div>★★★★★</div>
-                </div>
-              </>
-            )}
-          </div>
-        </section>
-
-        {/* Destinations */}
-        <section className="destinations">
-          <h2>Our Destinations</h2>
-          <div className="destinations-list">
-            {Array.isArray(destinations) && destinations.length > 0 ? (
-              destinations.map((d, idx) => (
-                <Link 
-                  key={idx} 
-                  to={`/destinations/${d.nom.toLowerCase()}`} 
-                  className="destination-card"
-                  style={{ textDecoration: 'none' }}
+          {/* AI Based Sections */}
+          <section className="ai-sections">
+            <div className="ai-hero-content">
+              <div className="ai-title-section">
+                <h2>
+                <span className="title-main">{t('moroccoFirstAI')}</span>
+                <span className="title-highlight">{t('orientationPlatform')}</span>
+                </h2>
+              </div>
+              <div className="ai-cards-grid">
+                <div
+                    className={`ai-card-stable ${currentAICard === 0 ? 'active' : currentAICard === 3 ? 'prev' : 'next'}`}
+                    onClick={() => navigate('/program-selector')}
                 >
-                  <h4>{d.nom}</h4>
-                  <p>{d.description}</p>
-                  {d.imageUrl && <img src={d.imageUrl} alt={d.nom} />}
-                </Link>
-              ))
-            ) : (
-              // Fallback destinations with background images and prices
-              <>
-                <Link to="/destinations/china" className="destination-card china-bg" style={{ textDecoration: 'none' }}>
-                  <div className="destination-overlay">
-                  <h4>China</h4>
-                  <p>Discover opportunities in one of the world's fastest-growing economies</p>
-                    <div className="destination-price">Starting from $3,500</div>
-                    <div className="destination-features">
-                      <span>🏛 Top Universities</span>
-                      <span>💰 Affordable Costs</span>
-                      <span>🌏 Cultural Experience</span>
-                    </div>
+                  <div className="ai-card-image">
+                    <img src={programSelectorImage} alt="AI Program Selector" />
                   </div>
-                </Link>
-                <Link to="/destinations/cyprus" className="destination-card cyprus-bg" style={{ textDecoration: 'none' }}>
-                  <div className="destination-overlay">
-                  <h4>Cyprus</h4>
-                  <p>Study in a beautiful Mediterranean island with excellent universities</p>
-                    <div className="destination-price">Starting from $4,200</div>
-                    <div className="destination-features">
-                      <span>🏝 Mediterranean Climate</span>
-                      <span>🎓 Quality Education</span>
-                      <span>🌊 Beautiful Beaches</span>
-                    </div>
-                  </div>
-                </Link>
-                <Link to="/destinations/romania" className="destination-card romania-bg" style={{ textDecoration: 'none' }}>
-                  <div className="destination-overlay">
-                  <h4>Romania</h4>
-                  <p>Experience European education with affordable costs</p>
-                    <div className="destination-price">Starting from $2,800</div>
-                    <div className="destination-features">
-                      <span>🇪🇺 European Union</span>
-                      <span>💵 Low Cost of Living</span>
-                      <span>🏰 Rich History</span>
-                    </div>
-                  </div>
-                </Link>
-              </>
-            )}
-          </div>
-        </section>
-
-        {/* Partners */}
-        <section className="partners">
-          <h2>Our Partners</h2>
-          <div className="partners-list">
-            {Array.isArray(partenaires) && partenaires.length > 0 ? (
-              partenaires.map((p, idx) => (
-                <div key={idx} className="partner-card">
-                  <h4>{p.nom}</h4>
-                  <p>{p.description}</p>
-                  {p.logoUrl && <img src={p.logoUrl} alt={p.nom} />}
-                  {p.siteWeb && <a href={p.siteWeb} target="_blank" rel="noopener noreferrer">Site Web</a>}
+                <h3>{t('aiBasedPrograms')}</h3>
                 </div>
-              ))
-            ) : (
-              // Fallback partners with background images and website links
-              <>
-                <a 
-                  href="https://www.final.edu.tr" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="partner-card"
+                <div
+                    className={`ai-card-stable ${currentAICard === 1 ? 'active' : currentAICard === 0 ? 'prev' : 'next'}`}
+                    onClick={() => navigate('/scenarios')}
                 >
-                  <div className="partner-logo">
-                    <img src={finalUniImage} alt="Final International University" />
+                  <div className="ai-card-image">
+                    <img src={scenarioImage} alt="AI Scenarios" />
                   </div>
-                  <div className="partner-content">
-                    <h4>Final International University</h4>
-                    <p>Leading university in Cyprus offering quality education with modern facilities and international programs</p>
-                    <div className="partner-features">
-                      <span>🎓 Quality Education</span>
-                      <span>🌍 International Programs</span>
-                      <span>🏛 Modern Campus</span>
-                    </div>
-                    <div className="partner-link">
-                      Visit Official Website
-                      <span className="link-arrow">→</span>
+                <h3>{t('aiBasedScenarios')}</h3>
+                </div>
+                <div
+                    className={`ai-card-stable ${currentAICard === 2 ? 'active' : currentAICard === 1 ? 'prev' : 'next'}`}
+                    onClick={() => navigate('/quizzes')}
+                >
+                  <div className="ai-card-image">
+                    <img src={quizzesImage} alt="AI Quizzes/Tests" />
+                  </div>
+                <h3>{t('aiBasedQuizzes')}</h3>
+                </div>
+                <div
+                    className={`ai-card-stable ${currentAICard === 3 ? 'active' : currentAICard === 2 ? 'prev' : 'next'}`}
+                    onClick={() => navigate('/goals')}
+                >
+                  <div className="ai-card-image">
+                    <img src={gamificationImage} alt="AI Gamification" />
+                  </div>
+                <h3>{t('aiBasedGamification')}</h3>
+                </div>
+
+                {/* Boutons de navigation RAPPROCHÉS */}
+                <div className="carousel-nav-buttons">
+                  <button className="nav-btn prev-btn" onClick={prevAICard}>
+                    &lt;
+                  </button>
+                  <button className="nav-btn next-btn" onClick={nextAICard}>
+                    &gt;
+                  </button>
+                </div>
+
+                {/* Indicateurs de position */}
+                <div className="carousel-indicators">
+                  {[0, 1, 2, 3].map((index) => (
+                      <button
+                          key={index}
+                          className={`indicator-dot ${currentAICard === index ? 'active' : ''}`}
+                          onClick={() => setCurrentAICard(index)}
+                      />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Who Can Join */}
+          <section className="who-can-join">
+            <div className="career-title-section">
+              <h2>
+              <span className="career-title-main">{t('careerOrientationTitle')}</span>
+              <span className="career-title-highlight">{t('careerOrientationForAll')}</span>
+              </h2>
+            </div>
+            <div className="career-orientation-container">
+              <div className="career-images-left">
+                <div className="career-image-grid">
+                  <div className="career-image-item">
+                    <img src={image1} alt="Career Orientation 1" />
+                  </div>
+                  <div className="career-image-item">
+                    <img src={image2} alt="Career Orientation 2" />
+                  </div>
+                  <div className="career-image-item">
+                    <img src={image3} alt="Career Orientation 3" />
+                  </div>
+                  <div className="career-image-item">
+                    <img src={image4} alt="Career Orientation 4" />
+                  </div>
+                </div>
+              </div>
+              <div className="career-orientation-right">
+                <img src={careerOrientation} alt="Career Orientation" />
+              </div>
+            </div>
+          </section>
+
+          {/* How It Works */}
+          <section className="how-it-works">
+            <div className="how-title-section">
+              <h2>
+              <span className="how-title-main">{t('howItWorksTitle')}</span>
+              </h2>
+            </div>
+            <div className="how-it-works-container">
+              <div className="how-image-left">
+                <img src={how1} alt="How It Works 1" />
+              </div>
+              <div className="steps-container">
+                <div className="step-item">
+                  <div className="step-number">1</div>
+                  <div className="step-content">
+                  <h3>{t('step1Title')}</h3>
+                  </div>
+                </div>
+                <div className="step-item">
+                  <div className="step-number">2</div>
+                  <div className="step-content">
+                  <h3>{t('step2Title')}</h3>
+                  </div>
+                </div>
+                <div className="step-item">
+                  <div className="step-number">3</div>
+                  <div className="step-content">
+                  <h3>{t('step3Title')}</h3>
+                  </div>
+                </div>
+                <div className="step-item">
+                  <div className="step-number">4</div>
+                  <div className="step-content">
+                  <h3>{t('step4Title')}</h3>
+                  </div>
+                </div>
+                <div className="step-item">
+                  <div className="step-number">5</div>
+                  <div className="step-content">
+                  <h3>{t('step5Title')}</h3>
+                  </div>
+                </div>
+                <div className="step-item">
+                  <div className="step-number">6</div>
+                  <div className="step-content">
+                  <h3>{t('step6Title')}</h3>
+                  </div>
+                </div>
+              </div>
+              <div className="how-image-right">
+                <img src={how2} alt="How It Works 2" />
+              </div>
+            </div>
+          </section>
+
+           {/* Popular Programs */}
+           <section className="popular-programs">
+          <h2>{t('popularProgramsTitle')}</h2>
+             <div className="programs-grid">
+               {Array.isArray(programs) && programs.length > 0 ? (
+              // Prendre les 8 premiers programmes de la base de données
+              programs.slice(0, 8).map((program, idx) => (
+                <div key={program.id || idx} className="program-card-university">
+                  <div className="card-header-university">
+                    <div className="university-logo">
+                      <img 
+                        src={program.universiteLogoUrl || program.universityLogo || '/images/placeholder-logo.png'} 
+                        alt={program.universities || program.university || 'University'} 
+                        onError={(e) => {
+                          e.target.src = '/images/placeholder-logo.png';
+                        }}
+                      />
+                           </div>
+                         </div>
+                  <div className="card-content-university">
+                    <h3>{program.program || program.nom || 'Program'}</h3>
+                    <p>{program.description || program.domaine || 'Program description not available.'}</p>
+                    <div className="program-actions">
+                      <button className="btn-secondary" onClick={() => navigate(`/program/${program.id}`)}>More Info</button>
+                      <button className="btn-secondary">Save This</button>
+                           </div>
+                    <button className="btn-primary" onClick={() => navigate('/apply', {
+                                 state: {
+                                   program: {
+                          id: program.id,
+                          name: program.program || program.nom,
+                          type: program.category || program.type,
+                          university: program.universities || program.university,
+                          logo: program.universiteLogoUrl || program.universityLogo,
+                          applicationFee: program.applicationFee || 4000,
+                          serviceFee: program.serviceFee || 11000,
+                          duration: program.duration || '4 Years',
+                          level: program.degreeType || 'Bachelor',
+                          language: program.language || 'English',
+                          tuitionFees: program.tuitionFees || 'Starting from $2,500',
+                          category: program.category || 'General',
+                          campusCity: program.campusCity || 'City',
+                          destinationName: program.destination?.nom || 'Destination'
+                        }
+                      }
+                    })}>Apply Now</button>
+                         </div>
+                       </div>
+                   ))
+               ) : (
+              // Fallback avec programmes fixes si pas de données
+              <>
+                <div className="program-card-university">
+                  <div className="card-header-university">
+                    <div className="university-logo university-1">
+                      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/a3/University_of_Toronto_CoA.svg/1200px-University_of_Toronto_CoA.svg.png" alt="University of Toronto" />
+                         </div>
+                       </div>
+                  <div className="card-content-university">
+                    <h3>Computer Science</h3>
+                    <p>Advanced program in computer science with focus on software development and algorithms.</p>
+                         <div className="program-actions">
+                      <button className="btn-secondary">More Info</button>
+                      <button className="btn-secondary">Save This</button>
+                         </div>
+                    <button className="btn-primary" onClick={() => navigate('/apply')}>Apply Now</button>
+                       </div>
+                     </div>
+                     
+                <div className="program-card-university">
+                  <div className="card-header-university">
+                    <div className="university-logo university-2">
+                      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/2/2f/Harvard_University_seal.svg/1200px-Harvard_University_seal.svg.png" alt="Harvard University" />
+                         </div>
+                       </div>
+                  <div className="card-content-university">
+                    <h3>Business Administration</h3>
+                    <p>Comprehensive business program covering management, finance, and entrepreneurship.</p>
+                         <div className="program-actions">
+                      <button className="btn-secondary">More Info</button>
+                      <button className="btn-secondary">Save This</button>
+                         </div>
+                    <button className="btn-primary" onClick={() => navigate('/apply')}>Apply Now</button>
+                       </div>
+                     </div>
+                     
+                <div className="program-card-university">
+                  <div className="card-header-university">
+                    <div className="university-logo university-3">
+                      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/5a/MIT_Seal.svg/1200px-MIT_Seal.svg.png" alt="MIT" />
+                         </div>
+                       </div>
+                  <div className="card-content-university">
+                    <h3>Data Science</h3>
+                    <p>Interdisciplinary field that uses scientific methods to extract insights from data.</p>
+                         <div className="program-actions">
+                      <button className="btn-secondary">More Info</button>
+                      <button className="btn-secondary">Save This</button>
+                         </div>
+                    <button className="btn-primary" onClick={() => navigate('/apply')}>Apply Now</button>
+                       </div>
+                     </div>
+                     
+                <div className="program-card-university">
+                  <div className="card-header-university">
+                    <div className="university-logo university-4">
+                      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8d/Stanford_University_seal_2003.svg/1200px-Stanford_University_seal_2003.svg.png" alt="Stanford University" />
+                         </div>
+                       </div>
+                  <div className="card-content-university">
+                    <h3>Engineering</h3>
+                    <p>Technical program focusing on problem-solving and innovation in engineering.</p>
+                         <div className="program-actions">
+                      <button className="btn-secondary">More Info</button>
+                      <button className="btn-secondary">Save This</button>
+                         </div>
+                    <button className="btn-primary" onClick={() => navigate('/apply')}>Apply Now</button>
+                       </div>
+                     </div>
+                     
+                <div className="program-card-university">
+                  <div className="card-header-university">
+                    <div className="university-logo university-5">
+                      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/4e/University_of_Oxford_seal.svg/1200px-University_of_Oxford_seal.svg.png" alt="University of Oxford" />
+                         </div>
+                       </div>
+                  <div className="card-content-university">
+                    <h3>Medicine</h3>
+                    <p>Medical program preparing students for careers in healthcare and medicine.</p>
+                         <div className="program-actions">
+                      <button className="btn-secondary">More Info</button>
+                      <button className="btn-secondary">Save This</button>
+                         </div>
+                    <button className="btn-primary" onClick={() => navigate('/apply')}>Apply Now</button>
+                       </div>
+                     </div>
+                     
+                <div className="program-card-university">
+                  <div className="card-header-university">
+                    <div className="university-logo university-6">
+                      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/6/6a/University_of_Cambridge_seal.svg/1200px-University_of_Cambridge_seal.svg.png" alt="University of Cambridge" />
                     </div>
                   </div>
-                </a>
+                  <div className="card-content-university">
+                    <h3>Architecture</h3>
+                    <p>Creative program combining design, technology, and environmental considerations.</p>
+                    <div className="program-actions">
+                      <button className="btn-secondary">More Info</button>
+                      <button className="btn-secondary">Save This</button>
+                    </div>
+                    <button className="btn-primary" onClick={() => navigate('/apply')}>Apply Now</button>
+                  </div>
+                         </div>
                 
-                <a 
-                  href="https://www.ciu.edu.tr" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="partner-card"
-                >
-                  <div className="partner-logo">
-                    <img src={cyprusUniImage} alt="Cyprus International University" />
-                  </div>
-                  <div className="partner-content">
-                    <h4>Cyprus International University</h4>
-                    <p>International university with diverse programs and a multicultural learning environment</p>
-                    <div className="partner-features">
-                      <span>🌐 Multicultural</span>
-                      <span>📚 Diverse Programs</span>
-                      <span>🏝 Cyprus Location</span>
+                <div className="program-card-university">
+                  <div className="card-header-university">
+                    <div className="university-logo university-7">
+                      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Princeton_University_seal.svg/1200px-Princeton_University_seal.svg.png" alt="Princeton University" />
+                       </div>
+                         </div>
+                  <div className="card-content-university">
+                    <h3>Finance</h3>
+                    <p>Financial program covering investment, banking, and corporate finance.</p>
+                         <div className="program-actions">
+                      <button className="btn-secondary">More Info</button>
+                      <button className="btn-secondary">Save This</button>
                     </div>
-                    <div className="partner-link">
-                      Visit Official Website
-                      <span className="link-arrow">→</span>
-                    </div>
+                    <button className="btn-primary" onClick={() => navigate('/apply')}>Apply Now</button>
                   </div>
-                </a>
+                </div>
                 
-                <a 
-                  href="https://www.bau.edu.tr" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="partner-card"
-                >
-                  <div className="partner-logo">
-                    <img src={bauImage} alt="BAU - Bahçeşehir University" />
-                  </div>
-                  <div className="partner-content">
-                    <h4>BAU - Bahçeşehir University</h4>
-                    <p>Excellence in education with innovative teaching methods and global partnerships</p>
-                    <div className="partner-features">
-                      <span>🚀 Innovation</span>
-                      <span>🤝 Global Partnerships</span>
-                      <span>⭐ Excellence</span>
-                    </div>
-                    <div className="partner-link">
-                      Visit Official Website
-                      <span className="link-arrow">→</span>
+                <div className="program-card-university">
+                  <div className="card-header-university">
+                    <div className="university-logo university-8">
+                      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8e/Yale_University_Shield_1.svg/1200px-Yale_University_Shield_1.svg.png" alt="Yale University" />
                     </div>
                   </div>
-                </a>
-              </>
-            )}
-          </div>
-        </section>
+                  <div className="card-content-university">
+                    <h3>Psychology</h3>
+                    <p>Study of human behavior and mental processes in various contexts.</p>
+                    <div className="program-actions">
+                      <button className="btn-secondary">More Info</button>
+                      <button className="btn-secondary">Save This</button>
+                    </div>
+                    <button className="btn-primary" onClick={() => navigate('/apply')}>Apply Now</button>
+                  </div>
+                </div>
+                   </>
+               )}
+             </div>
+          <button className="view-all-btn" onClick={() => navigate('/programs')}>View All Opportunities</button>
+           </section>
+
+          {/* Achievements */}
+          <section className="achievements">
+          <h2>
+            <span className="achievement-our">{t('achievementsTitle').split(' ')[0]}</span>
+            <span className="achievement-achievement">{t('achievementsTitle').split(' ').slice(1).join(' ')}</span>
+          </h2>
+            <div className="stats">
+              <div className="stat-item">
+                <div className="stat-number">200</div>
+              <div className="stat-label">{t('studentsAbroad')}</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-number">70</div>
+              <div className="stat-label">{t('programsAvailable')}</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-number">90%</div>
+              <div className="stat-label">{t('studentsSatisfied')}</div>
+              </div>
+            </div> 
+          </section>
+
+          {/* Testimonials - Design sophistiqué exact de l'image 2 */}
+          <section className="testimonials">
+            <div className="testimonials-title-section">
+              <h2>
+              <span className="testimonials-title-from">{t('from')}</span>
+              <span className="testimonials-title-dreamers">{t('dreamers')}</span>
+              <span className="testimonials-title-to">{t('to')}</span>
+              <span className="testimonials-title-achievers">{t('achievers')}</span>
+              <span className="testimonials-title-and">{t('and')}</span>
+              <span className="testimonials-title-doors">{t('doors')}</span>
+              </h2>
+            </div>
+            
+             <div className="testimonials-carousel">
+               <div className="testimonials-list">
+                 <div className="testimonials-slide">
+                   {/* Carte 1 - Computer Science - University of Toronto */}
+                   <div className="testimonial-card">
+                     <div className="testimonial-badge scholarship-a">
+                       <span>{t('diravenirScholar')}</span>
+                     </div>
+                     
+                     <div className="testimonial-content">
+                       <div className="student-illustration male"></div>
+                       <h4>Anir Chentre</h4>
+                       <div className="testimonial-field">Computer Science</div>
+                       
+                       <div className="testimonial-rating">
+                         <div className="stars">
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                         </div>
+                         <span className="time">6 Month Ago</span>
+                       </div>
+                       
+                       <div className="testimonial-details">
+                         <div className="detail-item">
+                           <span className="detail-icon">📄</span>
+                           <span>{t('scholarshipA')}</span>
+                         </div>
+                         <div className="detail-item">
+                           <span className="detail-icon">🎓</span>
+                           <span>{t('bachelor')}</span>
+                         </div>
+                       </div>
+                     </div>
+                     
+                     <div className="testimonial-text">
+                       <p>I want to sincerely thank Diravenir for their professional, honest, and transparent service. Their integrity stood out and made the whole process smooth. I highly recommend them.</p>
+                     </div>
+                   </div>
+
+                   {/* Carte 2 - Business Administration - Harvard University */}
+                   <div className="testimonial-card">
+                     <div className="testimonial-content">
+                       <div className="student-illustration female"></div>
+                       <h4>Fatimazahra Naim</h4>
+                       <div className="testimonial-field">Business Administration</div>
+                       
+                       <div className="testimonial-rating">
+                         <div className="stars">
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                         </div>
+                         <span className="time">3 Month Ago</span>
+                       </div>
+                       
+                       <div className="testimonial-details">
+                         <div className="detail-item">
+                           <span className="detail-icon">📄</span>
+                           <span>{t('selfSponsor')}</span>
+                         </div>
+                         <div className="detail-item">
+                           <span className="detail-icon">🎓</span>
+                           <span>{t('master')}</span>
+                         </div>
+                       </div>
+                     </div>
+                     
+                     <div className="testimonial-text">
+                       <p>I highly recommend Diravenir to anyone planning to study abroad, especially in China. The team is professional, responsive, and truly understanding.</p>
+                     </div>
+                   </div>
+
+                   {/* Carte 3 - Data Science - MIT */}
+                   <div className="testimonial-card">
+                     <div className="testimonial-badge scholarship-b">
+                       <span>{t('diravenirScholar')}</span>
+                     </div>
+                     
+                     <div className="testimonial-content">
+                       <div className="student-illustration male"></div>
+                       <h4>El Abbadi Hind</h4>
+                       <div className="testimonial-field">Data Science</div>
+                       
+                       <div className="testimonial-rating">
+                         <div className="stars">
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                         </div>
+                         <span className="time">6 Month Ago</span>
+                       </div>
+                       
+                       <div className="testimonial-details">
+                         <div className="detail-item">
+                           <span className="detail-icon">📄</span>
+                           <span>{t('scholarshipB')}</span>
+                         </div>
+                         <div className="detail-item">
+                           <span className="detail-icon">🎓</span>
+                           <span>{t('master')}</span>
+                         </div>
+                       </div>
+                     </div>
+                     
+                     <div className="testimonial-text">
+                       <p>I would like to extend my heartfelt thanks and appreciation to Diravenir for their outstanding services. They have demonstrated a high level of professionalism and exceptional commitment to meeting my needs.</p>
+                     </div>
+                   </div>
+
+                   {/* Carte 4 - Engineering - Stanford University */}
+                   <div className="testimonial-card">
+                     <div className="testimonial-badge scholarship-c">
+                       <span>{t('diravenirScholar')}</span>
+                     </div>
+                     
+                     <div className="testimonial-content">
+                       <div className="student-illustration female"></div>
+                       <h4>Sarah Johnson</h4>
+                       <div className="testimonial-field">Engineering</div>
+                       
+                       <div className="testimonial-rating">
+                         <div className="stars">
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                         </div>
+                         <span className="time">4 Month Ago</span>
+                       </div>
+                       
+                       <div className="testimonial-details">
+                         <div className="detail-item">
+                           <span className="detail-icon">📄</span>
+                           <span>{t('scholarshipC')}</span>
+                         </div>
+                         <div className="detail-item">
+                           <span className="detail-icon">🎓</span>
+                           <span>{t('bachelor')}</span>
+                         </div>
+                       </div>
+                     </div>
+                     
+                     <div className="testimonial-text">
+                       <p>Diravenir made my dream of studying engineering at Stanford a reality. Their guidance and support throughout the application process was exceptional.</p>
+                     </div>
+                   </div>
+
+                   {/* Carte 5 - Medicine - University of Oxford */}
+                   <div className="testimonial-card">
+                     <div className="testimonial-content">
+                       <div className="student-illustration male"></div>
+                       <h4>Ahmed Hassan</h4>
+                       <div className="testimonial-field">Medicine</div>
+                       
+                       <div className="testimonial-rating">
+                         <div className="stars">
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                         </div>
+                         <span className="time">2 Month Ago</span>
+                       </div>
+                       
+                       <div className="testimonial-details">
+                         <div className="detail-item">
+                           <span className="detail-icon">📄</span>
+                           <span>{t('selfSponsor')}</span>
+                         </div>
+                         <div className="detail-item">
+                           <span className="detail-icon">🎓</span>
+                           <span>{t('master')}</span>
+                         </div>
+                       </div>
+                     </div>
+                     
+                     <div className="testimonial-text">
+                       <p>The medical program at Oxford through Diravenir exceeded all my expectations. The quality of education and support is outstanding.</p>
+                     </div>
+                   </div>
+
+                   {/* Carte 6 - Architecture - University of Cambridge */}
+                   <div className="testimonial-card">
+                     <div className="testimonial-badge scholarship-a">
+                       <span>{t('diravenirScholar')}</span>
+                     </div>
+                     
+                     <div className="testimonial-content">
+                       <div className="student-illustration female"></div>
+                       <h4>Maria Rodriguez</h4>
+                       <div className="testimonial-field">Architecture</div>
+                       
+                       <div className="testimonial-rating">
+                         <div className="stars">
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                         </div>
+                         <span className="time">5 Month Ago</span>
+                       </div>
+                       
+                       <div className="testimonial-details">
+                         <div className="detail-item">
+                           <span className="detail-icon">📄</span>
+                           <span>{t('scholarshipA')}</span>
+                         </div>
+                         <div className="detail-item">
+                           <span className="detail-icon">🎓</span>
+                           <span>{t('bachelor')}</span>
+                         </div>
+                       </div>
+                     </div>
+                     
+                     <div className="testimonial-text">
+                       <p>Studying architecture at Cambridge through Diravenir has been an incredible journey. The program is world-class and the support is unmatched.</p>
+                     </div>
+                   </div>
+
+                   {/* Carte 7 - Finance - Princeton University */}
+                   <div className="testimonial-card">
+                     <div className="testimonial-content">
+                       <div className="student-illustration male"></div>
+                       <h4>David Kim</h4>
+                       <div className="testimonial-field">Finance</div>
+                       
+                       <div className="testimonial-rating">
+                         <div className="stars">
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                         </div>
+                         <span className="time">3 Month Ago</span>
+                       </div>
+                       
+                       <div className="testimonial-details">
+                         <div className="detail-item">
+                           <span className="detail-icon">📄</span>
+                           <span>{t('selfSponsor')}</span>
+                         </div>
+                         <div className="detail-item">
+                           <span className="detail-icon">🎓</span>
+                           <span>{t('master')}</span>
+                         </div>
+                       </div>
+                     </div>
+                     
+                     <div className="testimonial-text">
+                       <p>Princeton's finance program through Diravenir opened doors I never thought possible. The education quality and career opportunities are exceptional.</p>
+                     </div>
+                   </div>
+
+                   {/* Carte 8 - Psychology - Yale University */}
+                   <div className="testimonial-card">
+                     <div className="testimonial-badge scholarship-b">
+                       <span>{t('diravenirScholar')}</span>
+                     </div>
+                     
+                     <div className="testimonial-content">
+                       <div className="student-illustration female"></div>
+                       <h4>Emma Thompson</h4>
+                       <div className="testimonial-field">Psychology</div>
+                       
+                       <div className="testimonial-rating">
+                         <div className="stars">
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                           <span>★</span>
+                         </div>
+                         <span className="time">4 Month Ago</span>
+                       </div>
+                       
+                       <div className="testimonial-details">
+                         <div className="detail-item">
+                           <span className="detail-icon">📄</span>
+                           <span>{t('scholarshipB')}</span>
+                         </div>
+                         <div className="detail-item">
+                           <span className="detail-icon">🎓</span>
+                           <span>{t('bachelor')}</span>
+                         </div>
+                       </div>
+                     </div>
+                     
+                     <div className="testimonial-text">
+                       <p>Yale's psychology program through Diravenir has been transformative. The faculty, resources, and learning environment are truly world-class.</p>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+          </section>
+
+          {/* Destinations */}
+          <section className="destinations">
+          <h2><span className="our-text">{t('destinationsTitle').split(' ')[0]}</span> <span className="destinations-text">{t('destinationsTitle').split(' ').slice(1).join(' ')}</span></h2>
+            <div className="destinations-list">
+              {Array.isArray(destinations) && destinations.length > 0 ? (
+                  destinations.map((d, idx) => (
+                      <Link
+                          key={idx}
+                          to={`/destinations/${d.nom.toLowerCase()}`}
+                          className="destination-card"
+                          style={{ textDecoration: 'none' }}
+                      >
+                        <div className="destination-name">{d.nom}</div>
+                      </Link>
+                  ))
+              ) : (
+                  // Fallback destinations with background images and prices
+                  <>
+                    <Link to="/destinations/china" className="destination-card china-bg" style={{ textDecoration: 'none' }}>
+                  <div className="destination-name">{t('china')}</div>
+                    </Link>
+                    <Link to="/destinations/cyprus" className="destination-card cyprus-bg" style={{ textDecoration: 'none' }}>
+                  <div className="destination-name">{t('cyprus')}</div>
+                    </Link>
+                    <Link to="/destinations/romania" className="destination-card romania-bg" style={{ textDecoration: 'none' }}>
+                  <div className="destination-name">{t('romania')}</div>
+                    </Link>
+                  </>
+              )}
+            </div>
+          </section>
+
+          {/* Partners */}
+          <section className="partners">
+          <h2><span className="our-text">Our</span> <span className="partners-text">Partners</span></h2>
+            <div className="partners-list">
+              {Array.isArray(partenaires) && partenaires.length > 0 ? (
+                  partenaires.map((p, idx) => (
+                      <div key={idx} className="partner-card">
+                        {p.logoUrl && <img src={p.logoUrl} alt={p.nom} />}
+                      </div>
+                  ))
+              ) : (
+                  // Fallback partners with background images and website links
+                  <>
+                    <a
+                        href="https://www.final.edu.tr"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="partner-card"
+                    >
+                      <div className="partner-logo">
+                        <img src={finalUniImage} alt="Final International University" />
+                      </div>
+                    </a>
+
+                    <a
+                        href="https://www.ciu.edu.tr"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="partner-card"
+                    >
+                      <div className="partner-logo">
+                        <img src={cyprusUniImage} alt="Cyprus International University" />
+                      </div>
+                    </a>
+
+                    <a
+                        href="https://www.bau.edu.tr"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="partner-card"
+                    >
+                      <div className="partner-logo">
+                        <img src={bauImage} alt="BAU - Bahçeşehir University" />
+                      </div>
+                    </a>
+                  </>
+              )}
+            </div>
+          </section>
 
 
-      </div>
-    </GlobalLayout>
+
+        </div>
+      </GlobalLayout>
   );
 };
 
-export default HomePage; 
+export default HomePage;

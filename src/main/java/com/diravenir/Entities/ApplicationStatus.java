@@ -1,0 +1,38 @@
+package com.diravenir.Entities;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "application_status")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ApplicationStatus {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(name = "status_name", nullable = false, unique = true)
+    private String statusName;
+    
+    @Column(name = "description")
+    private String description;
+    
+    @Column(name = "is_active")
+    @Builder.Default
+    private Boolean isActive = true;
+    
+    @Column(name = "color_code")
+    private String colorCode;
+    
+    @Column(name = "sort_order")
+    @Builder.Default
+    private Integer sortOrder = 0;
+}

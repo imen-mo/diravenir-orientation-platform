@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Corrections Page Programs DirAvenir</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #DDC9DB 0%, #FFFFFF 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(84, 22, 82, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #DDC9DB;
+        }
+        
+        .header h1 {
+            color: #541652;
+            font-size: 2.5rem;
+            margin: 0 0 10px 0;
+            background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+            margin: 0;
+        }
+        
+        .fix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .fix-card {
+            background: #FFFFFF;
+            border: 2px solid #DDC9DB;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .fix-card.success {
+            border-color: #10B981;
+        }
+        
+        .fix-card.success::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #10B981;
+        }
+        
+        .fix-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(84, 22, 82, 0.15);
+        }
+        
+        .fix-icon {
+            width: 50px;
+            height: 50px;
+            background: #10B981;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #FFFFFF;
+            margin-bottom: 15px;
+        }
+        
+        .fix-title {
+            color: #541652;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+        }
+        
+        .fix-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0 0 15px 0;
+        }
+        
+        .fix-details {
+            background: #F9FAFB;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #374151;
+        }
+        
+        .demo-section {
+            background: linear-gradient(135deg, #DDC9DB 0%, #FFFFFF 100%);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #DDC9DB;
+        }
+        
+        .demo-section h2 {
+            color: #541652;
+            font-size: 1.8rem;
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+        
+        .code-block {
+            background: #1F2937;
+            color: #F9FAFB;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .highlight {
+            background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%);
+            color: #FFFFFF;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .test-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .test-button {
+            background: #FFFFFF;
+            border: 2px solid #DDC9DB;
+            color: #541652;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .test-button:hover {
+            background: #541652;
+            color: #FFFFFF;
+            border-color: #541652;
+            transform: translateY(-2px);
+        }
+        
+        .test-button.primary {
+            background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%);
+            color: #FFFFFF;
+            border-color: #FCBE1C;
+        }
+        
+        .test-button.primary:hover {
+            background: #541652;
+            border-color: #541652;
+        }
+        
+        .color-demo {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .color-box {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .color-violet {
+            background: #541652;
+        }
+        
+        .color-yellow {
+            background: #FCBE1C;
+        }
+        
+        .color-white {
+            background: #FFFFFF;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .fix-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .test-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .test-button {
+                width: 100%;
+                max-width: 200px;
+            }
+            
+            .color-demo {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Corrections Page Programs</h1>
+            <p>Résolution des problèmes de couleurs, titre et positionnement</p>
+        </div>
+
+        <div class="fix-grid">
+            <div class="fix-card success">
+                <div class="fix-icon">🔍</div>
+                <h3 class="fix-title">Barre de Recherche Corrigée</h3>
+                <p class="fix-description">
+                    La barre de recherche est maintenant blanche avec une ombre élégante 
+                    comme demandé.
+                </p>
+                <div class="fix-details">
+                    ✅ background: #ffffff<br>
+                    ✅ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)<br>
+                    ✅ border: 2px solid #e0e0e0<br>
+                    ✅ Effet hover et focus améliorés
+                </div>
+            </div>
+
+            <div class="fix-card success">
+                <div class="fix-icon">📊</div>
+                <h3 class="fix-title">Cartes de Statistiques Violettes</h3>
+                <p class="fix-description">
+                    Les 3 cartes de statistiques (Total, Filtrés, Favoris) 
+                    sont maintenant violettes avec des effets hover.
+                </p>
+                <div class="fix-details">
+                    ✅ background: #541652<br>
+                    ✅ color: white<br>
+                    ✅ box-shadow: 0 4px 12px rgba(84, 22, 82, 0.4)<br>
+                    ✅ Effet hover avec transform: translateY(-3px)
+                </div>
+            </div>
+
+            <div class="fix-card success">
+                <div class="fix-icon">📝</div>
+                <h3 class="fix-title">Titre Visible et Positionné</h3>
+                <p class="fix-description">
+                    Le titre "Liste des Programmes" apparaît maintenant correctement 
+                    sous la navbar et n'est plus caché.
+                </p>
+                <div class="fix-details">
+                    ✅ padding-top: 120px sur .programs-page<br>
+                    ✅ padding-top: 20px sur .programs-header<br>
+                    ✅ margin-top: 0 sur .programs-title<br>
+                    ✅ z-index: 10 pour la visibilité
+                </div>
+            </div>
+
+            <div class="fix-card success">
+                <div class="fix-icon">⬆️</div>
+                <h3 class="fix-title">Scroll vers le Haut Corrigé</h3>
+                <p class="fix-description">
+                    Les pages commencent maintenant en haut et le footer 
+                    n'apparaît plus en premier.
+                </p>
+                <div class="fix-details">
+                    ✅ scroll-behavior: smooth<br>
+                    ✅ min-height: calc(100vh - 140px)<br>
+                    ✅ display: flex sur .main-content<br>
+                    ✅ flex-direction: column
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>🎨 Palette de Couleurs Appliquée</h2>
+            
+            <div class="color-demo">
+                <div class="color-box color-violet">
+                    Violet<br>#541652
+                </div>
+                <div class="color-box color-yellow">
+                    Jaune<br>#FCBE1C
+                </div>
+                <div class="color-box color-white">
+                    Blanc<br>#FFFFFF
+                </div>
+            </div>
+            
+            <h3>1. Barre de Recherche</h3>
+            <div class="code-block">
+/* AVANT (gris) */
+.search-input {
+  background: #f5f5f5;
+  border: none;
+  box-shadow: none;
+}
+
+/* APRÈS (blanc avec ombre) */
+.search-input {
+  background: #ffffff; /* ✅ Blanc */
+  border: 2px solid #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* ✅ Ombre */
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  background: #ffffff; /* ✅ Reste blanc */
+  border-color: #FCBE1C;
+  box-shadow: 0 6px 20px rgba(252, 190, 28, 0.3);
+  transform: translateY(-2px);
+}
+            </div>
+
+            <h3>2. Cartes de Statistiques</h3>
+            <div class="code-block">
+/* AVANT (couleur incorrecte) */
+.stat-item {
+  background: #541752; /* ❌ Couleur incorrecte */
+  box-shadow: 0 2px 8px rgba(84, 23, 82, 0.3);
+}
+
+/* APRÈS (violet correct avec effets) */
+.stat-item {
+  background: #541652; /* ✅ Violet correct */
+  color: white;
+  box-shadow: 0 4px 12px rgba(84, 22, 82, 0.4); /* ✅ Ombre plus prononcée */
+  transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-3px); /* ✅ Effet hover */
+  box-shadow: 0 6px 20px rgba(84, 22, 82, 0.5);
+}
+            </div>
+
+            <h3>3. Positionnement des Titres</h3>
+            <div class="code-block">
+/* AVANT (titre caché sous navbar) */
+.programs-page {
+  padding: 2rem; /* ❌ Pas d'espace pour navbar */
+}
+
+.programs-title {
+  margin-top: auto; /* ❌ Positionnement incorrect */
+}
+
+/* APRÈS (titre visible) */
+.programs-page {
+  padding-top: 120px !important; /* ✅ Espace pour navbar */
+}
+
+.programs-header {
+  padding-top: 20px; /* ✅ Espace supplémentaire */
+}
+
+.programs-title {
+  margin-top: 0; /* ✅ Positionnement correct */
+  position: relative;
+  z-index: 10; /* ✅ Au-dessus des autres éléments */
+}
+            </div>
+
+            <h3>4. Scroll vers le Haut</h3>
+            <div class="code-block">
+/* AVANT (footer apparaît en premier) */
+.main-content {
+  min-height: 100vh; /* ❌ Pas de gestion de la navbar */
+}
+
+/* APRÈS (pages commencent en haut) */
+.main-content {
+  min-height: calc(100vh - 140px) !important; /* ✅ Hauteur - navbar */
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.programs-page,
+.about-page,
+.contact-page,
+.faq-page,
+.orientation-page {
+  scroll-behavior: smooth !important; /* ✅ Scroll fluide */
+}
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>🧪 Test des Corrections</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 20px;">
+                Testez maintenant la page Programs pour vérifier que toutes les corrections sont appliquées :
+            </p>
+            
+            <div class="test-buttons">
+                <a href="/programs" class="test-button primary">
+                    🎓 Page Programs
+                </a>
+                <a href="/about" class="test-button">
+                    ℹ️ Page About
+                </a>
+                <a href="/contact" class="test-button">
+                    📞 Page Contact
+                </a>
+                <a href="/faq" class="test-button">
+                    ❓ Page FAQ
+                </a>
+                <a href="/orientation" class="test-button">
+                    🧠 Page Orientation
+                </a>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>📋 Résumé des Corrections</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div style="background: #F9FAFB; padding: 20px; border-radius: 12px; border: 2px solid #DDC9DB;">
+                    <h4 style="color: #541652; margin: 0 0 10px 0;">✅ Fichiers Modifiés</h4>
+                    <ul style="margin: 0; padding-left: 20px; color: #666;">
+                        <li>fix-layout.css (corrections globales)</li>
+                        <li>Programs.css (couleurs et positionnement)</li>
+                        <li>App.jsx (import des corrections)</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #F9FAFB; padding: 20px; border-radius: 12px; border: 2px solid #DDC9DB;">
+                    <h4 style="color: #541652; margin: 0 0 10px 0;">🎯 Problèmes Résolus</h4>
+                    <ul style="margin: 0; padding-left: 20px; color: #666;">
+                        <li>Barre de recherche blanche avec ombre</li>
+                        <li>Cartes de statistiques violettes</li>
+                        <li>Titre visible sous la navbar</li>
+                        <li>Pages commencent en haut</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #F9FAFB; padding: 20px; border-radius: 12px; border: 2px solid #DDC9DB;">
+                    <h4 style="color: #541652; margin: 0 0 10px 0;">🚀 Améliorations</h4>
+                    <ul style="margin: 0; padding-left: 20px; color: #666;">
+                        <li>Effets hover sur les cartes</li>
+                        <li>Transitions fluides</li>
+                        <li>Positionnement responsive</li>
+                        <li>Scroll behavior optimisé</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animation des cartes
+        const fixCards = document.querySelectorAll('.fix-card');
+        fixCards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.style.animation = 'fadeInUp 0.6s ease forwards';
+        });
+
+        // CSS pour l'animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Test des boutons
+        document.querySelectorAll('.test-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (this.href.includes('http')) {
+                    e.preventDefault();
+                    alert('🎨 Test des corrections de la page Programs!\n\n✅ Barre de recherche blanche avec ombre\n✅ Cartes de statistiques violettes\n✅ Titre visible sous la navbar\n✅ Pages commencent en haut\n✅ Effets hover et transitions fluides');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

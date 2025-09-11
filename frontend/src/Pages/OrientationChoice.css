@@ -1,0 +1,285 @@
+.orientation-choice {
+  min-height: 100vh;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Poppins', sans-serif;
+}
+
+.choice-container {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  max-width: 95vw;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 25px;
+  padding: 6rem;
+  box-shadow: 0 25px 50px rgba(84, 22, 82, 0.15);
+  border: 1px solid #f0f0f0;
+  min-height: 90vh;
+  margin: 2rem auto;
+}
+
+.choice-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.choice-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #541652;
+  line-height: 1.1;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.highlight {
+  color: #FCBE1C;
+  font-weight: 600;
+}
+
+.choice-subtitle {
+  font-size: 1.3rem;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+}
+
+.choice-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.btn-primary {
+  background: #FCBE1C !important;
+  color: white !important;
+  border: none !important;
+  padding: 1.2rem 2.5rem;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  width: 100%;
+  text-align: center;
+  
+  /* Supprimer TOUS les styles par défaut du navigateur */
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  -khtml-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  
+  /* Supprimer le contour bleu */
+  outline: none !important;
+  -webkit-outline: none !important;
+  -moz-outline: none !important;
+}
+
+.btn-primary:hover {
+  background: #e6a800 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(252, 190, 28, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(252, 190, 28, 0.2);
+}
+
+/* Supprimer le contour bleu par défaut du navigateur */
+.btn-primary:focus {
+  background: #541652 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(84, 22, 82, 0.3);
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* État cliqué/actif - FORCER la couleur violette */
+.btn-primary:active,
+.btn-primary:active:focus,
+.btn-primary:active:hover {
+  background: #541652 !important;
+  color: white !important;
+  transform: translateY(0);
+}
+
+/* Supprimer tous les états bleus possibles */
+.btn-primary:focus:not(:focus-visible) {
+  background: #FCBE1C !important;
+}
+
+/* Supprimer le bleu sur mobile */
+.btn-primary:focus-visible {
+  background: #541652 !important;
+  outline: none !important;
+}
+
+/* Supprimer le bleu sur touch */
+.btn-primary:focus-within {
+  background: #541652 !important;
+}
+
+/* Supprimer TOUS les bleus possibles sur tous les navigateurs */
+.btn-primary::-moz-focus-inner {
+  border: 0 !important;
+  background: #541652 !important;
+}
+
+.btn-primary:-moz-focusring {
+  outline: none !important;
+  background: #541652 !important;
+}
+
+/* Supprimer le bleu sur Safari/iOS */
+.btn-primary:focus {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  background: #541652 !important;
+}
+
+/* Supprimer le bleu sur Chrome/Android */
+.btn-primary:focus-visible {
+  background: #541652 !important;
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Supprimer le bleu sur Edge */
+.btn-primary:focus-visible {
+  background: #541652 !important;
+  outline: none !important;
+}
+
+/* Supprimer le bleu sur Firefox */
+.btn-primary:focus {
+  background: #541652 !important;
+  outline: none !important;
+  -moz-outline: none !important;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #541652;
+  border: 2px solid #541652;
+  padding: 1.2rem 2.5rem;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  width: 100%;
+  text-align: center;
+}
+
+.btn-secondary:hover {
+  background: #541652;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(84, 22, 82, 0.3);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(84, 22, 82, 0.2);
+}
+
+.choice-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.choice-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 15px;
+}
+
+@media (max-width: 768px) {
+  .choice-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    margin: 1rem auto;
+  }
+  
+  .choice-title {
+    font-size: 2.5rem;
+    text-align: center;
+  }
+
+  .choice-subtitle {
+    text-align: center;
+  }
+
+  .choice-buttons {
+    max-width: 100%;
+    margin-top: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .choice-container {
+    padding: 1.5rem;
+    margin: 0.5rem auto;
+  }
+
+  .choice-title {
+    font-size: 2rem;
+  }
+
+  .choice-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* Animations d'apparition */
+.choice-buttons button {
+  animation: slideInUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.btn-primary {
+  animation-delay: 0.1s;
+}
+
+.btn-secondary {
+  animation-delay: 0.2s;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

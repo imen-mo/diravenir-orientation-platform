@@ -1,0 +1,67 @@
+/* Import des styles communs pour le centrage parfait */
+@import './OrientationQuestionCommon.css';
+
+/* Styles spécifiques pour OrientationQuestion3 - 5 réponses */
+.answers-grid:has(.answer-card:nth-child(5):last-child) {
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 1000px;
+  justify-items: center;
+}
+
+/* Style spécifique pour les cartes avec checkbox */
+.answer-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 80px;
+  padding: 20px 30px;
+  border-radius: 51px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #FFFFFF;
+}
+
+.answer-text {
+  flex: 1;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.answer-checkbox {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #FFFFFF;
+  margin-left: 20px;
+  transition: all 0.3s ease;
+}
+
+.answer-card.selected .answer-checkbox {
+  background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%);
+}
+
+.checkbox-selected, .checkbox-unselected {
+  color: #FFFFFF;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.answer-card.selected .checkbox-selected {
+  color: #541652;
+}
+
+/* Responsive spécifique */
+@media (max-width: 768px) {
+  .answer-card {
+    padding: 15px 20px;
+    min-height: 60px;
+  }
+  
+  .answer-text {
+    font-size: 16px;
+  }
+}

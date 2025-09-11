@@ -197,21 +197,65 @@ const authService = {
      */
     async login(credentials) {
         try {
+            console.log('🔑 Tentative de connexion avec:', credentials.email);
+            
             // Utiliser le client API centralisé au lieu d'axios direct
             const response = await apiClient.post('/auth/login', credentials);
             
+            console.log('🔑 Réponse de connexion reçue:', response);
+            
             if (response.token) {
                 setAuthToken(response.token);
-                setUserInfo({
-                    email: response.userEmail,
-                    name: response.userName,
+                
+                // CORRECTION: Utiliser les bons champs de la réponse
+                const userInfo = {
+                    id: response.userId,
+                    email: response.email,
+                    name: `${response.email.split('@')[0]}`, // Fallback si pas de nom/prénom
                     role: response.role,
-                });
+                };
+                
+                setUserInfo(userInfo);
+                console.log('✅ Token et infos utilisateur stockés:', userInfo);
             }
             
             return response;
         } catch (error) {
-            console.error('Erreur de connexion:', error);
+            console.error('❌ Erreur de connexion:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Inscription utilisateur
+     */
+    async register(userData) {
+        try {
+            console.log('📝 Tentative d\'inscription pour:', userData.email);
+            
+            // Utiliser le client API centralisé pour l'inscription
+            const response = await apiClient.post('/auth/register', userData);
+            
+            console.log('📝 Réponse d\'inscription:', response);
+            
+            // Vérifier si la réponse contient une erreur
+            if (response.success === false) {
+                throw new Error(response.message || 'Erreur lors de l\'inscription');
+            }
+            
+            // CORRECTION: Pour l'inscription, on ne stocke PAS le token car l'utilisateur doit d'abord vérifier son email
+            // On retourne juste les informations de succès avec la structure correcte
+            return {
+                success: true,
+                message: response.message || 'Inscription réussie ! Vérifiez votre email pour activer votre compte.',
+                userEmail: response.email || userData.email,
+                userName: `${userData.prenom || 'Utilisateur'} ${userData.nom || ''}`.trim(),
+                role: response.role || 'ETUDIANT',
+                token: response.token, // Token temporaire pour l'inscription
+                userId: response.userId
+            };
+        } catch (error) {
+            console.error('❌ Erreur d\'inscription:', error);
             throw error;
         }
     },

@@ -31,13 +31,13 @@ const VerifyEmail = () => {
     }, [token]);
 
     useEffect(() => {
-        if (verificationStatus === 'success' && countdown > 0) {
-            const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-            return () => clearTimeout(timer);
-        } else if (verificationStatus === 'success' && countdown === 0) {
-            navigate('/login');
+        if (verificationStatus === 'success') {
+            // Redirection immédiate vers login après vérification réussie
+            setTimeout(() => {
+                navigate('/login', { replace: true });
+            }, 1000); // Attendre 1 seconde pour que l'utilisateur voie le message de succès
         }
-    }, [verificationStatus, countdown, navigate]);
+    }, [verificationStatus, navigate]);
 
     const verifyEmail = async () => {
         try {
@@ -60,9 +60,11 @@ const VerifyEmail = () => {
             if (result.status === 'success') {
                 setVerificationStatus('success');
                 setMessage(result.message);
+                console.log('✅ Email vérifié avec succès, redirection vers login dans 5 secondes');
             } else {
                 setVerificationStatus('error');
                 setMessage(result.message || '❌ Échec de la vérification email');
+                console.log('❌ Échec de la vérification email:', result.message);
             }
         } catch (error) {
             console.error('❌ Erreur lors de la vérification:', error);
@@ -106,26 +108,13 @@ const VerifyEmail = () => {
                                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
                             </svg>
                         </div>
-                        <h2>✅ Vérification Réussie !</h2>
-                        <p className="success-message">{message}</p>
+                        <h2>✅ Email Vérifié !</h2>
+                        <p className="success-message">Votre compte est maintenant actif. Redirection vers la page de connexion...</p>
                         
-                        <div className="countdown-info">
-                            <p>Redirection automatique vers la page de connexion dans :</p>
-                            <div className="countdown-timer">{countdown}</div>
-                        </div>
-
                         <div className="verification-actions">
                             <button onClick={handleGoToLogin} className="primary-button">
                                 Se connecter maintenant
                             </button>
-                            <button onClick={handleGoToHome} className="secondary-button">
-                                Retour à l'accueil
-                            </button>
-                        </div>
-
-                        <div className="verification-note">
-                            <p><strong>🎉 Félicitations !</strong></p>
-                            <p>Votre compte est maintenant actif. Vous pouvez vous connecter et accéder à toutes les fonctionnalités de Diravenir.</p>
                         </div>
                     </div>
                 ) : (
@@ -135,7 +124,7 @@ const VerifyEmail = () => {
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                             </svg>
                         </div>
-                        <h2>❌ Vérification Échouée</h2>
+                        <h2>❌ Erreur de Vérification</h2>
                         <p className="error-message">{message}</p>
                         
                         <div className="verification-actions">
@@ -145,15 +134,6 @@ const VerifyEmail = () => {
                             <button onClick={() => navigate('/register')} className="secondary-button">
                                 S'inscrire à nouveau
                             </button>
-                        </div>
-
-                        <div className="verification-help">
-                            <p><strong>💡 Besoin d'aide ?</strong></p>
-                            <ul>
-                                <li>Vérifiez que le lien dans votre email est complet</li>
-                                <li>Le lien peut avoir expiré (24h)</li>
-                                <li>Contactez le support si le problème persiste</li>
-                            </ul>
                         </div>
                     </div>
                 )}

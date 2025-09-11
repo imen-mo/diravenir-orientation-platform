@@ -1,0 +1,244 @@
+/* VerifyEmailBlocked.css - Page de vérification email bloquante */
+
+.verify-blocked-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+}
+
+.verify-blocked-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+}
+
+/* Empêcher toute navigation */
+.verify-blocked-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.1);
+    z-index: -1;
+}
+
+/* Loading State */
+.verification-loading {
+    padding: 20px;
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.verification-loading h2 {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.verification-loading p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* Success State */
+.verification-success {
+    padding: 20px;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: white;
+}
+
+.success-icon svg {
+    width: 40px;
+    height: 40px;
+}
+
+.verification-success h2 {
+    color: #333;
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.success-message {
+    color: #059669;
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.redirect-info {
+    background: #f0f9ff;
+    border: 2px solid #0ea5e9;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 30px 0;
+}
+
+.redirect-info p {
+    color: #0369a1;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Error State */
+.verification-error {
+    padding: 20px;
+}
+
+.error-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: white;
+}
+
+.error-icon svg {
+    width: 40px;
+    height: 40px;
+}
+
+.verification-error h2 {
+    color: #333;
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.error-message {
+    color: #dc2626;
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.verification-help {
+    text-align: left;
+    margin: 30px 0;
+    padding: 20px;
+    background: #fef3c7;
+    border: 1px solid #fbbf24;
+    border-radius: 10px;
+}
+
+.verification-help p {
+    color: #92400e;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.verification-help ul {
+    color: #92400e;
+    line-height: 1.6;
+    padding-left: 20px;
+}
+
+.verification-help li {
+    margin-bottom: 8px;
+}
+
+.verification-actions {
+    margin: 30px 0;
+}
+
+.resend-button {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.resend-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+/* Empêcher toute interaction avec le reste de la page */
+.verify-blocked-container * {
+    pointer-events: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .verify-blocked-card {
+        padding: 30px 20px;
+        margin: 20px;
+    }
+    
+    .verification-success h2,
+    .verification-error h2 {
+        font-size: 1.8rem;
+    }
+    
+    .verification-loading h2 {
+        font-size: 1.6rem;
+    }
+}
+
+/* Animation d'entrée */
+.verify-blocked-card {
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

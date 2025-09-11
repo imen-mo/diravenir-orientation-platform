@@ -1,4 +1,4 @@
-import apiClient from '../config/api.js';
+import apiClient from '../config/api';
 
 /**
  * Service de connectivité centralisé pour garantir la communication backend-frontend

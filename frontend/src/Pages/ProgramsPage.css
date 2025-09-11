@@ -1,0 +1,484 @@
+/* ProgramsPage.css - Design Simple, Raffiné et Sophistiqué */
+
+.programs-page {
+    min-height: 100vh;
+    background: #FFFFFF;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Header */
+.programs-header {
+    background: #FFFFFF;
+    border-bottom: 2px solid #E5E7EB;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left h1 {
+    color: #541652;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+}
+
+.header-left p {
+    color: #6B7280;
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.header-actions .btn-primary {
+    background: #541652;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.2s ease;
+}
+
+.header-actions .btn-primary:hover {
+    background: #FCBE1C;
+    color: #541652;
+}
+
+/* Content */
+.programs-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Search and Filters */
+.content-header {
+    margin-bottom: 2rem;
+}
+
+.search-filters {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+    max-width: 400px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6B7280;
+    font-size: 1rem;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 2px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #541652;
+    background: #FFFFFF;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: #541652;
+}
+
+.filter-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-icon {
+    color: #6B7280;
+    font-size: 1rem;
+}
+
+.filter-dropdown select {
+    padding: 0.75rem 1rem;
+    border: 2px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #541652;
+    background: #FFFFFF;
+    cursor: pointer;
+}
+
+.filter-dropdown select:focus {
+    outline: none;
+    border-color: #541652;
+}
+
+/* Tabs */
+.programs-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #E5E7EB;
+}
+
+.tab-button {
+    padding: 1rem 1.5rem;
+    border: none;
+    background: transparent;
+    color: #6B7280;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+    color: #541652;
+}
+
+.tab-button.active {
+    color: #541652;
+    border-bottom-color: #FCBE1C;
+}
+
+/* Programs List */
+.programs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #6B7280;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    color: #DDC9DB;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    color: #541652;
+    font-size: 1.5rem;
+    margin: 0 0 0.5rem 0;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+/* Program Card */
+.program-card {
+    background: #FFFFFF;
+    border: 2px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(84, 22, 82, 0.08);
+}
+
+.program-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #F3F4F6;
+}
+
+.program-title h3 {
+    color: #541652;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 0.75rem 0;
+}
+
+.program-meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.university {
+    color: #541652;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.country {
+    color: #6B7280;
+    font-size: 1rem;
+    padding: 0.25rem 0.75rem;
+    background: #F3F4F6;
+    border-radius: 20px;
+}
+
+.program-status {
+    text-align: right;
+}
+
+.program-date {
+    color: #6B7280;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.status-saved {
+    background: #F0FDF4;
+    color: #059669;
+    border: 1px solid #BBF7D0;
+}
+
+.status-applied {
+    background: #EFF6FF;
+    color: #2563EB;
+    border: 1px solid #BFDBFE;
+}
+
+.status-pending {
+    background: #FFFBEB;
+    color: #D97706;
+    border: 1px solid #FED7AA;
+}
+
+.status-accepted {
+    background: #F0FDF4;
+    color: #059669;
+    border: 1px solid #BBF7D0;
+}
+
+.status-rejected {
+    background: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+}
+
+/* Program Details */
+.program-details {
+    margin-bottom: 2rem;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.detail-label {
+    color: #6B7280;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.detail-value {
+    color: #541652;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.program-description {
+    margin-bottom: 1.5rem;
+}
+
+.program-description p {
+    color: #374151;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.program-requirements h4 {
+    color: #541652;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem 0;
+}
+
+.program-requirements ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.program-requirements li {
+    color: #374151;
+    padding: 0.25rem 0;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.program-requirements li::before {
+    content: '•';
+    color: #FCBE1C;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+/* Program Actions */
+.program-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-top: 1.5rem;
+    border-top: 1px solid #F3F4F6;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+}
+
+.btn-primary {
+    background: #541652;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #FCBE1C;
+    color: #541652;
+}
+
+.btn-secondary {
+    background: #F3F4F6;
+    color: #541652;
+    border: 1px solid #E5E7EB;
+}
+
+.btn-secondary:hover {
+    background: #E5E7EB;
+    border-color: #541652;
+}
+
+.btn-danger {
+    background: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+}
+
+.btn-danger:hover {
+    background: #FECACA;
+    color: #DC2626;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .header-content {
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+    }
+    
+    .search-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-box {
+        max-width: none;
+    }
+    
+    .program-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .program-status {
+        text-align: left;
+    }
+    
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .programs-content,
+    .header-content {
+        padding: 0 1rem;
+    }
+    
+    .program-card {
+        padding: 1.5rem;
+    }
+    
+    .program-actions {
+        flex-direction: column;
+    }
+    
+    .btn-primary,
+    .btn-secondary,
+    .btn-danger {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-left h1 {
+        font-size: 1.75rem;
+    }
+    
+    .program-title h3 {
+        font-size: 1.25rem;
+    }
+    
+    .program-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}

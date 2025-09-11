@@ -1,0 +1,422 @@
+/* ProgramCardFixed.css - Design EXACT selon les propriétés CSS fournies */
+
+.program-card-fixed {
+  position: relative;
+  width: 360px;
+  height: 459px;
+  background: white; /* Background blanc comme demandé */
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.program-card-fixed:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Partie supérieure - Section violette avec logo de l'université (EXACT comme image 4) */
+.card-header-fixed {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: #541652; /* Couleur violette exacte selon image 4 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Logo de l'université - Cadre identique à l'image avec fond blanc et bordure bleue */
+.university-logo-fixed {
+  width: 168px;
+  height: 168px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: white; /* Fond blanc comme dans l'image */
+  /* Bordure bleue supprimée */
+  padding: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden; /* Pour éviter que les images débordent */
+  position: relative; /* Pour l'indicateur de redimensionnement */
+}
+
+.university-logo-fixed img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Garde les proportions, fait grandir les petites images */
+  object-position: center; /* Centre l'image */
+  border-radius: 50%;
+  transition: transform 0.3s ease; /* Animation douce */
+}
+
+/* Option 1: Faire grandir les petites images (recommandé) */
+.university-logo-fixed img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Garde les proportions, fait grandir les petites images */
+  object-position: center; /* Centre l'image */
+  border-radius: 50%;
+  transition: transform 0.3s ease; /* Animation douce */
+}
+
+/* Option 2: Étirer les images pour remplir complètement le cadre */
+.university-logo-fixed img.stretch {
+  object-fit: fill !important; /* Force l'étirement complet */
+  width: 100% !important; /* Force la largeur complète */
+  height: 100% !important; /* Force la hauteur complète */
+  min-width: 100% !important; /* Empêche la réduction */
+  min-height: 100% !important; /* Empêche la réduction */
+  max-width: 100% !important; /* Empêche l'agrandissement */
+  max-height: 100% !important; /* Empêche l'agrandissement */
+  filter: contrast(1.2) brightness(1.1) saturate(1.2) drop-shadow(0 1px 3px rgba(0,0,0,0.2)); /* Amélioration plus forte */
+  transition: all 0.3s ease;
+  image-rendering: -webkit-optimize-contrast; /* Améliore la netteté */
+  image-rendering: crisp-edges;
+  backface-visibility: hidden;
+}
+
+/* Option 3: Zoom spécial pour les images très petites */
+.university-logo-fixed img.stretch-zoom {
+  object-fit: fill !important; /* Force l'étirement complet */
+  width: 100% !important; /* Force la largeur complète */
+  height: 100% !important; /* Force la hauteur complète */
+  min-width: 100% !important; /* Empêche la réduction */
+  min-height: 100% !important; /* Empêche la réduction */
+  max-width: 100% !important; /* Empêche l'agrandissement */
+  max-height: 100% !important; /* Empêche l'agrandissement */
+  filter: contrast(1.5) brightness(1.2) saturate(1.4) drop-shadow(0 2px 6px rgba(0,0,0,0.4)); /* Zoom et amélioration très forte */
+  transform: scale(1.08); /* Plus grand que stretch normal */
+  transition: all 0.3s ease;
+  image-rendering: -webkit-optimize-contrast; /* Améliore la netteté sur Chrome/Safari */
+  image-rendering: crisp-edges; /* Améliore la netteté sur Firefox */
+  backface-visibility: hidden;
+}
+
+/* Option 4: Recadrer et centrer les images */
+.university-logo-fixed img.crop {
+  object-fit: cover; /* Recadre l'image pour remplir le cadre */
+}
+
+/* Hover effect pour voir la différence */
+.university-logo-fixed:hover img {
+  transform: scale(1.05); /* Légèrement plus grand au survol */
+}
+
+.university-logo-fixed:hover img.stretch {
+  transform: scale(1.08); /* Plus grand au survol pour les images étirées */
+  filter: contrast(1.3) brightness(1.15) saturate(1.3) drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+}
+
+.university-logo-fixed:hover img.stretch-zoom {
+  transform: scale(1.12); /* Plus grand au survol pour les images zoomées */
+  filter: contrast(1.6) brightness(1.25) saturate(1.5) drop-shadow(0 4px 10px rgba(0,0,0,0.5)); /* Amélioration hover très forte */
+}
+
+/* Indicateur de redimensionnement automatique */
+.resize-indicator {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(0, 102, 204, 0.9);
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: help;
+  animation: pulse 2s infinite;
+  z-index: 10;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Amélioration des images étirées */
+.university-logo-fixed img.stretch {
+  object-fit: fill; /* Étire l'image pour remplir tout le cadre */
+  filter: contrast(1.1) brightness(1.05) saturate(1.1); /* Améliore la qualité visuelle */
+  transition: filter 0.3s ease;
+}
+
+.university-logo-fixed img.stretch:hover {
+  filter: contrast(1.2) brightness(1.1) saturate(1.2); /* Effet hover amélioré */
+}
+
+/* Partie inférieure - Contenu blanc avec chevauchement (EXACT comme image 4) */
+.card-content-fixed {
+  position: relative;
+  background: white;
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+  margin-top: -20px; /* Chevauchement avec la section violette */
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Titre principal - Style exact selon image 4 */
+.program-title-fixed {
+  color: #171725;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 28px;
+  margin: 0 0 12px 0;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-transform: capitalize;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Description - Style exact selon image 4 */
+.program-description-fixed {
+  color: #6B7280;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 3em;
+  font-weight: 400;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Boutons secondaires côte à côte - Dimensions exactes selon CSS fourni */
+.secondary-buttons-fixed {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.btn-secondary-fixed {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #FCBE1C;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: #575757;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 15px;
+  letter-spacing: 0.1px;
+  /* Dimensions exactes selon Rectangle 847 et 848 */
+  width: 110.57px;
+  height: 29.92px;
+  opacity: 0.9;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.btn-secondary-fixed:hover {
+  background: rgba(252, 190, 28, 0.1);
+  transform: translateY(-1px);
+}
+
+.btn-secondary-fixed.saved {
+  background: #FCBE1C;
+  color: #171725;
+  border-color: #FCBE1C;
+}
+
+.btn-secondary-fixed.saved:hover {
+  background: #e6ab19;
+  border-color: #e6ab19;
+}
+
+/* Bouton principal Apply Now - Dimensions exactes selon CSS fourni */
+.btn-primary-fixed.apply-btn-fixed {
+  width: 207.04px;
+  height: 40.46px;
+  margin: 0 auto;
+  display: block;
+  background: #FCBE1C;
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+  border: none;
+  border-radius: 31px;
+  padding: 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.1px;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 16px;
+  opacity: 0.9;
+  box-sizing: border-box;
+}
+
+.btn-primary-fixed.apply-btn-fixed:hover {
+  filter: brightness(105%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(252, 190, 28, 0.3);
+}
+
+/* Responsive - Adaptation mobile */
+@media (max-width: 768px) {
+  .program-card-fixed {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    min-height: 400px;
+  }
+  
+  .card-header-fixed {
+    height: 180px;
+  }
+  
+  .university-logo-fixed {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .program-title-fixed {
+    font-size: 20px;
+    line-height: 24px;
+    min-height: 48px;
+  }
+  
+  .card-content-fixed {
+    padding: 16px;
+  }
+  
+  .secondary-buttons-fixed {
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .btn-secondary-fixed {
+    width: 100%;
+    max-width: 110.57px;
+  }
+  
+  .btn-primary-fixed.apply-btn-fixed {
+    width: 100%;
+    max-width: 207.04px;
+  }
+}
+
+/* Animation d'entrée */
+.program-card-fixed {
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Délai d'animation pour les cartes */
+.program-card-fixed:nth-child(1) { animation-delay: 0.1s; }
+.program-card-fixed:nth-child(2) { animation-delay: 0.2s; }
+.program-card-fixed:nth-child(3) { animation-delay: 0.3s; }
+.program-card-fixed:nth-child(4) { animation-delay: 0.4s; }
+.program-card-fixed:nth-child(5) { animation-delay: 0.5s; }
+.program-card-fixed:nth-child(6) { animation-delay: 0.6s; }
+.program-card-fixed:nth-child(7) { animation-delay: 0.7s; }
+.program-card-fixed:nth-child(8) { animation-delay: 0.8s; }
+
+/* RÈGLES ULTRA-STRICTES POUR FORCER L'ÉTIREMENT COMPLET */
+.university-logo-fixed img.stretch,
+.university-logo-fixed img.stretch-zoom {
+  /* FORCER l'étirement dans TOUTES les directions */
+  object-fit: fill !important;
+  object-position: center !important;
+  
+  /* DIMENSIONS FORCÉES - AUCUNE EXCEPTION */
+  width: 100% !important;
+  height: 100% !important;
+  
+  /* EMPÊCHER TOUTE RÉDUCTION */
+  min-width: 100% !important;
+  min-height: 100% !important;
+  
+  /* EMPÊCHER TOUT AGRANDISSEMENT */
+  max-width: 100% !important;
+  max-height: 100% !important;
+  
+  /* FORCER L'AFFICHAGE COMPLET */
+  display: block !important;
+  position: relative !important;
+  
+  /* SUPPRIMER TOUTES LES MARGES/PADDING */
+  margin: 0 !important;
+  padding: 0 !important;
+  
+  /* FORCER LE RENDU */
+  image-rendering: -webkit-optimize-contrast !important;
+  image-rendering: crisp-edges !important;
+  backface-visibility: hidden !important;
+  
+  /* RÈGLES SUPPLÉMENTAIRES POUR FORCER L'ÉTIREMENT */
+  transform: scale(1) !important;
+  transform-origin: center center !important;
+  
+  /* EMPÊCHER TOUTE ANIMATION QUI POURRAIT INTERFÉRER */
+  transition: none !important;
+  animation: none !important;
+  
+  /* FORCER LE Z-INDEX */
+  z-index: 1 !important;
+  
+  /* EMPÊCHER TOUTE MODIFICATION CSS */
+  box-sizing: border-box !important;
+  vertical-align: top !important;
+  text-align: center !important;
+}
+
+/* RÈGLES SUPPLÉMENTAIRES POUR FORCER L'ÉTIREMENT */
+.university-logo-fixed img.stretch *,
+.university-logo-fixed img.stretch-zoom * {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: fill !important;
+}
+
+/* FORCER L'ÉTIREMENT MÊME SI D'AUTRES CSS INTERFÈRENT */
+.university-logo-fixed img.stretch[style*="width"],
+.university-logo-fixed img.stretch-zoom[style*="width"] {
+  width: 100% !important;
+}
+
+.university-logo-fixed img.stretch[style*="height"],
+.university-logo-fixed img.stretch-zoom[style*="height"] {
+  height: 100% !important;
+}
+
+.university-logo-fixed img.stretch[style*="object-fit"],
+.university-logo-fixed img.stretch-zoom[style*="object-fit"] {
+  object-fit: fill !important;
+}

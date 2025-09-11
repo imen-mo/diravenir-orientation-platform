@@ -1,345 +1,261 @@
+/* ExcelUploader.css - Styles pour le composant d'upload Excel */
+
 .excel-uploader {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
 }
 
 .uploader-header {
-  text-align: center;
-  margin-bottom: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
-.uploader-header h2 {
-  color: #2c3e50;
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
+.uploader-header h3 {
+    color: #2d3748;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
 }
 
 .uploader-header p {
-  color: #7f8c8d;
-  font-size: 1.1rem;
-  margin: 0;
+    color: #718096;
+    font-size: 1rem;
 }
 
-.template-section {
-  margin-top: 20px;
-  padding: 15px;
-  background: #f0f9ff;
-  border: 1px solid #bae6fd;
-  border-radius: 8px;
+.uploader-content {
+    margin-bottom: 2rem;
 }
 
-.template-btn {
-  background: #0ea5e9;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: background-color 0.3s;
-  margin-bottom: 10px;
+/* Zone de glisser-déposer */
+.drop-zone {
+    border: 2px dashed #cbd5e0;
+    border-radius: 10px;
+    padding: 3rem 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    background: #f7fafc;
+    margin-bottom: 1.5rem;
 }
 
-.template-btn:hover {
-  background: #0284c7;
+.drop-zone:hover {
+    border-color: #4299e1;
+    background: #ebf8ff;
 }
 
-.template-info {
-  color: #0369a1;
-  font-size: 0.85rem;
-  margin: 0;
-  font-style: italic;
+.drop-zone.drag-over {
+    border-color: #4299e1;
+    background: #ebf8ff;
+    transform: scale(1.02);
 }
 
-.upload-area {
-  border: 3px dashed #e0e6ed;
-  border-radius: 12px;
-  padding: 3rem 2rem;
-  text-align: center;
-  position: relative;
-  transition: all 0.3s ease;
-  background: #f8f9fa;
-  cursor: pointer;
+.drop-zone-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
 }
 
-.upload-area:hover {
-  border-color: #3498db;
-  background: #f0f8ff;
+.drop-zone-icon {
+    font-size: 3rem;
+    color: #718096;
 }
 
-.upload-area.has-file {
-  border-color: #27ae60;
-  background: #f0fff4;
+.drop-zone-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #4a5568;
+    margin: 0;
 }
 
-.upload-icon {
-  margin-bottom: 1.5rem;
-  color: #7f8c8d;
+.drop-zone-subtext {
+    color: #a0aec0;
+    margin: 0;
 }
 
-.upload-area.has-file .upload-icon {
-  color: #27ae60;
+.file-input-label {
+    background: #4299e1;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
 }
 
-.upload-text h3 {
-  color: #2c3e50;
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-}
-
-.upload-text p {
-  color: #7f8c8d;
-  margin: 0.25rem 0;
-  font-size: 1rem;
-}
-
-.file-name {
-  color: #27ae60 !important;
-  font-weight: 600;
-  font-size: 1.1rem !important;
-}
-
-.file-size {
-  color: #95a5a6 !important;
-  font-size: 0.9rem !important;
-}
-
-.file-types {
-  color: #95a5a6 !important;
-  font-size: 0.9rem !important;
-  font-style: italic;
+.file-input-label:hover {
+    background: #3182ce;
 }
 
 .file-input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
+    display: none;
 }
 
-.upload-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 2rem;
+/* Fichier sélectionné */
+.selected-file {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f0fff4;
+    border: 1px solid #9ae6b4;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
 }
 
-.upload-btn, .cancel-btn {
-  padding: 0.75rem 2rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 150px;
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 }
 
-.upload-btn {
-  background: linear-gradient(135deg, #3498db, #2980b9);
-  color: white;
+.file-icon {
+    font-size: 1.5rem;
 }
 
-.upload-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #2980b9, #1f5f8b);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+.file-name {
+    font-weight: 500;
+    color: #2f855a;
 }
 
-.upload-btn:disabled {
-  background: #bdc3c7;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
+.file-size {
+    color: #718096;
+    font-size: 0.9rem;
 }
 
-.cancel-btn {
-  background: #ecf0f1;
-  color: #2c3e50;
-  border: 2px solid #bdc3c7;
+.remove-file-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #e53e3e;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
 }
 
-.cancel-btn:hover:not(:disabled) {
-  background: #d5dbdb;
-  border-color: #95a5a6;
+.remove-file-btn:hover {
+    background: #fed7d7;
 }
 
-.cancel-btn:disabled {
-  background: #f8f9fa;
-  color: #bdc3c7;
-  cursor: not-allowed;
-}
-
+/* Barre de progression */
 .upload-progress {
-  margin-top: 2rem;
-  text-align: center;
+    margin-bottom: 1.5rem;
 }
 
 .progress-bar {
-  width: 100%;
-  height: 8px;
-  background: #ecf0f1;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 1rem;
+    width: 100%;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
 }
 
 .progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #3498db, #27ae60);
-  border-radius: 4px;
-  transition: width 0.3s ease;
+    height: 100%;
+    background: linear-gradient(90deg, #4299e1, #3182ce);
+    transition: width 0.3s ease;
 }
 
 .progress-text {
-  color: #2c3e50;
-  font-weight: 600;
-  margin: 0;
+    font-size: 0.9rem;
+    color: #718096;
+    text-align: center;
+    display: block;
 }
 
-.upload-info {
-  margin-top: 3rem;
-  padding: 2rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border-left: 4px solid #3498db;
-}
-
-.upload-info h4 {
-  color: #2c3e50;
-  margin-bottom: 1rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-.upload-info ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.upload-info li {
-  color: #34495e;
-  margin-bottom: 0.5rem;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #ecf0f1;
-  font-size: 0.95rem;
-}
-
-.upload-info li:last-child {
-  border-bottom: none;
-}
-
-.upload-info strong {
-  color: #2c3e50;
-  font-weight: 600;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .excel-uploader {
-    padding: 1rem;
-    margin: 1rem;
-  }
-  
-  .upload-area {
-    padding: 2rem 1rem;
-  }
-  
-  .uploader-header h2 {
-    font-size: 1.5rem;
-  }
-  
-  .upload-text h3 {
-    font-size: 1.2rem;
-  }
-  
-  .upload-actions {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .upload-btn, .cancel-btn {
+/* Bouton d'upload */
+.upload-btn {
     width: 100%;
-    max-width: 250px;
-  }
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
-@media (max-width: 480px) {
-  .excel-uploader {
-    padding: 0.5rem;
-    margin: 0.5rem;
-  }
-  
-  .upload-area {
-    padding: 1.5rem 0.5rem;
-  }
-  
-  .upload-info {
-    padding: 1rem;
-  }
+.upload-btn:hover:not(.disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
 }
 
-/* ======================
-   === SECTION EXEMPLE ===
-   ====================== */
-
-.example-section {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background: #ffffff;
-  border-radius: 8px;
-  border: 1px solid #e0e6ed;
+.upload-btn:active:not(.disabled) {
+    transform: translateY(0);
 }
 
-.example-section h5 {
-  color: #2c3e50;
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  text-align: center;
+.upload-btn.disabled {
+    background: #a0aec0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
-.example-data {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 0.75rem;
-  background: #f8f9fa;
-  padding: 1rem;
-  border-radius: 6px;
+.upload-icon {
+    font-size: 1.2rem;
 }
 
-.example-data p {
-  margin: 0;
-  padding: 0.5rem;
-  background: #ffffff;
-  border-radius: 4px;
-  border-left: 3px solid #3498db;
-  font-size: 0.9rem;
-  color: #34495e;
+.spinner {
+    animation: spin 1s linear infinite;
 }
 
-.example-data strong {
-  color: #2c3e50;
-  font-weight: 600;
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
-/* Responsive pour la section exemple */
+/* Instructions */
+.uploader-instructions {
+    background: #f7fafc;
+    border-radius: 8px;
+    padding: 1.5rem;
+    border-left: 4px solid #4299e1;
+}
+
+.uploader-instructions h4 {
+    color: #2d3748;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.uploader-instructions ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.uploader-instructions li {
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .example-data {
-    grid-template-columns: 1fr;
-  }
-  
-  .example-section {
-    padding: 1rem;
-  }
-} 
+    .excel-uploader {
+        padding: 1.5rem;
+    }
+    
+    .drop-zone {
+        padding: 2rem 1rem;
+    }
+    
+    .drop-zone-icon {
+        font-size: 2.5rem;
+    }
+    
+    .upload-btn {
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+    }
+}

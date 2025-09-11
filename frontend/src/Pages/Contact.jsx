@@ -7,8 +7,10 @@ import emailjs from '@emailjs/browser';
 import './Contact.css';
 import logo from '../assets/logo.png';
 import GlobalLayout from '../components/GlobalLayout';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Contact = () => {
+  const { getText } = useTheme();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -59,21 +61,21 @@ const Contact = () => {
     const newErrors = {};
     
     if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = getText('nameRequired');
     }
     
     if (!formData.email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = getText('emailRequired');
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = getText('emailInvalid');
     }
     
     if (!formData.subject.trim()) {
-      newErrors.subject = 'Subject is required';
+      newErrors.subject = getText('subjectRequired');
     }
     
     if (!formData.message.trim()) {
-      newErrors.message = 'Message is required';
+      newErrors.message = getText('messageRequired');
     }
     
     setErrors(newErrors);
@@ -99,7 +101,7 @@ const Contact = () => {
       
       setSubmitStatus({
         success: true,
-        message: 'Your message has been sent successfully! We\'ll get back to you soon.'
+        message: getText('messageSentSuccess')
       });
       
       setFormData({
@@ -117,7 +119,7 @@ const Contact = () => {
       console.error('Error sending email:', error);
       setSubmitStatus({
         success: false,
-        message: 'Something went wrong. Please try again later.'
+        message: getText('messageSentError')
       });
     } finally {
       setIsSubmitting(false);
@@ -144,8 +146,8 @@ const Contact = () => {
       
       <section className="contact-hero">
         <div className="contact-hero-content">
-          <h1>Get in Touch</h1>
-          <p className="hero-subtitle">We're here to help and answer any questions you might have.</p>
+          <h1>{getText('getInTouch')}</h1>
+          <p className="hero-subtitle">{getText('contactSubtitle')}</p>
         </div>
       </section>
 
@@ -161,8 +163,8 @@ const Contact = () => {
             <FaEnvelope />
           </div>
           <div className="method-content">
-            <h3>Email Us</h3>
-            <p>Send us an email and we'll get back to you as soon as possible.</p>
+            <h3>{getText('emailUs')}</h3>
+            <p>{getText('emailUsDescription')}</p>
             <a href="mailto:contact@diravenir.com" className="contact-link">
               contact@diravenir.com
               <span className="link-icon">→</span>
@@ -181,8 +183,8 @@ const Contact = () => {
             <FaPhoneAlt />
           </div>
           <div className="method-content">
-            <h3>Call Us</h3>
-            <p>Give us a call and we'll be happy to assist you.</p>
+            <h3>{getText('callUs')}</h3>
+            <p>{getText('callUsDescription')}</p>
             <a href="tel:+1234567890" className="contact-link">
               +1 (234) 567-890
               <span className="link-icon">→</span>
@@ -201,10 +203,10 @@ const Contact = () => {
             <FaMapMarkerAlt />
           </div>
           <div className="method-content">
-            <h3>Visit Us</h3>
-            <p>Come visit our office and meet our team in person.</p>
+            <h3>{getText('visitUs')}</h3>
+            <p>{getText('visitUsDescription')}</p>
             <a href="https://maps.app.goo.gl/LX6f589uVm12t5qy9" className="contact-link" target="_blank" rel="noopener noreferrer">
-              View on Map
+              {getText('viewOnMap')}
               <span className="link-icon">→</span>
             </a>
           </div>
@@ -214,8 +216,8 @@ const Contact = () => {
       <section className="contact-form-section">
         <div className="form-container">
           <div className="form-header">
-            <h2>Contact Form</h2>
-            <p>Fill out the form below and we'll get back to you as soon as possible.</p>
+            <h2>{getText('contactForm')}</h2>
+            <p>{getText('contactFormSubtitle')}</p>
           </div>
           
           <form className="contact-form" onSubmit={handleSubmit}>
@@ -231,7 +233,7 @@ const Contact = () => {
             {/* Première ligne : Your name et Contact email */}
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="name">Your name*</label>
+                <label htmlFor="name">{getText('yourName')}*</label>
                 <input 
                   type="text" 
                   id="name"
@@ -239,13 +241,13 @@ const Contact = () => {
                   value={formData.name}
                   onChange={handleChange}
                   className="form-input" 
-                  placeholder="Your name*"
+                  placeholder={getText('yourNamePlaceholder')}
                 />
                 {errors.name && <span className="error-message">{errors.name}</span>}
               </div>
               
               <div className="form-group">
-                <label htmlFor="email">Contact email*</label>
+                <label htmlFor="email">{getText('contactEmail')}*</label>
                 <input 
                   type="email" 
                   id="email"
@@ -253,7 +255,7 @@ const Contact = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className="form-input" 
-                  placeholder="contact@gmail.com"
+                  placeholder={getText('contactEmailPlaceholder')}
                 />
                 {errors.email && <span className="error-message">{errors.email}</span>}
               </div>
@@ -262,7 +264,7 @@ const Contact = () => {
             {/* Deuxième ligne : Phone Number et Subject */}
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="phone">Phone Number*</label>
+                <label htmlFor="phone">{getText('phoneNumber')}*</label>
                 <input 
                   type="tel" 
                   id="phone"
@@ -270,13 +272,13 @@ const Contact = () => {
                   value={formData.phone}
                   onChange={handleChange}
                   className="form-input" 
-                  placeholder="Phone Number*"
+                  placeholder={getText('phoneNumberPlaceholder')}
                 />
                 {errors.phone && <span className="error-message">{errors.phone}</span>}
               </div>
               
               <div className="form-group">
-                <label htmlFor="subject">Subject Related to*</label>
+                <label htmlFor="subject">{getText('subjectRelatedTo')}*</label>
                 <select 
                   id="subject"
                   name="subject"
@@ -284,10 +286,10 @@ const Contact = () => {
                   onChange={handleChange}
                   className="form-select"
                 >
-                  <option value="">Select a subject</option>
-                  <option value="Orientation">Orientation</option>
-                  <option value="Payment Failure">Payment Failure</option>
-                  <option value="Other">Other</option>
+                  <option value="">{getText('selectSubject')}</option>
+                  <option value="Orientation">{getText('orientation')}</option>
+                  <option value="Payment Failure">{getText('paymentFailure')}</option>
+                  <option value="Other">{getText('other')}</option>
                 </select>
                 {errors.subject && <span className="error-message">{errors.subject}</span>}
               </div>
@@ -296,14 +298,14 @@ const Contact = () => {
             {/* Troisième ligne : Your message (pleine largeur) */}
             <div className="form-row">
               <div className="form-group full-width">
-                <label htmlFor="message">Your message*</label>
+                <label htmlFor="message">{getText('yourMessage')}*</label>
                 <textarea 
                   id="message"
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
                   className="form-textarea" 
-                  placeholder="Type your message...."
+                  placeholder={getText('yourMessagePlaceholder')}
                 />
                 {errors.message && <span className="error-message">{errors.message}</span>}
               </div>
@@ -311,7 +313,7 @@ const Contact = () => {
             
             {/* Disclaimer text comme dans l'image */}
             <p className="disclaimer-text">
-              By submitting this form you agree to our terms and conditions and our Privacy Policy which explains how we may collect, use and disclose your personal information including to third parties.
+              {getText('disclaimerText')}
             </p>
             
             <motion.button 
@@ -321,7 +323,7 @@ const Contact = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <span className="btn-text">Send</span>
+              <span className="btn-text">{getText('send')}</span>
               <IoMdSend className="send-icon" />
             </motion.button>
           </form>

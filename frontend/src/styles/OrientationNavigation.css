@@ -1,0 +1,43 @@
+/* Correction globale de la navigation pour toutes les questions d'orientation */
+
+/* Forcer la largeur et le positionnement de la navigation */
+.orientation-question .navigation {
+  width: 100% !important;
+  position: relative !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+/* Forcer le positionnement des boutons */
+.orientation-question .btn-back {
+  margin-right: auto !important; /* Pousse le bouton à gauche */
+}
+
+.orientation-question .btn-next {
+  margin-left: auto !important; /* Pousse le bouton à droite */
+}
+
+/* Agrandir la carte mère pour toutes les questions */
+.orientation-question .question-content {
+  max-width: 1400px !important; /* Au lieu de 1200px */
+}
+
+/* Assurer que les boutons sont bien espacés */
+.orientation-question .navigation button {
+  min-width: 120px;
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+  .orientation-question .navigation {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .orientation-question .btn-back,
+  .orientation-question .btn-next {
+    margin: 0 !important;
+    width: 100%;
+  }
+}

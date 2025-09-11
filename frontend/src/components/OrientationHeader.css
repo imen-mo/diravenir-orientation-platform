@@ -1,0 +1,184 @@
+.orientation-header {
+  position: relative;
+  width: 100%;
+  height: 100px;
+  overflow: hidden;
+  background: #541652;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo */
+.header-logo {
+  width: 180px;
+  height: 80px;
+  z-index: 2;
+}
+
+.header-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Navigation */
+.header-nav {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.nav-link {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.2;
+  letter-spacing: 0.3px;
+  color: #FFFFFF;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 0.7rem 0;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: #FCBE1C;
+}
+
+.nav-link.active {
+  font-weight: 500;
+  color: #FCBE1C;
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #FCBE1C;
+  border-radius: 1px;
+}
+
+/* Action Buttons */
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* Login Button */
+.btn-login {
+  width: 120px;
+  height: 48px;
+  border: 2px solid #FFFFFF;
+  border-radius: 6px;
+  background: transparent;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.2;
+  text-align: center;
+  letter-spacing: 0.3px;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+  background: #FFFFFF;
+  color: #541652;
+}
+
+/* Create Account Button */
+.btn-create-account {
+  width: 140px;
+  height: 48px;
+  background: #FFFFFF;
+  border-radius: 6px;
+  border: none;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.2;
+  text-align: center;
+  color: #2E343D;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-create-account:hover {
+  background: #f0f0f0;
+  transform: translateY(-1px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .header-nav {
+    gap: 2rem;
+  }
+  
+  .nav-link {
+    font-size: 15px;
+  }
+  
+  .header-actions {
+    gap: 0.8rem;
+  }
+  
+  .btn-login {
+    width: 90px;
+    height: 36px;
+    font-size: 13px;
+  }
+  
+  .btn-create-account {
+    width: 110px;
+    height: 36px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .orientation-header {
+    height: 90px;
+    padding: 0 1.5rem;
+  }
+  
+  .header-logo {
+    width: 150px;
+    height: 70px;
+  }
+  
+  .header-nav {
+    gap: 1.5rem;
+  }
+  
+  .nav-link {
+    font-size: 16px;
+  }
+  
+  .header-actions {
+    gap: 0.5rem;
+  }
+  
+  .btn-login {
+    width: 100px;
+    height: 42px;
+    font-size: 14px;
+  }
+  
+  .btn-create-account {
+    width: 115px;
+    height: 42px;
+    font-size: 14px;
+  }
+}

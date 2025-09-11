@@ -1,30 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaBars, FaTimes, FaChevronDown, FaUser, FaSignOutAlt } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../assets/logo.png';
-import logoColorful from '../assets/logo-colorfull.png';
+import logo from '../assets/logo_diravenir.png';
 import '../styles/Navbar.css';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import LanguageSelector from './LanguageSelector';
 
 const GlobalNavbar = ({ activePage = '' }) => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   
   const { user, isAuthenticated, logout } = useAuth();
   const { getText } = useTheme();
+  const { t } = useLanguage();
   const navigate = useNavigate();
-
-  // Gestion du scroll pour l'effet de changement de couleur
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  
+  // Pages où le sélecteur de langue ne doit pas être affiché
+  const hideLanguageSelector = ['login', 'register'].includes(activePage);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -39,23 +34,51 @@ const GlobalNavbar = ({ activePage = '' }) => {
   };
 
   const handleLogout = async () => {
-    await logout();
-    setIsUserMenuOpen(false);
-    navigate('/');
+    try {
+      console.log('🚪 Déconnexion en cours...');
+      
+      // Fermer le menu utilisateur
+      setIsUserMenuOpen(false);
+      
+      // Appeler la déconnexion du contexte
+      await logout();
+      
+      // Nettoyer toutes les données locales
+      localStorage.clear();
+      sessionStorage.clear();
+      
+      // Nettoyer les cookies côté client
+      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = 'userInfo=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = 'jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      
+      console.log('✅ Déconnexion complète réussie');
+      
+      // Rediriger vers la page d'accueil
+      navigate('/', { replace: true });
+      
+    } catch (error) {
+      console.error('❌ Erreur lors de la déconnexion:', error);
+      // Même en cas d'erreur, nettoyer les données locales
+      localStorage.clear();
+      sessionStorage.clear();
+      navigate('/', { replace: true });
+    }
   };
 
   const navItems = [
-    { href: '/', label: 'Home', page: 'home' },
-    { href: '/orientation', label: 'Orientation', page: 'orientation' },
-    { href: '/programs', label: 'Programs', page: 'programs' },
-    { href: '/about', label: 'About US', page: 'about' },
-    { href: '/faq', label: 'FAQ', page: 'faq' },
-    { href: '/contact', label: 'Contact US', page: 'contact' }
+    { href: '/', label: t('home'), page: 'home' },
+    { href: '/orientation', label: t('orientation'), page: 'orientation' },
+    { href: '/programs', label: t('programs'), page: 'programs' },
+    { href: '/about', label: t('about'), page: 'about' },
+    { href: '/faq', label: t('faq'), page: 'faq' },
+    { href: '/contact', label: t('contact'), page: 'contact' }
   ];
 
   return (
     <motion.header
-      className={`navbar ${isScrolled ? 'scrolled' : ''}`}
+      className="navbar"
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -69,7 +92,7 @@ const GlobalNavbar = ({ activePage = '' }) => {
         >
           <Link to="/">
             <img 
-              src={isScrolled ? logo : logoColorful} 
+              src={logo} 
               alt="DirAvenir Logo" 
               className="navbar-logo"
             />
@@ -92,9 +115,16 @@ const GlobalNavbar = ({ activePage = '' }) => {
           ))}
         </nav>
 
+        {/* Sélecteur de langue - Entre navigation et authentification */}
+        {!hideLanguageSelector && (
+          <div className="navbar-language">
+            <LanguageSelector />
+          </div>
+        )}
+
         {/* Boutons d'authentification - Tout à droite */}
         <div className="navbar-buttons">
-          {isAuthenticated ? (
+          {isAuthenticated && user ? (
             <div className="user-menu">
               <motion.button
                 className="user-menu-button"
@@ -104,39 +134,140 @@ const GlobalNavbar = ({ activePage = '' }) => {
                 transition={{ duration: 0.2 }}
               >
                 <div className="user-avatar">
-                  <FaUser />
+                  {(() => {
+                    const email = user?.email || user?.userEmail || user?.user_email;
+                    return email ? email.charAt(0).toUpperCase() : 'U';
+                  })()}
                 </div>
-                <div className="user-info">
-                  <span className="user-name">{user?.name || 'Utilisateur'}</span>
-                  <span className="user-email">{user?.email || ''}</span>
-                </div>
-                <FaChevronDown className={`chevron ${isUserMenuOpen ? 'rotated' : ''}`} />
               </motion.button>
 
-              <AnimatePresence>
+              {/* Menu déroulant utilisateur */}
                 {isUserMenuOpen && (
-                  <motion.div
-                    className={`user-dropdown ${isUserMenuOpen ? 'show' : ''}`}
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Link to="/profile" className="user-dropdown-item">
+                <div className="user-dropdown">
+                    {/* Informations utilisateur */}
+                    <div className="user-dropdown-header">
+                      <div className="user-dropdown-avatar">
+                        {(() => {
+                          const email = user?.email || user?.userEmail || user?.user_email;
+                          return email ? email.charAt(0).toUpperCase() : 'U';
+                        })()}
+                      </div>
+                      <div className="user-dropdown-info">
+                        <div className="user-dropdown-name">
+                          {user?.firstName || user?.name || 'Utilisateur'}
+                        </div>
+                        <div className="user-dropdown-email">
+                          {user?.email || user?.userEmail || user?.user_email || 'email@example.com'}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="user-dropdown-divider"></div>
+                    
+                    {/* Options du menu */}
+                    <div
+                      className="user-dropdown-item"
+                      onClick={() => {
+                        navigate('/profile');
+                        setIsUserMenuOpen(false);
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          navigate('/profile');
+                          setIsUserMenuOpen(false);
+                        }
+                      }}
+                    >
                       <FaUser />
-                      Mon Profil
-                    </Link>
-                    <Link to="/settings" className="user-dropdown-item">
-                      <FaUser />
-                      Paramètres
-                    </Link>
-                    <button onClick={handleLogout} className="user-dropdown-item logout">
+                      <span>Mon Profil</span>
+                    </div>
+                    
+                    <div
+                      className="user-dropdown-item"
+                      onClick={() => {
+                        navigate('/dashboard-student');
+                        setIsUserMenuOpen(false);
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          navigate('/dashboard-student');
+                          setIsUserMenuOpen(false);
+                        }
+                      }}
+                    >
+                      <span>📊</span>
+                      <span>Dashboard Étudiant</span>
+                    </div>
+                    
+                    <div
+                      className="user-dropdown-item"
+                      onClick={() => {
+                        navigate('/orientation');
+                        setIsUserMenuOpen(false);
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          navigate('/orientation');
+                          setIsUserMenuOpen(false);
+                        }
+                      }}
+                    >
+                      <span>🎯</span>
+                      <span>Orientation</span>
+                    </div>
+                    
+                    <div
+                      className="user-dropdown-item"
+                      onClick={() => {
+                        navigate('/programs');
+                        setIsUserMenuOpen(false);
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          navigate('/programs');
+                          setIsUserMenuOpen(false);
+                        }
+                      }}
+                    >
+                      <span>📚</span>
+                      <span>Programmes</span>
+                    </div>
+                    
+                    <div className="user-dropdown-divider"></div>
+                    
+                    <div
+                      className="user-dropdown-item"
+                      onClick={() => {
+                        navigate('/settings');
+                        setIsUserMenuOpen(false);
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          navigate('/settings');
+                          setIsUserMenuOpen(false);
+                        }
+                      }}
+                    >
+                      <span>⚙️</span>
+                      <span>Paramètres</span>
+                    </div>
+                    
+                    <div className="user-dropdown-item logout" onClick={handleLogout}>
                       <FaSignOutAlt />
-                      Se déconnecter
-                    </button>
-                  </motion.div>
+                      <span>Se déconnecter</span>
+                    </div>
+                </div>
                 )}
-              </AnimatePresence>
             </div>
           ) : (
             <div className="auth-buttons">
@@ -146,7 +277,7 @@ const GlobalNavbar = ({ activePage = '' }) => {
                 transition={{ duration: 0.2 }}
               >
                 <Link to="/login" className="navbar-button outline">
-                  Log In
+                  {t('login')}
                 </Link>
               </motion.div>
               <motion.div
@@ -155,83 +286,52 @@ const GlobalNavbar = ({ activePage = '' }) => {
                 transition={{ duration: 0.2 }}
               >
                 <Link to="/register" className="navbar-button solid">
-                  Create Account
+                  {t('register')}
                 </Link>
               </motion.div>
             </div>
           )}
         </div>
 
-        {/* Bouton Menu Mobile */}
+        {/* Bouton menu mobile */}
         <motion.button
           className="navbar-mobile-toggle"
           onClick={toggleMobileMenu}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           transition={{ duration: 0.2 }}
         >
           {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
         </motion.button>
-
-        {/* Menu Mobile */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              className="mobile-menu"
-              initial={{ opacity: 0, x: '100%' }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: '100%' }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-            >
-              <div className="mobile-menu-header">
-                <img src={logo} alt="DirAvenir Logo" className="mobile-logo" />
-                <button
-                  className="mobile-close-btn"
-                  onClick={closeMobileMenu}
-                >
-                  <FaTimes />
-                </button>
-              </div>
-              
-              <nav className="mobile-nav">
-                {navItems.map((item) => (
-                  <motion.a
-                    key={item.href}
-                    href={item.href}
-                    className={`mobile-nav-link ${activePage === item.page ? 'active' : ''}`}
-                    onClick={closeMobileMenu}
-                    whileHover={{ x: 10 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {item.label}
-                  </motion.a>
-                ))}
-              </nav>
-
-              {/* Authentification Mobile */}
-              <div className="mobile-auth">
-                {isAuthenticated ? (
-                  <div className="mobile-user-info">
-                    <div className="mobile-user-avatar">
-                      <FaUser />
-                    </div>
-                    <span className="mobile-user-name">{user?.name || 'Utilisateur'}</span>
-                  </div>
-                ) : (
-                  <div className="mobile-auth-buttons">
-                    <Link to="/login" className="mobile-auth-button login" onClick={closeMobileMenu}>
-                      Log In
-                    </Link>
-                    <Link to="/register" className="mobile-auth-button register" onClick={closeMobileMenu}>
-                      Create Account
-                    </Link>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
+
+      {/* Menu mobile */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            className="mobile-menu"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <nav className="mobile-nav">
+              {navItems.map((item) => (
+                <motion.a
+                  key={item.href}
+                  href={item.href}
+                  className={`mobile-nav-item ${activePage === item.page ? 'active' : ''}`}
+                  onClick={closeMobileMenu}
+                  whileHover={{ x: 10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {item.label}
+                </motion.a>
+              ))}
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 };

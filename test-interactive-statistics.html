@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Statistiques Interactives DirAvenir</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #DDC9DB 0%, #FFFFFF 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(84, 22, 82, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #DDC9DB;
+        }
+        
+        .header h1 {
+            color: #541652;
+            font-size: 2.5rem;
+            margin: 0 0 10px 0;
+            background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+            margin: 0;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .feature-card {
+            background: #FFFFFF;
+            border: 2px solid #DDC9DB;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(84, 22, 82, 0.15);
+            border-color: #541652;
+        }
+        
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #FFFFFF;
+            margin-bottom: 15px;
+        }
+        
+        .feature-title {
+            color: #541652;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+        }
+        
+        .feature-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        .stats-preview {
+            background: linear-gradient(135deg, #DDC9DB 0%, #FFFFFF 100%);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #DDC9DB;
+        }
+        
+        .stats-preview h2 {
+            color: #541652;
+            font-size: 1.8rem;
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+        
+        .stats-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+        
+        .stat-button {
+            background: #FFFFFF;
+            border: 2px solid #DDC9DB;
+            color: #541652;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .stat-button:hover {
+            background: #541652;
+            color: #FFFFFF;
+            border-color: #541652;
+            transform: translateY(-2px);
+        }
+        
+        .stat-button.active {
+            background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%);
+            color: #FFFFFF;
+            border-color: #FCBE1C;
+        }
+        
+        .chart-types {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .chart-type-button {
+            background: #DDC9DB;
+            border: none;
+            color: #541652;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .chart-type-button:hover {
+            background: #541652;
+            color: #FFFFFF;
+        }
+        
+        .chart-type-button.active {
+            background: #541652;
+            color: #FFFFFF;
+        }
+        
+        .mock-chart {
+            background: #FFFFFF;
+            border: 2px solid #DDC9DB;
+            border-radius: 12px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #541652;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .stats-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .stat-detail {
+            background: #FFFFFF;
+            border: 2px solid #DDC9DB;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-detail:hover {
+            border-color: #541652;
+            transform: translateY(-2px);
+        }
+        
+        .stat-detail h4 {
+            color: #541652;
+            margin: 0 0 5px 0;
+            font-size: 0.9rem;
+        }
+        
+        .stat-detail p {
+            color: #541652;
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .demo-section {
+            background: #FFFFFF;
+            border: 2px solid #DDC9DB;
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .demo-section h2 {
+            color: #541652;
+            font-size: 1.8rem;
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+        
+        .demo-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .demo-step {
+            background: linear-gradient(135deg, #DDC9DB 0%, #FFFFFF 100%);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #DDC9DB;
+        }
+        
+        .demo-step h3 {
+            color: #541652;
+            margin: 0 0 10px 0;
+            font-size: 1.2rem;
+        }
+        
+        .demo-step p {
+            color: #666;
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .highlight {
+            background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%);
+            color: #FFFFFF;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stat-button {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Statistiques Interactives DirAvenir</h1>
+            <p>Système de visualisation dynamique des données avec graphiques interactifs</p>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3 class="feature-title">Graphiques Dynamiques</h3>
+                <p class="feature-description">
+                    Changez instantanément entre différents types de graphiques : barres, lignes, camembert et aires. 
+                    Visualisez vos données de la manière la plus claire possible.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3 class="feature-title">Statistiques Interchangeables</h3>
+                <p class="feature-description">
+                    Un seul diagramme pour toutes les statistiques ! Cliquez sur les boutons pour passer des 
+                    applications aux programmes, utilisateurs, tests, chat, financier et temporel.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3 class="feature-title">Design DirAvenir</h3>
+                <p class="feature-description">
+                    Respect parfait de la palette de couleurs DirAvenir avec des dégradés orange, 
+                    violet et blanc. Interface moderne et intuitive.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">Temps Réel</h3>
+                <p class="feature-description">
+                    Données mises à jour en temps réel depuis la base de données. 
+                    Statistiques précises et toujours à jour pour une gestion optimale.
+                </p>
+            </div>
+        </div>
+
+        <div class="stats-preview">
+            <h2>🎯 Aperçu des Statistiques Interactives</h2>
+            
+            <div class="stats-buttons">
+                <button class="stat-button active" onclick="switchStat('applications')">
+                    📄 Applications
+                </button>
+                <button class="stat-button" onclick="switchStat('programs')">
+                    🎓 Programmes
+                </button>
+                <button class="stat-button" onclick="switchStat('users')">
+                    👥 Utilisateurs
+                </button>
+                <button class="stat-button" onclick="switchStat('tests')">
+                    🧠 Tests
+                </button>
+                <button class="stat-button" onclick="switchStat('chat')">
+                    💬 Chat
+                </button>
+                <button class="stat-button" onclick="switchStat('financial')">
+                    💰 Financier
+                </button>
+                <button class="stat-button" onclick="switchStat('temporal')">
+                    ⏰ Temporel
+                </button>
+            </div>
+
+            <div class="chart-types">
+                <button class="chart-type-button active" onclick="switchChart('bar')">📊 Barres</button>
+                <button class="chart-type-button" onclick="switchChart('line')">📈 Ligne</button>
+                <button class="chart-type-button" onclick="switchChart('pie')">🥧 Camembert</button>
+                <button class="chart-type-button" onclick="switchChart('area')">📉 Aire</button>
+            </div>
+
+            <div class="mock-chart" id="mockChart">
+                📊 Graphique en Barres - Applications
+            </div>
+
+            <div class="stats-details" id="statsDetails">
+                <div class="stat-detail">
+                    <h4>Total</h4>
+                    <p>456</p>
+                </div>
+                <div class="stat-detail">
+                    <h4>Approuvées</h4>
+                    <p>312</p>
+                </div>
+                <div class="stat-detail">
+                    <h4>Rejetées</h4>
+                    <p>45</p>
+                </div>
+                <div class="stat-detail">
+                    <h4>En attente</h4>
+                    <p>99</p>
+                </div>
+                <div class="stat-detail">
+                    <h4>Ce mois</h4>
+                    <p>67</p>
+                </div>
+                <div class="stat-detail">
+                    <h4>Cette semaine</h4>
+                    <p>23</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>🚀 Comment Utiliser les Statistiques Interactives</h2>
+            <div class="demo-steps">
+                <div class="demo-step">
+                    <h3>1. Accéder au Dashboard</h3>
+                    <p>
+                        Connectez-vous en tant qu'admin et cliquez sur le bouton 
+                        <span class="highlight">"Statistiques Interactives"</span> 
+                        dans le header du dashboard.
+                    </p>
+                </div>
+                <div class="demo-step">
+                    <h3>2. Choisir les Statistiques</h3>
+                    <p>
+                        Sélectionnez le type de données à visualiser : Applications, Programmes, 
+                        Utilisateurs, Tests, Chat, Financier ou Temporel.
+                    </p>
+                </div>
+                <div class="demo-step">
+                    <h3>3. Changer le Type de Graphique</h3>
+                    <p>
+                        Utilisez les boutons de type de graphique pour passer des barres aux lignes, 
+                        camembert ou aires selon vos préférences.
+                    </p>
+                </div>
+                <div class="demo-step">
+                    <h3>4. Analyser les Données</h3>
+                    <p>
+                        Consultez les statistiques détaillées sous le graphique et les informations 
+                        supplémentaires pour chaque type de données.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulation des données pour la démonstration
+        const statsData = {
+            applications: {
+                title: 'Applications',
+                chart: '📊 Graphique en Barres - Applications',
+                details: [
+                    { name: 'Total', value: '456' },
+                    { name: 'Approuvées', value: '312' },
+                    { name: 'Rejetées', value: '45' },
+                    { name: 'En attente', value: '99' },
+                    { name: 'Ce mois', value: '67' },
+                    { name: 'Cette semaine', value: '23' }
+                ]
+            },
+            programs: {
+                title: 'Programmes',
+                chart: '🎓 Graphique en Barres - Programmes',
+                details: [
+                    { name: 'Total', value: '89' },
+                    { name: 'Actifs', value: '67' },
+                    { name: 'Inactifs', value: '12' },
+                    { name: 'En attente', value: '10' }
+                ]
+            },
+            users: {
+                title: 'Utilisateurs',
+                chart: '👥 Graphique en Barres - Utilisateurs',
+                details: [
+                    { name: 'Total', value: '1,247' },
+                    { name: 'Étudiants', value: '1,156' },
+                    { name: 'Admins', value: '91' },
+                    { name: 'Actifs', value: '1,089' },
+                    { name: 'Nouveaux ce mois', value: '156' }
+                ]
+            },
+            tests: {
+                title: 'Tests d\'Orientation',
+                chart: '🧠 Graphique en Barres - Tests',
+                details: [
+                    { name: 'Total tests', value: '892' },
+                    { name: 'Complétés', value: '634' },
+                    { name: 'En cours', value: '89' },
+                    { name: 'Abandonnés', value: '169' },
+                    { name: 'Taux completion', value: '71%' }
+                ]
+            },
+            chat: {
+                title: 'Chat & Messages',
+                chart: '💬 Graphique en Barres - Chat',
+                details: [
+                    { name: 'Messages totaux', value: '2,456' },
+                    { name: 'Non lus', value: '23' },
+                    { name: 'Conversations actives', value: '45' },
+                    { name: 'Utilisateurs en ligne', value: '12' }
+                ]
+            },
+            financial: {
+                title: 'Statistiques Financières',
+                chart: '💰 Graphique en Barres - Financier',
+                details: [
+                    { name: 'Applications payées', value: '312' },
+                    { name: 'Paiements en attente', value: '45' },
+                    { name: 'Paiements échoués', value: '12' },
+                    { name: 'Taux conversion', value: '68%' }
+                ]
+            },
+            temporal: {
+                title: 'Activité Temporelle',
+                chart: '⏰ Graphique en Barres - Temporel',
+                details: [
+                    { name: 'Activité aujourd\'hui', value: '156' },
+                    { name: 'Cette semaine', value: '1,089' },
+                    { name: 'Ce mois', value: '4,567' },
+                    { name: 'Heure de pointe', value: '14:00' }
+                ]
+            }
+        };
+
+        const chartTypes = {
+            bar: '📊 Graphique en Barres',
+            line: '📈 Graphique en Ligne',
+            pie: '🥧 Graphique en Camembert',
+            area: '📉 Graphique en Aire'
+        };
+
+        let currentStat = 'applications';
+        let currentChart = 'bar';
+
+        function switchStat(stat) {
+            currentStat = stat;
+            
+            // Mettre à jour les boutons
+            document.querySelectorAll('.stat-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Mettre à jour le graphique
+            updateChart();
+            updateDetails();
+        }
+
+        function switchChart(chart) {
+            currentChart = chart;
+            
+            // Mettre à jour les boutons
+            document.querySelectorAll('.chart-type-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Mettre à jour le graphique
+            updateChart();
+        }
+
+        function updateChart() {
+            const chartElement = document.getElementById('mockChart');
+            const data = statsData[currentStat];
+            const chartType = chartTypes[currentChart];
+            
+            chartElement.textContent = `${chartType} - ${data.title}`;
+        }
+
+        function updateDetails() {
+            const detailsElement = document.getElementById('statsDetails');
+            const data = statsData[currentStat];
+            
+            detailsElement.innerHTML = data.details.map(detail => `
+                <div class="stat-detail">
+                    <h4>${detail.name}</h4>
+                    <p>${detail.value}</p>
+                </div>
+            `).join('');
+        }
+
+        // Initialisation
+        updateChart();
+        updateDetails();
+    </script>
+</body>
+</html>

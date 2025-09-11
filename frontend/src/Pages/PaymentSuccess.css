@@ -1,0 +1,611 @@
+/* Payment Success Page - Professional Design */
+
+.payment-success-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  padding: 40px 20px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Main Success Card */
+.success-main-card {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+/* Success Header */
+.success-header {
+  background: linear-gradient(135deg, #541652 0%, #7c3aed 100%);
+  color: white;
+  padding: 60px 40px;
+  text-align: center;
+  position: relative;
+}
+
+.success-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
+}
+
+.success-icon-container {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 30px;
+}
+
+.success-icon {
+  width: 100px;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.success-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.success-subtitle {
+  font-size: 1.25rem;
+  font-weight: 400;
+  margin: 0;
+  opacity: 0.9;
+  position: relative;
+  z-index: 2;
+}
+
+/* Receipt Card */
+.receipt-card {
+  margin: 40px;
+  background: #f8fafc;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.receipt-header {
+  background: linear-gradient(135deg, #FCBE1C 0%, #f59e0b 100%);
+  color: #541652;
+  padding: 24px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.receipt-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.receipt-number {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #541652;
+}
+
+.receipt-content {
+  padding: 32px;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.receipt-row:last-of-type {
+  border-bottom: none;
+}
+
+.receipt-label {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+.receipt-value {
+  font-weight: 500;
+  color: #1f2937;
+  font-size: 0.95rem;
+  text-align: right;
+  max-width: 200px;
+}
+
+.receipt-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0;
+  margin-top: 16px;
+  border-top: 2px solid #e2e8f0;
+}
+
+.total-label {
+  font-weight: 700;
+  color: #541652;
+  font-size: 1.1rem;
+}
+
+.total-amount {
+  font-weight: 800;
+  color: #FCBE1C;
+  font-size: 1.5rem;
+  background: #541652;
+  padding: 8px 16px;
+  border-radius: 12px;
+  color: white;
+}
+
+.receipt-actions {
+  padding: 0 32px 32px;
+  text-align: center;
+}
+
+.download-receipt-btn {
+  background: linear-gradient(135deg, #541652 0%, #7c3aed 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 18px 40px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(84, 22, 82, 0.3);
+  min-width: 280px;
+}
+
+.download-receipt-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(84, 22, 82, 0.4);
+}
+
+.download-receipt-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Application Summary Card */
+.application-summary-card {
+  margin: 0 40px 40px;
+  background: #f8fafc;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 32px;
+}
+
+.application-summary-card h3 {
+  color: #541652;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 32px 0;
+  text-align: center;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.summary-item {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.summary-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: #541652;
+}
+
+.summary-label {
+  display: block;
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summary-value {
+  display: block;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #1f2937;
+}
+
+/* Status Colors */
+.status-draft { color: #6b7280; }
+.status-in_progress { color: #007bff; }
+.status-submitted { color: #28a745; }
+.status-under_review { color: #ffc107; }
+.status-approved { color: #28a745; }
+.status-rejected { color: #dc3545; }
+.status-completed { color: #6f42c1; }
+
+/* Documents Status Card */
+.documents-status-card {
+  margin: 0 40px 40px;
+  background: #f8fafc;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 32px;
+}
+
+.documents-status-card h3 {
+  color: #541652;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 32px 0;
+  text-align: center;
+}
+
+.documents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.document-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 16px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.document-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: #541652;
+}
+
+.document-icon {
+  font-size: 20px;
+  width: 30px;
+  text-align: center;
+}
+
+.document-name {
+  flex: 1;
+  font-family: 'Epilogue';
+  font-weight: 500;
+  font-size: 14px;
+  color: #374151;
+  text-transform: capitalize;
+}
+
+.document-status {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-family: 'Work Sans';
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  background: #DCFCE7;
+  color: #166534;
+  border: 1px solid #86EFAC;
+}
+
+/* Next Steps Card */
+.next-steps-card {
+  margin: 0 40px 40px;
+  background: #f8fafc;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 32px;
+}
+
+.next-steps-card h3 {
+  color: #541652;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 32px 0;
+  text-align: center;
+}
+
+.steps-timeline {
+  display: grid;
+  gap: 24px;
+}
+
+.step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.step-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: #541652;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #541652 0%, #7c3aed 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.step-content h4 {
+  color: #1f2937;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.step-content p {
+  color: #6b7280;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 0 40px 40px;
+  flex-wrap: wrap;
+}
+
+.btn-secondary {
+  background: white;
+  color: #541652;
+  border: 2px solid #541652;
+  border-radius: 50px;
+  padding: 16px 32px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 180px;
+}
+
+.btn-secondary:hover {
+  background: #541652;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(84, 22, 82, 0.3);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 16px 32px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 200px;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
+}
+
+/* Contact Information */
+.contact-info {
+  background: #f1f5f9;
+  padding: 32px 40px;
+  text-align: center;
+  border-top: 1px solid #e2e8f0;
+}
+
+.contact-info h4 {
+  color: #541652;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+
+.contact-info p {
+  color: #6b7280;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.contact-info strong {
+  color: #541652;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .payment-success-container {
+    padding: 20px 10px;
+  }
+  
+  .success-main-card {
+    margin: 0 10px;
+  }
+  
+  .success-header {
+    padding: 40px 20px;
+  }
+  
+  .success-title {
+    font-size: 2rem;
+  }
+  
+  .success-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .receipt-card,
+  .next-steps-card,
+  .application-summary-card,
+  .documents-status-card {
+    margin: 20px;
+  }
+  
+  .receipt-content,
+  .next-steps-card,
+  .application-summary-card,
+  .documents-status-card {
+    padding: 20px;
+  }
+  
+  .receipt-header {
+    padding: 20px;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .receipt-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .receipt-value {
+    text-align: left;
+    max-width: none;
+  }
+  
+  .receipt-total {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+  
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .documents-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px 20px;
+  }
+  
+  .btn-secondary,
+  .btn-primary {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .contact-info {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .success-icon {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .receipt-card,
+  .next-steps-card,
+  .application-summary-card,
+  .documents-status-card {
+    margin: 10px;
+  }
+  
+  .receipt-content,
+  .next-steps-card,
+  .application-summary-card,
+  .documents-status-card {
+    padding: 16px;
+  }
+  
+  .download-receipt-btn {
+    min-width: 100%;
+    padding: 16px 20px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .payment-success-container {
+    background: white;
+    padding: 0;
+  }
+  
+  .success-main-card {
+    box-shadow: none;
+    border: none;
+  }
+  
+  .action-buttons,
+  .contact-info {
+    display: none;
+  }
+  
+  .success-header {
+    background: white !important;
+    color: #541652 !important;
+  }
+  
+  .receipt-card {
+    background: white;
+    border: 2px solid #541652;
+  }
+  
+  .next-steps-card,
+  .application-summary-card,
+  .documents-status-card {
+    background: white;
+    border: 2px solid #e2e8f0;
+  }
+}

@@ -11,8 +11,10 @@ const VerifyEmailSent = () => {
     const [isResending, setIsResending] = useState(false);
     const [resendMessage, setResendMessage] = useState('');
 
-    // Récupérer l'email depuis la navigation
-    const email = location.state?.email || 'votre email';
+    // Récupérer l'email depuis l'URL ou la navigation
+    const urlParams = new URLSearchParams(location.search);
+    const email = urlParams.get('email') || location.state?.email || 'votre email';
+    const message = urlParams.get('message') || location.state?.message || '';
 
     const handleResendEmail = async () => {
         setIsResending(true);
@@ -55,6 +57,11 @@ const VerifyEmailSent = () => {
                     <div className="email-display">
                         <strong>{email}</strong>
                     </div>
+                    {message && (
+                        <div className="verification-message">
+                            <p>{message}</p>
+                        </div>
+                    )}
                 </div>
 
                 <div className="verify-email-content">

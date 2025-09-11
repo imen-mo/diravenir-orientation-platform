@@ -269,7 +269,31 @@ const China = () => {
                       <span className="value">{program.requirements}</span>
                     </div>
                   </div>
-                  <button className="apply-btn">Apply Now</button>
+                  <button 
+                    className="apply-btn"
+                    onClick={() => navigate('/apply', {
+                      state: {
+                        program: {
+                          id: index + 1,
+                          name: program.name,
+                          type: program.major,
+                          university: 'Chinese University',
+                          logo: '/src/assets/logo.png',
+                          applicationFee: 4000,
+                          serviceFee: 11000,
+                          duration: program.duration,
+                          level: 'Bachelor',
+                          language: program.language,
+                          tuitionFees: program.cost,
+                          category: program.major,
+                          campusCity: 'Beijing',
+                          destinationName: 'China'
+                        }
+                      }
+                    })}
+                  >
+                    Apply Now
+                  </button>
                 </div>
               ))}
             </div>

@@ -2,638 +2,330 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import GlobalLayout from '../components/GlobalLayout';
-import API from '../services/api';
-import notificationService from '../services/notificationService';
-import { defaultSettings, supportedThemes, supportedLanguages, supportedTimezones } from '../config/defaultSettings';
+import UserAvatar from '../components/UserAvatar';
 import './Settings.css';
 
-export default function Settings() {
+const Settings = () => {
     const { user } = useAuth();
-    const { currentTheme, currentLanguage, changeTheme, changeLanguage, getText } = useTheme();
+    const { 
+        theme, 
+        setTheme, 
+        language, 
+        setLanguage, 
+        getText,
+        availableLanguages 
+    } = useTheme();
+    
+    const [settings, setSettings] = useState({
+        notifications: {
+            email: true,
+            push: false,
+            sms: false
+        },
+        privacy: {
+            profileVisibility: 'public',
+            showEmail: false,
+            showPhone: false
+        },
+        preferences: {
+            autoSave: true,
+            darkMode: theme === 'dark',
+            language: language
+        }
+    });
+    
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
 
-    const [settings, setSettings] = useState({
-        ...defaultSettings,
-        languePreferee: currentLanguage,
-        theme: currentTheme
-    });
-
-    // Charger les paramètres au montage
+    // Charger les paramètres sauvegardés
     useEffect(() => {
-        if (user) {
-            loadUserSettings();
-        }
-    }, [user]);
+        loadSettings();
+    }, []);
 
-    // Charger les paramètres depuis l'API
-    const loadUserSettings = async () => {
+    const loadSettings = () => {
         try {
-            setLoading(true);
-            const response = await API.get('/auth/settings');
-            
-            if (response.data.status === 'success') {
-                const userSettings = response.data.settings;
-                setSettings(prev => ({
-                    ...prev,
-                    ...userSettings
-                }));
-                
-                // Appliquer les paramètres chargés
-                if (userSettings.theme) {
-                    changeTheme(userSettings.theme);
-                }
-                if (userSettings.languePreferee) {
-                    changeLanguage(userSettings.languePreferee);
-                }
+            const savedSettings = localStorage.getItem('userSettings');
+            if (savedSettings) {
+                const parsed = JSON.parse(savedSettings);
+                setSettings(prev => ({ ...prev, ...parsed }));
             }
         } catch (error) {
             console.error('Erreur lors du chargement des paramètres:', error);
-            // En cas d'erreur, on garde les valeurs par défaut
-        } finally {
-            setLoading(false);
         }
     };
 
-    const handleInputChange = async (e) => {
-        const { name, value, type, checked } = e.target;
-        const newValue = type === 'checkbox' ? checked : value;
-        
-        setSettings(prev => ({
-            ...prev,
-            [name]: newValue
-        }));
-
-        // Gérer les changements en temps réel
-        if (name === 'theme') {
-            changeTheme(newValue);
-        } else if (name === 'languePreferee') {
-            changeLanguage(newValue);
-        } else if (name === 'notifications') {
-            // Si on active les notifications, demander la permission
-            if (newValue) {
-                const granted = await notificationService.requestPermission();
-                if (!granted) {
-                    // Si la permission est refusée, remettre à false
-                    setSettings(prev => ({ ...prev, notifications: false }));
-                    setMessage({ type: 'error', text: '❌ Permission de notification refusée' });
-                }
-            }
-        } else if (name === 'pushNotifications' && newValue) {
-            // Demander la permission pour les notifications push
-            const granted = await notificationService.requestPermission();
-            if (!granted) {
-                setSettings(prev => ({ ...prev, pushNotifications: false }));
-                setMessage({ type: 'error', text: '❌ Permission de notification push refusée' });
-            }
-        }
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const saveSettings = async () => {
         setLoading(true);
+        setMessage({ type: '', text: '' });
         
         try {
-            const response = await API.put('/auth/settings', settings);
+            // Sauvegarder en localStorage
+            localStorage.setItem('userSettings', JSON.stringify(settings));
             
-            if (response.data.status === 'success') {
-                setMessage({ type: 'success', text: '✅ Paramètres sauvegardés avec succès !' });
-                
-                // Appliquer le thème immédiatement
-                if (settings.theme === 'dark') {
-                    document.documentElement.classList.add('dark-theme');
-                } else {
-                    document.documentElement.classList.remove('dark-theme');
-                }
-                
-                // Appliquer la langue
-                document.documentElement.lang = settings.languePreferee;
-                
-            } else {
-                throw new Error(response.data.message || 'Erreur lors de la sauvegarde');
+            // Appliquer les changements de thème et langue
+            if (settings.preferences.darkMode !== (theme === 'dark')) {
+                setTheme(settings.preferences.darkMode ? 'dark' : 'light');
             }
+            
+            if (settings.preferences.language !== language) {
+                setLanguage(settings.preferences.language);
+            }
+            
+            setMessage({ 
+                type: 'success', 
+                text: getText('settingsSaved', 'Paramètres sauvegardés avec succès !') 
+            });
+            
+            // Effacer le message après 3 secondes
+            setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+            
         } catch (error) {
             console.error('Erreur lors de la sauvegarde:', error);
-            setMessage({ type: 'error', text: '❌ Erreur lors de la sauvegarde des paramètres' });
+            setMessage({ 
+                type: 'error', 
+                text: getText('settingsError', 'Erreur lors de la sauvegarde des paramètres') 
+            });
         } finally {
             setLoading(false);
         }
     };
 
-    const resetToDefaults = () => {
-        const defaultSettings = {
-            languePreferee: 'fr',
-            theme: 'light',
-            timezone: 'Europe/Paris',
-            notifications: true,
-            emailNotifications: true,
-            pushNotifications: false,
-            smsNotifications: false,
-            saveTestResults: true,
-            personalizedRecommendations: true,
-            weeklyDigest: false,
-            newProgramsAlert: true,
-            dataAnalytics: false,
-            shareProfile: false,
-            marketingEmails: false,
-            twoFactorAuth: false,
-            loginNotifications: true,
-            sessionTimeout: 30
-        };
-        
-        setSettings(defaultSettings);
-        setMessage({ type: 'info', text: '🔄 Paramètres remis à zéro' });
+    const handleSettingChange = (category, key, value) => {
+        setSettings(prev => ({
+            ...prev,
+            [category]: {
+                ...prev[category],
+                [key]: value
+            }
+        }));
     };
 
-    if (!user) {
-        return (
-            <div className="settings-container">
-                <GlobalNavbar activePage="settings" />
-                <div className="settings-error">
-                    <h2>🔒 Accès refusé</h2>
-                    <p>Vous devez être connecté pour accéder aux paramètres.</p>
-                </div>
-            </div>
-        );
-    }
+    const resetSettings = () => {
+        setSettings({
+            notifications: {
+                email: true,
+                push: false,
+                sms: false
+            },
+            privacy: {
+                profileVisibility: 'public',
+                showEmail: false,
+                showPhone: false
+            },
+            preferences: {
+                autoSave: true,
+                darkMode: false,
+                language: 'fr'
+            }
+        });
+    };
 
     return (
         <GlobalLayout activePage="settings">
             <div className="settings-container">
-            
-            <main className="settings-main">
                 <div className="settings-header">
-                    <h1>⚙️ {getText('settings')}</h1>
-                    <p>Personnalisez votre expérience sur DirAvenir</p>
+                    <div className="settings-user-info">
+                        <UserAvatar user={user} size="large" />
+                        <div className="settings-user-details">
+                            <h1>{getText('settings', 'Paramètres')}</h1>
+                            <p>{getText('settingsSubtitle', 'Personnalisez votre expérience DirAvenir')}</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="settings-content">
-                    <form onSubmit={handleSubmit} className="settings-form">
-                        
-                        {/* Section Préférences Générales */}
-                        <div className="settings-section">
-                            <h2>🌍 {getText('generalPreferences')}</h2>
-                            
-                            <div className="form-row">
-                            <div className="form-group">
-                                <label htmlFor="languePreferee">{getText('language')}</label>
-                                <select
-                                    id="languePreferee"
-                                    name="languePreferee"
-                                    value={settings.languePreferee}
-                                    onChange={handleInputChange}
-                                    className="form-select"
-                                >
-                                    <option value="fr">🇫🇷 Français</option>
-                                    <option value="en">🇬🇧 English</option>
-                                    <option value="es">🇪🇸 Español</option>
-                                    <option value="ar">🇸🇦 العربية</option>
-                                    <option value="de">🇩🇪 Deutsch</option>
-                                    <option value="it">🇮🇹 Italiano</option>
-                                </select>
-                                
-                                {/* Statut de la langue */}
-                                <div className="setting-status">
-                                    <span className="status-text">
-                                        {getText('currentLanguage')}: <strong>{currentLanguage.toUpperCase()}</strong>
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="theme">🎨 {getText('theme')}</label>
-                                <select
-                                    id="theme"
-                                    name="theme"
-                                    value={settings.theme}
-                                    onChange={handleInputChange}
-                                    className="form-select"
-                                >
-                                    <option value="light">☀️ {getText('light')}</option>
-                                    <option value="dark">🌙 {getText('dark')}</option>
-                                    <option value="auto">🔄 {getText('auto')}</option>
-                                </select>
-                                
-                                {/* Statut du thème */}
-                                <div className="setting-status">
-                                    <span className="status-text">
-                                        {getText('theme')} {getText('current')}: <strong>{currentTheme}</strong>
-                                    </span>
-                                    <button
-                                        type="button"
-                                        onClick={() => changeTheme(currentTheme === 'light' ? 'dark' : 'light')}
-                                        className="toggle-theme-btn"
-                                    >
-                                        🔄 {getText('toggle')}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="languePreferee">🌍 {getText('language')}</label>
-                                <select
-                                    id="languePreferee"
-                                    name="languePreferee"
-                                    value={settings.languePreferee}
-                                    onChange={handleInputChange}
-                                    className="form-select"
-                                >
-                                    <option value="fr">🇫🇷 Français</option>
-                                    <option value="en">🇬🇧 English</option>
-                                    <option value="es">🇪🇸 Español</option>
-                                </select>
-                                
-                                {/* Statut de la langue */}
-                                <div className="setting-status">
-                                    <span className="status-text">
-                                        {getText('currentLanguage')}: <strong>{currentLanguage.toUpperCase()}</strong>
-                                    </span>
-                                    <button
-                                        type="button"
-                                        onClick={() => changeLanguage(settings.languePreferee)}
-                                        className="toggle-theme-btn"
-                                    >
-                                        🔄 {getText('apply')}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="timezone">{getText('timezone')}</label>
-                                <select
-                                    id="timezone"
-                                    name="timezone"
-                                    value={settings.timezone}
-                                    onChange={handleInputChange}
-                                    className="form-select"
-                                >
-                                    <option value="Europe/Paris">🇫🇷 Paris (UTC+1/+2)</option>
-                                    <option value="Europe/London">🇬🇧 Londres (UTC+0/+1)</option>
-                                    <option value="America/New_York">🇺🇸 New York (UTC-5/-4)</option>
-                                    <option value="Asia/Tokyo">🇯🇵 Tokyo (UTC+9)</option>
-                                    <option value="Australia/Sydney">🇦🇺 Sydney (UTC+10/+11)</option>
-                                    <option value="Africa/Cairo">🇪🇬 Le Caire (UTC+2)</option>
-                                </select>
-                            </div>
-                            </div>
+                    {/* Message de statut */}
+                    {message.text && (
+                        <div className={`settings-message ${message.type}`}>
+                            {message.text}
                         </div>
+                    )}
 
-                        {/* Section Notifications */}
-                        <div className="settings-section">
-                            <h2>🔔 Notifications</h2>
-                            
-                            <div className="form-group checkbox-group">
-                                <label className="checkbox-label">
+                    {/* Notifications */}
+                    <div className="settings-section">
+                        <h2>{getText('notifications', 'Notifications')}</h2>
+                        <div className="settings-group">
+                            <div className="setting-item">
+                                <div className="setting-info">
+                                    <h3>{getText('emailNotifications', 'Notifications par email')}</h3>
+                                    <p>{getText('emailNotificationsDesc', 'Recevez des notifications importantes par email')}</p>
+                                </div>
+                                <label className="toggle-switch">
                                     <input
                                         type="checkbox"
-                                        name="notifications"
-                                        checked={settings.notifications}
-                                        onChange={handleInputChange}
-                                        className="form-checkbox"
+                                        checked={settings.notifications.email}
+                                        onChange={(e) => handleSettingChange('notifications', 'email', e.target.checked)}
                                     />
-                                    <span className="checkmark"></span>
-                                    Activer toutes les notifications
+                                    <span className="toggle-slider"></span>
                                 </label>
-                                <p className="form-help">Contrôle principal pour toutes les notifications</p>
-                                
-                                {/* Statut des permissions */}
-                                <div className="permission-status">
-                                    <span className={`status-indicator ${notificationService.getPermissionStatus().isAllowed ? 'granted' : 'denied'}`}>
-                                        {notificationService.getPermissionStatus().isAllowed ? '✅ Autorisé' : '❌ Non autorisé'}
-                                    </span>
-                                    <button
-                                        type="button"
-                                        onClick={() => notificationService.requestPermission()}
-                                        className="permission-btn"
-                                    >
-                                        🔐 Demander la permission
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => notificationService.testNotification()}
-                                        className="test-btn"
-                                        disabled={!notificationService.isAllowed()}
-                                    >
-                                        🧪 Tester les notifications
-                                    </button>
-                                </div>
                             </div>
 
-                            <div className="form-row">
-                                <div className="form-group checkbox-group">
-                                    <label className="checkbox-label">
-                                        <input
-                                            type="checkbox"
-                                            name="emailNotifications"
-                                            checked={settings.emailNotifications}
-                                            onChange={handleInputChange}
-                                            className="form-checkbox"
-                                            disabled={!settings.notifications}
-                                        />
-                                        <span className="checkmark"></span>
-                                        Notifications par email
-                                    </label>
-                                    <p className="form-help">Recevez des mises à jour importantes par email</p>
+                            <div className="setting-item">
+                                <div className="setting-info">
+                                    <h3>{getText('pushNotifications', 'Notifications push')}</h3>
+                                    <p>{getText('pushNotificationsDesc', 'Recevez des notifications push dans votre navigateur')}</p>
                                 </div>
-                                
-                                <div className="form-group checkbox-group">
-                                    <label className="checkbox-label">
-                                        <input
-                                            type="checkbox"
-                                            name="pushNotifications"
-                                            checked={settings.pushNotifications}
-                                            onChange={handleInputChange}
-                                            className="form-checkbox"
-                                            disabled={!settings.notifications}
-                                        />
-                                        <span className="checkmark"></span>
-                                        Notifications push
-                                    </label>
-                                    <p className="form-help">Alertes instantanées sur votre appareil</p>
-                                </div>
-                            </div>
-
-                            <div className="form-group checkbox-group">
-                                <label className="checkbox-label">
+                                <label className="toggle-switch">
                                     <input
                                         type="checkbox"
-                                        name="smsNotifications"
-                                        checked={settings.smsNotifications}
-                                        onChange={handleInputChange}
-                                        className="form-checkbox"
-                                        disabled={!settings.notifications}
+                                        checked={settings.notifications.push}
+                                        onChange={(e) => handleSettingChange('notifications', 'push', e.target.checked)}
                                     />
-                                    <span className="checkmark"></span>
-                                    Notifications par SMS
+                                    <span className="toggle-slider"></span>
                                 </label>
-                                <p className="form-help">Alertes importantes par message texte</p>
+                            </div>
+
+                            <div className="setting-item">
+                                <div className="setting-info">
+                                    <h3>{getText('smsNotifications', 'Notifications SMS')}</h3>
+                                    <p>{getText('smsNotificationsDesc', 'Recevez des notifications par SMS (nécessite un numéro de téléphone')}</p>
+                                </div>
+                                <label className="toggle-switch">
+                                    <input
+                                        type="checkbox"
+                                        checked={settings.notifications.sms}
+                                        onChange={(e) => handleSettingChange('notifications', 'sms', e.target.checked)}
+                                    />
+                                    <span className="toggle-slider"></span>
+                                </label>
                             </div>
                         </div>
+                    </div>
 
-                        {/* Section Tests et Orientation */}
-                        <div className="settings-section">
-                            <h2>🧠 Tests et Orientation</h2>
-                            
-                            <div className="form-row">
-                            <div className="form-group checkbox-group">
-                                <label className="checkbox-label">
-                                    <input
-                                        type="checkbox"
-                                        name="saveTestResults"
-                                            checked={settings.saveTestResults}
-                                            onChange={handleInputChange}
-                                        className="form-checkbox"
-                                    />
-                                    <span className="checkmark"></span>
-                                    Sauvegarder les résultats de tests
-                                </label>
-                                <p className="form-help">Conservez l'historique de vos tests d'orientation</p>
-                            </div>
-
-                            <div className="form-group checkbox-group">
-                                <label className="checkbox-label">
-                                    <input
-                                        type="checkbox"
-                                        name="personalizedRecommendations"
-                                            checked={settings.personalizedRecommendations}
-                                            onChange={handleInputChange}
-                                        className="form-checkbox"
-                                    />
-                                    <span className="checkmark"></span>
-                                    Recommandations personnalisées
-                                </label>
-                                <p className="form-help">Recevez des suggestions adaptées à votre profil</p>
+                    {/* Confidentialité */}
+                    <div className="settings-section">
+                        <h2>{getText('privacy', 'Confidentialité')}</h2>
+                        <div className="settings-group">
+                            <div className="setting-item">
+                                <div className="setting-info">
+                                    <h3>{getText('profileVisibility', 'Visibilité du profil')}</h3>
+                                    <p>{getText('profileVisibilityDesc', 'Contrôlez qui peut voir votre profil')}</p>
                                 </div>
-                            </div>
-
-                            <div className="form-row">
-                                <div className="form-group checkbox-group">
-                                    <label className="checkbox-label">
-                                        <input
-                                            type="checkbox"
-                                            name="weeklyDigest"
-                                            checked={settings.weeklyDigest}
-                                            onChange={handleInputChange}
-                                            className="form-checkbox"
-                                        />
-                                        <span className="checkmark"></span>
-                                        Résumé hebdomadaire
-                                    </label>
-                                    <p className="form-help">Recevez un récapitulatif de vos activités</p>
-                                </div>
-                                
-                                <div className="form-group checkbox-group">
-                                    <label className="checkbox-label">
-                                        <input
-                                            type="checkbox"
-                                            name="newProgramsAlert"
-                                            checked={settings.newProgramsAlert}
-                                            onChange={handleInputChange}
-                                            className="form-checkbox"
-                                        />
-                                        <span className="checkmark"></span>
-                                        Alertes nouveaux programmes
-                                    </label>
-                                    <p className="form-help">Soyez informé des nouveaux programmes disponibles</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Section Confidentialité */}
-                        <div className="settings-section">
-                            <h2>🔒 Confidentialité et Données</h2>
-                            
-                            <div className="form-row">
-                                <div className="form-group checkbox-group">
-                                    <label className="checkbox-label">
-                                        <input
-                                            type="checkbox"
-                                            name="dataAnalytics"
-                                            checked={settings.dataAnalytics}
-                                            onChange={handleInputChange}
-                                            className="form-checkbox"
-                                        />
-                                        <span className="checkmark"></span>
-                                        Partager les données d'utilisation
-                                    </label>
-                                    <p className="form-help">Aidez-nous à améliorer la plateforme (anonymement)</p>
-                                </div>
-                                
-                                <div className="form-group checkbox-group">
-                                    <label className="checkbox-label">
-                                        <input
-                                            type="checkbox"
-                                            name="shareProfile"
-                                            checked={settings.shareProfile}
-                                            onChange={handleInputChange}
-                                            className="form-checkbox"
-                                        />
-                                        <span className="checkmark"></span>
-                                        Profil visible publiquement
-                                    </label>
-                                    <p className="form-help">Permettre aux autres utilisateurs de voir votre profil</p>
-                                </div>
-                            </div>
-                            
-                            <div className="form-group checkbox-group">
-                                <label className="checkbox-label">
-                                    <input
-                                        type="checkbox"
-                                        name="marketingEmails"
-                                        checked={settings.marketingEmails}
-                                        onChange={handleInputChange}
-                                        className="form-checkbox"
-                                    />
-                                    <span className="checkmark"></span>
-                                    Emails marketing et promotions
-                                </label>
-                                <p className="form-help">Recevez des offres spéciales et des promotions</p>
-                            </div>
-                        </div>
-
-                        {/* Section Sécurité */}
-                        <div className="settings-section">
-                            <h2>🛡️ Sécurité</h2>
-                            
-                            <div className="form-row">
-                                <div className="form-group checkbox-group">
-                                    <label className="checkbox-label">
-                                        <input
-                                            type="checkbox"
-                                            name="twoFactorAuth"
-                                            checked={settings.twoFactorAuth}
-                                            onChange={handleInputChange}
-                                            className="form-checkbox"
-                                        />
-                                        <span className="checkmark"></span>
-                                        Authentification à deux facteurs
-                                    </label>
-                                    <p className="form-help">Sécurisez votre compte avec un code supplémentaire</p>
-                                    
-                                    {/* Statut 2FA */}
-                                    <div className="setting-status">
-                                        <span className="status-indicator disabled">
-                                            ⚠️ Non configuré
-                                        </span>
-                                        <button
-                                            type="button"
-                                            className="configure-btn"
-                                        >
-                                            ⚙️ Configurer
-                                        </button>
-                                    </div>
-                                </div>
-                                
-                                <div className="form-group checkbox-group">
-                                    <label className="checkbox-label">
-                                        <input
-                                            type="checkbox"
-                                            name="loginNotifications"
-                                            checked={settings.loginNotifications}
-                                            onChange={handleInputChange}
-                                            className="form-checkbox"
-                                        />
-                                        <span className="checkmark"></span>
-                                        Notifications de connexion
-                                    </label>
-                                    <p className="form-help">Recevez une alerte lors de nouvelles connexions</p>
-                                    
-                                    {/* Test de notification de connexion */}
-                                    <div className="setting-status">
-                                        <button
-                                            type="button"
-                                            onClick={() => notificationService.sendNotification(
-                                                '🔐 Nouvelle connexion détectée',
-                                                { body: 'Connexion depuis un nouvel appareil' }
-                                            )}
-                                            className="test-btn"
-                                            disabled={!notificationService.isAllowed()}
-                                        >
-                                            🧪 Tester
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="sessionTimeout">Délai d'expiration de session (minutes)</label>
                                 <select
-                                    id="sessionTimeout"
-                                    name="sessionTimeout"
-                                    value={settings.sessionTimeout}
-                                    onChange={handleInputChange}
-                                    className="form-select"
+                                    value={settings.privacy.profileVisibility}
+                                    onChange={(e) => handleSettingChange('privacy', 'profileVisibility', e.target.value)}
+                                    className="setting-select"
                                 >
-                                    <option value={15}>15 minutes</option>
-                                    <option value={30}>30 minutes</option>
-                                    <option value={60}>1 heure</option>
-                                    <option value={120}>2 heures</option>
-                                    <option value={480}>8 heures</option>
+                                    <option value="public">{getText('public', 'Public')}</option>
+                                    <option value="friends">{getText('friends', 'Amis uniquement')}</option>
+                                    <option value="private">{getText('private', 'Privé')}</option>
                                 </select>
-                                <p className="form-help">Après ce délai, vous devrez vous reconnecter</p>
+                            </div>
+
+                            <div className="setting-item">
+                                <div className="setting-info">
+                                    <h3>{getText('showEmail', 'Afficher l\'email')}</h3>
+                                    <p>{getText('showEmailDesc', 'Permettre aux autres utilisateurs de voir votre email')}</p>
+                                </div>
+                                <label className="toggle-switch">
+                                    <input
+                                        type="checkbox"
+                                        checked={settings.privacy.showEmail}
+                                        onChange={(e) => handleSettingChange('privacy', 'showEmail', e.target.checked)}
+                                    />
+                                    <span className="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div className="setting-item">
+                                <div className="setting-info">
+                                    <h3>{getText('showPhone', 'Afficher le téléphone')}</h3>
+                                    <p>{getText('showPhoneDesc', 'Permettre aux autres utilisateurs de voir votre numéro de téléphone')}</p>
+                                </div>
+                                <label className="toggle-switch">
+                                    <input
+                                        type="checkbox"
+                                        checked={settings.privacy.showPhone}
+                                        onChange={(e) => handleSettingChange('privacy', 'showPhone', e.target.checked)}
+                                    />
+                                    <span className="toggle-slider"></span>
+                                </label>
                             </div>
                         </div>
+                    </div>
 
-                        {/* Boutons d'action */}
-                        <div className="form-actions">
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="save-btn"
-                            >
-                                {loading ? '💾 Sauvegarde...' : `💾 ${getText('save')}`}
-                            </button>
-                            
-                            <button
-                                type="button"
-                                onClick={resetToDefaults}
-                                className="reset-btn"
-                            >
-                                🔄 Remettre à zéro
-                            </button>
-                            
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    // Test complet des fonctionnalités
-                                    notificationService.testNotification();
-                                    changeTheme(currentTheme === 'light' ? 'dark' : 'light');
-                                    setTimeout(() => changeTheme(currentTheme === 'light' ? 'dark' : 'light'), 1000);
-                                }}
-                                className="test-all-btn"
-                            >
-                                🧪 Tester tout
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    // Test du changement de langue
-                                    const languages = ['fr', 'en', 'es'];
-                                    const currentIndex = languages.indexOf(currentLanguage);
-                                    const nextLanguage = languages[(currentIndex + 1) % languages.length];
-                                    changeLanguage(nextLanguage);
-                                    setMessage({ type: 'success', text: `🌍 Langue changée vers ${nextLanguage.toUpperCase()}` });
-                                }}
-                                className="test-all-btn"
-                                style={{ backgroundColor: '#8b5cf6' }}
-                            >
-                                🌍 Tester Langue
-                            </button>
-                        </div>
-
-                        {/* Messages de feedback */}
-                        {message.text && (
-                            <div className={`message ${message.type}`}>
-                                {message.text}
+                    {/* Préférences */}
+                    <div className="settings-section">
+                        <h2>{getText('preferences', 'Préférences')}</h2>
+                        <div className="settings-group">
+                            <div className="setting-item">
+                                <div className="setting-info">
+                                    <h3>{getText('darkMode', 'Mode sombre')}</h3>
+                                    <p>{getText('darkModeDesc', 'Activer le thème sombre pour une meilleure expérience nocturne')}</p>
+                                </div>
+                                <label className="toggle-switch">
+                                    <input
+                                        type="checkbox"
+                                        checked={settings.preferences.darkMode}
+                                        onChange={(e) => handleSettingChange('preferences', 'darkMode', e.target.checked)}
+                                    />
+                                    <span className="toggle-slider"></span>
+                                </label>
                             </div>
-                        )}
-                    </form>
+
+                            <div className="setting-item">
+                                <div className="setting-info">
+                                    <h3>{getText('language', 'Langue')}</h3>
+                                    <p>{getText('languageDesc', 'Choisissez votre langue préférée')}</p>
+                                </div>
+                                <select
+                                    value={settings.preferences.language}
+                                    onChange={(e) => handleSettingChange('preferences', 'language', e.target.value)}
+                                    className="setting-select"
+                                >
+                                    {availableLanguages.map(lang => (
+                                        <option key={lang.code} value={lang.code}>
+                                            {lang.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="setting-item">
+                                <div className="setting-info">
+                                    <h3>{getText('autoSave', 'Sauvegarde automatique')}</h3>
+                                    <p>{getText('autoSaveDesc', 'Sauvegarder automatiquement vos modifications')}</p>
+                                </div>
+                                <label className="toggle-switch">
+                                    <input
+                                        type="checkbox"
+                                        checked={settings.preferences.autoSave}
+                                        onChange={(e) => handleSettingChange('preferences', 'autoSave', e.target.checked)}
+                                    />
+                                    <span className="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="settings-actions">
+                        <button
+                            onClick={saveSettings}
+                            disabled={loading}
+                            className="settings-save-btn"
+                        >
+                            {loading ? (
+                                <>
+                                    <div className="loading-spinner"></div>
+                                    {getText('saving', 'Sauvegarde...')}
+                                </>
+                            ) : (
+                                getText('saveSettings', 'Sauvegarder les paramètres')
+                            )}
+                        </button>
+
+                        <button
+                            onClick={resetSettings}
+                            className="settings-reset-btn"
+                        >
+                            {getText('resetSettings', 'Réinitialiser')}
+                        </button>
+                    </div>
                 </div>
-            </main>
-        </div>
+            </div>
         </GlobalLayout>
     );
-}
+};
 
-
+export default Settings;

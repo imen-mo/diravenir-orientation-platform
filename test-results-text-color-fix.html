@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Correction Couleur Texte Cartes Résultats</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Styles de base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+        }
+
+        .major-results {
+            min-height: 100vh;
+            background: #DDC9DB;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .results-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .results-content {
+            background: #541652;
+            box-shadow: 0px 4px 17px rgba(0, 0, 0, 0.19);
+            border-radius: 43px;
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+            color: white;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .results-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 32px;
+            line-height: 130%;
+            text-align: center;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            color: #FFFFFF;
+            margin: 0 auto 15px;
+        }
+
+        .results-subtitle {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            font-size: 18px;
+            line-height: 130%;
+            text-align: center;
+            letter-spacing: 0.02em;
+            color: #FFFFFF;
+            margin: 0;
+        }
+
+        .majors-list {
+            margin-bottom: 30px;
+        }
+
+        .majors-title {
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 25px;
+            color: #FFFFFF;
+        }
+
+        /* CORRECTION : Cartes de majeures avec texte blanc */
+        .major-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #FFFFFF; /* Force le texte en blanc */
+        }
+
+        .major-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .major-rank {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: #DDC9DB;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .rank-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: #541652;
+        }
+
+        .major-info {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* CORRECTION : Nom de la majeure en blanc */
+        .major-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #FFFFFF !important; /* Force le blanc */
+            margin: 0 0 5px 0;
+        }
+
+        .major-code {
+            display: inline-block;
+            background: #DDC9DB;
+            color: #541652;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .major-category {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: #FFFFFF;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .major-score {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .score-circle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border-radius: 50%;
+            margin-bottom: 5px;
+        }
+
+        .score-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        .score-label {
+            font-size: 10px;
+            color: #DDC9DB;
+            text-transform: uppercase;
+        }
+
+        .major-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%);
+            border: none;
+            color: #541652;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(252, 190, 28, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #FFFFFF;
+            color: #FFFFFF;
+            padding: 10px 22px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-secondary:hover {
+            background: #FFFFFF;
+            color: #541652;
+            transform: translateY(-2px);
+        }
+
+        /* CORRECTION : Description en blanc */
+        .major-description {
+            color: #FFFFFF !important; /* Force le blanc */
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 15px 0;
+        }
+
+        /* CORRECTION : Raisons en blanc */
+        .reasons-section {
+            margin-top: 20px;
+        }
+
+        .reasons-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #DDC9DB;
+            margin: 0 0 15px 0;
+            text-transform: uppercase;
+        }
+
+        .reasons-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .reason-item {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .reason-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            width: 30px;
+        }
+
+        .reason-content {
+            flex: 1;
+        }
+
+        .reason-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #FFFFFF !important; /* Force le blanc */
+            margin: 0 0 5px 0;
+        }
+
+        .reason-description {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9) !important; /* Force le blanc avec transparence */
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .results-container {
+                padding: 10px;
+            }
+            
+            .results-content {
+                padding: 20px;
+                border-radius: 20px;
+            }
+            
+            .results-title {
+                font-size: 24px;
+            }
+            
+            .results-subtitle {
+                font-size: 16px;
+            }
+            
+            .major-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .major-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .btn-primary,
+            .btn-secondary {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+
+        /* Indicateur de test */
+        .test-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #FCBE1C;
+            color: #541652;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 1000;
+        }
+
+        .test-info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(84, 22, 82, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            max-width: 300px;
+            z-index: 1000;
+        }
+
+        .test-info h4 {
+            margin-bottom: 10px;
+            color: #FCBE1C;
+        }
+
+        .test-info ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .test-info li {
+            margin-bottom: 5px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .test-info li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #FCBE1C;
+            font-weight: bold;
+        }
+
+        .color-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-indicator">TEST - Couleur Texte</div>
+    
+    <div class="test-info">
+        <h4>Corrections Appliquées :</h4>
+        <ul>
+            <li>Nom majeure en blanc</li>
+            <li>Description en blanc</li>
+            <li>Titres des raisons en blanc</li>
+            <li>Descriptions des raisons en blanc</li>
+            <li>Force !important pour priorité</li>
+        </ul>
+    </div>
+    
+    <div class="major-results">
+        <div class="results-container">
+            <div class="results-content">
+                <div class="results-header">
+                    <h1 class="results-title">Vos Résultats d'Orientation</h1>
+                    <p class="results-subtitle">Voici les 3 majeures qui correspondent le mieux à votre profil</p>
+                </div>
+
+                <div class="majors-list">
+                    <h2 class="majors-title">Majeures Recommandées</h2>
+                    
+                    <!-- Carte 1 - Informatique -->
+                    <div class="major-card">
+                        <div class="color-indicator">TEXTE BLANC</div>
+                        <div class="major-header">
+                            <div class="major-rank">
+                                <span class="rank-number">1</span>
+                            </div>
+                            <div class="major-info">
+                                <h3 class="major-name">Informatique</h3>
+                                <div>
+                                    <span class="major-code">INFO</span>
+                                    <span class="major-category">Technologie</span>
+                                </div>
+                            </div>
+                            <div class="major-score">
+                                <div class="score-circle">
+                                    <span class="score-value">95%</span>
+                                </div>
+                                <span class="score-label">Correspondance</span>
+                            </div>
+                        </div>
+                        
+                        <p class="major-description">
+                            L'informatique est un domaine en constante évolution qui combine logique, créativité et innovation. 
+                            Vous apprendrez à développer des logiciels, créer des applications et résoudre des problèmes complexes.
+                        </p>
+                        
+                        <div class="reasons-section">
+                            <h4 class="reasons-title">Pourquoi cette majeure ?</h4>
+                            <div class="reasons-list">
+                                <div class="reason-item">
+                                    <div class="reason-icon">💻</div>
+                                    <div class="reason-content">
+                                        <h5 class="reason-title">Logique et résolution de problèmes</h5>
+                                        <p class="reason-description">Votre profil montre une forte aptitude pour la pensée logique et la résolution de problèmes complexes.</p>
+                                    </div>
+                                </div>
+                                <div class="reason-item">
+                                    <div class="reason-icon">🚀</div>
+                                    <div class="reason-content">
+                                        <h5 class="reason-title">Innovation et créativité</h5>
+                                        <p class="reason-description">Vous avez un esprit créatif qui s'épanouit dans l'innovation technologique.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="major-actions">
+                            <button class="btn-primary">Postuler maintenant</button>
+                            <button class="btn-secondary">Voir les détails</button>
+                        </div>
+                    </div>
+
+                    <!-- Carte 2 - Génie Civil -->
+                    <div class="major-card">
+                        <div class="color-indicator">TEXTE BLANC</div>
+                        <div class="major-header">
+                            <div class="major-rank">
+                                <span class="rank-number">2</span>
+                            </div>
+                            <div class="major-info">
+                                <h3 class="major-name">Génie Civil</h3>
+                                <div>
+                                    <span class="major-code">GC</span>
+                                    <span class="major-category">Ingénierie</span>
+                                </div>
+                            </div>
+                            <div class="major-score">
+                                <div class="score-circle">
+                                    <span class="score-value">87%</span>
+                                </div>
+                                <span class="score-label">Correspondance</span>
+                            </div>
+                        </div>
+                        
+                        <p class="major-description">
+                            Le génie civil vous permettra de concevoir et construire des infrastructures durables qui façonnent notre environnement.
+                        </p>
+                        
+                        <div class="reasons-section">
+                            <h4 class="reasons-title">Pourquoi cette majeure ?</h4>
+                            <div class="reasons-list">
+                                <div class="reason-item">
+                                    <div class="reason-icon">🏗️</div>
+                                    <div class="reason-content">
+                                        <h5 class="reason-title">Conception et construction</h5>
+                                        <p class="reason-description">Votre profil indique un intérêt pour la conception et la construction d'infrastructures.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="major-actions">
+                            <button class="btn-primary">Postuler maintenant</button>
+                            <button class="btn-secondary">Voir les détails</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test de responsive
+        function testResponsive() {
+            const width = window.innerWidth;
+            const info = document.querySelector('.test-info');
+            
+            if (width <= 768) {
+                info.innerHTML = '<h4>Mode Mobile (≤768px)</h4><ul><li>Texte blanc maintenu</li><li>Layout vertical</li><li>Boutons adaptés</li></ul>';
+            } else {
+                info.innerHTML = '<h4>Mode Desktop (>768px)</h4><ul><li>Nom majeure en blanc</li><li>Description en blanc</li><li>Titres en blanc</li></ul>';
+            }
+        }
+
+        window.addEventListener('resize', testResponsive);
+        testResponsive();
+
+        // Animation de chargement
+        setTimeout(() => {
+            document.querySelector('.test-indicator').style.background = '#4CAF50';
+            document.querySelector('.test-indicator').textContent = '✓ CORRECTION APPLIQUÉE';
+        }, 2000);
+
+        // Test des interactions
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('Bouton "Postuler maintenant" cliqué !');
+            });
+        });
+
+        document.querySelectorAll('.btn-secondary').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('Bouton "Voir les détails" cliqué !');
+            });
+        });
+    </script>
+</body>
+</html>

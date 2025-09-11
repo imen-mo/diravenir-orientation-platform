@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Configuration axios pour l'API - PORT 8080 (nouveau backend normalisé)
-const API_BASE_URL = 'http://localhost:8080';
+// Configuration axios pour l'API - PORT 8084 (backend principal)
+const API_BASE_URL = 'http://localhost:8084';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -276,6 +276,54 @@ export const applicationService = {
   // Save application progress (alias for saveProgress)
   saveApplicationProgress: async (id, applicationData) => {
     return this.saveProgress(id, applicationData);
+  },
+
+  // ===== NOUVELLES MÉTHODES AUTO-SAVE =====
+
+  // Sauvegarde automatique à chaque étape
+  autoSaveApplication: async (id, applicationData) => {
+    try {
+      // Pour les applications temporaires, sauvegarder en local seulement
+      if (id.startsWith('temp_')) {
+        localStorage.setItem(`temp_application_${id}`, JSON.stringify(applicationData));
+        console.log('✅ Auto-save local réussi pour:', id);
+        return { success: true, message: 'Saved locally' };
+      }
+      
+      const response = await api.patch(`/api/applications/${id}/auto-save`, applicationData);
+      return response.data;
+    } catch (error) {
+      console.error('Error auto-saving application:', error);
+      // En cas d'erreur, sauvegarder en local comme fallback
+      localStorage.setItem(`temp_application_${id}`, JSON.stringify(applicationData));
+      console.log('✅ Auto-save local de fallback pour:', id);
+      return { success: true, message: 'Saved locally as fallback' };
+    }
+  },
+
+  // Sauvegarde à une étape spécifique
+  saveApplicationStep: async (id, step, applicationData) => {
+    try {
+      const response = await api.patch(`/api/applications/${id}/save-step/${step}`, applicationData);
+      return response.data;
+    } catch (error) {
+      console.error('Error saving application step:', error);
+      throw error;
+    }
+  },
+
+  // Sauvegarde avec délai (pour éviter trop de requêtes)
+  debouncedAutoSave: async (id, applicationData, delay = 2000) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const result = await this.autoSaveApplication(id, applicationData);
+          resolve(result);
+        } catch (error) {
+          reject(error);
+        }
+      }, delay);
+    });
   },
 
   // ===== NOUVELLES MÉTHODES POUR LES DOCUMENTS =====

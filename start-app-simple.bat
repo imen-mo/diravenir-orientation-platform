@@ -1,13 +1,19 @@
 @echo off
-echo Starting Diravenir Application on port 8084...
+echo ========================================
+echo   DIRAVENIR - DEMARRAGE SIMPLE
+echo ========================================
 echo.
 
-REM Compile the application
-echo Compiling application...
-call mvn clean compile
+cd frontend
 
-REM Start the application
-echo Starting application...
-call mvn exec:java -Dexec.mainClass="com.dira.diravenir1.Diravenir1Application" -Dexec.args="--server.port=8084"
+echo Demarrage de l'application React/Vite...
+echo.
+
+REM Demarrer sur le port 5173 (port Vite par defaut)
+echo URL d'acces: http://localhost:5173
+echo.
+
+REM Demarrer Vite
+npm run dev
 
 pause

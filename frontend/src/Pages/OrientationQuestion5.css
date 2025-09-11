@@ -1,0 +1,52 @@
+/* Import des styles communs pour le centrage parfait */
+@import './OrientationQuestionCommon.css';
+
+/* Styles spécifiques pour OrientationQuestion5 - 8 réponses */
+.answers-grid:has(.answer-card:nth-child(8):last-child) {
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 1200px;
+  justify-items: center;
+}
+
+/* Style spécifique pour les cartes avec description */
+.answer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.answer-description {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 0.5rem;
+  line-height: 1.3;
+}
+
+.answer-card.selected .answer-description {
+  color: rgba(84, 22, 82, 0.8);
+}
+
+/* Responsive spécifique pour 8 cartes */
+@media (max-width: 1200px) {
+  .answers-grid:has(.answer-card:nth-child(8):last-child) {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1000px;
+  }
+}
+
+@media (max-width: 768px) {
+  .answers-grid:has(.answer-card:nth-child(8):last-child) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .answers-grid:has(.answer-card:nth-child(8):last-child) {
+    grid-template-columns: 1fr;
+  }
+}

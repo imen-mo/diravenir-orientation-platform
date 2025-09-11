@@ -1,415 +1,1557 @@
-/* ProgramDetail.css - Design exact de l'image */
 
-.program-detail-page {
-  min-height: 100vh;
-  background: white;
-  font-family: 'Arial', sans-serif;
+/* ProgramDetail.css - Styles pour la page ProgramDetail */
+
+/* Import de la police Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+/* Variables CSS pour les couleurs du thème */
+:root {
+  --primary-color: #541652;
+  --secondary-color: #FCBE1C;
+  --text-dark: #333;
+  --text-light: #666;
+  --white: #ffffff;
+  --overlay-bg: rgba(0, 0, 0, 0.8);
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --border-radius: 20px;
 }
 
-/* Header violet avec logo et titre - Style exact de l'image */
-.program-header {
-  background: #441048; /* Violet exact de l'image */
-  padding: 2.5rem 2rem;
+/* Reset et styles de base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--text-dark);
+  background-color: #f5f5f5;
+}
+
+/* Page principale - remplir toute la largeur */
+.program-detail-overlay {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 0;
+}
+
+/* Container principal - remplir toute la largeur */
+.program-detail-container {
+  width: 100%;
+  margin: 0;
+  background: var(--white);
+  border-radius: 0;
+  box-shadow: none;
+  overflow-x: auto; /* Permet le défilement horizontal si nécessaire */
   position: relative;
-  border-radius: 0 0 30px 30px; /* Coins arrondis en bas comme l'image */
+  min-height: 100vh;
+  min-width: 1000px; /* Largeur minimale pour éviter la compression */
+}
+
+/* Header Section - Bannière violette qui remplit toute la largeur */
+.detail-header {
+  background: var(--primary-color);
+  color: var(--white);
+  padding: 0;
+  position: relative;
+  width: 100%;
+  min-height: 400px;
   overflow: hidden;
 }
 
-.program-header::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 150px;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05));
-}
+/* Suppression des effets électriques - style simple */
 
-.header-content {
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* Section logo université - Style exact de l'image */
+/* Section logo université - position ajustée */
 .university-logo-section {
-  flex-shrink: 0;
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  z-index: 2;
 }
 
 .university-logo {
-  width: 100px;
-  height: 100px;
-}
-
-.logo-ring {
-  width: 100%;
-  height: 100%;
-  border: 5px solid #F5F5DC; /* Bordure beige/off-white exacte de l'image */
+  width: 280px;
+  height: 280px;
+  background: var(--white);
   border-radius: 50%;
-  position: relative;
-  background: #00CED1; /* Teal exact de l'image */
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
 }
 
-.logo-text {
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: white;
-  font-size: 0.65rem;
-  font-weight: 600;
-  white-space: nowrap;
-  background: #441048;
-  padding: 3px 10px;
-  border-radius: 12px;
-  letter-spacing: 0.5px;
-  font-family: 'Arial', sans-serif;
+.university-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
-.logo-center {
-  text-align: center;
-  color: white;
-}
-
-.chinese-text {
-  font-size: 1.1rem;
+.university-logo div {
+  font-size: 24px;
   font-weight: bold;
-  margin-bottom: 3px;
-  font-family: 'SimSun', 'Arial', sans-serif;
+  color: var(--primary-color);
 }
 
-.building-icon {
-  font-size: 1.3rem;
-  margin: 3px 0;
-}
-
-.founding-year {
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-/* Section titre du programme - Style exact de l'image */
+/* Section titre du programme - position ajustée */
 .program-title-section {
-  flex: 1;
+  position: absolute;
+  top: 80px;
+  left: 500px;
+  width: 60%;
+  z-index: 2;
 }
 
-.program-main-title {
-  color: white;
-  font-size: 2.2rem;
-  font-weight: 800;
-  line-height: 1.1;
+/* Titres de sections - Normes web standard */
+.section-title {
+  color: var(--secondary-color); /* Jaune vif #FCBE1C */
+  font-size: 28px; /* Norme web : 24px-28px pour H2 */
+  font-weight: 600; /* SemiBold */
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 20px;
+  line-height: 1.3; /* Norme web : 1.2-1.3 pour titres */
+  letter-spacing: 0.2px; /* Réduit pour lisibilité */
+  text-align: left;
+}
+
+/* Suppression de la ligne décorative sous les titres */
+.section-title::after {
+  display: none;
+}
+
+/* Texte de contenu - Normes web standard */
+.section-text {
+  color: var(--text-dark) !important;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px; /* Norme web : 16px-18px pour texte principal */
+  font-weight: 400; /* Regular pour lisibilité */
+  line-height: 1.6; /* Norme web : 1.5-1.6 pour texte */
+  margin-bottom: 0;
+  text-align: left;
+}
+
+/* Titre principal du programme - Normes web standard */
+.program-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 36px; /* Norme web : 32px-36px pour H1 */
+  font-weight: 700; /* Bold */
+  line-height: 1.2; /* Norme web : 1.2-1.3 pour titres */
   margin: 0;
-  font-family: 'Arial', sans-serif;
-  letter-spacing: -0.5px;
+  letter-spacing: 0.2px;
+  color: var(--white);
+  text-align: left;
 }
 
-.degree-type {
-  color: #FFD700; /* Jaune exact de l'image */
+.title-main {
   display: block;
-  font-size: 2.2rem;
-  font-weight: 800;
-  margin-bottom: 2px;
+  margin-bottom: 10px;
+  color: var(--secondary-color);
+  font-size: 36px; /* Norme web : 32px-36px pour H1 */
+  font-weight: 700; /* Bold */
+  text-align: left;
 }
 
-.degree-name {
-  color: #FFD700;
+.title-subtitle {
   display: block;
-  font-size: 2.2rem;
-  font-weight: 800;
-  margin-bottom: 8px;
+  font-size: 24px; /* Norme web : 20px-24px pour H3 */
+  font-weight: 600; /* SemiBold */
+  color: var(--white);
+  line-height: 1.3; /* Norme web : 1.2-1.3 pour titres */
+  text-align: left;
 }
 
-.university-info {
-  color: white;
-  display: block;
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 2px;
+/* Section contenu principal */
+.detail-content {
+  padding: 40px 20px; /* Padding réduit pour éviter le décalage */
+  background: var(--white);
+  max-width: 100%; /* Largeur maximale pour éviter le décalage */
+  overflow-x: hidden; /* Empêche le défilement horizontal */
 }
 
-.university-name {
-  color: white;
-  display: block;
-  font-size: 1.8rem;
-  font-weight: 700;
-}
-
-/* Contenu principal blanc */
-.program-main-content {
-  background: white;
-  padding: 3rem 2rem;
-}
-
-.content-grid {
+.content-columns {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  max-width: 1400px;
-  margin: 0 auto;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+  align-items: start;
+  max-width: 100%; /* Largeur maximale pour éviter le décalage */
 }
 
-/* Colonnes */
-.left-column,
-.right-column {
+/* Colonne gauche */
+.left-column {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 30px;
 }
 
-/* Sections d'information */
-.info-section {
-  background: white;
+.content-section {
+  background: #fafafa;
+  padding: 25px;
+  border-radius: 15px;
+  border-left: 4px solid var(--secondary-color);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: var(--text-dark) !important;
 }
 
-.section-title {
-  color: #FFD700; /* Jaune exact */
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  text-transform: uppercase;
+.content-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-.section-text {
-  color: #333;
-  font-size: 1rem;
-  line-height: 1.6;
-  margin: 0;
+/* S'assurer que tout le texte dans les sections de contenu est noir */
+.content-section p,
+.content-section span,
+.content-section li,
+.content-section div {
+  color: var(--text-dark) !important;
 }
 
-/* Liste des avantages */
+/* Liste des avantages - Normes web standard */
 .benefits-list {
   list-style: none;
   padding: 0;
-  margin: 0;
 }
 
 .benefit-item {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  transition: all 0.3s ease;
 }
 
-.check-icon {
-  color: #4CAF50; /* Vert pour les checkmarks */
-  font-size: 1.2rem;
-  flex-shrink: 0;
+.benefit-item:hover {
+  background: #e9ecef;
+  transform: translateX(5px);
+}
+
+.benefit-item svg {
+  margin-right: 12px;
   margin-top: 2px;
+  flex-shrink: 0;
 }
 
-.benefit-text {
-  color: #333;
-  font-size: 0.95rem;
-  line-height: 1.5;
+.benefit-item span {
+  color: var(--text-dark) !important;
+  font-size: 16px; /* Norme web : 16px-18px */
+  line-height: 1.6; /* Norme web : 1.5-1.6 */
+  font-weight: 400; /* Regular pour lisibilité */
 }
 
-/* Détails du programme */
-.program-details {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.8rem 0;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.detail-label {
-  color: #333;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.detail-value {
-  color: #333;
-  font-size: 0.95rem;
-}
-
-.degree-badge {
-  background: #FFD700;
-  color: #5C1A6B;
-  padding: 0.3rem 0.8rem;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 0.85rem;
-}
-
-.scholarship-badge {
-  background: #4CAF50;
-  color: white;
-  padding: 0.3rem 0.8rem;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 0.85rem;
-}
-
-/* Grille des documents */
+/* Grille des documents - Style amélioré pour remplir la page */
 .documents-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(4, 1fr); /* Exactement 4 colonnes comme dans l'image */
+  gap: 20px;
+  margin-top: 25px;
+  width: 100%;
 }
 
 .document-card {
-  background: white;
-  border: 2px solid #f0f0f0;
-  border-radius: 15px;
-  padding: 1.5rem 1rem;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid var(--secondary-color);
+  min-height: 80px; /* Hauteur minimale pour une meilleure apparence */
 }
 
 .document-card:hover {
-  border-color: #FFD700;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
-.document-icon {
-  font-size: 2rem;
-  display: block;
-  margin-bottom: 0.8rem;
+/* Mini-logo avec cadre rond */
+.mini-logo-container {
+  margin-right: 15px;
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #FCBE1C; /* Fond jaune comme dans l'image */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(252, 190, 28, 0.3);
 }
 
-.document-text {
-  color: #333;
-  font-size: 0.85rem;
-  font-weight: 500;
+.mini-logo {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.document-name {
+  color: #541652 !important; /* Violet foncé comme dans l'image */
+  font-size: 16px;
+  font-weight: 600; /* Semi-bold pour une meilleure lisibilité */
+  line-height: 1.4;
+  flex: 1;
+}
+
+/* Colonne droite - Carte des détails */
+.right-column {
+  position: sticky;
+  top: 20px;
+  min-width: 550px; /* Largeur minimale réduite pour optimiser l'espace */
+  flex-shrink: 0; /* Empêche la compression de la colonne */
+}
+
+/* Section "About this Program" - Style corrigé */
+.program-details-card {
+  position: relative;
+  background: var(--white);
+  padding: 30px 25px; /* Padding réduit à gauche et à droite */
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 30px;
+  color: var(--text-dark);
+  overflow: visible; /* Permet au contenu de déborder si nécessaire */
+  min-width: 550px; /* Largeur minimale réduite pour optimiser l'espace */
+}
+
+/* Bordure bleue à gauche - SUPPRIMÉE selon la demande */
+.card-left-border {
+  display: none; /* Bordure supprimée */
+}
+
+/* Titre "About this Program" - Style identique à l'image */
+.program-details-card .section-title {
+  color: #FCBE1C; /* Jaune-orange exact de l'image */
+  font-size: 28px;
+  font-weight: 700; /* Bold comme dans l'image */
+  font-family: 'Poppins', sans-serif;
+  text-align: left; /* Alignement à gauche au lieu du centre */
+  margin-bottom: 25px;
+  margin-left: 5px; /* Marge à gauche pour aligner avec le contenu */
   line-height: 1.3;
+  letter-spacing: 0.2px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* Section Call to Action - Style exact de l'image */
+/* Liste des détails du programme - Style corrigé avec espacement */
+.details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Espace entre les éléments */
+  margin-top: 30px; /* Plus d'espace après le titre */
+  margin-left: 5px; /* Marge à gauche réduite */
+  margin-right: 5px; /* Marge à droite réduite */
+}
+
+/* Chaque élément de détail - Style corrigé avec espacement */
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Alignement en haut pour les tags multilignes */
+  padding: 20px 20px; /* Padding réduit pour rapprocher du bord gauche */
+  border-bottom: 1px solid #e8e8e8;
+  position: relative;
+  min-height: 70px; /* Hauteur minimale augmentée */
+  border-radius: 8px; /* Coins légèrement arrondis */
+  transition: all 0.2s ease; /* Transition fluide */
+  gap: 15px; /* Espacement réduit entre label et valeur */
+}
+
+.detail-item:last-child {
+  border-bottom: none; /* Pas de bordure pour le dernier élément */
+}
+
+/* Effet de survol subtil */
+.detail-item:hover {
+  background: #f8f9fa;
+  transform: translateY(-1px); /* Léger déplacement vers le haut */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Ombre au survol */
+}
+
+.detail-item:hover .detail-label {
+  color: #6a1b9a !important; /* Violet plus foncé au survol */
+}
+
+/* Labels (clés) - Style corrigé en gras et violet */
+.detail-label {
+  color: #541652 !important; /* Violet foncé */
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 700; /* Bold comme demandé */
+  line-height: 1.4;
+  letter-spacing: 0.2px;
+  text-align: left;
+  flex-shrink: 0; /* Empêche la compression du texte */
+  margin-right: 30px; /* Espace réduit entre label et valeur */
+  min-width: 140px; /* Largeur minimale réduite */
+  padding-left: 5px; /* Espace à gauche réduit */
+  padding-top: 5px; /* Espace en haut pour l'alignement avec les tags */
+}
+
+/* Valeurs - Style corrigé pour éviter le débordement */
+.detail-value {
+  color: #333 !important; /* Gris foncé */
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 400; /* Regular */
+  text-align: right;
+  flex: 1; /* Prend l'espace disponible */
+  word-wrap: break-word; /* Gère le texte long */
+  overflow-wrap: break-word; /* Support moderne */
+  max-width: none; /* Pas de limitation de largeur */
+  min-width: 200px; /* Largeur minimale réduite */
+  padding-left: 10px; /* Espace à gauche réduit */
+  padding-right: 10px; /* Espace à droite réduit */
+  overflow: visible; /* Permet au texte de déborder si nécessaire */
+  text-overflow: clip; /* Supprime l'ellipsis */
+  padding-top: 5px; /* Espace en haut pour l'alignement */
+}
+
+/* Tags spéciaux - Style corrigé selon les spécifications */
+.detail-value.degree-type {
+  background: #EB85331A; /* Couleur exacte demandée */
+  color: #FCBE1C !important; /* Jaune comme les titres - IMPORTANT pour forcer la couleur */
+  padding: 12px 24px; /* Padding augmenté pour plus d'espace */
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  min-width: 120px; /* Largeur minimale */
+  max-width: none; /* Pas de limitation de largeur */
+  display: inline-block;
+  white-space: normal; /* Permet le retour à la ligne */
+  overflow: visible; /* Permet au texte de déborder */
+  text-overflow: clip; /* Supprime l'ellipsis */
+  line-height: 1.4; /* Hauteur de ligne pour le texte multiligne */
+  height: auto; /* Hauteur automatique selon le contenu */
+  word-wrap: break-word; /* Gère les mots longs */
+  overflow-wrap: break-word; /* Support moderne */
+}
+
+.detail-value.scholarship {
+  background: #46B73433; /* Couleur exacte demandée */
+  color: #46B734 !important; /* Vert pour Available - IMPORTANT pour forcer la couleur */
+  padding: 12px 24px; /* Padding augmenté pour plus d'espace */
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  min-width: 200px; /* Largeur minimale augmentée pour "Available for eligible international" */
+  max-width: none; /* Pas de limitation de largeur */
+  display: inline-block;
+  white-space: normal; /* Permet le retour à la ligne */
+  overflow: visible; /* Permet au texte de déborder */
+  text-overflow: clip; /* Supprime l'ellipsis */
+  line-height: 1.4; /* Hauteur de ligne pour le texte multiligne */
+  height: auto; /* Hauteur automatique selon le contenu */
+  word-wrap: break-word; /* Gère les mots longs */
+  overflow-wrap: break-word; /* Support moderne */
+}
+
+/* Éléments décoratifs - SUPPRIMÉS selon la demande */
+.decorative-dots {
+  display: none; /* Points violets supprimés */
+}
+
+.decorative-arc {
+  display: none; /* Cercle jaune supprimé */
+}
+
+/* Section Call to Action */
 .cta-section {
-  background: #441048; /* Violet exact de l'image */
-  padding: 3rem 2rem;
-  margin: 0;
+  background: linear-gradient(135deg, var(--primary-color) 0%, #6a1b9a 100%);
+  padding: 50px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.cta-content {
+/* NOUVELLE SECTION APPLY - Basée sur l'image 2 */
+.apply-section {
+  background: #541652; /* Violet exact #541652 */
+  padding: 50px 40px;
+  margin: 40px 0;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.apply-section-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
-.cta-text {
-  color: white;
+.apply-text {
+  flex: 1;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+}
+
+.apply-text h3 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  line-height: 1.3;
+  color: #ffffff;
+}
+
+.apply-text p {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #ffffff;
+  opacity: 0.9;
+}
+
+.apply-button-container {
+  flex-shrink: 0;
+  margin-left: 40px;
+}
+
+.apply-now-button {
+  background: #FCBE1C; /* Jaune exact #FCBE1C */
+  color: #333333;
+  border: none;
+  padding: 16px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(252, 190, 28, 0.3);
+}
+
+.apply-now-button:hover {
+  background: #f0b800;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(252, 190, 28, 0.4);
+}
+
+.apply-now-button:active {
+  transform: translateY(0);
+}
+
+/* Suppression des effets électriques - style simple */
+
+.cta-content {
+  position: relative;
+  z-index: 2;
+}
+
+.cta-text h3 {
+  color: var(--white);
   font-size: 1.8rem;
-  font-weight: 700;
-  margin: 0;
+  font-weight: 600;
+  margin-bottom: 30px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .cta-button {
-  background: #FFD700;
-  color: #5C1A6B;
-  border: none;
-  padding: 1rem 2.5rem;
-  border-radius: 30px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+  display: flex;
+  justify-content: center;
 }
 
-.cta-button:hover {
-  background: #FFC800;
+.apply-now-btn {
+  background: var(--secondary-color);
+  color: var(--text-dark);
+  border: none;
+  padding: 18px 40px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(252, 190, 28, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.apply-now-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(252, 190, 28, 0.6);
+  background: #f0b800;
+}
+
+.apply-now-btn:active {
+  transform: translateY(-1px);
+}
+
+/* NOUVELLE SECTION APPLY - Basée sur l'image 2 */
+.apply-section {
+  background: #541652; /* Violet exact #541652 */
+  padding: 50px 40px;
+  margin: 40px 0;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.apply-section-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.apply-text {
+  flex: 1;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+}
+
+.apply-text h3 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  line-height: 1.3;
+  color: #ffffff;
+}
+
+.apply-text p {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #ffffff;
+  opacity: 0.9;
+}
+
+.apply-button-container {
+  flex-shrink: 0;
+  margin-left: 40px;
+}
+
+.apply-now-button {
+  background: #FCBE1C; /* Jaune exact #FCBE1C */
+  color: #333333;
+  border: none;
+  padding: 16px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(252, 190, 28, 0.3);
+}
+
+.apply-now-button:hover {
+  background: #f0b800;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(252, 190, 28, 0.4);
+}
+
+.apply-now-button:active {
+  transform: translateY(0);
 }
 
 /* Section autres universités */
 .other-universities-section {
-  background: white;
-  padding: 3rem 2rem;
+  background: var(--white);
+  padding: 50px 40px;
   text-align: center;
 }
 
 .other-universities-section .section-title {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 40px;
+  color: var(--secondary-color); /* Orange-jaune comme dans l'image */
+  font-size: 28px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+}
+
+.other-universities-section .section-title::after {
+  content: '';
+  display: inline-block;
+  width: 60px;
+  height: 3px;
+  background: var(--secondary-color); /* Ligne orange-jaune */
+  margin-left: 15px;
+  vertical-align: middle;
 }
 
 .universities-logos {
   display: flex;
   justify-content: center;
-  gap: 2rem;
   flex-wrap: wrap;
+  gap: 25px; /* Plus d'espace entre les logos */
+  margin-top: 40px;
 }
 
 .university-logo-item {
-  width: 80px;
-  height: 80px;
-  background: #f8f9fa;
-  border: 2px solid #e9ecef;
+  width: 120px; /* Logo plus grand */
+  height: 140px; /* Hauteur augmentée pour le nom */
   border-radius: 50%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  cursor: pointer;
   transition: all 0.3s ease;
+  position: relative;
+  overflow: visible; /* Permet au nom de déborder */
+  background: var(--white); /* Fond blanc uniforme pour tous */
+  border: 4px solid var(--primary-color); /* Cadre violet épais #541652 */
+  box-shadow: 0 4px 20px rgba(84, 22, 82, 0.2); /* Ombre violette subtile */
 }
 
 .university-logo-item:hover {
-  border-color: #FFD700;
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 8px 30px rgba(84, 22, 82, 0.3);
+  border-color: #6a1b9a; /* Bordure plus foncée au survol */
+}
+
+.university-logo-item img {
+  width: 80%; /* Logo un peu plus petit que le conteneur */
+  height: 80%;
+  object-fit: contain; /* Garde les proportions et centre parfaitement */
+  border-radius: 0; /* Pas de border-radius sur l'image elle-même */
+  max-width: 90px; /* Évite que le logo soit trop grand */
+  max-height: 90px;
+}
+
+/* Style pour le nom de l'université sous le logo */
+.university-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary-color);
+  text-align: center;
+  margin-top: 8px;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+/* ===== NOUVEAUX STYLES POUR LES ÉTATS DE CHARGEMENT ===== */
+
+.no-similar-programs {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-light);
+}
+
+.no-similar-programs p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--primary-color);
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Amélioration du style des logos pour une meilleure présentation */
+.university-logo-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.university-logo-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(84, 22, 82, 0.1) 50%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.university-logo-item:hover::after {
+  opacity: 1;
+}
+
+/* Responsive design pour les logos */
+@media (max-width: 768px) {
+  .universities-logos {
+    gap: 15px;
+  }
+  
+  .university-logo-item {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .university-logo-item img {
+    max-width: 70px;
+    max-height: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .universities-logos {
+    gap: 10px;
+  }
+  
+  .university-logo-item {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .university-logo-item img {
+    max-width: 60px;
+    max-height: 60px;
+  }
+}
+
+/* Bouton de fermeture */
+.close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  background: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(84, 22, 82, 0.3);
+  z-index: 1000;
+}
+
+.close-button:hover {
+  background: #6a1b9a;
   transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(84, 22, 82, 0.4);
+}
+
+/* Spinner de chargement */
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .content-grid {
+  .content-columns {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 30px;
   }
   
-  .header-content {
-    flex-direction: column;
-    text-align: center;
-    gap: 2rem;
+  .right-column {
+    position: static;
   }
   
-  .cta-content {
+  .detail-header {
+    padding: 30px;
+  }
+  
+  .detail-content {
+    padding: 30px 40px; /* Réduit le padding horizontal sur les petits écrans */
+  }
+  
+  .documents-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 colonnes sur tablette */
+    gap: 15px;
+  }
+  
+  .cta-section {
+    padding: 40px 30px;
+  }
+  
+  .other-universities-section {
+    padding: 40px 30px;
+  }
+  
+  /* Responsive pour la section apply */
+  .apply-section {
+    padding: 40px 30px;
+  }
+  
+  .apply-section-content {
     flex-direction: column;
-    gap: 2rem;
     text-align: center;
+  }
+  
+  .apply-button-container {
+    margin-left: 0;
+    margin-top: 30px;
+  }
+  
+  /* Responsive pour la section apply */
+  .apply-section {
+    padding: 40px 30px;
+  }
+  
+  .apply-section-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .apply-button-container {
+    margin-left: 0;
+    margin-top: 30px;
   }
 }
 
 @media (max-width: 768px) {
-  .program-header,
-  .program-main-content,
-  .cta-section,
-  .other-universities-section {
-    padding: 2rem 1rem;
+  .program-detail-overlay {
+    padding: 10px;
   }
   
-  .program-main-title {
+  .detail-header {
+    padding: 25px;
+  }
+  
+  .program-title {
     font-size: 2rem;
   }
   
+  .title-subtitle {
+    font-size: 1rem;
+  }
+  
+  .detail-content {
+    padding: 25px 30px; /* Réduit le padding horizontal */
+  }
+  
+  .content-section {
+    padding: 20px;
+  }
+  
   .documents-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr; /* 1 colonne sur mobile */
+    gap: 15px;
+  }
+  
+  .cta-section {
+    padding: 30px 25px;
+  }
+  
+  .cta-text h3 {
+    font-size: 1.5rem;
+  }
+  
+  .apply-now-btn {
+    padding: 15px 30px;
+    font-size: 1rem;
+  }
+  
+  .other-universities-section {
+    padding: 30px 25px;
+  }
+  
+  /* Responsive pour la section apply */
+  .apply-section {
+    padding: 30px 25px;
+    margin: 30px 0;
+  }
+  
+  .apply-text h3 {
+    font-size: 20px;
+  }
+  
+  .apply-text p {
+    font-size: 14px;
+  }
+  
+  .apply-now-button {
+    padding: 14px 28px;
+    font-size: 14px;
   }
   
   .universities-logos {
-    gap: 1rem;
+    gap: 20px;
   }
   
   .university-logo-item {
-    width: 60px;
-    height: 60px;
+    width: 100px; /* Logos un peu plus petits sur tablette mais toujours grands */
+    height: 100px;
+  }
+  
+  .university-logo-item span {
+    font-size: 16px;
+  }
+  
+  /* Responsive pour la section apply */
+  .apply-section {
+    padding: 30px 25px;
+    margin: 30px 0;
+  }
+  
+  .apply-text h3 {
+    font-size: 20px;
+  }
+  
+  .apply-text p {
+    font-size: 14px;
+  }
+  
+  .apply-now-button {
+    padding: 14px 28px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .detail-header {
+    padding: 20px;
+  }
+  
+  .detail-content {
+    padding: 20px;
+  }
+  
+  .content-section {
+    padding: 15px;
+  }
+  
+  .cta-section {
+    padding: 25px 20px;
+  }
+  
+  .other-universities-section {
+    padding: 25px 20px;
+  }
+  
+  .program-title {
     font-size: 1.5rem;
   }
-} 
+  
+  .title-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .section-title {
+    font-size: 1.3rem;
+  }
+  
+  .apply-now-btn {
+    padding: 12px 25px;
+    font-size: 0.9rem;
+  }
+  
+  /* Responsive pour la section apply */
+  .apply-section {
+    padding: 25px 20px;
+    margin: 25px 0;
+  }
+  
+  .apply-text h3 {
+    font-size: 18px;
+  }
+  
+  .apply-text p {
+    font-size: 13px;
+  }
+  
+  .apply-now-button {
+    padding: 12px 24px;
+    font-size: 13px;
+  }
+  
+  /* Responsive pour la section apply */
+  .apply-section {
+    padding: 25px 20px;
+    margin: 25px 0;
+  }
+  
+  .apply-text h3 {
+    font-size: 18px;
+  }
+  
+  .apply-text p {
+    font-size: 13px;
+  }
+  
+  .apply-now-button {
+    padding: 12px 24px;
+    font-size: 13px;
+  }
+}
+
+/* Style simple sans animations */
+
+/* Hover effects pour les éléments interactifs */
+.document-card:hover .document-name {
+  color: var(--primary-color);
+}
+
+.university-logo-item:hover span {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
+/* Focus states pour l'accessibilité */
+.apply-now-btn:focus,
+.close-button:focus,
+.apply-now-button:focus {
+  outline: 3px solid var(--secondary-color);
+  outline-offset: 2px;
+}
+
+.document-card:focus {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
+}
+
+/* Scrollbar personnalisée */
+.program-detail-overlay::-webkit-scrollbar {
+  width: 8px;
+}
+
+.program-detail-overlay::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.program-detail-overlay::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+.program-detail-overlay::-webkit-scrollbar-thumb:hover {
+  background: #6a1b9a;
+}
+
+/* Styles pour le nouveau formatage de whyThisProgram */
+.why-this-program-text {
+  background: #f8f9fa;
+  border-left: 4px solid #541652;
+  padding: 20px; /* Padding augmenté */
+  border-radius: 0 10px 10px 0; /* Coins légèrement plus arrondis */
+  margin: 15px 0; /* Marge augmentée */
+}
+
+.benefit-line {
+  display: flex;
+  align-items: center;
+  margin: 10px 0; /* Un peu plus d'espacement */
+  padding: 12px 16px; /* Padding augmenté */
+  background: white;
+  border-radius: 8px; /* Coins légèrement plus arrondis */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* Ombre un peu plus prononcée */
+  border-left: 4px solid #4CAF50; /* Bordure gauche un peu plus épaisse */
+  font-size: 16px; /* Taille de police augmentée */
+  line-height: 1.6; /* Ligne d'espacement augmentée */
+  color: #333;
+  font-weight: 600; /* Semi-bold pour plus de lisibilité */
+}
+
+.checkmark-icon {
+  flex-shrink: 0;
+  margin-right: 15px; /* Un peu plus d'espace */
+  width: 22px; /* Légèrement plus grande */
+  height: 22px; /* Légèrement plus grande */
+}
+
+.benefit-text {
+  flex: 1;
+  color: #333;
+  font-size: 16px; /* Taille augmentée pour correspondre à la ligne */
+  line-height: 1.6; /* Ligne d'espacement augmentée */
+  font-weight: 600; /* Semi-bold pour plus de lisibilité */
+}
+
+/* Effet de survol pour l'icône de checkmark */
+.benefit-line:hover .checkmark-icon {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+.benefit-line:first-child {
+  margin-top: 0;
+}
+
+.benefit-line:last-child {
+  margin-bottom: 0;
+}
+
+/* Styles pour la 3ème question du test d'analyse d'orientation */
+
+/* Group 2236 - Container principal */
+.orientation-question-container {
+  position: absolute;
+  width: 380px;
+  height: 390.59px;
+}
+
+/* Icône de localisation */
+.location-icon {
+  position: absolute;
+  width: 31px;
+  height: 32.63px;
+}
+
+.location-icon .vector {
+  position: absolute;
+  left: 20.84%;
+  right: 20.83%;
+  top: 8.33%;
+  bottom: 8.33%;
+  background: #FFFFFF;
+}
+
+.location-icon .vector-bg {
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+}
+
+/* Icône email */
+.email-icon {
+  position: absolute;
+  width: 32px;
+  height: 32.63px;
+}
+
+.email-icon .vector {
+  position: absolute;
+  left: 16.67%;
+  right: 16.66%;
+  top: 23.33%;
+  bottom: 23.33%;
+  background: #FFFFFF;
+}
+
+.email-icon .vector-bg {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 10%;
+  bottom: 10%;
+}
+
+/* Icône téléphone */
+.phone-icon {
+  position: absolute;
+  width: 29px;
+  height: 28.55px;
+}
+
+.phone-icon .vector {
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+}
+
+.phone-icon .vector-bg {
+  position: absolute;
+  left: 12.5%;
+  right: 12.5%;
+  top: 12.5%;
+  bottom: 12.5%;
+  background: #FFFFFF;
+}
+
+/* Titre "Contact Us" */
+.contact-us-title {
+  position: absolute;
+  width: 220px;
+  height: 108.1px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 38px;
+  line-height: 57px;
+  color: #FFFFFF;
+}
+
+/* Adresse */
+.contact-address {
+  position: absolute;
+  width: 334px;
+  height: 153.99px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 147.4%;
+  color: #FFFFFF;
+}
+
+/* Email de contact */
+.contact-email {
+  position: absolute;
+  width: 317px;
+  height: 56px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 147.4%;
+  color: #FFFFFF;
+}
+
+/* Numéro de téléphone */
+.contact-phone {
+  position: absolute;
+  width: 237px;
+  height: 56.09px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 147.4%;
+  color: #FFFFFF;
+}
+
+/* Icônes de réseaux sociaux */
+.social-icon {
+  position: absolute;
+  background: #FFFFFF;
+}
+
+.instagram-icon {
+  width: 18.64px;
+  height: 20.55px;
+}
+
+.linkedin-icon {
+  width: 19px;
+  height: 18px;
+}
+
+.facebook-icon {
+  width: 8.41px;
+  height: 18.54px;
+}
+
+.twitter-icon {
+  width: 18.64px;
+  height: 16.7px;
+}
+
+/* Container principal de la question */
+.question-main-container {
+  position: absolute;
+  width: 1637px;
+  height: 856px;
+  left: 141px;
+  top: 448px;
+  background: #541652;
+  box-shadow: 0px 4px 17px 3px rgba(0, 0, 0, 0.19);
+  border-radius: 43px;
+}
+
+/* Composants de sélection (Early Morning, After Lunch, etc.) */
+.selection-component {
+  position: absolute;
+  width: 577px;
+  height: 62px;
+  left: 663px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 51px;
+}
+
+.selection-component .box {
+  box-sizing: border-box;
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+  border: 1px solid #FFFFFF;
+  border-radius: 30px;
+}
+
+.selection-component .text {
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 33.93%;
+  bottom: 32.14%;
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 130%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 0.02em;
+  background: linear-gradient(0deg, #FFFFFF, #FFFFFF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+/* Composant sélectionné (I'm A Doctor...) */
+.selected-component {
+  position: absolute;
+  width: 577px;
+  height: 62px;
+  left: 663px;
+  top: 1000px;
+  background: #343434;
+  border-radius: 51px;
+}
+
+.selected-component .box {
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+  background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%);
+  box-shadow: -6px -6px 16px rgba(255, 255, 255, 0.1), 6px 9px 40px rgba(138, 55, 55, 0.54);
+  border-radius: 30px;
+}
+
+/* Question principale */
+.main-question {
+  position: absolute;
+  width: 1441px;
+  height: 101px;
+  left: 252px;
+  top: 495px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 130%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+}
+
+/* Instruction de sélection */
+.selection-instruction {
+  position: absolute;
+  width: 227px;
+  height: 31px;
+  left: 838px;
+  top: 565px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 24px;
+  line-height: 130%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+}
+
+/* Barre de progression */
+.progress-container {
+  position: absolute;
+  width: 893px;
+  height: 112px;
+  left: 517px;
+  top: 1126px;
+}
+
+.progress-bar {
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 46.15%;
+  bottom: 0%;
+  background: #DDC9DB;
+  box-shadow: -6px -6px 16px rgba(255, 255, 255, 0.1), 6px 9px 40px rgba(48, 49, 55, 0.54);
+  border-radius: 64px;
+}
+
+.progress-fill {
+  position: absolute;
+  left: 0%;
+  right: 86.45%;
+  top: 46.15%;
+  bottom: 0%;
+  background: linear-gradient(88.33deg, #FCBE1C -7.64%, #FCBE1C 145.94%);
+}
+
+/* Bouton retour */
+.back-button {
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: -0.89%;
+  bottom: 82.14%;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 130%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 0.02em;
+  color: #FFFFFF;
+}
+
+/* Indicateur de progression */
+.progress-indicator {
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 62.06%;
+  bottom: 17.4%;
+  font-family: 'Roboto Slab';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 130%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #541652;
+}
+
+/* Barre de progression colorée */
+.progress-colored-bar {
+  position: absolute;
+  left: 26.93%;
+  right: 64.11%;
+  top: 54.49%;
+  bottom: 42.69%;
+  background: linear-gradient(88.37deg, #FCBE1C 27.38%, #FF914C 177.02%);
+}

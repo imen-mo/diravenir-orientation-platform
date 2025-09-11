@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Debug Email</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        .raw-response { max-height: 300px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Test Debug Email</h1>
+    
+    <div class="test-section info">
+        <h3>📧 Test avec Email Valide</h3>
+        <button onclick="testWithValidEmail()">Test avec Email Valide</button>
+        <div id="valid-email-result"></div>
+    </div>
+    
+    <div class="test-section info">
+        <h3>📧 Test avec Email Invalide</h3>
+        <button onclick="testWithInvalidEmail()">Test avec Email Invalide</button>
+        <div id="invalid-email-result"></div>
+    </div>
+    
+    <div class="test-section info">
+        <h3>📧 Test sans Email</h3>
+        <button onclick="testWithoutEmail()">Test sans Email</button>
+        <div id="no-email-result"></div>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost:8084';
+        
+        async function testWithValidEmail() {
+            const resultDiv = document.getElementById('valid-email-result');
+            resultDiv.innerHTML = '<p>🔄 Test en cours...</p>';
+            
+            const testData = {
+                "q1": "B", "q2": "A", "q3": "C", "q4": "B", "q5": "A",
+                "q6": "C", "q7": "B", "q8": "A", "q9": "{\"security\": 60, \"innovation\": 70, \"autonomy\": 80, \"salary\": 40}",
+                "q10": "C", "q11": "B", "q12": "A", "q13": "C", "q14": "B",
+                "studentInfo": {
+                    "fullName": "Test Email Valide",
+                    "email": "test.valid@diravenir.com",
+                    "phone": "+33987654321"
+                }
+            };
+            
+            await performTest(testData, resultDiv, "Email Valide");
+        }
+        
+        async function testWithInvalidEmail() {
+            const resultDiv = document.getElementById('invalid-email-result');
+            resultDiv.innerHTML = '<p>🔄 Test en cours...</p>';
+            
+            const testData = {
+                "q1": "B", "q2": "A", "q3": "C", "q4": "B", "q5": "A",
+                "q6": "C", "q7": "B", "q8": "A", "q9": "{\"security\": 60, \"innovation\": 70, \"autonomy\": 80, \"salary\": 40}",
+                "q10": "C", "q11": "B", "q12": "A", "q13": "C", "q14": "B",
+                "studentInfo": {
+                    "fullName": "Test Email Invalide",
+                    "email": "email-invalide-sans-domaine",
+                    "phone": "+33987654321"
+                }
+            };
+            
+            await performTest(testData, resultDiv, "Email Invalide");
+        }
+        
+        async function testWithoutEmail() {
+            const resultDiv = document.getElementById('no-email-result');
+            resultDiv.innerHTML = '<p>🔄 Test en cours...</p>';
+            
+            const testData = {
+                "q1": "B", "q2": "A", "q3": "C", "q4": "B", "q5": "A",
+                "q6": "C", "q7": "B", "q8": "A", "q9": "{\"security\": 60, \"innovation\": 70, \"autonomy\": 80, \"salary\": 40}",
+                "q10": "C", "q11": "B", "q12": "A", "q13": "C", "q14": "B",
+                "studentInfo": {
+                    "fullName": "Test Sans Email",
+                    "email": null,
+                    "phone": "+33987654321"
+                }
+            };
+            
+            await performTest(testData, resultDiv, "Sans Email");
+        }
+        
+        async function performTest(testData, resultDiv, testName) {
+            try {
+                console.log(`🧪 Test ${testName}:`, testData);
+                
+                const response = await fetch(`${BASE_URL}/api/orientation/complete`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testData)
+                });
+                
+                console.log(`📊 Response Status: ${response.status}`);
+                console.log(`📊 Response Headers:`, response.headers);
+                
+                // Essayer de lire la réponse comme texte d'abord
+                const responseText = await response.text();
+                console.log(`📄 Raw Response:`, responseText);
+                
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('❌ JSON Parse Error:', parseError);
+                    resultDiv.innerHTML = `
+                        <div class="test-section error">
+                            <h4>❌ Erreur de Parsing JSON</h4>
+                            <p><strong>Status:</strong> ${response.status}</p>
+                            <p><strong>Erreur:</strong> ${parseError.message}</p>
+                            <details>
+                                <summary>📄 Réponse Brute</summary>
+                                <pre class="raw-response">${responseText}</pre>
+                            </details>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="test-section success">
+                            <h4>✅ Test ${testName} Réussi!</h4>
+                            <p><strong>Status:</strong> ${response.status}</p>
+                            <p><strong>Test UUID:</strong> ${result.testUuid}</p>
+                            <p><strong>Meilleure Recommandation:</strong> ${result.results?.topRecommendationMajor}</p>
+                            <p><strong>Score:</strong> ${result.results?.topRecommendationScore?.toFixed(2)}</p>
+                            <details>
+                                <summary>📊 Réponse Complète</summary>
+                                <pre>${JSON.stringify(result, null, 2)}</pre>
+                            </details>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="test-section error">
+                            <h4>❌ Erreur HTTP ${response.status}</h4>
+                            <pre>${JSON.stringify(result, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error(`❌ Erreur ${testName}:`, error);
+                resultDiv.innerHTML = `
+                    <div class="test-section error">
+                        <h4>❌ Erreur Réseau</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

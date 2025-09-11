@@ -1,0 +1,270 @@
+.major-recommendation-detail {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 25px;
+  margin: 20px 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* Force tous les textes en blanc */
+.major-recommendation-detail * {
+  color: #FFFFFF !important;
+}
+
+.major-recommendation-detail h1,
+.major-recommendation-detail h2,
+.major-recommendation-detail h3,
+.major-recommendation-detail h4,
+.major-recommendation-detail h5,
+.major-recommendation-detail h6 {
+  color: #FFFFFF !important;
+}
+
+.major-recommendation-detail p {
+  color: #FFFFFF !important;
+}
+
+.major-recommendation-detail span {
+  color: #FFFFFF !important;
+}
+
+.major-recommendation-detail div {
+  color: #FFFFFF !important;
+}
+
+/* En-tête avec pourcentage */
+.recommendation-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.match-percentage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.percentage-value {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.percentage-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.recommendation-title {
+  flex: 1;
+  min-width: 200px;
+}
+
+.recommendation-title h3 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #FFFFFF;
+}
+
+.match-text {
+  font-size: 16px;
+  color: #DDC9DB;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Description de la majeure */
+.major-description-section {
+  margin-bottom: 25px;
+}
+
+.major-description {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #FFFFFF;
+  margin: 0;
+  text-align: justify;
+}
+
+/* Section des raisons */
+.reasons-section {
+  margin-top: 25px;
+}
+
+.reasons-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #DDC9DB;
+  margin: 0 0 20px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.reasons-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.reason-item {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reason-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.reason-content {
+  flex: 1;
+}
+
+.reason-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0 0 8px 0;
+}
+
+.reason-description {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #DDC9DB;
+  margin: 0;
+}
+
+/* Bouton toggle */
+.toggle-details-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.toggle-details-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Message d'erreur */
+.no-recommendation {
+  text-align: center;
+  color: #DDC9DB;
+  font-style: italic;
+  padding: 20px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .major-recommendation-detail {
+    padding: 20px;
+    margin: 15px 0;
+  }
+  
+  .recommendation-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+  
+  .match-percentage {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .percentage-value {
+    font-size: 18px;
+  }
+  
+  .recommendation-title h3 {
+    font-size: 20px;
+  }
+  
+  .match-text {
+    font-size: 14px;
+  }
+  
+  .major-description {
+    font-size: 14px;
+  }
+  
+  .reasons-title {
+    font-size: 18px;
+  }
+  
+  .reason-item {
+    padding: 15px;
+    gap: 12px;
+  }
+  
+  .reason-icon {
+    font-size: 20px;
+    width: 35px;
+    height: 35px;
+  }
+  
+  .reason-title {
+    font-size: 16px;
+  }
+  
+  .reason-description {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .major-recommendation-detail {
+    padding: 15px;
+  }
+  
+  .recommendation-title h3 {
+    font-size: 18px;
+  }
+  
+  .major-description {
+    font-size: 13px;
+  }
+  
+  .reason-item {
+    padding: 12px;
+  }
+  
+  .reason-title {
+    font-size: 15px;
+  }
+  
+  .reason-description {
+    font-size: 12px;
+  }
+}

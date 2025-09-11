@@ -31,3 +31,105 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# ===============================================
+# === FICHIERS EXCLUS POUR PUSH SÉCURISÉ ===
+# ===============================================
+
+# Fichiers d'authentification et sécurité
+**/AuthContext.jsx
+**/SimpleAuthContext.jsx
+**/authService.js
+**/simpleAuthService.js
+**/oauth2Service.js
+**/AuthTestComponent.jsx
+**/AuthTestPage.jsx
+**/OAuth2Callback.jsx
+**/auth.css
+**/AuthService.css
+**/AuthContext.css
+**/OAuth2Callback.css
+
+# Pages de Login et Inscription
+**/Login.jsx
+**/Register.jsx
+**/SimpleLogin.jsx
+**/SimpleRegister.jsx
+**/Login.css
+**/Register.css
+
+# Pages de vérification email
+**/VerifyEmail.jsx
+**/VerifyEmailSimple.jsx
+**/VerifyEmailBlocked.jsx
+**/EmailTestPage.jsx
+**/EmailDebugPage.jsx
+
+# Contrôleurs et services d'authentification
+**/AuthController.java
+**/OAuth2Controller.java
+**/AuthTestController.java
+**/OAuth2DiagnosticController.java
+**/AuthenticationService.java
+**/OAuth2Service.java
+**/OAuth2DiagnosticService.java
+**/CustomOAuth2User.java
+**/CustomOAuth2UserService.java
+**/OAuth2SuccessHandler.java
+**/AuthenticationResponse.java
+**/AuthenticationRequest.java
+**/JwtAuthenticationFilter.java
+**/SecurityConfig.java
+**/SecurityHeadersFilter.java
+**/AdminSecurityFilter.java
+**/AuthProvider.java
+
+# Configuration OAuth2 et sécurité
+**/application-oauth2.properties
+**/SecurityConfig.java
+**/SecurityHeadersFilter.java
+**/AdminSecurityFilter.java
+
+# Fichiers FAQ et Footer
+**/FAQ.jsx
+**/FAQ.css
+**/Footer.jsx
+**/Footer.css
+
+# Fichiers de configuration sensibles
+.env
+.env.local
+.env.production
+.env.staging
+**/application.properties
+**/application-dev.properties
+**/application-prod.properties
+
+# Scripts d'authentification
+cleanup-auth.js
+start-auth-system.bat
+start-oauth2-test.bat
+test-auth-*.html
+test-auth-*.bat
+test-auth-*.js
+test-auth-*.sql
+test-oauth2-*.html
+test-oauth2-*.sh
+test-google-oauth.html
+test-simple-auth.html
+
+# Guides d'authentification
+**/GUIDE_TEST_AUTH*.md
+**/GUIDE_DEPANNAGE_AUTH.md
+**/GUIDE_TEST_FINAL_AUTH*.md
+**/GUIDE_TEST_INSCRIPTION_CORRIGEE.md
+**/GUIDE_VERIFICATION_EMAIL.md
+**/GUIDE_TEST_VERIFY_EMAIL_RAPIDE.md
+**/README_OAUTH2_IMPLEMENTATION.md
+**/SOLUTION_EMAIL_VERIFICATION.md
+
+# Fichiers de test d'authentification
+test-*-auth*.html
+test-*-auth*.js
+test-*-auth*.bat
+test-*-auth*.sql

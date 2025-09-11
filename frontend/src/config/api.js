@@ -20,7 +20,6 @@ const API_CONFIG = {
       VERIFY_EMAIL: '/auth/verify-email',
       FORGOT_PASSWORD: '/auth/forgot-password',
       RESET_PASSWORD: '/auth/reset-password',
-      OAUTH2: '/oauth2',
     },
     
     // Orientation
@@ -77,11 +76,8 @@ const API_CONFIG = {
 class ApiClient {
   constructor() {
     // CORRECTION : Construction correcte de l'URL de base
-    // Si API_BASE_PATH est vide, on utilise directement BACKEND_URL
-    // Sinon on concatène BACKEND_URL + API_BASE_PATH
-    this.baseURL = API_CONFIG.API_BASE_PATH 
-      ? API_CONFIG.BACKEND_URL + API_CONFIG.API_BASE_PATH
-      : API_CONFIG.BACKEND_URL + '/api'; // Fallback vers /api si pas de configuration
+    // Le backend expose déjà les endpoints avec /api, donc on utilise directement BACKEND_URL
+    this.baseURL = API_CONFIG.BACKEND_URL;
     
     this.cache = new Map();
     this.requestCount = 0;
@@ -114,7 +110,9 @@ class ApiClient {
       console.log(`✅ API Response #${requestId}: ${response.status} (${responseTime.toFixed(2)}ms)`);
       
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const errorText = await response.text();
+        console.error(`❌ Erreur détaillée:`, errorText);
+        throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
       }
       
       // Mise en cache si applicable

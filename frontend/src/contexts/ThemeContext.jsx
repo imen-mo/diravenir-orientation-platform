@@ -151,7 +151,12 @@ export const ThemeProvider = ({ children }) => {
         
         // Système de traductions complet pour toute l'application
         getText: (key, params = {}) => {
-            return getTranslation(key, currentLanguage, params);
+            try {
+                return getTranslation(key, currentLanguage, params);
+            } catch (error) {
+                console.warn(`Translation error for key "${key}":`, error);
+                return key; // Retourner la clé si la traduction échoue
+            }
         },
         
         // Obtenir toutes les traductions de la langue actuelle

@@ -10,22 +10,24 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     server: {
-      port: 3000,
+      port: process.env.VITE_PORT || 5173, // Utiliser le port depuis l'env ou 5173 par défaut
       host: true,
       open: true,
-      strictPort: true, // Force le port 3000
+      strictPort: false, // Permettre un port alternatif si le port est occupé
       cors: true // Active CORS pour le développement
     },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
+        // Suppression de l'alias sockjs-client problématique
       },
     },
     define: {
       'process.env': {
         NODE_ENV: JSON.stringify(mode),
         // Suppression des variables reCAPTCHA
-      }
+      },
+      global: 'globalThis',
     },
     optimizeDeps: {
       include: [
@@ -33,6 +35,7 @@ export default defineConfig(({ mode }) => {
         'react-dom',
         'react-router-dom',
         'axios'
+        // Suppression de sockjs-client des dépendances optimisées
       ]
     },
     build: {

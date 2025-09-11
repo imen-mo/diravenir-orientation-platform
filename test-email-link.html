@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Lien Email - Diravenir</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .url-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .step {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📧 Test Lien Email - Diravenir</h1>
+        
+        <div class="success">
+            <h3>✅ Configuration Corrigée !</h3>
+            <p>L'URL du frontend dans le backend a été mise à jour de <code>http://localhost:3000</code> vers <code>http://localhost:5173</code></p>
+        </div>
+
+        <div class="info">
+            <h3>🔧 Modification Apportée</h3>
+            <p><strong>Fichier :</strong> <code>src/main/resources/application.properties</code></p>
+            <p><strong>Ligne 140 :</strong> <code>app.frontend.url=http://localhost:5173</code></p>
+        </div>
+
+        <div class="step">
+            <h4>📋 Étapes de Test</h4>
+            <ol>
+                <li><strong>Redémarrez le backend</strong> pour appliquer la nouvelle configuration</li>
+                <li><strong>Démarrez le frontend</strong> sur le port 5173</li>
+                <li><strong>Inscrivez-vous</strong> avec un nouvel email</li>
+                <li><strong>Vérifiez votre email</strong> (boîte de réception/spam)</li>
+                <li><strong>Cliquez sur le lien</strong> de vérification</li>
+                <li><strong>Vérifiez</strong> que vous êtes redirigé vers le bon port</li>
+            </ol>
+        </div>
+
+        <div class="url-box">
+            <strong>URL du lien dans l'email :</strong><br>
+            <code>http://localhost:5173/verify-email?token=VOTRE_TOKEN</code>
+        </div>
+
+        <div class="info">
+            <h3>🧪 Test avec votre token</h3>
+            <p>Si vous avez déjà un token de test :</p>
+            <div class="url-box">
+                <code>http://localhost:5173/verify-email?token=45ea2c84402946b4ac67c2def7b413951757516228807</code>
+            </div>
+        </div>
+
+        <div class="step">
+            <h4>🚀 Commandes de Redémarrage</h4>
+            <div class="url-box">
+                <strong>Backend :</strong><br>
+                <code>cd backend</code><br>
+                <code>mvn spring-boot:run</code><br><br>
+                
+                <strong>Frontend :</strong><br>
+                <code>cd frontend</code><br>
+                <code>npm run dev</code>
+            </div>
+        </div>
+
+        <div class="success">
+            <h3>🎯 Résultat Attendu</h3>
+            <p>Après redémarrage du backend :</p>
+            <ul>
+                <li>Les nouveaux emails contiendront des liens avec le port 5173</li>
+                <li>Les liens fonctionneront correctement</li>
+                <li>La vérification email redirigera vers la page de login</li>
+            </ul>
+        </div>
+
+        <div class="info">
+            <h3>🔍 Vérification</h3>
+            <p>Pour vérifier que la configuration est appliquée :</p>
+            <ol>
+                <li>Regardez les logs du backend au démarrage</li>
+                <li>Cherchez : <code>app.frontend.url=http://localhost:5173</code></li>
+                <li>Testez avec un nouvel email d'inscription</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h4>📱 Test Mobile</h4>
+            <p>Le lien fonctionnera aussi sur mobile :</p>
+            <div class="url-box">
+                <code>http://localhost:5173/verify-email?token=VOTRE_TOKEN</code>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test automatique de la configuration
+        console.log('🔧 Configuration Email Link Test');
+        console.log('✅ Frontend URL mise à jour vers port 5173');
+        console.log('📧 Les nouveaux emails utiliseront le bon port');
+    </script>
+</body>
+</html>

@@ -266,35 +266,7 @@
   z-index: 1;
 }
 
-/* Bouton Google */
-.login-google {
-  width: 100%;
-  padding: 0.875rem 1.5rem;
-  background: white;
-  border: 2px solid #e5e7eb;
-  border-radius: 12px;
-  color: #374151;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-}
 
-.login-google:hover {
-  border-color: #d1d5db;
-  background: #f9fafb;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.login-google-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-}
 
 /* Mentions légales */
 .login-legal {

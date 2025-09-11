@@ -1,0 +1,53 @@
+/* Reset global pour supprimer TOUS les styles bleus des boutons */
+
+/* Supprimer le bleu sur TOUS les navigateurs */
+button:focus,
+button:focus-visible,
+button:focus-within,
+button:active,
+button:active:focus,
+button:active:hover {
+  outline: none !important;
+  -webkit-outline: none !important;
+  -moz-outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  -khtml-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
+/* Supprimer le bleu sur Firefox */
+button::-moz-focus-inner {
+  border: 0 !important;
+}
+
+button:-moz-focusring {
+  outline: none !important;
+}
+
+/* Supprimer le bleu sur Safari/iOS */
+button:focus {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+}
+
+/* Supprimer le bleu sur Chrome/Android */
+button:focus-visible {
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Supprimer le bleu sur Edge */
+button:focus-visible {
+  outline: none !important;
+}
+
+/* Supprimer l'apparence par défaut sur tous les navigateurs */
+button {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}

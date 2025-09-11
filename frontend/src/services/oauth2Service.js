@@ -1,275 +1,250 @@
-import axios from 'axios';
-import connectivityService from './connectivityService.js';
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8084';
-
-// Configuration axios pour OAuth2 avec gestion des cookies
-const oauth2Axios = axios.create({
-    baseURL: API_BASE_URL,
-    withCredentials: true, // Important pour les cookies et sessions
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
-
-// Intercepteur pour vérifier la connectivité avant chaque requête
-oauth2Axios.interceptors.request.use(
-    async (config) => {
-        // Vérifier la connectivité avant d'envoyer la requête
-        const status = connectivityService.getConnectionStatus();
-        
-        if (!status.isConnected && !status.isOnline) {
-            throw new Error('Aucune connectivité réseau disponible');
-        }
-        
-        if (!status.isConnected) {
-            console.log('🔄 Tentative de reconnexion avant requête OAuth2...');
-            await connectivityService.forceConnectivityCheck();
-            
-            // Attendre un peu pour la reconnexion
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            const newStatus = connectivityService.getConnectionStatus();
-            if (!newStatus.isConnected) {
-                throw new Error('Impossible de se connecter au backend');
-            }
-        }
-        
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
+import apiClient from '../config/api.js';
 
 /**
  * Service OAuth2 pour l'authentification Google
  */
-const oauth2Service = {
+class OAuth2Service {
+    constructor() {
+        this.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8084';
+        this.frontendURL = import.meta.env.VITE_FRONTEND_URL || 'http://localhost:3000';
+    }
+
     /**
-     * Démarre l'authentification Google
+     * Initie l'authentification Google pour la connexion
      */
     async initiateGoogleAuth() {
         try {
-            console.log('🚀 Démarrage de l\'authentification Google...');
-            
-            // Vérifier la connectivité avec le backend
-            try {
-                await oauth2Axios.get('/api/health');
-                console.log('✅ Backend accessible');
-            } catch (error) {
-                console.error('❌ Backend inaccessible:', error.message);
-                throw new Error('Le serveur backend n\'est pas accessible. Vérifiez qu\'il est démarré sur le port 8084.');
-            }
+            console.log('🚀 Initiation de l\'authentification Google...');
             
             // Rediriger vers l'endpoint OAuth2 de Spring Security
-            const googleAuthUrl = `${API_BASE_URL}/oauth2/authorization/google`;
+            const googleAuthUrl = `${this.baseURL}/oauth2/authorization/google`;
+            
             console.log('🔗 Redirection vers:', googleAuthUrl);
             
-            // Stocker l'état de l'authentification en cours
-            localStorage.setItem('oauth2_in_progress', 'true');
-            localStorage.setItem('oauth2_timestamp', Date.now().toString());
-            
-            // Redirection avec gestion d'erreur
+            // Redirection vers Google OAuth2
             window.location.href = googleAuthUrl;
+            
         } catch (error) {
-            console.error('❌ Erreur lors de l\'initialisation de l\'auth Google:', error);
-            throw error;
+            console.error('❌ Erreur lors de l\'initiation de l\'authentification Google:', error);
+            throw new Error('Erreur lors de l\'authentification Google');
         }
-    },
+    }
 
     /**
-     * Traite le callback OAuth2 depuis le backend
+     * Initie l'authentification Google pour l'inscription
      */
-    async handleGoogleCallback(userData) {
+    async initiateGoogleSignup() {
         try {
-            console.log('🔄 Traitement du callback OAuth2:', userData);
+            console.log('🚀 Initiation de l\'inscription Google...');
             
-            const response = await oauth2Axios.post('/api/oauth2/google/callback', userData);
-            console.log('✅ Callback OAuth2 traité avec succès:', response.data);
+            // Pour l'inscription, on utilise le même endpoint mais on peut ajouter des paramètres
+            const googleSignupUrl = `${this.baseURL}/oauth2/authorization/google?action=signup`;
             
-            // Nettoyer l'état d'authentification en cours
-            localStorage.removeItem('oauth2_in_progress');
-            localStorage.removeItem('oauth2_timestamp');
+            console.log('🔗 Redirection vers:', googleSignupUrl);
             
-            return response.data;
+            // Redirection vers Google OAuth2
+            window.location.href = googleSignupUrl;
+            
         } catch (error) {
-            console.error('❌ Erreur lors du callback Google:', error);
-            
-            // Nettoyer l'état d'authentification en cours même en cas d'erreur
-            localStorage.removeItem('oauth2_in_progress');
-            localStorage.removeItem('oauth2_timestamp');
-            
-            throw error.response?.data || error.message;
+            console.error('❌ Erreur lors de l\'initiation de l\'inscription Google:', error);
+            throw new Error('Erreur lors de l\'inscription Google');
         }
-    },
+    }
 
     /**
-     * Vérifie le statut du service OAuth2
+     * Traite le callback OAuth2 après authentification
      */
-    async checkOAuth2Status() {
+    async handleOAuth2Callback(urlParams) {
         try {
-            console.log('🔍 Vérification du statut OAuth2...');
+            console.log('🔄 Traitement du callback OAuth2...');
             
-            const response = await oauth2Axios.get('/api/oauth2/status');
-            console.log('✅ Statut OAuth2 récupéré:', response.data);
-            
-            return response.data;
-        } catch (error) {
-            console.error('❌ Erreur lors de la vérification du statut OAuth2:', error);
-            throw error.response?.data || error.message;
-        }
-    },
+            const token = urlParams.get('token');
+            const refreshToken = urlParams.get('refreshToken');
+            const userEmail = urlParams.get('userEmail');
+            const userName = urlParams.get('userName');
+            const role = urlParams.get('role');
+            const emailVerified = urlParams.get('emailVerified') === 'true';
+            const authProvider = urlParams.get('authProvider');
+            const userId = urlParams.get('userId');
+            const photoProfil = urlParams.get('photoProfil');
+            const success = urlParams.get('success') === 'true';
+            const message = urlParams.get('message');
 
-    /**
-     * Obtient l'URL de connexion Google
-     */
-    async getGoogleLoginUrl() {
-        try {
-            console.log('🔗 Récupération de l\'URL de connexion Google...');
-            
-            const response = await oauth2Axios.get('/api/oauth2/google/login-url');
-            console.log('✅ URL de connexion Google récupérée:', response.data);
-            
-            return response.data;
-        } catch (error) {
-            console.error('❌ Erreur lors de la récupération de l\'URL Google:', error);
-            throw error.response?.data || error.message;
-        }
-    },
+            if (!success || !token) {
+                throw new Error(message || 'Échec de l\'authentification OAuth2');
+            }
 
-    /**
-     * Traite la redirection OAuth2 depuis l'URL
-     */
-    processOAuth2Redirect() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const email = urlParams.get('email');
-        const name = urlParams.get('name');
-        const givenName = urlParams.get('givenName');
-        const familyName = urlParams.get('familyName');
-        const picture = urlParams.get('picture');
-        const sessionId = urlParams.get('sessionId');
-        const error = urlParams.get('error');
+            // Stocker les informations d'authentification
+            this.storeAuthData({
+                token,
+                refreshToken,
+                userEmail,
+                userName,
+                role,
+                emailVerified,
+                authProvider,
+                userId,
+                photoProfil
+            });
 
-        console.log('🔄 Traitement de la redirection OAuth2:', {
-            email, name, givenName, familyName, picture, sessionId, error
-        });
-
-        if (error) {
-            console.error('❌ Erreur OAuth2 détectée:', error);
-            return {
-                success: false,
-                error: error,
-                message: 'Échec de l\'authentification Google'
-            };
-        }
-
-        if (email && name) {
-            // Stocker les informations utilisateur OAuth2
-            const oauth2UserData = {
-                email: email,
-                name: name,
-                givenName: givenName || '',
-                familyName: familyName || '',
-                picture: picture || '',
-                sessionId: sessionId || '',
-                isOAuth2User: true
-            };
-            
-            localStorage.setItem('oauth2_user_data', JSON.stringify(oauth2UserData));
-            localStorage.setItem('oauth2_authenticated', 'true');
-            
-            console.log('✅ Utilisateur OAuth2 authentifié:', oauth2UserData);
+            console.log('✅ Authentification OAuth2 réussie pour:', userEmail);
             
             return {
                 success: true,
-                user: oauth2UserData,
-                message: 'Authentification Google réussie'
-            };
-        }
-
-        return null;
-    },
-
-    /**
-     * Vérifie si l'utilisateur est authentifié via OAuth2
-     */
-    isOAuth2Authenticated() {
-        const isAuthenticated = localStorage.getItem('oauth2_authenticated') === 'true';
-        const userData = localStorage.getItem('oauth2_user_data');
-        
-        if (isAuthenticated && userData) {
-            try {
-                const user = JSON.parse(userData);
-                const timestamp = localStorage.getItem('oauth2_timestamp');
-                
-                // Vérifier si l'authentification n'est pas trop ancienne (24h)
-                if (timestamp && (Date.now() - parseInt(timestamp)) < 24 * 60 * 60 * 1000) {
-                    return true;
-                } else {
-                    // Authentification expirée, nettoyer
-                    this.clearOAuth2Data();
-                    return false;
+                message: message || 'Authentification Google réussie',
+                user: {
+                    email: userEmail,
+                    name: userName,
+                    role: role,
+                    emailVerified: emailVerified,
+                    authProvider: authProvider,
+                    userId: userId,
+                    photoProfil: photoProfil
                 }
-            } catch (error) {
-                console.error('❌ Erreur lors de la vérification OAuth2:', error);
-                this.clearOAuth2Data();
-                return false;
-            }
+            };
+
+        } catch (error) {
+            console.error('❌ Erreur lors du traitement du callback OAuth2:', error);
+            throw error;
         }
-        
-        return false;
-    },
+    }
 
     /**
-     * Récupère les données utilisateur OAuth2
+     * Stocke les données d'authentification
      */
-    getOAuth2UserData() {
-        const userData = localStorage.getItem('oauth2_user_data');
-        if (userData) {
-            try {
-                return JSON.parse(userData);
-            } catch (error) {
-                console.error('❌ Erreur lors de la récupération des données OAuth2:', error);
-                return null;
+    storeAuthData(authData) {
+        try {
+            // Stocker le token JWT
+            if (authData.token) {
+                localStorage.setItem('token', authData.token);
+                document.cookie = `jwt_token=${authData.token}; path=/; max-age=86400; secure; samesite=strict`;
             }
+
+            // Stocker le refresh token
+            if (authData.refreshToken) {
+                localStorage.setItem('refreshToken', authData.refreshToken);
+            }
+
+            // Stocker les informations utilisateur
+            const userInfo = {
+                email: authData.userEmail,
+                name: authData.userName,
+                role: authData.role,
+                emailVerified: authData.emailVerified,
+                authProvider: authData.authProvider,
+                userId: authData.userId,
+                photoProfil: authData.photoProfil
+            };
+
+            localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+            // Mettre à jour l'état global
+            if (window.authState) {
+                window.authState.isAuthenticated = true;
+                window.authState.token = authData.token;
+                window.authState.userInfo = userInfo;
+            }
+
+            console.log('💾 Données d\'authentification stockées');
+
+        } catch (error) {
+            console.error('❌ Erreur lors du stockage des données d\'authentification:', error);
         }
-        return null;
-    },
+    }
+
+    /**
+     * Récupère les informations utilisateur OAuth2
+     */
+    async getOAuth2User(email, name = null, givenName = null, familyName = null) {
+        try {
+            console.log('🔍 Récupération des informations OAuth2 pour:', email);
+            
+            const params = new URLSearchParams({
+                email: email
+            });
+
+            if (name) params.append('name', name);
+            if (givenName) params.append('givenName', givenName);
+            if (familyName) params.append('familyName', familyName);
+
+            const response = await apiClient.get(`/auth/oauth2-user?${params.toString()}`);
+            
+            console.log('✅ Informations OAuth2 récupérées:', response);
+            return response;
+
+        } catch (error) {
+            console.error('❌ Erreur lors de la récupération des informations OAuth2:', error);
+            throw error;
+        }
+    }
 
     /**
      * Déconnecte l'utilisateur OAuth2
      */
     async logout() {
         try {
-            console.log('🔓 Déconnexion OAuth2...');
+            console.log('🚪 Déconnexion OAuth2...');
             
-            await oauth2Axios.post('/api/oauth2/logout');
-            this.clearOAuth2Data();
+            // Nettoyer les données locales
+            localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('userInfo');
             
+            // Nettoyer les cookies
+            document.cookie = 'jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            
+            // Mettre à jour l'état global
+            if (window.authState) {
+                window.authState.isAuthenticated = false;
+                window.authState.token = null;
+                window.authState.userInfo = null;
+            }
+
             console.log('✅ Déconnexion OAuth2 réussie');
-            return { success: true, message: 'Déconnexion réussie' };
+
         } catch (error) {
             console.error('❌ Erreur lors de la déconnexion OAuth2:', error);
-            
-            // Nettoyer quand même côté client
-            this.clearOAuth2Data();
-            
-            return { success: false, message: 'Erreur lors de la déconnexion' };
+            throw error;
         }
-    },
+    }
 
     /**
-     * Nettoie toutes les données OAuth2
+     * Vérifie si l'utilisateur est authentifié via OAuth2
      */
-    clearOAuth2Data() {
-        localStorage.removeItem('oauth2_authenticated');
-        localStorage.removeItem('oauth2_user_data');
-        localStorage.removeItem('oauth2_in_progress');
-        localStorage.removeItem('oauth2_timestamp');
+    isAuthenticated() {
+        const token = localStorage.getItem('token');
+        const userInfo = localStorage.getItem('userInfo');
         
-        console.log('🧹 Données OAuth2 nettoyées');
+        if (!token || !userInfo) {
+            return false;
+        }
+
+        try {
+            // Vérifier si le token n'est pas expiré
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const currentTime = Date.now() / 1000;
+            return payload.exp > currentTime;
+        } catch (error) {
+            console.warn('⚠️ Erreur lors de la vérification du token OAuth2:', error);
+            return false;
+        }
     }
-};
+
+    /**
+     * Récupère les informations utilisateur actuelles
+     */
+    getCurrentUser() {
+        try {
+            const userInfo = localStorage.getItem('userInfo');
+            return userInfo ? JSON.parse(userInfo) : null;
+        } catch (error) {
+            console.warn('⚠️ Erreur lors de la récupération des informations utilisateur:', error);
+            return null;
+        }
+    }
+}
+
+// Instance singleton
+const oauth2Service = new OAuth2Service();
 
 export default oauth2Service;

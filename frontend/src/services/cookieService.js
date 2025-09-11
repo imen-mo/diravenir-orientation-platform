@@ -1,9 +1,6 @@
 /**
- * Service de gestion des cookies pour l'authentification
- * Assure la persistance des sessions entre les pages et la navigation
+ * Configuration des cookies pour l'application
  */
-
-// Configuration des cookies
 const COOKIE_CONFIG = {
     jwt_token: {
         path: '/',
@@ -11,13 +8,6 @@ const COOKIE_CONFIG = {
         sameSite: 'strict',
         maxAge: 24 * 60 * 60, // 24 heures
         httpOnly: false // Permet l'accès via JavaScript
-    },
-    oauth2_state: {
-        path: '/',
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 10 * 60, // 10 minutes (pour OAuth2)
-        httpOnly: false
     }
 };
 
@@ -92,7 +82,6 @@ export function clearAuthCookies() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('userInfo');
-    localStorage.removeItem('oauth2_processing');
     
     console.log('🧹 Tous les cookies d\'authentification ont été nettoyés');
 }
@@ -105,6 +94,69 @@ export function syncCookiesWithLocalStorage() {
     if (token && !getCookie('jwt_token')) {
         setCookie('jwt_token', token);
         console.log('🔄 Token synchronisé depuis localStorage vers cookies');
+    }
+}
+
+/**
+ * Nettoie tous les cookies de l'application
+ */
+export function clearAllCookies() {
+    const cookies = document.cookie.split(';');
+    
+    cookies.forEach(cookie => {
+        const [name] = cookie.trim().split('=');
+        if (name) {
+            deleteCookie(name);
+        }
+    });
+    
+    console.log('🧹 Tous les cookies ont été supprimés');
+}
+
+/**
+ * Récupère tous les cookies d'authentification
+ */
+export function getAuthCookies() {
+    const authCookies = {};
+    
+    Object.keys(COOKIE_CONFIG).forEach(cookieName => {
+        const value = getCookie(cookieName);
+        if (value) {
+            authCookies[cookieName] = value;
+        }
+    });
+    
+    return authCookies;
+}
+
+/**
+ * Vérifie si des cookies d'authentification existent
+ */
+export function hasAuthCookies() {
+    return Object.keys(getAuthCookies()).length > 0;
+}
+
+/**
+ * Définit un cookie d'authentification avec les options par défaut
+ */
+export function setAuthCookie(name, value) {
+    if (COOKIE_CONFIG[name]) {
+        setCookie(name, value, COOKIE_CONFIG[name]);
+    } else {
+        console.warn(`⚠️ Configuration de cookie non trouvée pour: ${name}`);
+        setCookie(name, value);
+    }
+}
+
+/**
+ * Supprime un cookie d'authentification
+ */
+export function deleteAuthCookie(name) {
+    if (COOKIE_CONFIG[name]) {
+        deleteCookie(name);
+    } else {
+        console.warn(`⚠️ Configuration de cookie non trouvée pour: ${name}`);
+        deleteCookie(name);
     }
 }
 
@@ -151,5 +203,10 @@ export default {
     clearAuthCookies,
     syncCookiesWithLocalStorage,
     checkAuthConsistency,
-    initCookieService
+    initCookieService,
+    clearAllCookies,
+    getAuthCookies,
+    hasAuthCookies,
+    setAuthCookie,
+    deleteAuthCookie
 };

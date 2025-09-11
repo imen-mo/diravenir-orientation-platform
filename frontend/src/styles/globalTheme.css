@@ -53,9 +53,13 @@
     --info-color: #3b82f6;
 }
 
+/* Police Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 /* Application des variables */
 * {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
