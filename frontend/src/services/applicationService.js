@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Configuration axios pour l'API - PORT 8084 (backend principal)
-const API_BASE_URL = 'http://localhost:8084';
+const API_BASE_URL = 'http://localhost:8084/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

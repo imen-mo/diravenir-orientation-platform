@@ -38,9 +38,7 @@ const HomePage = () => {
   const [temoignages, setTemoignages] = useState([]);
   const [destinations, setDestinations] = useState([]);
   const [partenaires, setPartenaires] = useState([]);
-  const [oauth2Success, setOauth2Success] = useState(false);
-  const [oauth2Email, setOauth2Email] = useState('');
-  const [oauth2Token, setOauth2Token] = useState('');
+  // OAuth2 removed - no authentication needed
   const [currentAICard, setCurrentAICard] = useState(0);
 
   console.log('🔍 HomePage composant rendu');
@@ -65,25 +63,7 @@ const HomePage = () => {
   useEffect(() => {
     console.log('🔍 HomePage useEffect exécuté');
 
-    // Détecter la connexion OAuth2 réussie
-    const oauth2Param = searchParams.get('oauth2');
-    const emailParam = searchParams.get('email');
-    const tokenParam = searchParams.get('token');
-
-    if (oauth2Param === 'success' && emailParam && tokenParam) {
-      setOauth2Success(true);
-      setOauth2Email(emailParam);
-      setOauth2Token(tokenParam);
-
-      // Stocker le token dans localStorage pour l'authentification
-      localStorage.setItem('token', tokenParam);
-
-      // Nettoyer l'URL après 5 secondes
-      setTimeout(() => {
-        setOauth2Success(false);
-        navigate('/', { replace: true });
-      }, 5000);
-    }
+    // OAuth2 removed - no authentication needed
 
     // Charger les programmes
     fetchFilieres()
@@ -123,26 +103,6 @@ const HomePage = () => {
         <div className="home-page">
           {/* Hero Section */}
           <section className="hero-section">
-            {/* Message de bienvenue OAuth2 */}
-            {oauth2Success && (
-                <div className="oauth2-welcome-banner">
-                  <div className="oauth2-welcome-content">
-                    <div className="oauth2-welcome-icon">🎉</div>
-                    <div className="oauth2-welcome-text">
-                  <h3>Bienvenue !</h3>
-                  <p>Vous êtes maintenant connecté avec votre compte Google ({oauth2Email})</p>
-                      <div className="oauth2-actions">
-                        <button
-                            onClick={() => navigate('/profile')}
-                            className="oauth2-profile-btn"
-                        >
-                      Voir mon profil
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            )}
 
             <div className="hero-content">
               <div className="hero-text">

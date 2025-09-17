@@ -3,7 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import OrientationHeader from '../components/OrientationHeader';
 import orientationService from '../services/orientationService';
 import { getMajorDescriptionUpdated } from '../data/majorDescriptionsUpdated';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext.jsx';
+import useTestNotification from '../hooks/useTestNotification';
 import './OrientationResultsModern.css';
 
 const OrientationResults = () => {
@@ -13,6 +14,7 @@ const OrientationResults = () => {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
+  const { sendTestCompletionNotification, requestNotificationPermission } = useTestNotification();
 
   // Récupérer les réponses depuis localStorage
   const getAnswersFromStorage = () => {
@@ -101,6 +103,28 @@ const OrientationResults = () => {
           
           // Sauvegarder les nouveaux résultats
           localStorage.setItem('orientationResults', JSON.stringify(newResults));
+          
+          // Envoyer une notification avec les résultats
+          try {
+            await sendTestCompletionNotification({
+              testId: 'orientation-test',
+              testName: 'Test d\'Orientation',
+              score: Math.round(recommendations[0]?.matchingScore || 0),
+              recommendations: recommendations.map(r => ({
+                major: r.major,
+                score: r.matchingScore,
+                description: r.description
+              })),
+              detailedResults: {
+                userProfile,
+                personalityProfile: generatePersonalityProfile(userProfile),
+                topRecommendations: recommendations.slice(0, 3)
+              }
+            });
+            console.log('✅ Notification envoyée avec succès');
+          } catch (notificationError) {
+            console.error('❌ Erreur envoi notification:', notificationError);
+          }
           
         } catch (calculationError) {
           console.error('❌ Erreur lors du recalcul:', calculationError);

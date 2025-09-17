@@ -2,7 +2,7 @@
 
 /* Masquer tous les éléments de défilement globaux */
 .programs-page {
-  min-height: 100vh;
+  min-height: auto;
   background: white;
   padding: 2rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

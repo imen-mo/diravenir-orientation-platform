@@ -17,7 +17,7 @@ body {
 /* === HOMEPAGE DIRAVENIR === */
 
 .home-page {
-  min-height: 120vh;
+  min-height: auto;
   background: #ffffff;
   font-family: 'Inter', sans-serif;
 }

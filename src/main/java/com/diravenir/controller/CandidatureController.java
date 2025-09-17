@@ -39,7 +39,7 @@ public class CandidatureController {
     @GetMapping("/{id}")
     public ResponseEntity<Candidature> getCandidatureById(@PathVariable Long id) {
         try {
-            Candidature candidature = candidatureService.getCandidatureById(id.intValue());
+            Candidature candidature = candidatureService.getCandidatureById(id);
             return ResponseEntity.ok(candidature);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
@@ -49,7 +49,7 @@ public class CandidatureController {
     @PutMapping("/{id}")
     public ResponseEntity<Candidature> updateCandidature(@PathVariable Long id, @RequestBody Candidature candidature) {
         try {
-            Candidature updated = candidatureService.updateCandidature(id.intValue(), candidature);
+            Candidature updated = candidatureService.updateCandidature(id, candidature);
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -59,7 +59,7 @@ public class CandidatureController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCandidature(@PathVariable Long id) {
         try {
-            candidatureService.deleteCandidature(id.intValue());
+            candidatureService.deleteCandidature(id);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.notFound().build();

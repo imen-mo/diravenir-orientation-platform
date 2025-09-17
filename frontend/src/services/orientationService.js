@@ -8,7 +8,7 @@ import { getMajorDescriptionUpdated } from '../data/majorDescriptionsUpdated';
 
 class OrientationService {
   constructor() {
-    this.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:8084';
+    this.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:8084/api';
     this.currentTestUuid = null;
   }
 

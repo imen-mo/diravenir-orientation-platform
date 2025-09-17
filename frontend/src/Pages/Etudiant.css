@@ -88,3 +88,40 @@
 .enregistrer-btn:hover {
     background-color: #580a9e; /* mauve foncé au hover */
 }
+
+.edit-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.annuler-btn {
+    padding: 8px 12px;
+    background-color: #6c757d; /* Gris */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.annuler-btn:hover {
+    background-color: #5a6268; /* Gris plus foncé au hover */
+}
+
+.editing-indicator {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: #28a745;
+    background: rgba(40, 167, 69, 0.1);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    margin-left: 0.5rem;
+}
+
+.etudiant-form input:disabled {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+}

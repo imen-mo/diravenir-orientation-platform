@@ -1,0 +1,218 @@
+/* Loading - Composant de chargement professionnel */
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+  background: #FFFFFF !important;
+}
+
+.loading-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.loading-spinner {
+  position: relative;
+}
+
+.loading-spinner.loading-small {
+  width: 24px;
+  height: 24px;
+}
+
+.loading-spinner.loading-medium {
+  width: 40px;
+  height: 40px;
+}
+
+.loading-spinner.loading-large {
+  width: 64px;
+  height: 64px;
+}
+
+.spinner {
+  width: 100%;
+  height: 100%;
+  border: 3px solid var(--border-light);
+  border-top: 3px solid var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: 500;
+  text-align: center;
+}
+
+.loading-fullscreen .loading-text {
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+/* Animation de rotation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animation d'entrée */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.loading-container,
+.loading-fullscreen {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Variantes de couleur */
+.loading-spinner.primary .spinner {
+  border-top-color: var(--accent-primary);
+}
+
+.loading-spinner.secondary .spinner {
+  border-top-color: var(--accent-secondary);
+}
+
+.loading-spinner.success .spinner {
+  border-top-color: #10B981;
+}
+
+.loading-spinner.warning .spinner {
+  border-top-color: #F59E0B;
+}
+
+.loading-spinner.error .spinner {
+  border-top-color: #EF4444;
+}
+
+/* Responsive Design */
+
+/* Tablette */
+@media (max-width: 1023px) {
+  .loading-container {
+    padding: var(--spacing-lg);
+  }
+  
+  .loading-spinner.loading-large {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .loading-spinner.loading-medium {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .loading-spinner.loading-small {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .loading-container {
+    padding: var(--spacing-md);
+  }
+  
+  .loading-spinner.loading-large {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .loading-spinner.loading-medium {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .loading-spinner.loading-small {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .loading-text {
+    font-size: 0.8rem;
+  }
+  
+  .loading-fullscreen .loading-text {
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile Small */
+@media (max-width: 480px) {
+  .loading-spinner.loading-large {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .loading-spinner.loading-medium {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .loading-spinner.loading-small {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .loading-text {
+    font-size: 0.75rem;
+  }
+  
+  .loading-fullscreen .loading-text {
+    font-size: 0.8rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .loading-container,
+  .loading-fullscreen {
+    display: none !important;
+  }
+}
+
+/* Dark mode support (maintien du background blanc) */
+@media (prefers-color-scheme: dark) {
+  .loading-container {
+    background: #FFFFFF !important;
+  }
+  
+  .loading-fullscreen {
+    background: rgba(255, 255, 255, 0.95) !important;
+  }
+}

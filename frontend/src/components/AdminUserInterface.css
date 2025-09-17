@@ -1,0 +1,246 @@
+/* Admin User Interface - Barre admin pour navigation utilisateur */
+
+:root {
+  --primary-purple: #541652;
+  --secondary-purple: #DDC9DB;
+  --gradient-orange: linear-gradient(88.33deg, #FCBE1C -7.64%, #FF914C 145.94%);
+  --background-white: #FFFFFF;
+  --text-dark: #111827;
+  --text-gray: #6B7280;
+  --text-white: #FFFFFF;
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --transition-normal: 0.3s ease-in-out;
+}
+
+.admin-user-interface {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Admin Bar */
+.admin-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #541652 0%, #7B2C7B 100%);
+  color: var(--text-white);
+  z-index: 1000;
+  box-shadow: var(--shadow-lg);
+  border-bottom: 3px solid var(--gradient-orange);
+}
+
+.admin-bar-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.admin-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.admin-badge svg {
+  font-size: 1rem;
+}
+
+.admin-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.admin-role {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.admin-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.admin-bar-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-white);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-bar-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.admin-bar-btn svg {
+  font-size: 0.8rem;
+}
+
+/* Toggle Button */
+.admin-toggle-btn {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  width: 50px;
+  height: 50px;
+  background: var(--gradient-orange);
+  border: none;
+  border-radius: 50%;
+  color: var(--text-white);
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-toggle-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Main Content */
+.admin-content {
+  transition: padding-top var(--transition-normal);
+}
+
+.admin-content.with-admin-bar {
+  padding-top: 4rem; /* Hauteur de la barre admin */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .admin-bar-content {
+    padding: 0.5rem 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+  
+  .admin-bar-left {
+    justify-content: center;
+  }
+  
+  .admin-bar-right {
+    justify-content: center;
+  }
+  
+  .admin-info {
+    text-align: center;
+  }
+  
+  .admin-content.with-admin-bar {
+    padding-top: 6rem; /* Plus d'espace sur mobile */
+  }
+  
+  .admin-toggle-btn {
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-bar-content {
+    padding: 0.5rem;
+  }
+  
+  .admin-badge {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  
+  .admin-bar-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  
+  .admin-content.with-admin-bar {
+    padding-top: 7rem;
+  }
+}
+
+/* Animation d'entrée */
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.admin-bar {
+  animation: slideDown 0.3s ease-out;
+}
+
+/* Animation du bouton toggle */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.admin-toggle-btn {
+  animation: pulse 2s infinite;
+}
+
+/* Focus visible pour l'accessibilité */
+.admin-bar-btn:focus-visible,
+.admin-toggle-btn:focus-visible {
+  outline: 2px solid var(--text-white);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .admin-bar,
+  .admin-toggle-btn {
+    display: none !important;
+  }
+  
+  .admin-content {
+    padding-top: 0 !important;
+  }
+}

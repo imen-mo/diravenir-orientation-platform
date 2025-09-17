@@ -1,114 +1,91 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import React, { useEffect, useState } from 'react';
+import { useLocation, Link } from 'react-router-dom';
 import '../styles/VerifyEmailSent.css';
 import GlobalLayout from '../components/GlobalLayout';
 
 const VerifyEmailSent = () => {
     const location = useLocation();
-    const navigate = useNavigate();
-    const { logout } = useAuth();
-    const [isResending, setIsResending] = useState(false);
-    const [resendMessage, setResendMessage] = useState('');
+    const [email, setEmail] = useState('');
+    const [message, setMessage] = useState('');
 
-    // Récupérer l'email depuis l'URL ou la navigation
-    const urlParams = new URLSearchParams(location.search);
-    const email = urlParams.get('email') || location.state?.email || 'votre email';
-    const message = urlParams.get('message') || location.state?.message || '';
+    useEffect(() => {
+        // Récupérer les paramètres de l'URL
+        const urlParams = new URLSearchParams(location.search);
+        const emailParam = urlParams.get('email');
+        const messageParam = urlParams.get('message');
 
-    const handleResendEmail = async () => {
-        setIsResending(true);
-        setResendMessage('');
-        
-        try {
-            const response = await fetch('http://localhost:8084/api/auth/resend-verification', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email }),
-            });
-
-            if (response.ok) {
-                setResendMessage('✅ Email de vérification renvoyé avec succès !');
-            } else {
-                const error = await response.json();
-                setResendMessage(`❌ Erreur: ${error.message || 'Impossible de renvoyer l\'email'}`);
-            }
-        } catch (error) {
-            setResendMessage('❌ Erreur réseau lors de l\'envoi');
-        } finally {
-            setIsResending(false);
+        if (emailParam) {
+            setEmail(decodeURIComponent(emailParam));
         }
-    };
-
-    const handleBackToLogin = () => {
-        logout();
-        navigate('/login');
-    };
+        if (messageParam) {
+            setMessage(decodeURIComponent(messageParam));
+        }
+    }, [location.search]);
 
     return (
         <GlobalLayout activePage="verify-email-sent">
-            <div className="verify-email-container">
-            <div className="verify-email-card">
-                <div className="verify-email-header">
-                    <h1>📧 Vérifiez Votre Email</h1>
-                    <p>Un email de vérification a été envoyé à :</p>
-                    <div className="email-display">
-                        <strong>{email}</strong>
-                    </div>
-                    {message && (
-                        <div className="verification-message">
-                            <p>{message}</p>
+            <div className="verify-email-sent-container">
+                <div className="verify-email-sent-card">
+                    <div className="verify-email-sent-header">
+                        <div className="verify-email-sent-icon">
+                            <svg className="email-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
                         </div>
-                    )}
-                </div>
-
-                <div className="verify-email-content">
-                    <div className="verification-steps">
-                        <h3>📋 Étapes de Vérification :</h3>
-                        <ol>
-                            <li>Vérifiez votre boîte de réception</li>
-                            <li>Cliquez sur le lien de vérification dans l'email</li>
-                            <li>Votre compte sera activé automatiquement</li>
-                            <li>Vous pourrez alors vous connecter</li>
-                        </ol>
+                        
+                        <h1 className="verify-email-sent-title">Check Your Email</h1>
+                        <p className="verify-email-sent-subtitle">
+                            We've sent you a verification link
+                        </p>
                     </div>
 
-                    <div className="verification-actions">
-                        <button 
-                            onClick={handleResendEmail}
-                            disabled={isResending}
-                            className="resend-button"
-                        >
-                            {isResending ? '🔄 Envoi...' : '📤 Renvoyer l\'Email'}
-                        </button>
-
-                        <button 
-                            onClick={handleBackToLogin}
-                            className="back-button"
-                        >
-                            ← Retour à la Connexion
-                        </button>
-                    </div>
-
-                    {resendMessage && (
-                        <div className={`resend-message ${resendMessage.includes('✅') ? 'success' : 'error'}`}>
-                            {resendMessage}
+                    <div className="verify-email-sent-content">
+                        <div className="verify-email-sent-message">
+                            <p className="main-message">
+                                {message || 'Please check your email and click the verification link to activate your account.'}
+                            </p>
+                            
+                            {email && (
+                                <div className="email-info">
+                                    <p className="email-label">Email sent to:</p>
+                                    <p className="email-address">{email}</p>
+                                </div>
+                            )}
                         </div>
-                    )}
 
-                    <div className="verification-note">
-                        <p><strong>⚠️ Important :</strong></p>
-                        <ul>
-                            <li>Vérifiez aussi votre dossier spam</li>
-                            <li>L'email peut prendre quelques minutes à arriver</li>
-                            <li>Vous ne pouvez pas accéder aux pages protégées sans vérification</li>
-                        </ul>
+                        <div className="verify-email-sent-instructions">
+                            <h3>What to do next:</h3>
+                            <ol>
+                                <li>Check your email inbox (and spam folder)</li>
+                                <li>Click on the verification link</li>
+                                <li>Return here to sign in</li>
+                            </ol>
+                        </div>
+
+                        <div className="verify-email-sent-actions">
+                            <Link to="/login" className="back-to-login-button">
+                                Back to Login
+                            </Link>
+                            
+                            <button 
+                                onClick={() => window.location.reload()} 
+                                className="refresh-button"
+                            >
+                                Refresh Page
+                            </button>
+                        </div>
+
+                        <div className="verify-email-sent-help">
+                            <p>
+                                Didn't receive the email? Check your spam folder or{' '}
+                                <Link to="/register" className="help-link">
+                                    try registering again
+                                </Link>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </GlobalLayout>
     );
 };

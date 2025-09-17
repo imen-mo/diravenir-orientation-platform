@@ -7,10 +7,10 @@ import emailjs from '@emailjs/browser';
 import './Contact.css';
 import logo from '../assets/logo.png';
 import GlobalLayout from '../components/GlobalLayout';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTranslations } from '../hooks/useTranslations';
 
 const Contact = () => {
-  const { getText } = useTheme();
+  const { t } = useTranslations();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -61,21 +61,21 @@ const Contact = () => {
     const newErrors = {};
     
     if (!formData.name.trim()) {
-      newErrors.name = getText('nameRequired');
+      newErrors.name = t('fullName') + ' ' + t('required');
     }
     
     if (!formData.email) {
-      newErrors.email = getText('emailRequired');
+      newErrors.email = t('email') + ' ' + t('required');
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = getText('emailInvalid');
+      newErrors.email = t('invalidEmail');
     }
     
     if (!formData.subject.trim()) {
-      newErrors.subject = getText('subjectRequired');
+      newErrors.subject = t('subject') + ' ' + t('required');
     }
     
     if (!formData.message.trim()) {
-      newErrors.message = getText('messageRequired');
+      newErrors.message = t('message') + ' ' + t('required');
     }
     
     setErrors(newErrors);
@@ -101,7 +101,7 @@ const Contact = () => {
       
       setSubmitStatus({
         success: true,
-        message: getText('messageSentSuccess')
+        message: t('messageSentSuccess')
       });
       
       setFormData({
@@ -119,7 +119,7 @@ const Contact = () => {
       console.error('Error sending email:', error);
       setSubmitStatus({
         success: false,
-        message: getText('messageSentError')
+        message: t('messageSentError')
       });
     } finally {
       setIsSubmitting(false);
@@ -144,80 +144,11 @@ const Contact = () => {
       
       <div className="decorative-circle"></div>
       
-      <section className="contact-hero">
-        <div className="contact-hero-content">
-          <h1>{getText('getInTouch')}</h1>
-          <p className="hero-subtitle">{getText('contactSubtitle')}</p>
-        </div>
-      </section>
-
-      <section className="contact-methods">
-        <motion.div 
-          className="contact-method-card"
-          initial="hidden"
-          animate="visible"
-          variants={cardVariants}
-          whileHover={{ y: -5, transition: { duration: 0.2 } }}
-        >
-          <div className="method-icon email-icon">
-            <FaEnvelope />
-          </div>
-          <div className="method-content">
-            <h3>{getText('emailUs')}</h3>
-            <p>{getText('emailUsDescription')}</p>
-            <a href="mailto:contact@diravenir.com" className="contact-link">
-              contact@diravenir.com
-              <span className="link-icon">→</span>
-            </a>
-          </div>
-        </motion.div>
-
-        <motion.div 
-          className="contact-method-card"
-          initial="hidden"
-          animate="visible"
-          variants={cardVariants}
-          whileHover={{ y: -5, transition: { duration: 0.2 } }}
-        >
-          <div className="method-icon phone-icon">
-            <FaPhoneAlt />
-          </div>
-          <div className="method-content">
-            <h3>{getText('callUs')}</h3>
-            <p>{getText('callUsDescription')}</p>
-            <a href="tel:+1234567890" className="contact-link">
-              +1 (234) 567-890
-              <span className="link-icon">→</span>
-            </a>
-          </div>
-        </motion.div>
-
-        <motion.div 
-          className="contact-method-card"
-          initial="hidden"
-          animate="visible"
-          variants={cardVariants}
-          whileHover={{ y: -5, transition: { duration: 0.2 } }}
-        >
-          <div className="method-icon location-icon">
-            <FaMapMarkerAlt />
-          </div>
-          <div className="method-content">
-            <h3>{getText('visitUs')}</h3>
-            <p>{getText('visitUsDescription')}</p>
-            <a href="https://maps.app.goo.gl/LX6f589uVm12t5qy9" className="contact-link" target="_blank" rel="noopener noreferrer">
-              {getText('viewOnMap')}
-              <span className="link-icon">→</span>
-            </a>
-          </div>
-        </motion.div>
-      </section>
-
+      {/* Formulaire de contact en premier, juste après le header */}
       <section className="contact-form-section">
         <div className="form-container">
           <div className="form-header">
-            <h2>{getText('contactForm')}</h2>
-            <p>{getText('contactFormSubtitle')}</p>
+            <h2>{t('contactTitle')}</h2>
           </div>
           
           <form className="contact-form" onSubmit={handleSubmit}>
@@ -233,7 +164,7 @@ const Contact = () => {
             {/* Première ligne : Your name et Contact email */}
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="name">{getText('yourName')}*</label>
+                <label htmlFor="name">{t('fullName')}*</label>
                 <input 
                   type="text" 
                   id="name"
@@ -241,13 +172,13 @@ const Contact = () => {
                   value={formData.name}
                   onChange={handleChange}
                   className="form-input" 
-                  placeholder={getText('yourNamePlaceholder')}
+                  placeholder={t('fullName') + '*'}
                 />
                 {errors.name && <span className="error-message">{errors.name}</span>}
               </div>
               
               <div className="form-group">
-                <label htmlFor="email">{getText('contactEmail')}*</label>
+                <label htmlFor="email">{t('email')}*</label>
                 <input 
                   type="email" 
                   id="email"
@@ -255,7 +186,7 @@ const Contact = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className="form-input" 
-                  placeholder={getText('contactEmailPlaceholder')}
+                  placeholder="contact@gmail.com"
                 />
                 {errors.email && <span className="error-message">{errors.email}</span>}
               </div>
@@ -264,7 +195,7 @@ const Contact = () => {
             {/* Deuxième ligne : Phone Number et Subject */}
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="phone">{getText('phoneNumber')}*</label>
+                <label htmlFor="phone">{t('phoneNumber')}*</label>
                 <input 
                   type="tel" 
                   id="phone"
@@ -272,13 +203,13 @@ const Contact = () => {
                   value={formData.phone}
                   onChange={handleChange}
                   className="form-input" 
-                  placeholder={getText('phoneNumberPlaceholder')}
+                  placeholder={t('phoneNumber') + '*'}
                 />
                 {errors.phone && <span className="error-message">{errors.phone}</span>}
               </div>
               
               <div className="form-group">
-                <label htmlFor="subject">{getText('subjectRelatedTo')}*</label>
+                <label htmlFor="subject">{t('subject')}*</label>
                 <select 
                   id="subject"
                   name="subject"
@@ -286,10 +217,10 @@ const Contact = () => {
                   onChange={handleChange}
                   className="form-select"
                 >
-                  <option value="">{getText('selectSubject')}</option>
-                  <option value="Orientation">{getText('orientation')}</option>
-                  <option value="Payment Failure">{getText('paymentFailure')}</option>
-                  <option value="Other">{getText('other')}</option>
+                  <option value="">{t('selectSubject')}</option>
+                  <option value="Orientation">{t('orientation')}</option>
+                  <option value="Payment Failure">{t('paymentFailure')}</option>
+                  <option value="Other">{t('other')}</option>
                 </select>
                 {errors.subject && <span className="error-message">{errors.subject}</span>}
               </div>
@@ -298,14 +229,14 @@ const Contact = () => {
             {/* Troisième ligne : Your message (pleine largeur) */}
             <div className="form-row">
               <div className="form-group full-width">
-                <label htmlFor="message">{getText('yourMessage')}*</label>
+                <label htmlFor="message">{t('message')}*</label>
                 <textarea 
                   id="message"
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
                   className="form-textarea" 
-                  placeholder={getText('yourMessagePlaceholder')}
+                  placeholder={t('typeMessage')}
                 />
                 {errors.message && <span className="error-message">{errors.message}</span>}
               </div>
@@ -313,7 +244,7 @@ const Contact = () => {
             
             {/* Disclaimer text comme dans l'image */}
             <p className="disclaimer-text">
-              {getText('disclaimerText')}
+              {t('termsAgreement')}
             </p>
             
             <motion.button 
@@ -323,10 +254,61 @@ const Contact = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <span className="btn-text">{getText('send')}</span>
+              <span className="btn-text">{t('send')}</span>
               <IoMdSend className="send-icon" />
             </motion.button>
           </form>
+        </div>
+      </section>
+
+      <section className="contact-hero">
+        <div className="contact-hero-content">
+          <h1>{t('getInTouch')}</h1>
+          <p className="hero-subtitle">{t('hereToHelp')}</p>
+        </div>
+      </section>
+
+      <section className="contact-methods">
+        <div className="contact-method-card">
+          <div className="method-icon email-icon">
+            <FaEnvelope />
+          </div>
+          <div className="method-content">
+            <h3>{t('emailUs')}</h3>
+            <p>{t('emailUsDescription')}</p>
+            <a href="mailto:contact@diravenir.com" className="contact-link">
+              contact@diravenir.com
+              <span className="link-icon">→</span>
+            </a>
+          </div>
+        </div>
+
+        <div className="contact-method-card">
+          <div className="method-icon phone-icon">
+            <FaPhoneAlt />
+          </div>
+          <div className="method-content">
+            <h3>{t('callUs')}</h3>
+            <p>{t('callUsDescription')}</p>
+            <a href="tel:+1234567890" className="contact-link">
+              +1 (234) 567-890
+              <span className="link-icon">→</span>
+            </a>
+          </div>
+        </div>
+
+        <div className="contact-method-card">
+          <div className="method-icon location-icon">
+            <FaMapMarkerAlt />
+          </div>
+          <div className="method-content">
+            <h3>{t('visitUs')}</h3>
+            <p>{t('visitUsDescription')}</p>
+            <a href="https://maps.app.goo.gl/LX6f589uVm12t5qy9" className="contact-link" target="_blank" rel="noopener noreferrer">
+              {t('viewOnMap')}
+              <span className="link-icon">→</span>
+            </a>
+          </div>
         </div>
       </section>
       </div>

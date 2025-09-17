@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -291,6 +290,22 @@ public class AdminApplicationController {
             log.error("Erreur lors de la récupération des statistiques", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("error", "Erreur lors de la récupération des statistiques"));
+        }
+    }
+
+    /**
+     * Obtenir les données timeline des applications (par mois)
+     */
+    @GetMapping("/timeline")
+    public ResponseEntity<Map<String, Object>> getApplicationTimeline(
+            @RequestParam(defaultValue = "12") int months) {
+        try {
+            Map<String, Object> timelineData = applicationService.getApplicationTimeline(months);
+            return ResponseEntity.ok(timelineData);
+        } catch (Exception e) {
+            log.error("Erreur lors de la récupération des données timeline", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Erreur lors de la récupération des données timeline"));
         }
     }
 

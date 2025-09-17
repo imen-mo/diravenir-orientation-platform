@@ -116,7 +116,7 @@ const OrientationQuestion15 = () => {
       
       // Appeler l'API backend pour le calcul réel
       try {
-        const baseURL = process.env.REACT_APP_API_URL || 'http://localhost:8084';
+        const baseURL = process.env.REACT_APP_API_URL || 'http://localhost:8084/api';
         const apiResponse = await fetch(`${baseURL}/api/orientation/complete`, {
           method: 'POST',
           headers: {

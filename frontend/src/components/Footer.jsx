@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom';
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaYoutube } from 'react-icons/fa';
 import logo from '../assets/logo.png';
 import './Footer.css';
+import { useTranslations } from '../hooks/useTranslations';
 
 const Footer = () => {
+  const { t } = useTranslations();
+  
   return (
     <footer className="footer">
       <div className="footer-container">
@@ -16,16 +19,16 @@ const Footer = () => {
             className="logo"
           />
           <p>
-            Diravenir is a web platform that supports students in their academic orientation and application processes both in Morocco and abroad. It stands out through a personalized approach based on assessments, tailored recommendations, and guidance prior to any application.
+            {t('footerDescription')}
           </p>
 
           {/* Newsletter Section */}
           <div className="newsletter-section">
-            <h4>Subscribe to Our Newsletter</h4>
+            <h4>{t('subscribeNewsletter')}</h4>
             <form className="newsletter-form">
               <input
                 type="email"
-                placeholder="Your email address"
+                placeholder={t('emailPlaceholder')}
                 className="newsletter-input"
               />
               <button type="submit" className="newsletter-button">
@@ -36,34 +39,34 @@ const Footer = () => {
 
           {/* Legal Links */}
           <div className="bottom-links">
-            <Link to="/terms">Terms & Conditions</Link>
-            <Link to="/privacy">Privacy Policy</Link>
+            <Link to="/terms">{t('termsConditions')}</Link>
+            <Link to="/privacy">{t('privacyPolicy')}</Link>
           </div>
         </div>
 
         {/* CENTER SECTION - Quick Links */}
         <div className="footer-section center-section">
           <h4>
-            Quick <span className="highlight">Links</span>
+            {t('quickLinks')} <span className="highlight">{t('links')}</span>
           </h4>
           <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/orientation">Orientation</Link></li>
-            <li><Link to="/programs">Best Programs</Link></li>
-            <li><Link to="/faq">Your FAQ's</Link></li>
-            <li><Link to="/cancellation">Cancellation & Refunds</Link></li>
-            <li><Link to="/contact">Contact Us</Link></li>
+            <li><Link to="/">{t('home')}</Link></li>
+            <li><Link to="/orientation">{t('orientation')}</Link></li>
+            <li><Link to="/programs">{t('bestPrograms')}</Link></li>
+            <li><Link to="/faq">{t('yourFaqs')}</Link></li>
+            <li><Link to="/cancellation">{t('cancellationRefunds')}</Link></li>
+            <li><Link to="/contact">{t('contactUsFooter')}</Link></li>
           </ul>
         </div>
 
         {/* RIGHT SECTION - Contact Info */}
         <div className="footer-section right-section">
           <h4>
-            Contact <span className="highlight">Us</span>
+            {t('contactUs')} <span className="highlight">{t('us')}</span>
           </h4>
           <div className="contact-info">
             <p>📍 BD la Résistance, 179, Angle des Boulevards de Londres, Av. Mers Sultan, Casablanca 20250</p>
-            <p>✉️ contact@diravenir.com</p>
+            <p>✉ contact@diravenir.com</p>
             <p>📞 +212 771 497 646</p>
           </div>
 

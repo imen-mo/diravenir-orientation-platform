@@ -7,7 +7,7 @@ import ModernDatePicker from '../components/ModernDatePicker';
 import ModernCountrySelector from '../components/ModernCountrySelector';
 import { Tooltip } from 'react-tooltip';
 import { clientValidation, validateField, errorMessages } from '../services/validationService';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext.jsx';
 import './Apply.css';
 
 const Apply = () => {
@@ -238,7 +238,7 @@ const Apply = () => {
         
         if (step1Errors.length > 0) {
           console.log('Step 1 validation errors:', step1Errors);
-          toast.error(`Erreurs: ${step1Errors.slice(0, 3).join(', ')}${step1Errors.length > 3 ? ' et plus...' : ''}`);
+          // Suppression du toast d'erreur - validation silencieuse
           return false;
         }
         
@@ -354,9 +354,10 @@ const Apply = () => {
         if (formData.englishLevel.trim() === '') missingFields.push('English level');
         if (formData.englishCertificate.trim() === '') missingFields.push('English certificate');
         
-        toast.error(`Please complete: ${missingFields.slice(0, 3).join(', ')}${missingFields.length > 3 ? ' and more...' : ''}`);
+        // Suppression du toast d'erreur - validation silencieuse
+        console.log(`Missing fields: ${missingFields.join(', ')}`);
       } else {
-        toast.error('Please complete all required fields in this step before continuing.');
+        console.log('Please complete all required fields in this step before continuing.');
       }
     }
   };
@@ -377,7 +378,7 @@ const Apply = () => {
       // Check if previous steps are valid
       for (let i = 1; i < step; i++) {
         if (!isStepValid(i)) {
-          toast.error(`Please complete step ${i} before accessing step ${step}.`);
+          console.log(`Please complete step ${i} before accessing step ${step}.`);
           return;
         }
       }
@@ -394,7 +395,7 @@ const Apply = () => {
   // Handle final submission
   const handleSubmit = async () => {
     if (!isStepValid(currentStep)) {
-      toast.error('Please complete all required fields before submitting.');
+      console.log('Please complete all required fields before submitting.');
       return;
     }
 
@@ -437,7 +438,7 @@ const Apply = () => {
       
     } catch (error) {
       console.error('Error submitting application:', error);
-      toast.error('Failed to submit application. Please try again.');
+      // Suppression du toast d'erreur - gestion silencieuse
     } finally {
       setLoading(false);
     }
@@ -464,12 +465,12 @@ const Apply = () => {
     // Validation en temps réel
     validateFieldRealTime(field, value);
     
-    // Auto-save après modification (avec délai)
-    if (applicationId) {
+    // Auto-save intelligent après modification (avec délai)
+    if (applicationId && value && value.toString().trim() !== '') {
       clearTimeout(autoSaveTimeout.current);
       autoSaveTimeout.current = setTimeout(() => {
         autoSaveApplication();
-      }, 2000); // Sauvegarde automatique après 2 secondes d'inactivité
+      }, 3000); // Sauvegarde automatique après 3 secondes d'inactivité
     }
   };
   
@@ -841,7 +842,7 @@ const Apply = () => {
       toast.success('PDF downloaded successfully!');
     } catch (error) {
       console.error('Error generating PDF:', error);
-      toast.error('Could not generate PDF. Please try again.');
+      // Suppression du toast d'erreur - gestion silencieuse
     }
   };
 
@@ -945,20 +946,20 @@ This is a draft application form. Please complete all steps and submit for proce
       
       // Validate final step
       if (!formData.finalDeclaration) {
-        toast.error('Please accept the final declaration before submitting.');
+        console.log('Please accept the final declaration before submitting.');
         return;
       }
       
       // Validate all steps are complete
       for (let i = 1; i <= 5; i++) {
         if (!isStepValid(i)) {
-          toast.error(`Please complete step ${i} before submitting.`);
+          console.log(`Please complete step ${i} before submitting.`);
           return;
         }
       }
       
       if (!applicationId) {
-        toast.error('No application ID found. Please save your progress first.');
+        console.log('No application ID found. Please save your progress first.');
         return;
       }
       
@@ -1057,7 +1058,7 @@ This is a draft application form. Please complete all steps and submit for proce
       
     } catch (error) {
       console.error('Error submitting application:', error);
-      toast.error('Could not submit application: ' + (error.message || 'Unknown error'));
+      // Suppression du toast d'erreur - gestion silencieuse
     } finally {
       setLoading(false);
     }
@@ -1169,7 +1170,7 @@ This is a draft application form. Please complete all steps and submit for proce
           localStorage.setItem('applicationId', tempId);
           setApplicationId(tempId);
           
-          toast.warning('Saved locally. Please check your internet connection and try again.');
+          console.log('Saved locally. Please check your internet connection and try again.');
         }
       } else {
         // Update existing application
@@ -1185,16 +1186,16 @@ This is a draft application form. Please complete all steps and submit for proce
           
           // Fallback: save to localStorage only
           localStorage.setItem('applicationFormData', JSON.stringify(dataToSave));
-          toast.warning('Saved locally. Please check your internet connection and try again.');
+          console.log('Saved locally. Please check your internet connection and try again.');
         }
       }
       
-    } catch (error) {
-      console.error('Error saving progress:', error);
-      toast.error('Could not save progress. Please try again.');
-    } finally {
-      setSaving(false);
-    }
+        } catch (error) {
+          console.error('Error saving progress:', error);
+          // Suppression du toast d'erreur - gestion silencieuse
+        } finally {
+          setSaving(false);
+        }
   };
 
   // Initialize on mount
@@ -1211,7 +1212,7 @@ This is a draft application form. Please complete all steps and submit for proce
             setSelectedProgram(JSON.parse(savedProgram));
           } else {
             // No program selected, redirect to programs page
-            toast.error('No program selected. Please select a program first.');
+            console.log('No program selected. Please select a program first.');
             navigate('/programs');
             return;
           }
@@ -1256,7 +1257,7 @@ This is a draft application form. Please complete all steps and submit for proce
           toast.success('New application created');
         } catch (error) {
           console.error('Error with application:', error);
-          toast.warning('Working in offline mode. Data will be saved locally.');
+          console.log('Working in offline mode. Data will be saved locally.');
         }
       } catch (error) {
         console.error('Error initializing application:', error);
@@ -1277,7 +1278,7 @@ This is a draft application form. Please complete all steps and submit for proce
   // Function to download application as PDF from backend
   const downloadApplicationPdf = async () => {
     if (!applicationId) {
-      toast.error('No application ID found');
+      console.log('No application ID found');
       return;
     }
     
@@ -1313,7 +1314,7 @@ This is a draft application form. Please complete all steps and submit for proce
       
     } catch (error) {
       console.error('Erreur lors du téléchargement du PDF:', error);
-      toast.error('Échec du téléchargement du PDF');
+      // Suppression du toast d'erreur - gestion silencieuse
     } finally {
       setLoading(false);
     }
@@ -1332,7 +1333,7 @@ This is a draft application form. Please complete all steps and submit for proce
       
       // Vérifier que toutes les données nécessaires sont présentes
       if (!formData.payment.method || !formData.finalDeclaration) {
-        toast.error('Veuillez remplir tous les champs requis et accepter la déclaration finale');
+        console.log('Veuillez remplir tous les champs requis et accepter la déclaration finale');
         console.log('❌ Validation échouée:', {
           method: formData.payment.method,
           finalDeclaration: formData.finalDeclaration
@@ -1371,7 +1372,7 @@ This is a draft application form. Please complete all steps and submit for proce
       
     } catch (error) {
       console.error('❌ Erreur lors du traitement du paiement:', error);
-      toast.error('Erreur lors du traitement du paiement. Veuillez réessayer.');
+      // Suppression du toast d'erreur - gestion silencieuse
     }
   };
 
@@ -1397,7 +1398,14 @@ This is a draft application form. Please complete all steps and submit for proce
       
     } catch (error) {
       console.error('❌ Erreur lors de la sauvegarde automatique:', error);
-      toast.error('Erreur lors de la sauvegarde automatique');
+      // Sauvegarde locale en cas d'erreur réseau
+      try {
+        localStorage.setItem('applicationFormData', JSON.stringify(saveData));
+        localStorage.setItem('applicationId', applicationId);
+        console.log('✅ Sauvegarde locale de secours effectuée');
+      } catch (localError) {
+        console.error('❌ Erreur sauvegarde locale:', localError);
+      }
     } finally {
       setSaving(false);
     }
@@ -1424,7 +1432,7 @@ This is a draft application form. Please complete all steps and submit for proce
       
     } catch (error) {
       console.error('❌ Erreur lors de la sauvegarde de l\'étape:', error);
-      toast.error('Erreur lors de la sauvegarde');
+      // Suppression du toast d'erreur - gestion silencieuse
     } finally {
       setSaving(false);
     }

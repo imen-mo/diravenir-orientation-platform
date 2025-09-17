@@ -16,7 +16,7 @@ import hamzaImage from '../assets/hamzaaomari.png';
 import wiamImage from '../assets/wiamfarih.png';
 
 import GlobalLayout from '../components/GlobalLayout';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext.jsx';
 
 const About = () => {
   const navigate = useNavigate();

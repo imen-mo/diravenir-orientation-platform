@@ -1,7 +1,7 @@
 // Configuration API ultra-optimisée pour Diravenir
 const API_CONFIG = {
   // Configuration du backend
-  BACKEND_URL: import.meta.env.VITE_API_URL || 'http://localhost:8084',
+  BACKEND_URL: import.meta.env.VITE_API_URL || 'http://localhost:8084/api',
   API_BASE_PATH: import.meta.env.VITE_API_BASE_PATH || '', // CORRIGÉ : Pas de préfixe par défaut
   
   // Timeouts optimisés

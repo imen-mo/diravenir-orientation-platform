@@ -3,8 +3,13 @@ package com.diravenir.Entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "utilisateur")
@@ -12,7 +17,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Utilisateur {
+@Builder
+public class Utilisateur implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -93,6 +99,9 @@ public class Utilisateur {
     @Column(name = "compte_verifie")
     private Boolean compteVerifie = false;
 
+    @Column(name = "email_verification_token", length = 100)
+    private String emailVerificationToken;
+
     // Champs supplémentaires pour le profil utilisateur
     @Column(name = "genre", length = 20)
     private String genre;
@@ -169,6 +178,7 @@ public class Utilisateur {
         private String oauth2RefreshToken;
         private LocalDateTime oauth2TokenExpiry;
         private Boolean compteVerifie = false;
+        private String emailVerificationToken;
         private String genre;
         private String nationalite;
         private String pays;
@@ -200,6 +210,7 @@ public class Utilisateur {
         public UtilisateurBuilder oauth2RefreshToken(String oauth2RefreshToken) { this.oauth2RefreshToken = oauth2RefreshToken; return this; }
         public UtilisateurBuilder oauth2TokenExpiry(LocalDateTime oauth2TokenExpiry) { this.oauth2TokenExpiry = oauth2TokenExpiry; return this; }
         public UtilisateurBuilder compteVerifie(Boolean compteVerifie) { this.compteVerifie = compteVerifie; return this; }
+        public UtilisateurBuilder emailVerificationToken(String emailVerificationToken) { this.emailVerificationToken = emailVerificationToken; return this; }
         public UtilisateurBuilder genre(String genre) { this.genre = genre; return this; }
         public UtilisateurBuilder nationalite(String nationalite) { this.nationalite = nationalite; return this; }
         public UtilisateurBuilder pays(String pays) { this.pays = pays; return this; }
@@ -233,6 +244,7 @@ public class Utilisateur {
             utilisateur.oauth2RefreshToken = this.oauth2RefreshToken;
             utilisateur.oauth2TokenExpiry = this.oauth2TokenExpiry;
             utilisateur.compteVerifie = this.compteVerifie;
+            utilisateur.emailVerificationToken = this.emailVerificationToken;
             utilisateur.genre = this.genre;
             utilisateur.nationalite = this.nationalite;
             utilisateur.pays = this.pays;
@@ -244,5 +256,63 @@ public class Utilisateur {
             utilisateur.specialite = this.specialite;
             return utilisateur;
         }
+    }
+    
+    // Méthodes UserDetails pour l'authentification
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        // Pour le développement, permettre la connexion si le compte est actif
+        // La vérification email peut être optionnelle
+        return compteActif;
+    }
+    
+    public String getFullName() {
+        return prenom + " " + nom;
+    }
+    
+    public String getInitials() {
+        return (prenom.charAt(0) + "" + nom.charAt(0)).toUpperCase();
+    }
+    
+    // Méthodes de compatibilité avec User
+    public String getFirstName() {
+        return prenom;
+    }
+    
+    public String getLastName() {
+        return nom;
+    }
+    
+    public void setFirstName(String firstName) {
+        this.prenom = firstName;
+    }
+    
+    public void setLastName(String lastName) {
+        this.nom = lastName;
     }
 }

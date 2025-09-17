@@ -4,8 +4,7 @@ import { FaBars, FaTimes, FaChevronDown, FaUser, FaSignOutAlt } from 'react-icon
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo_diravenir.png';
 import '../styles/Navbar.css';
-import { useAuth } from '../contexts/AuthContext';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext.jsx';
 import { useLanguage } from '../contexts/LanguageContext';
 import LanguageSelector from './LanguageSelector';
 
@@ -13,13 +12,23 @@ const GlobalNavbar = ({ activePage = '' }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   
-  const { user, isAuthenticated, logout } = useAuth();
+  // Authentication state
+  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { getText } = useTheme();
   const { t } = useLanguage();
   const navigate = useNavigate();
   
-  // Pages où le sélecteur de langue ne doit pas être affiché
-  const hideLanguageSelector = ['login', 'register'].includes(activePage);
+  // Check authentication on component mount
+  React.useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userData = localStorage.getItem('user');
+    
+    if (token && userData) {
+      setUser(JSON.parse(userData));
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -35,34 +44,27 @@ const GlobalNavbar = ({ activePage = '' }) => {
 
   const handleLogout = async () => {
     try {
-      console.log('🚪 Déconnexion en cours...');
+      // Call logout API
+      await fetch('http://localhost:8084/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        }
+      });
+    } catch (error) {
+      console.error('Logout API error:', error);
+    } finally {
+      // Clear local storage
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       
-      // Fermer le menu utilisateur
+      // Update state
+      setUser(null);
+      setIsAuthenticated(false);
       setIsUserMenuOpen(false);
       
-      // Appeler la déconnexion du contexte
-      await logout();
-      
-      // Nettoyer toutes les données locales
-      localStorage.clear();
-      sessionStorage.clear();
-      
-      // Nettoyer les cookies côté client
-      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-      document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-      document.cookie = 'userInfo=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-      document.cookie = 'jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-      
-      console.log('✅ Déconnexion complète réussie');
-      
-      // Rediriger vers la page d'accueil
-      navigate('/', { replace: true });
-      
-    } catch (error) {
-      console.error('❌ Erreur lors de la déconnexion:', error);
-      // Même en cas d'erreur, nettoyer les données locales
-      localStorage.clear();
-      sessionStorage.clear();
+      // Redirect to home
       navigate('/', { replace: true });
     }
   };
@@ -72,7 +74,7 @@ const GlobalNavbar = ({ activePage = '' }) => {
     { href: '/orientation', label: t('orientation'), page: 'orientation' },
     { href: '/programs', label: t('programs'), page: 'programs' },
     { href: '/about', label: t('about'), page: 'about' },
-    { href: '/faq', label: t('faq'), page: 'faq' },
+    { href: '/faq', label: 'FAQ', page: 'faq' },
     { href: '/contact', label: t('contact'), page: 'contact' }
   ];
 
@@ -84,46 +86,49 @@ const GlobalNavbar = ({ activePage = '' }) => {
       transition={{ duration: 0.6, ease: 'easeOut' }}
     >
       <div className="navbar-container">
-        {/* Logo - Tout à gauche */}
-        <motion.div 
-          className="navbar-brand"
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.2 }}
-        >
-          <Link to="/">
-            <img 
-              src={logo} 
-              alt="DirAvenir Logo" 
-              className="navbar-logo"
-            />
-          </Link>
-        </motion.div>
+        {/* Section gauche - Logo + Navigation */}
+        <div className="navbar-left">
+          {/* Logo */}
+          <motion.div 
+            className="navbar-brand"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Link to="/">
+              <img 
+                src={logo} 
+                alt="DirAvenir Logo" 
+                className="navbar-logo"
+              />
+            </Link>
+          </motion.div>
 
-        {/* Navigation - Centrée */}
-        <nav className="navbar-nav">
-          {navItems.map((item) => (
-            <motion.a
-              key={item.href}
-              href={item.href}
-              className={`${activePage === item.page ? 'active' : ''}`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ duration: 0.2 }}
-            >
-              {item.label}
-            </motion.a>
-          ))}
-        </nav>
+          {/* Navigation */}
+          <nav className="navbar-nav">
+            {navItems.map((item) => (
+              <motion.a
+                key={item.href}
+                href={item.href}
+                className={`${activePage === item.page ? 'active' : ''}`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
+                {item.label}
+              </motion.a>
+            ))}
+          </nav>
+        </div>
 
-        {/* Sélecteur de langue - Entre navigation et authentification */}
-        {!hideLanguageSelector && (
+        {/* Section droite - Langue + Authentification */}
+        <div className="navbar-right">
+          {/* Sélecteur de langue */}
           <div className="navbar-language">
             <LanguageSelector />
           </div>
-        )}
 
-        {/* Boutons d'authentification - Tout à droite */}
-        <div className="navbar-buttons">
+          {/* Boutons d'authentification */}
+          <div className="navbar-buttons">
           {isAuthenticated && user ? (
             <div className="user-menu">
               <motion.button
@@ -133,11 +138,9 @@ const GlobalNavbar = ({ activePage = '' }) => {
                 whileTap={{ scale: 0.95 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="user-avatar">
-                  {(() => {
-                    const email = user?.email || user?.userEmail || user?.user_email;
-                    return email ? email.charAt(0).toUpperCase() : 'U';
-                  })()}
+                <div className={`user-avatar ${user?.role === 'ADMIN' ? 'admin-avatar' : ''}`}>
+                  {user?.firstName ? user.firstName.charAt(0).toUpperCase() : 'U'}
+                  {user?.role === 'ADMIN' && <span className="admin-badge">🛡️</span>}
                 </div>
               </motion.button>
 
@@ -146,19 +149,24 @@ const GlobalNavbar = ({ activePage = '' }) => {
                 <div className="user-dropdown">
                     {/* Informations utilisateur */}
                     <div className="user-dropdown-header">
-                      <div className="user-dropdown-avatar">
-                        {(() => {
-                          const email = user?.email || user?.userEmail || user?.user_email;
-                          return email ? email.charAt(0).toUpperCase() : 'U';
-                        })()}
+                      <div className={`user-dropdown-avatar ${user?.role === 'ADMIN' ? 'admin-dropdown-avatar' : ''}`}>
+                        {user?.firstName ? user.firstName.charAt(0).toUpperCase() : 'U'}
+                        {user?.role === 'ADMIN' && <span className="admin-dropdown-badge">🛡️</span>}
                       </div>
                       <div className="user-dropdown-info">
                         <div className="user-dropdown-name">
-                          {user?.firstName || user?.name || 'Utilisateur'}
+                          {user?.firstName ? `${user.firstName} ${user.lastName}` : 'Utilisateur'}
                         </div>
                         <div className="user-dropdown-email">
-                          {user?.email || user?.userEmail || user?.user_email || 'email@example.com'}
+                          {user?.email || ''}
                         </div>
+                        {user?.role && (
+                          <div className="user-dropdown-role">
+                            {user.role === 'ADMIN' ? '🛡️ Administrateur' : 
+                             user.role === 'CONSEILLER' ? '👨‍💼 Conseiller' : 
+                             '🎓 Étudiant'}
+                          </div>
+                        )}
                       </div>
                     </div>
                     
@@ -184,6 +192,27 @@ const GlobalNavbar = ({ activePage = '' }) => {
                       <span>Mon Profil</span>
                     </div>
                     
+                    {/* Dashboard selon le rôle */}
+                    {user?.role === 'ADMIN' ? (
+                      <div
+                        className="user-dropdown-item"
+                        onClick={() => {
+                          navigate('/admin/dashboard');
+                          setIsUserMenuOpen(false);
+                        }}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            navigate('/admin/dashboard');
+                            setIsUserMenuOpen(false);
+                          }
+                        }}
+                      >
+                        <span>🛡️</span>
+                        <span>Dashboard Admin</span>
+                      </div>
+                    ) : (
                     <div
                       className="user-dropdown-item"
                       onClick={() => {
@@ -202,7 +231,71 @@ const GlobalNavbar = ({ activePage = '' }) => {
                       <span>📊</span>
                       <span>Dashboard Étudiant</span>
                     </div>
+                    )}
                     
+                    {/* Options supplémentaires pour les admins */}
+                    {user?.role === 'ADMIN' && (
+                      <>
+                        <div
+                          className="user-dropdown-item"
+                          onClick={() => {
+                            navigate('/admin/users');
+                            setIsUserMenuOpen(false);
+                          }}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              navigate('/admin/users');
+                              setIsUserMenuOpen(false);
+                            }
+                          }}
+                        >
+                          <span>👥</span>
+                          <span>Gestion Utilisateurs</span>
+                        </div>
+                        
+                        <div
+                          className="user-dropdown-item"
+                          onClick={() => {
+                            navigate('/admin/programs');
+                            setIsUserMenuOpen(false);
+                          }}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              navigate('/admin/programs');
+                              setIsUserMenuOpen(false);
+                            }
+                          }}
+                        >
+                          <span>📚</span>
+                          <span>Gestion Programmes</span>
+                        </div>
+                        
+                        <div
+                          className="user-dropdown-item"
+                          onClick={() => {
+                            navigate('/admin/applications');
+                            setIsUserMenuOpen(false);
+                          }}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              navigate('/admin/applications');
+                              setIsUserMenuOpen(false);
+                            }
+                          }}
+                        >
+                          <span>📋</span>
+                          <span>Gestion Candidatures</span>
+                        </div>
+                      </>
+                    )}
+                    
+                    {/* Options pour tous les utilisateurs */}
                     <div
                       className="user-dropdown-item"
                       onClick={() => {
@@ -293,16 +386,17 @@ const GlobalNavbar = ({ activePage = '' }) => {
           )}
         </div>
 
-        {/* Bouton menu mobile */}
-        <motion.button
-          className="navbar-mobile-toggle"
-          onClick={toggleMobileMenu}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          transition={{ duration: 0.2 }}
-        >
-          {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
-        </motion.button>
+          {/* Bouton menu mobile */}
+          <motion.button
+            className="navbar-mobile-toggle"
+            onClick={toggleMobileMenu}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ duration: 0.2 }}
+          >
+            {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+          </motion.button>
+        </div>
       </div>
 
       {/* Menu mobile */}

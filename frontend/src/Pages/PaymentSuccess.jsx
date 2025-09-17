@@ -417,6 +417,17 @@ const PaymentSuccess = () => {
 
   return (
     <div className="payment-success-container">
+      {/* Animated Background */}
+      <div className="animated-background">
+        <div className="floating-shapes">
+          <div className="shape shape-1"></div>
+          <div className="shape shape-2"></div>
+          <div className="shape shape-3"></div>
+          <div className="shape shape-4"></div>
+          <div className="shape shape-5"></div>
+        </div>
+      </div>
+
       {/* Main Success Card */}
       <div className="success-main-card">
         
@@ -424,14 +435,30 @@ const PaymentSuccess = () => {
         <div className="success-header">
           <div className="success-icon-container">
             <div className="success-icon">
-              <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                <path d="M10 30L25 45L50 15" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <div className="checkmark-animation">
+                <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                  <path d="M10 30L25 45L50 15" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <div className="success-ripple"></div>
             </div>
           </div>
           
-          <h1 className="success-title">Paiement Réussi !</h1>
+          <h1 className="success-title">
+            <span className="title-word">Paiement</span>
+            <span className="title-word">Réussi</span>
+            <span className="title-word">!</span>
+          </h1>
           <p className="success-subtitle">Votre paiement a été traité avec succès</p>
+          
+          {/* Success Particles */}
+          <div className="success-particles">
+            <div className="particle particle-1">✨</div>
+            <div className="particle particle-2">🎉</div>
+            <div className="particle particle-3">💫</div>
+            <div className="particle particle-4">⭐</div>
+            <div className="particle particle-5">✨</div>
+          </div>
         </div>
 
         {/* Payment Receipt Card */}

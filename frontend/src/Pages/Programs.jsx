@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useLocation } from 'react-router-dom';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext.jsx';
 import ProgramCardFixed from '../components/ProgramCardFixed';
 import GlobalLayout from '../components/GlobalLayout';
 import { programService, healthService } from '../services/api';

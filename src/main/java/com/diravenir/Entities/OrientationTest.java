@@ -24,7 +24,10 @@ public class OrientationTest {
     private Long id;
     
     // Informations étudiant
-    @Column(name = "student_email", nullable = false, unique = true)
+    @Column(name = "student_id", nullable = false)
+    private Long studentId;
+    
+    @Column(name = "student_email", nullable = false)
     private String studentEmail;
     
     @Column(name = "student_name", nullable = false)
@@ -32,6 +35,11 @@ public class OrientationTest {
     
     @Column(name = "student_phone")
     private String studentPhone;
+    
+    // Relation avec l'étudiant
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id", insertable = false, updatable = false)
+    private Etudiant etudiant;
     
     // Informations du test
     @Column(name = "test_uuid", unique = true)
@@ -92,9 +100,7 @@ public class OrientationTest {
     @OneToOne(mappedBy = "orientationTest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private OrientationResult result;
     
-    // Relations avec Student
-    @Column(name = "student_id")
-    private Long studentId;
+    // Relations avec Student (déjà défini plus haut)
     
     @PrePersist
     protected void onCreate() {

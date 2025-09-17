@@ -17,23 +17,39 @@
     font-family: 'Poppins', sans-serif;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 40px;
+    justify-content: flex-start; /* Alignement à gauche */
+    padding: 0; /* Pas de padding sur la navbar */
 }
 
 .navbar-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start; /* Tout aligné à gauche */
     width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
+    max-width: none; /* Pas de limite de largeur */
+    margin: 0;
+    padding: 0 1cm; /* 1cm de chaque côté */
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    flex: 1; /* Prend tout l'espace disponible */
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-left: auto; /* Pousse vers la droite */
 }
 
 /* === LOGO === */
 .navbar-brand {
     flex-shrink: 0;
-    width: 200px;
+    width: auto; /* Largeur automatique */
+    margin-right: 40px; /* Espacement après le logo */
 }
 
 .navbar-brand a {
@@ -53,7 +69,7 @@
     align-items: center;
     gap: 48px;
     flex: 1;
-    justify-content: center;
+    justify-content: flex-start; /* Navigation à gauche après le logo */
 }
 
 .navbar-nav a {
@@ -103,6 +119,29 @@
     gap: 20px;
     flex-shrink: 0;
     width: auto;
+}
+
+/* === AVATAR UTILISATEUR === */
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #FFD700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.user-avatar:hover {
+    transform: scale(1.1);
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 .auth-buttons {
@@ -308,6 +347,64 @@
     text-overflow: ellipsis;
 }
 
+.user-dropdown-role {
+    color: #667eea;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 4px;
+    padding: 2px 6px;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 4px;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+/* Avatar Admin */
+.admin-avatar {
+    position: relative;
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+    border: 2px solid #dc3545 !important;
+}
+
+.admin-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    font-size: 10px;
+    background: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+}
+
+/* Avatar Admin dans le dropdown */
+.admin-dropdown-avatar {
+    position: relative;
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+    border: 2px solid #dc3545 !important;
+}
+
+.admin-dropdown-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    font-size: 8px;
+    background: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid white;
+}
+
 /* Séparateur */
 .user-dropdown-divider {
     height: 1px;
@@ -408,10 +505,10 @@
 @media (max-width: 768px) {
     .navbar {
         height: 80px;
-        padding: 0 20px;
+        padding: 0; /* Pas de padding sur mobile */
     }
     .navbar-container {
-        padding: 0 20px;
+        padding: 0 1cm; /* Garde 1cm sur mobile */
     }
     .navbar-nav {
         display: none;
@@ -430,10 +527,10 @@
 @media (max-width: 480px) {
     .navbar {
         height: 70px;
-        padding: 0 16px;
+        padding: 0; /* Pas de padding sur très petit écran */
     }
     .navbar-container {
-        padding: 0 16px;
+        padding: 0 0.5cm; /* Réduit à 0.5cm sur très petit écran */
     }
     .navbar-logo {
         height: 55px;

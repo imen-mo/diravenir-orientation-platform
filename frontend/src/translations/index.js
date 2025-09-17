@@ -13,7 +13,6 @@ export const translations = {
         register: 'Inscription',
         logout: 'Déconnexion',
         dashboard: 'Tableau de bord',
-        faq: 'FAQ',
         universites: 'Universités',
         destinations: 'Destinations',
         apply: 'Candidature',
@@ -336,11 +335,6 @@ export const translations = {
         message: 'Message',
         send: 'Envoyer',
         
-        // FAQ
-        faqTitle: 'Questions Fréquemment Posées',
-        faqSubtitle: 'Trouvez des réponses à vos questions',
-        question: 'Question',
-        answer: 'Réponse',
         
         // Dashboard
         dashboardTitle: 'Tableau de Bord',
@@ -649,39 +643,7 @@ export const translations = {
         // Page Contact - Disclaimer
         disclaimerText: 'En soumettant ce formulaire, vous acceptez nos termes et conditions et notre Politique de Confidentialité qui explique comment nous pouvons collecter, utiliser et divulguer vos informations personnelles, y compris à des tiers.',
         
-        // Page FAQ - Titre
-        frequentlyAskedQuestions: 'Questions Fréquemment Posées',
         
-        // Page FAQ - Questions et Réponses
-        faq1Question: 'Qu\'est-ce que DirAvenir ?',
-        faq1Answer: 'DirAvenir est une plateforme d\'orientation éducative qui aide les étudiants, en particulier au Maroc, à trouver des opportunités d\'études à l\'étranger. Elle offre un support personnalisé pour choisir des programmes, postuler aux universités, obtenir des bourses et gérer les procédures telles que les visas et l\'hébergement principalement dans des pays comme la Chine et Chypre.',
-        
-        faq2Question: 'Dans quels pays assistez-vous les étudiants ?',
-        faq2Answer: 'Nous assistons les étudiants à explorer les opportunités académiques en Roumanie, Chypre et Chine. Que ce soit pour des études de premier cycle ou de cycle supérieur, nous fournissons des conseils tout au long du processus, du choix du bon programme à l\'obtention d\'un visa et à la recherche d\'un logement.',
-        
-        faq3Question: 'Quelles bourses sont disponibles ?',
-        faq3Answer: 'Nous offrons une variété d\'options de bourses pour soutenir les étudiants dans leur parcours académique. Vous pouvez accéder à des récompenses basées sur le mérite, des subventions basées sur les besoins et des bourses spécifiques à la destination pour des programmes dans des pays comme la Roumanie, Chypre et la Chine. Chaque opportunité inclut des conseils complets sur l\'éligibilité, les exigences d\'application et les délais.',
-        
-        faq4Question: 'Quels documents sont requis pour l\'inscription ?',
-        faq4Answer: 'Les documents requis pour l\'inscription incluent généralement : Un passeport ou une pièce d\'identité valide, des relevés de notes académiques, une preuve de compétence linguistique, des lettres de recommandation et un formulaire de candidature rempli. D\'autres documents peuvent également être requis, et toute l\'équipe DirAvenir vous aidera à préparer et soumettre tous les documents nécessaires.',
-        
-        faq5Question: 'Dois-je parler anglais ?',
-        faq5Answer: 'Parler anglais est souvent requis, selon le programme et le pays. Cependant, certains programmes peuvent offrir un support dans d\'autres langues.',
-        
-        faq6Question: 'Assistez-vous avec les arrangements de visa et de logement ?',
-        faq6Answer: 'Oui, nous assistons avec les demandes de visa et les arrangements de logement. Notre équipe vous guide tout au long du processus pour assurer une transition en douceur vers votre destination d\'études.',
-        
-        faq7Question: 'Avez-vous déjà travaillé avec des étudiants ?',
-        faq7Answer: 'Oui, nous avons travaillé avec succès avec des centaines d\'étudiants auparavant et continuons à en soutenir beaucoup tout au long de leurs parcours académiques.',
-        
-        faq8Question: 'Comment commencer le processus ?',
-        faq8Answer: 'Pour commencer le processus, vous pouvez nous contacter via WhatsApp ou remplir notre formulaire d\'inscription en ligne. Notre équipe vous guidera ensuite étape par étape à travers les prochaines étapes.',
-        
-        faq9Question: 'Comment savoir quel programme d\'études me convient ?',
-        faq9Answer: 'Pour trouver le bon programme d\'études pour vous, nous offrons des conseils personnalisés basés sur vos intérêts, compétences et objectifs de carrière. Nos experts vous aident à explorer les options et à choisir le meilleur choix pour votre avenir.',
-        
-        faq10Question: 'Quel est le meilleur moment pour postuler ?',
-        faq10Answer: 'Il est préférable de postuler le plus tôt possible pour sécuriser votre admission et votre bourse. Commencer tôt vous donne les meilleures chances de remplir toutes les exigences à temps.',
         
         // Pages d'Authentification - Login
         loginTitle: 'Connexion',
@@ -708,6 +670,20 @@ export const translations = {
         termsAndConditions: 'Termes et Conditions',
         and: 'et la',
         privacyPolicy: 'Politique de Confidentialité',
+        
+        // Footer
+        footerDescription: 'Diravenir est une plateforme web qui soutient les étudiants dans leur orientation académique et leurs processus de candidature au Maroc et à l\'étranger. Elle se distingue par une approche personnalisée basée sur des évaluations, des recommandations adaptées et un accompagnement avant toute candidature.',
+        subscribeNewsletter: 'Abonnez-vous à notre newsletter',
+        termsConditions: 'Termes et Conditions',
+        quickLinks: 'Liens Rapides',
+        links: 'Liens',
+        bestPrograms: 'Meilleurs Programmes',
+        yourFaqs: 'Vos FAQ',
+        cancellationRefunds: 'Annulation et Remboursements',
+        contactUsFooter: 'Contactez-nous',
+        contactUs: 'Contactez',
+        us: 'Nous',
+        
         registerButton: 'Créer mon compte',
         registerWithGoogle: 'S\'inscrire avec Google',
         alreadyHaveAccount: 'Vous avez déjà un compte ?',
@@ -1078,7 +1054,30 @@ export const translations = {
         backendServerNotAccessible: 'Serveur Backend Non Accessible',
         retryConnection: 'Réessayer la connexion',
         reloadPage: 'Recharger la page',
-        troubleshooting: 'Dépannage'
+        troubleshooting: 'Dépannage',
+        
+        // FAQ Page
+        faqTitle: 'Questions Fréquemment Posées',
+        faqQuestion1: 'Qu\'est-ce que DirAvenir ?',
+        faqAnswer1: 'DirAvenir est une plateforme d\'orientation éducative qui aide les étudiants, en particulier au Maroc, à trouver des opportunités d\'études à l\'étranger. Elle offre un support personnalisé pour choisir les programmes, postuler aux universités, obtenir des bourses et gérer les procédures telles que les visas et l\'hébergement principalement dans des pays comme la Chine et Chypre.',
+        faqQuestion2: 'Dans quels pays assistez-vous les étudiants ?',
+        faqAnswer2: 'Nous assistons les étudiants dans l\'exploration d\'opportunités académiques en Roumanie, Chypre et Chine. Que ce soit pour des études de premier cycle ou de troisième cycle, nous fournissons des conseils tout au long du processus, du choix du bon programme à l\'obtention du visa et à la recherche d\'hébergement.',
+        faqQuestion3: 'Quelles bourses sont disponibles ?',
+        faqAnswer3: 'Nous offrons une variété d\'options de bourses pour soutenir les étudiants dans leur parcours académique. Vous pouvez accéder à des récompenses basées sur le mérite, des subventions basées sur les besoins, et des bourses spécifiques à la destination pour des programmes dans des pays comme la Roumanie, Chypre et la Chine. Chaque opportunité comprend des conseils complets sur l\'éligibilité, les exigences d\'application et les délais.',
+        faqQuestion4: 'Quels documents sont requis pour l\'inscription ?',
+        faqAnswer4: 'Les documents requis pour l\'inscription incluent généralement : un passeport ou une pièce d\'identité valide, des relevés de notes académiques, une preuve de compétence linguistique, des lettres de recommandation, et un formulaire de candidature rempli. D\'autres documents peuvent également être requis, et toute l\'équipe DirAvenir vous aidera à préparer et soumettre tous les documents nécessaires.',
+        faqQuestion5: 'Dois-je parler anglais ?',
+        faqAnswer5: 'Parler anglais est souvent requis, selon le programme et le pays. Cependant, certains programmes peuvent offrir un support dans d\'autres langues.',
+        faqQuestion6: 'Assistez-vous avec les demandes de visa et l\'hébergement ?',
+        faqAnswer6: 'Oui, nous assistons avec les demandes de visa et l\'arrangement de l\'hébergement. Notre équipe vous guide tout au long du processus pour assurer une transition en douceur vers votre destination d\'études.',
+        faqQuestion7: 'Avez-vous déjà travaillé avec des étudiants ?',
+        faqAnswer7: 'Oui, nous avons travaillé avec succès avec des centaines d\'étudiants et continuons à en soutenir beaucoup tout au long de leurs parcours académiques.',
+        faqQuestion8: 'Comment commencer le processus ?',
+        faqAnswer8: 'Pour commencer le processus, vous pouvez nous contacter via WhatsApp ou remplir notre formulaire d\'inscription en ligne. Notre équipe vous guidera ensuite étape par étape à travers les prochaines étapes.',
+        faqQuestion9: 'Comment savoir quel programme d\'études me convient ?',
+        faqAnswer9: 'Pour trouver le bon programme d\'études pour vous, nous offrons des conseils personnalisés basés sur vos intérêts, compétences et objectifs de carrière. Nos experts vous aident à explorer les options et choisir le meilleur choix pour votre avenir.',
+        faqQuestion10: 'Quel est le meilleur moment pour postuler ?',
+        faqAnswer10: 'Il est préférable de postuler le plus tôt possible pour sécuriser votre admission et votre bourse. Commencer tôt vous donne les meilleures chances de remplir tous les exigences à temps.'
     },
     
     en: {
@@ -1094,7 +1093,6 @@ export const translations = {
         register: 'Register',
         logout: 'Logout',
         dashboard: 'Dashboard',
-        faq: 'FAQ',
         universites: 'Universities',
         destinations: 'Destinations',
         apply: 'Application',
@@ -1417,11 +1415,6 @@ export const translations = {
         message: 'Message',
         send: 'Send',
         
-        // FAQ
-        faqTitle: 'Frequently Asked Questions',
-        faqSubtitle: 'Find answers to your questions',
-        question: 'Question',
-        answer: 'Answer',
         
         // Dashboard
         dashboardTitle: 'Dashboard',
@@ -1730,39 +1723,7 @@ export const translations = {
         // Contact Page - Disclaimer
         disclaimerText: 'By submitting this form you agree to our terms and conditions and our Privacy Policy which explains how we may collect, use and disclose your personal information including to third parties.',
         
-        // FAQ Page - Title
-        frequentlyAskedQuestions: 'Frequently Asked Questions',
         
-        // FAQ Page - Questions and Answers
-        faq1Question: 'What is DirAvenir?',
-        faq1Answer: 'DirAvenir is an educational guidance platform that helps students, especially in Morocco, find study opportunities abroad. It offers personalized support in choosing programs, applying to universities, obtaining scholarships, and handling procedures such as visas and accommodation mainly in countries like China and Cyprus.',
-        
-        faq2Question: 'In which countries do you assist students?',
-        faq2Answer: 'We assist students in exploring academic opportunities in Romania, Cyprus, and China. Whether it\'s for undergraduate or postgraduate studies, we provide guidance throughout the entire process from choosing the right program to securing a visa and finding accommodation.',
-        
-        faq3Question: 'What scholarships are available?',
-        faq3Answer: 'We offer a variety of scholarship options to support students on their academic journey. You can access merit-based awards, need-based grants, and destination-specific scholarships for programs in countries like Romania, Cyprus, and China. Each opportunity includes full guidance on eligibility, application requirements, and deadlines.',
-        
-        faq4Question: 'What documents are required for registration?',
-        faq4Answer: 'The documents required for registration typically include: A valid passport or ID, academic transcripts, proof of language proficiency, recommendation letters, and a completed application form. Other documents may also be required, and the entire DirAvenir team will assist you in preparing and submitting all necessary paperwork.',
-        
-        faq5Question: 'Do I need to speak English?',
-        faq5Answer: 'Speaking English is often required, depending on the program and country. However, some programs may offer support in other languages.',
-        
-        faq6Question: 'Do you assist with visa and housing arrangements?',
-        faq6Answer: 'Yes, we assist with both visa applications and housing arrangements. Our team guides you through the entire process to ensure a smooth transition to your study destination.',
-        
-        faq7Question: 'Have you worked with students before?',
-        faq7Answer: 'Yes, we have successfully worked with hundreds of students before and continue to support many throughout their academic journeys.',
-        
-        faq8Question: 'How do I start the process?',
-        faq8Answer: 'To start the process, you can contact us via WhatsApp or fill out our online registration form. Our team will then guide you step-by-step through the next stages.',
-        
-        faq9Question: 'How do I know which study program is right for me?',
-        faq9Answer: 'To find the right study program for you, we offer personalized counseling based on your interests, skills, and career goals. Our experts help you explore options and choose the best fit for your future.',
-        
-        faq10Question: 'What is the best time to apply?',
-        faq10Answer: 'It\'s best to apply as soon as possible to secure your admission and scholarship. Starting early gives you the best chance to complete all requirements on time.',
         
         // Authentication Pages - Login
         loginTitle: 'Login',
@@ -1789,6 +1750,20 @@ export const translations = {
         termsAndConditions: 'Terms and Conditions',
         and: 'and the',
         privacyPolicy: 'Privacy Policy',
+        
+        // Footer
+        footerDescription: 'Diravenir is a web platform that supports students in their academic orientation and application processes both in Morocco and abroad. It stands out through a personalized approach based on assessments, tailored recommendations, and guidance prior to any application.',
+        subscribeNewsletter: 'Subscribe to Our Newsletter',
+        termsConditions: 'Terms & Conditions',
+        quickLinks: 'Quick',
+        links: 'Links',
+        bestPrograms: 'Best Programs',
+        yourFaqs: 'Your FAQ\'s',
+        cancellationRefunds: 'Cancellation & Refunds',
+        contactUsFooter: 'Contact Us',
+        contactUs: 'Contact',
+        us: 'Us',
+        
         registerButton: 'Create my account',
         registerWithGoogle: 'Sign up with Google',
         alreadyHaveAccount: 'Already have an account?',
@@ -2159,7 +2134,30 @@ export const translations = {
         backendServerNotAccessible: 'Backend Server Not Accessible',
         retryConnection: 'Retry connection',
         reloadPage: 'Reload page',
-        troubleshooting: 'Troubleshooting'
+        troubleshooting: 'Troubleshooting',
+        
+        // FAQ Page
+        faqTitle: 'Frequently Asked Questions',
+        faqQuestion1: 'What is Diravenir?',
+        faqAnswer1: 'Diravenir is an educational guidance platform that helps students, especially in Morocco, find study opportunities abroad. It offers personalized support in choosing programs, applying to universities, obtaining scholarships, and handling procedures such as visas and accommodation mainly in countries like China and Cyprus.',
+        faqQuestion2: 'In which countries do you assist students?',
+        faqAnswer2: 'We assist students in exploring academic opportunities in Romania, Cyprus, and China. Whether it\'s for undergraduate or postgraduate studies, we provide guidance throughout the entire process from choosing the right program to securing a visa and finding accommodation.',
+        faqQuestion3: 'What scholarships are available?',
+        faqAnswer3: 'We offer a variety of scholarship options to support students on their academic journey. You can access merit-based awards, need-based grants, and destination-specific scholarships for programs in countries like Romania, Cyprus, and China. Each opportunity includes full guidance on eligibility, application requirements, and deadlines.',
+        faqQuestion4: 'What documents are required for registration?',
+        faqAnswer4: 'The documents required for registration typically include: A valid passport or ID, academic transcripts, proof of language proficiency, recommendation letters, and a completed application form. Other documents may also be required, and the entire Diravenir team will assist you in preparing and submitting all necessary paperwork.',
+        faqQuestion5: 'Do I need to speak English?',
+        faqAnswer5: 'Speaking English is often required, depending on the program and country. However, some programs may offer support in other languages.',
+        faqQuestion6: 'Do you assist with visa and housing arrangements?',
+        faqAnswer6: 'Yes, we assist with both visa applications and housing arrangements. Our team guides you through the entire process to ensure a smooth transition to your study destination.',
+        faqQuestion7: 'Have you worked with students before?',
+        faqAnswer7: 'Yes, we have successfully worked with hundreds of students before and continue to support many throughout their academic journeys.',
+        faqQuestion8: 'How do I start the process?',
+        faqAnswer8: 'To start the process, you can contact us via WhatsApp or fill out our online registration form. Our team will then guide you step-by-step through the next stages.',
+        faqQuestion9: 'How do I know which study program is right for me?',
+        faqAnswer9: 'To find the right study program for you, we offer personalized counseling based on your interests, skills, and career goals. Our experts help you explore options and choose the best fit for your future.',
+        faqQuestion10: 'What is the best time to apply?',
+        faqAnswer10: 'It\'s best to apply as soon as possible to secure your admission and scholarship. Starting early gives you the best chance to complete all requirements on time.'
     }
 };
 

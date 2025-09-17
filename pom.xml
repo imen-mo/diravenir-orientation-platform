@@ -63,13 +63,13 @@
             <artifactId>spring-messaging</artifactId>
         </dependency>
 
-         <!-- 🔐 SPRING SECURITY - AJOUT CRITIQUE -->
+        <!-- 🔐 SPRING SECURITY -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- 🎫 JWT - AJOUT CRITIQUE -->
+        <!-- 🎫 JWT -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -88,13 +88,11 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- 🔐 OAUTH2 - AJOUT CRITIQUE -->
+        <!-- 🔐 OAUTH2 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-client</artifactId>
         </dependency>
-
-
 
         <!-- 💾 JPA -->
         <dependency>
@@ -207,6 +205,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.diravenir.Diravenir1Application</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>

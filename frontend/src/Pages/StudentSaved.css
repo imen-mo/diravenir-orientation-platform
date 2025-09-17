@@ -1,0 +1,361 @@
+/* StudentSaved.css - Page des programmes sauvegardés */
+
+.student-saved-container {
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(84, 22, 82, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+/* ===== EN-TÊTE ===== */
+.saved-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #DDC9DB;
+}
+
+.saved-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #541652;
+  margin: 0 0 0.5rem 0;
+}
+
+.saved-header p {
+  color: #6B7280;
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* ===== STATISTIQUES ===== */
+.saved-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-item {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(84, 22, 82, 0.1);
+  border: 1px solid #E5E7EB;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(84, 22, 82, 0.15);
+}
+
+.stat-number {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #541652;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+/* ===== GRILLE DES PROGRAMMES SAUVEGARDÉS ===== */
+.saved-programs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.saved-program-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(84, 22, 82, 0.1);
+  border: 1px solid #E5E7EB;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.saved-program-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(84, 22, 82, 0.15);
+}
+
+.saved-program-card::before {
+  content: "❤️";
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.2rem;
+  opacity: 0.7;
+}
+
+.program-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.program-title h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #541652;
+  margin: 0 0 0.25rem 0;
+}
+
+.program-title .university {
+  color: #6B7280;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.program-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #EF4444;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 0.5rem;
+  border-radius: 50%;
+}
+
+.remove-btn:hover {
+  background: #FEF2F2;
+  color: #DC2626;
+}
+
+.program-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #F9FAFB;
+  border-radius: 8px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #541652;
+}
+
+.info-item svg {
+  color: #6B7280;
+  font-size: 0.8rem;
+}
+
+.program-description {
+  margin-bottom: 1rem;
+}
+
+.program-description p {
+  color: #6B7280;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.program-meta {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #F0FDF4;
+  border-radius: 8px;
+  border: 1px solid #BBF7D0;
+}
+
+.meta-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.meta-item strong {
+  color: #541652;
+}
+
+.meta-item span {
+  color: #6B7280;
+}
+
+.program-actions-bottom {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #541652 0%, #7B2C7B 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(84, 22, 82, 0.3);
+}
+
+.btn-secondary {
+  background: white;
+  color: #541652;
+  border: 2px solid #541652;
+}
+
+.btn-secondary:hover {
+  background: #541652;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* ===== ÉTAT VIDE ===== */
+.no-saved-programs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(84, 22, 82, 0.1);
+  border: 1px solid #E5E7EB;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  color: #DDC9DB;
+  margin-bottom: 1.5rem;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  color: #541652;
+  margin: 0 0 1rem 0;
+}
+
+.empty-state p {
+  color: #6B7280;
+  margin: 0 0 2rem 0;
+  line-height: 1.5;
+}
+
+/* ===== LOADING ===== */
+.saved-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  color: #541652;
+}
+
+.saved-loading svg {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  animation: spin 1s linear infinite;
+}
+
+.saved-loading span {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ===== ALERTES ===== */
+.alert {
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.alert-error {
+  background: #FEF2F2;
+  color: #DC2626;
+  border: 1px solid #FECACA;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .student-saved-container {
+    padding: 1rem;
+  }
+  
+  .saved-programs-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .saved-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .program-info {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .program-actions-bottom {
+    flex-direction: column;
+  }
+  
+  .btn {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .saved-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .program-info {
+    grid-template-columns: 1fr;
+  }
+  
+  .stat-number {
+    font-size: 1.5rem;
+  }
+  
+  .empty-state {
+    padding: 2rem;
+  }
+  
+  .empty-icon {
+    font-size: 3rem;
+  }
+}

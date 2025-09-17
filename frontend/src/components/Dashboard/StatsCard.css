@@ -1,0 +1,341 @@
+/* StatsCard - Cartes de statistiques professionnelles */
+
+.stats-card {
+  background: #FFFFFF !important;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.stats-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--accent-primary);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.stats-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-primary);
+}
+
+.stats-card:hover::before {
+  opacity: 1;
+}
+
+.stats-card.clickable {
+  cursor: pointer;
+}
+
+.stats-card.clickable:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Icône */
+.stats-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #FFFFFF;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.stats-icon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--accent-primary);
+  opacity: 0.9;
+}
+
+.stats-icon svg {
+  position: relative;
+  z-index: 1;
+}
+
+/* Contenu */
+.stats-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.stats-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 0 0 var(--spacing-sm) 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
+
+.stats-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-sm) 0;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.stats-change {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.stats-change.positive {
+  color: #10B981;
+}
+
+.stats-change.negative {
+  color: #EF4444;
+}
+
+.stats-change.neutral {
+  color: var(--text-muted);
+}
+
+.stats-change svg {
+  font-size: 0.7rem;
+}
+
+/* États de chargement */
+.stats-card.loading {
+  pointer-events: none;
+}
+
+.stats-skeleton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  width: 100%;
+}
+
+.skeleton-icon {
+  width: 64px;
+  height: 64px;
+  background: var(--background-secondary);
+  border-radius: var(--radius-xl);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.skeleton-title {
+  width: 60%;
+  height: 14px;
+  background: var(--background-secondary);
+  border-radius: var(--radius-sm);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-value {
+  width: 40%;
+  height: 32px;
+  background: var(--background-secondary);
+  border-radius: var(--radius-sm);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-change {
+  width: 30%;
+  height: 12px;
+  background: var(--background-secondary);
+  border-radius: var(--radius-sm);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* États d'erreur */
+.stats-card.error {
+  border-color: #EF4444;
+}
+
+.stats-card.error .stats-icon {
+  background: #EF4444;
+}
+
+.stats-card.error .stats-value {
+  color: #EF4444;
+}
+
+.stats-card.error .stats-change {
+  color: #EF4444;
+}
+
+/* Variantes de couleurs pour les icônes */
+.stats-card:nth-child(1) .stats-icon {
+  background: var(--accent-primary);
+}
+
+.stats-card:nth-child(2) .stats-icon {
+  background: var(--accent-secondary);
+}
+
+.stats-card:nth-child(3) .stats-icon {
+  background: #10B981;
+}
+
+.stats-card:nth-child(4) .stats-icon {
+  background: #3B82F6;
+}
+
+.stats-card:nth-child(5) .stats-icon {
+  background: #8B5CF6;
+}
+
+.stats-card:nth-child(6) .stats-icon {
+  background: #F59E0B;
+}
+
+/* Responsive Design */
+
+/* Tablette */
+@media (max-width: 1023px) {
+  .stats-card {
+    padding: var(--spacing-lg);
+  }
+  
+  .stats-icon {
+    width: 56px;
+    height: 56px;
+    font-size: 1.3rem;
+  }
+  
+  .stats-value {
+    font-size: 2rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .stats-card {
+    padding: var(--spacing-md);
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-md);
+  }
+  
+  .stats-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 1.2rem;
+  }
+  
+  .stats-value {
+    font-size: 1.8rem;
+  }
+  
+  .stats-title {
+    font-size: 0.8rem;
+  }
+  
+  .stats-change {
+    font-size: 0.7rem;
+    justify-content: center;
+  }
+}
+
+/* Mobile Small */
+@media (max-width: 480px) {
+  .stats-card {
+    padding: var(--spacing-sm);
+  }
+  
+  .stats-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+  
+  .stats-value {
+    font-size: 1.5rem;
+  }
+  
+  .stats-title {
+    font-size: 0.7rem;
+  }
+}
+
+/* Animation d'entrée */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stats-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.stats-card:nth-child(1) { animation-delay: 0.1s; }
+.stats-card:nth-child(2) { animation-delay: 0.2s; }
+.stats-card:nth-child(3) { animation-delay: 0.3s; }
+.stats-card:nth-child(4) { animation-delay: 0.4s; }
+.stats-card:nth-child(5) { animation-delay: 0.5s; }
+.stats-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Print styles */
+@media print {
+  .stats-card {
+    break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
+  
+  .stats-card::before {
+    display: none !important;
+  }
+}
+
+/* Dark mode support (maintien du background blanc) */
+@media (prefers-color-scheme: dark) {
+  .stats-card {
+    background: #FFFFFF !important;
+    border-color: var(--border-light);
+  }
+}

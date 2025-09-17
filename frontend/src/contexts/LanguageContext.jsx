@@ -26,7 +26,25 @@ const translations = {
         profile: 'Profil',
         settings: 'Paramètres',
         logout: 'Se déconnecter',
-        dashboard: 'Tableau de bord'
+        dashboard: 'Tableau de bord',
+        // Settings page
+        personalInfo: 'Informations personnelles',
+        preferences: 'Préférences',
+        firstName: 'Prénom',
+        lastName: 'Nom',
+        email: 'Email',
+        phone: 'Téléphone',
+        birthDate: 'Date de naissance',
+        language: 'Langue',
+        theme: 'Thème',
+        lightTheme: 'Clair',
+        darkTheme: 'Sombre',
+        saveSettings: 'Sauvegarder les paramètres',
+        settingsSaved: 'Paramètres sauvegardés avec succès !',
+        saveError: 'Erreur lors de la sauvegarde',
+        loadingSettings: 'Chargement des paramètres...',
+        unauthorizedAccess: 'Accès non autorisé',
+        loginRequired: 'Veuillez vous connecter pour accéder aux paramètres.'
     },
     en: {
         home: 'Home',
@@ -40,7 +58,25 @@ const translations = {
         profile: 'Profile',
         settings: 'Settings',
         logout: 'Logout',
-        dashboard: 'Dashboard'
+        dashboard: 'Dashboard',
+        // Settings page
+        personalInfo: 'Personal Information',
+        preferences: 'Preferences',
+        firstName: 'First Name',
+        lastName: 'Last Name',
+        email: 'Email',
+        phone: 'Phone',
+        birthDate: 'Birth Date',
+        language: 'Language',
+        theme: 'Theme',
+        lightTheme: 'Light',
+        darkTheme: 'Dark',
+        saveSettings: 'Save Settings',
+        settingsSaved: 'Settings saved successfully!',
+        saveError: 'Error saving settings',
+        loadingSettings: 'Loading settings...',
+        unauthorizedAccess: 'Unauthorized Access',
+        loginRequired: 'Please log in to access settings.'
     },
     ar: {
         home: 'الرئيسية',
@@ -54,7 +90,25 @@ const translations = {
         profile: 'الملف الشخصي',
         settings: 'الإعدادات',
         logout: 'تسجيل الخروج',
-        dashboard: 'لوحة التحكم'
+        dashboard: 'لوحة التحكم',
+        // Settings page
+        personalInfo: 'المعلومات الشخصية',
+        preferences: 'التفضيلات',
+        firstName: 'الاسم الأول',
+        lastName: 'اسم العائلة',
+        email: 'البريد الإلكتروني',
+        phone: 'الهاتف',
+        birthDate: 'تاريخ الميلاد',
+        language: 'اللغة',
+        theme: 'المظهر',
+        lightTheme: 'فاتح',
+        darkTheme: 'داكن',
+        saveSettings: 'حفظ الإعدادات',
+        settingsSaved: 'تم حفظ الإعدادات بنجاح!',
+        saveError: 'خطأ في حفظ الإعدادات',
+        loadingSettings: 'جاري تحميل الإعدادات...',
+        unauthorizedAccess: 'وصول غير مصرح به',
+        loginRequired: 'يرجى تسجيل الدخول للوصول إلى الإعدادات.'
     }
 };
 

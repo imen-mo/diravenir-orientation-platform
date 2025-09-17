@@ -49,6 +49,22 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     // Find applications by university name
     List<Application> findByUniversityNameContainingIgnoreCase(String universityName);
     
+    // Count applications by user ID
+    long countByUserId(Long userId);
+    
+    // Count applications by etudiant ID
+    long countByEtudiantId(Long etudiantId);
+    
+    // Count applications by user ID and status
+    long countByUserIdAndStatus(Long userId, String status);
+    
+    // Count applications by etudiant ID and status
+    long countByEtudiantIdAndStatus(Long etudiantId, String status);
+    
+    // Count applications by user ID and month
+    @Query("SELECT COUNT(a) FROM Application a WHERE a.userId = :userId AND YEAR(a.createdAt) = :year AND MONTH(a.createdAt) = :month")
+    long countByUserIdAndMonth(@Param("userId") Long userId, @Param("year") int year, @Param("month") int month);
+    
     // Count applications by status
     long countByStatus(String status);
     
@@ -90,10 +106,10 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     long countByPaymentStatus(Application.PaymentStatus paymentStatus);
     
     @Query("SELECT a FROM Application a WHERE a.status = :status AND (LOWER(a.programName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(a.universityName) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
-    List<Application> findByStatusAndSearchTerm(@Param("status") String status, @Param("searchTerm") String searchTerm, org.springframework.data.domain.Pageable pageable);
+    org.springframework.data.domain.Page<Application> findByStatusAndSearchTerm(@Param("status") String status, @Param("searchTerm") String searchTerm, org.springframework.data.domain.Pageable pageable);
     
     @Query("SELECT a FROM Application a WHERE LOWER(a.programName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(a.universityName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
-    List<Application> findBySearchTerm(@Param("searchTerm") String searchTerm, org.springframework.data.domain.Pageable pageable);
+    org.springframework.data.domain.Page<Application> findBySearchTerm(@Param("searchTerm") String searchTerm, org.springframework.data.domain.Pageable pageable);
     
     long countByCreatedAtAfter(LocalDateTime date);
     

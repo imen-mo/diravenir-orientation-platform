@@ -8,6 +8,21 @@
   font-family: 'Poppins', sans-serif;
 }
 
+/* Éliminer tous les cadres et bordures indésirables */
+.footer * {
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+}
+
+.footer .footer-container,
+.footer .footer-section,
+.footer .footer-section * {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 /* WRAPPER À 3 COLONNES */
 .footer-container {
   max-width: 1400px;                /* plus large pour plus d'aération */
@@ -22,6 +37,10 @@
 .footer-section {
   flex: 1 1 320px;                  /* plus large pour plus d'aération */
   margin: 0;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
 }
 
 /* TEXTE & ALIGN */
@@ -159,11 +178,23 @@
   color: #FDCB00;                   /* jaune vif */
 }
 
+.right-section .contact-info {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
 .right-section .contact-info p {
   color: #ccc;
   font-size: 15px;
   margin-bottom: 16px;              /* plus d'espace */
   line-height: 1.6;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
 }
 
 .right-section .social-icons {
@@ -182,6 +213,38 @@
 .right-section .social-icon:hover {
   color: #FDCB00;                   /* jaune vif au hover */
   transform: translateY(-2px);
+}
+
+/* Styles spécifiques pour éliminer les cadres sur tous les éléments */
+.footer h4,
+.footer p,
+.footer ul,
+.footer li,
+.footer a,
+.footer input,
+.footer button {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.footer .newsletter-form {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.footer .newsletter-input {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.footer .newsletter-button {
+  background: #FDCB00 !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* RESPONSIVE */
@@ -243,4 +306,3 @@
     gap: 15px;
   }
 }
-

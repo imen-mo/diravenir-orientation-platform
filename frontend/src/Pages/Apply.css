@@ -172,7 +172,7 @@
   gap: 30px;
   max-width: 96vw;
   margin: 0 auto;
-  min-height: calc(100vh - 200px);
+  min-height: auto;
   padding: 0 15px;
 }
 
@@ -183,7 +183,7 @@
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   height: fit-content;
-  min-height: calc(100vh - 200px);
+  min-height: auto;
   margin-left: -10px;
   width: calc(100% + 20px);
 }
@@ -216,7 +216,7 @@
   position: sticky;
   top: 20px;
   height: fit-content;
-  min-height: calc(100vh - 200px);
+  min-height: auto;
   margin-left: -5px;
   width: calc(100% + 10px);
 }

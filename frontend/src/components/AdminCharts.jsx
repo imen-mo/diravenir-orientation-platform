@@ -10,9 +10,12 @@ import {
   Tooltip,
   Legend,
   ArcElement,
+  Filler
 } from 'chart.js';
-import { Line, Bar, Doughnut } from 'react-chartjs-2';
+import { Line, Bar, Doughnut, Pie } from 'react-chartjs-2';
+import './AdminCharts.css';
 
+// Enregistrer les composants Chart.js
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -22,110 +25,124 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement
+  ArcElement,
+  Filler
 );
 
-const AdminCharts = ({ data }) => {
-  // Chart des applications par mois
-  const applicationsData = {
+const AdminCharts = ({ stats, recentActivity }) => {
+  // Configuration des couleurs DirAvenir
+  const colors = {
+    primary: '#541652',
+    secondary: '#DDC9DB',
+    accent: '#FCBE1C',
+    accent2: '#FF914C',
+    success: '#10B981',
+    warning: '#F59E0B',
+    error: '#EF4444',
+    info: '#3B82F6',
+    gradient: {
+      primary: 'linear-gradient(135deg, #541652 0%, #7B2C7B 100%)',
+      accent: 'linear-gradient(135deg, #FCBE1C 0%, #FF914C 100%)'
+    }
+  };
+
+  // Données pour le graphique des utilisateurs (évolution mensuelle)
+  const usersData = {
     labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
     datasets: [
       {
-        label: 'Applications Approuvées',
-        data: data?.applicationsByMonth?.approved || [12, 19, 8, 15, 22, 18, 25, 20, 28, 24, 30, 26],
-        borderColor: '#10B981',
-        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-        tension: 0.4,
+        label: 'Nouveaux Utilisateurs',
+        data: [120, 190, 300, 500, 200, 300, 450, 600, 550, 700, 800, 950],
+        borderColor: colors.primary,
+        backgroundColor: `${colors.primary}20`,
+        borderWidth: 3,
         fill: true,
-      },
-      {
-        label: 'Applications Rejetées',
-        data: data?.applicationsByMonth?.rejected || [3, 5, 2, 4, 6, 4, 7, 5, 8, 6, 9, 7],
-        borderColor: '#EF4444',
-        backgroundColor: 'rgba(239, 68, 68, 0.1)',
         tension: 0.4,
-        fill: true,
-      },
-      {
-        label: 'Applications En Attente',
-        data: data?.applicationsByMonth?.pending || [5, 8, 4, 6, 9, 7, 10, 8, 12, 10, 13, 11],
-        borderColor: '#F59E0B',
-        backgroundColor: 'rgba(245, 158, 11, 0.1)',
-        tension: 0.4,
-        fill: true,
+        pointBackgroundColor: colors.primary,
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 6,
+        pointHoverRadius: 8
       }
     ]
   };
 
-  // Chart des utilisateurs par type
-  const usersData = {
-    labels: ['Étudiants', 'Administrateurs', 'Conseillers'],
-    datasets: [
-      {
-        data: data?.usersByType || [150, 5, 12],
-        backgroundColor: [
-          '#10B981',
-          '#3B82F6',
-          '#8B5CF6'
-        ],
-        borderColor: [
-          '#059669',
-          '#2563EB',
-          '#7C3AED'
-        ],
-        borderWidth: 2,
-      }
-    ]
-  };
-
-  // Chart des programmes populaires
-  const programsData = {
-    labels: data?.popularPrograms?.labels || ['Informatique', 'Business', 'Design', 'Ingénierie', 'Marketing'],
+  // Données pour le graphique des candidatures par statut
+  const applicationsData = {
+    labels: ['Approuvées', 'En attente', 'Rejetées', 'Brouillon'],
     datasets: [
       {
         label: 'Candidatures',
-        data: data?.popularPrograms?.data || [45, 38, 32, 28, 22],
+        data: [
+          stats.totalApplications * 0.6 || 300,
+          stats.totalApplications * 0.25 || 125,
+          stats.totalApplications * 0.1 || 50,
+          stats.totalApplications * 0.05 || 25
+        ],
         backgroundColor: [
-          '#10B981',
-          '#3B82F6',
-          '#8B5CF6',
-          '#F59E0B',
-          '#EF4444'
+          colors.success,
+          colors.warning,
+          colors.error,
+          colors.info
         ],
         borderColor: [
-          '#059669',
-          '#2563EB',
-          '#7C3AED',
-          '#D97706',
-          '#DC2626'
+          colors.success,
+          colors.warning,
+          colors.error,
+          colors.info
         ],
         borderWidth: 2,
+        hoverOffset: 10
       }
     ]
   };
 
-  // Chart des tests complétés
-  const testsData = {
-    labels: ['Tests Complétés', 'Tests En Cours', 'Tests Non Commencés'],
+  // Données pour le graphique des revenus mensuels
+  const revenueData = {
+    labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
     datasets: [
       {
-        data: data?.testsStatus || [120, 35, 45],
-        backgroundColor: [
-          '#10B981',
-          '#F59E0B',
-          '#6B7280'
-        ],
-        borderColor: [
-          '#059669',
-          '#D97706',
-          '#4B5563'
-        ],
-        borderWidth: 2,
+        label: 'Revenus (€)',
+        data: [15000, 22000, 18000, 25000, 30000, 28000, 35000, 40000, 38000, 45000, 42000, 50000],
+        backgroundColor: `${colors.accent}40`,
+        borderColor: colors.accent,
+        borderWidth: 3,
+        borderRadius: 8,
+        borderSkipped: false,
+        hoverBackgroundColor: `${colors.accent}60`,
+        hoverBorderColor: colors.accent2,
+        hoverBorderWidth: 4
       }
     ]
   };
 
-  const chartOptions = {
+  // Données pour le graphique des programmes par université
+  const programsData = {
+    labels: ['Hefei University', 'Cyprus International', 'University of Bucharest', 'Autres'],
+    datasets: [
+      {
+        label: 'Programmes',
+        data: [15, 12, 8, 5],
+        backgroundColor: [
+          colors.primary,
+          colors.accent,
+          colors.success,
+          colors.info
+        ],
+        borderColor: [
+          colors.primary,
+          colors.accent,
+          colors.success,
+          colors.info
+        ],
+        borderWidth: 2,
+        hoverOffset: 15
+      }
+    ]
+  };
+
+  // Configuration commune des graphiques
+  const commonOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -142,45 +159,93 @@ const AdminCharts = ({ data }) => {
       },
       tooltip: {
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        titleColor: 'white',
-        bodyColor: 'white',
-        borderColor: 'rgba(255, 255, 255, 0.1)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        borderColor: colors.primary,
         borderWidth: 1,
         cornerRadius: 8,
-        displayColors: true,
-        intersect: false,
-        mode: 'index'
+        padding: 12,
+        titleFont: {
+          size: 14,
+          weight: '600'
+        },
+        bodyFont: {
+          size: 13
+        }
       }
     },
     scales: {
-      y: {
-        beginAtZero: true,
+      x: {
         grid: {
           color: 'rgba(0, 0, 0, 0.05)',
           drawBorder: false
         },
         ticks: {
-          color: '#6B7280',
           font: {
-            size: 11
-          }
+            size: 11,
+            weight: '500'
+          },
+          color: '#6B7280'
         }
       },
-      x: {
+      y: {
         grid: {
-          display: false
+          color: 'rgba(0, 0, 0, 0.05)',
+          drawBorder: false
         },
         ticks: {
-          color: '#6B7280',
           font: {
-            size: 11
-          }
+            size: 11,
+            weight: '500'
+          },
+          color: '#6B7280'
         }
       }
     }
   };
 
-  const doughnutOptions = {
+  // Options spécifiques pour les graphiques en barres
+  const barOptions = {
+    ...commonOptions,
+    plugins: {
+      ...commonOptions.plugins,
+      title: {
+        display: true,
+        text: 'Revenus Mensuels',
+        font: {
+          size: 16,
+          weight: '600'
+        },
+        color: colors.primary,
+        padding: {
+          bottom: 20
+        }
+      }
+    }
+  };
+
+  // Options spécifiques pour les graphiques en ligne
+  const lineOptions = {
+    ...commonOptions,
+    plugins: {
+      ...commonOptions.plugins,
+      title: {
+        display: true,
+        text: 'Évolution des Utilisateurs',
+        font: {
+          size: 16,
+          weight: '600'
+        },
+        color: colors.primary,
+        padding: {
+          bottom: 20
+        }
+      }
+    }
+  };
+
+  // Options spécifiques pour les graphiques en secteurs
+  const pieOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -197,72 +262,149 @@ const AdminCharts = ({ data }) => {
       },
       tooltip: {
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        titleColor: 'white',
-        bodyColor: 'white',
-        borderColor: 'rgba(255, 255, 255, 0.1)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        borderColor: colors.primary,
         borderWidth: 1,
         cornerRadius: 8,
-        displayColors: true
+        padding: 12
       }
-    },
-    cutout: '60%'
+    }
   };
 
   return (
     <div className="admin-charts">
-      {/* Applications par mois */}
-      <div className="chart-container">
-        <div className="chart-header">
-          <h3>Applications par Mois</h3>
-          <div className="chart-legend">
-            <div className="legend-item">
-              <div className="legend-color approved"></div>
-              <span>Approuvées</span>
-            </div>
-            <div className="legend-item">
-              <div className="legend-color rejected"></div>
-              <span>Rejetées</span>
-            </div>
-            <div className="legend-item">
-              <div className="legend-color pending"></div>
-              <span>En Attente</span>
+      <div className="charts-grid">
+        {/* Graphique des utilisateurs */}
+        <div className="chart-container">
+          <div className="chart-header">
+            <h3>Évolution des Utilisateurs</h3>
+            <div className="chart-stats">
+              <span className="stat-value">+{stats.totalUsers || 0}</span>
+              <span className="stat-label">Total</span>
             </div>
           </div>
+          <div className="chart-wrapper">
+            <Line data={usersData} options={lineOptions} />
+          </div>
         </div>
-        <div className="chart-content">
-          <Line data={applicationsData} options={chartOptions} />
+
+        {/* Graphique des revenus */}
+        <div className="chart-container">
+          <div className="chart-header">
+            <h3>Revenus Mensuels</h3>
+            <div className="chart-stats">
+              <span className="stat-value">€{(stats.totalRevenue || 0).toLocaleString()}</span>
+              <span className="stat-label">Total</span>
+            </div>
+          </div>
+          <div className="chart-wrapper">
+            <Bar data={revenueData} options={barOptions} />
+          </div>
+        </div>
+
+        {/* Graphique des candidatures */}
+        <div className="chart-container">
+          <div className="chart-header">
+            <h3>Candidatures par Statut</h3>
+            <div className="chart-stats">
+              <span className="stat-value">{stats.totalApplications || 0}</span>
+              <span className="stat-label">Total</span>
+            </div>
+          </div>
+          <div className="chart-wrapper">
+            <Doughnut data={applicationsData} options={pieOptions} />
+          </div>
+        </div>
+
+        {/* Graphique des programmes */}
+        <div className="chart-container">
+          <div className="chart-header">
+            <h3>Programmes par Université</h3>
+            <div className="chart-stats">
+              <span className="stat-value">{stats.totalPrograms || 0}</span>
+              <span className="stat-label">Total</span>
+            </div>
+          </div>
+          <div className="chart-wrapper">
+            <Pie data={programsData} options={pieOptions} />
+          </div>
         </div>
       </div>
 
-      {/* Grille des charts secondaires */}
-      <div className="charts-grid">
-        {/* Utilisateurs par type */}
-        <div className="chart-container small">
+      {/* Graphiques supplémentaires */}
+      <div className="charts-grid charts-grid-large">
+        {/* Graphique de performance */}
+        <div className="chart-container chart-large">
           <div className="chart-header">
-            <h3>Utilisateurs par Type</h3>
+            <h3>Performance Globale</h3>
+            <div className="chart-stats">
+              <span className="stat-value">98.5%</span>
+              <span className="stat-label">Uptime</span>
+            </div>
           </div>
-          <div className="chart-content">
-            <Doughnut data={usersData} options={doughnutOptions} />
+          <div className="chart-wrapper">
+            <Line 
+              data={{
+                labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+                datasets: [
+                  {
+                    label: 'Performance (%)',
+                    data: [95, 97, 98, 99, 98, 97],
+                    borderColor: colors.success,
+                    backgroundColor: `${colors.success}20`,
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: colors.success,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6
+                  }
+                ]
+              }} 
+              options={lineOptions} 
+            />
           </div>
         </div>
 
-        {/* Programmes populaires */}
-        <div className="chart-container small">
+        {/* Graphique des activités récentes */}
+        <div className="chart-container chart-large">
           <div className="chart-header">
-            <h3>Programmes Populaires</h3>
+            <h3>Activités Récentes</h3>
+            <div className="chart-stats">
+              <span className="stat-value">{recentActivity.length || 0}</span>
+              <span className="stat-label">Activités</span>
+            </div>
           </div>
-          <div className="chart-content">
-            <Bar data={programsData} options={chartOptions} />
-          </div>
-        </div>
-
-        {/* Tests complétés */}
-        <div className="chart-container small">
-          <div className="chart-header">
-            <h3>Statut des Tests</h3>
-          </div>
-          <div className="chart-content">
-            <Doughnut data={testsData} options={doughnutOptions} />
+          <div className="chart-wrapper">
+            <Bar 
+              data={{
+                labels: ['Connexions', 'Candidatures', 'Tests', 'Inscriptions'],
+                datasets: [
+                  {
+                    label: 'Activités',
+                    data: [45, 23, 12, 8],
+                    backgroundColor: [
+                      colors.primary,
+                      colors.accent,
+                      colors.success,
+                      colors.info
+                    ],
+                    borderColor: [
+                      colors.primary,
+                      colors.accent,
+                      colors.success,
+                      colors.info
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    borderSkipped: false
+                  }
+                ]
+              }} 
+              options={barOptions} 
+            />
           </div>
         </div>
       </div>

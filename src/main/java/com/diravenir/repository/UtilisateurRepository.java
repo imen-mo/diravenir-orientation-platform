@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,4 +25,7 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> 
     
     @Query("SELECT u FROM Utilisateur u WHERE u.email LIKE %:searchTerm% OR u.nom LIKE %:searchTerm% OR u.prenom LIKE %:searchTerm%")
     List<Utilisateur> searchUsers(@Param("searchTerm") String searchTerm);
+    
+    @Query("SELECT COUNT(u) FROM Utilisateur u WHERE u.derniereConnexion >= :since")
+    long countRecentLogins(@Param("since") LocalDateTime since);
 }

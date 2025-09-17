@@ -1,7 +1,14 @@
 /* Login.css - Styles pour la page de connexion moderne et pleine largeur */
 
-.login-container {
+.login-page-wrapper {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+.login-container {
+  flex: 1;
   width: 100vw;
   max-width: 100%;
   margin: 0;
@@ -12,6 +19,7 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
+  padding-top: 140px; /* Espace pour la navbar fixe */
 }
 
 /* Particules d'arrière-plan - Supprimées pour un design plus épuré */
@@ -22,7 +30,7 @@
 /* Layout principal - Pleine largeur */
 .login-layout {
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 140px); /* Hauteur moins l'espace de la navbar */
   display: flex;
   background: white;
   position: relative;
@@ -31,8 +39,8 @@
 
 /* Section formulaire - Carte centrée avec ombre */
 .login-form-section {
-  flex: 0 0 700px; /* Largeur augmentée de 600px à 700px */
-  height: 100vh;
+  flex: 0 0 50%; /* Augmenté de 40% à 50% de la largeur */
+  height: calc(100vh - 140px); /* Hauteur moins l'espace de la navbar */
   padding: 0;
   display: flex;
   align-items: center;
@@ -40,16 +48,15 @@
   background: white;
   position: relative;
   z-index: 10;
-  margin: 0 auto; /* Centrer la carte horizontalement */
 }
 
 .login-form-container {
   width: 100%;
-  max-width: 600px; /* Largeur maximale augmentée de 500px à 600px */
+  max-width: 500px; /* Augmenté de 400px à 500px */
   background: white;
-  padding: 3rem 2.5rem;
-  border-radius: 20px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15); /* Ombre élégante */
+  padding: 3rem 2.5rem; /* Augmenté le padding */
+  border-radius: 20px; /* Augmenté le border-radius */
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15); /* Ombre plus prononcée */
   border: 1px solid rgba(0, 0, 0, 0.05);
   position: relative;
   backdrop-filter: blur(10px);
@@ -217,6 +224,50 @@
   left: 100%;
 }
 
+/* Bouton Google - Style sophistiqué */
+.login-google {
+  width: 100%;
+  background: white;
+  color: #374151;
+  border: 2px solid #e5e7eb;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.login-google:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-color: #d1d5db;
+  background: #f9fafb;
+}
+
+.login-google:active {
+  transform: translateY(0);
+}
+
+.login-google:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.login-google-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
 /* Lien d'inscription */
 .login-register {
   text-align: center;
@@ -290,13 +341,13 @@
 
 /* Section illustration - Grande image glissée vers la droite */
 .login-illustration-section {
-  flex: 1; /* Prend tout l'espace restant */
-  height: 100vh;
-  background: white; /* Background blanc */
+  flex: 1; /* Prend tout l'espace restant (50% maintenant) */
+  height: calc(100vh - 140px); /* Hauteur moins l'espace de la navbar */
+  background: white; /* Fond blanc pur sans dégradé */
   padding: 0;
   display: flex;
   align-items: center;
-  justify-content: flex-end; /* Aligner complètement à droite */
+  justify-content: center; /* Centrer l'image */
   position: relative;
   overflow: hidden;
 }
@@ -309,23 +360,21 @@
   position: relative;
   z-index: 2;
   text-align: center;
-  color: #441048; /* Texte en violet */
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-right: 4rem; /* Espacement augmenté vers la droite */
-  transform: translateX(2rem); /* Glisser encore plus vers la droite */
+  padding: 2rem; /* Espacement uniforme */
 }
 
 .login-illustration-image {
-  max-width: 95%; /* Image encore plus grande */
-  max-height: 85vh; /* Image très grande */
+  max-width: 80%; /* Augmenté de 70% à 80% */
+  max-height: 80vh; /* Augmenté de 70vh à 80vh */
   object-fit: contain;
-  margin-bottom: 2rem;
-  filter: drop-shadow(0 20px 40px rgba(68, 16, 72, 0.1));
+  /* Suppression de l'ombre et du cadre */
+  filter: none;
   transition: transform 0.3s ease;
 }
 
@@ -333,35 +382,14 @@
   transform: scale(1.02);
 }
 
-.login-illustration-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  color: #441048;
-  text-shadow: 0 2px 10px rgba(68, 16, 72, 0.1);
-}
-
-.login-illustration-text {
-  font-size: 1.2rem;
-  line-height: 1.6;
-  color: #6b7280;
-  max-width: 400px;
-  margin: 0 auto;
-  font-weight: 500;
-}
-
 /* Responsive */
 @media (max-width: 1200px) {
   .login-form-section {
-    flex: 0 0 450px;
+    flex: 0 0 50%; /* Maintenir 50% même sur les écrans moyens */
   }
   
-  .login-illustration-title {
-    font-size: 2rem;
-  }
-  
-  .login-illustration-text {
-    font-size: 1rem;
+  .login-form-container {
+    max-width: 450px; /* Réduire légèrement sur les écrans moyens */
   }
 }
 
@@ -471,5 +499,60 @@
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+/* Styles responsives pour les nouvelles hauteurs */
+@media (max-width: 1024px) {
+  .login-container {
+    padding-top: 130px;
+  }
+  
+  .login-layout {
+    height: calc(100vh - 130px);
+  }
+  
+  .login-form-section {
+    height: calc(100vh - 130px);
+  }
+  
+  .login-illustration-section {
+    height: calc(100vh - 130px);
+  }
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    padding-top: 120px;
+  }
+  
+  .login-layout {
+    height: calc(100vh - 120px);
+  }
+  
+  .login-form-section {
+    height: calc(100vh - 120px);
+  }
+  
+  .login-illustration-section {
+    height: calc(100vh - 120px);
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding-top: 100px;
+  }
+  
+  .login-layout {
+    height: calc(100vh - 100px);
+  }
+  
+  .login-form-section {
+    height: calc(100vh - 100px);
+  }
+  
+  .login-illustration-section {
+    height: calc(100vh - 100px);
   }
 }

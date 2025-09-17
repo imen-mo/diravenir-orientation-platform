@@ -1,0 +1,40 @@
+/* StudentLayout.css - Layout spécialisé pour les étudiants */
+
+.student-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #DDC9DB 0%, #FFFFFF 100%);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+}
+
+.student-layout-content {
+  flex: 1;
+  display: flex;
+  margin-top: 80px; /* Espace pour la navbar fixe */
+  min-height: calc(100vh - 80px);
+}
+
+.student-main-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 2rem;
+  background: transparent;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .student-layout-content {
+    margin-top: 60px; /* Navbar plus petite sur mobile */
+    min-height: calc(100vh - 60px);
+  }
+  
+  .student-main-area {
+    padding: 1rem;
+  }
+}
+
+/* Ajustements du footer pour le layout étudiant */
+/* Supprimé pour éviter les conflits avec le nouveau Footer.css */

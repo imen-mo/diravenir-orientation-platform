@@ -4,7 +4,7 @@ import com.diravenir.dto.OrientationRequestDTO;
 import com.diravenir.dto.OrientationResponseDTO;
 import com.diravenir.service.OrientationCalculationService;
 import com.diravenir.service.OrientationPersistenceService;
-import com.diravenir.service.EmailService;
+// import com.diravenir.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ public class OrientationController {
     
     private final OrientationCalculationService calculationService;
     private final OrientationPersistenceService persistenceService;
-    private final EmailService emailService;
+    // private final EmailService emailService;
     
     /**
      * Endpoint pour traiter un test d'orientation complet
@@ -44,23 +44,23 @@ public class OrientationController {
             // Sauvegarder les résultats
             var result = persistenceService.saveOrientationResults(test.getId(), userProfile, recommendations);
             
-            // Envoyer l'email de résultats
-            if (request.getStudentInfo() != null && request.getStudentInfo().getEmail() != null) {
-                try {
-                    emailService.sendOrientationResultsEmail(
-                        request.getStudentInfo().getEmail(), 
-                        request.getStudentInfo().getFullName(),
-                        test.getId().toString(),
-                        result.getTopRecommendationMajor(),
-                        result.getTopRecommendationScore(),
-                        result.getUserProfile()
-                    );
-                    log.info("✅ Email de résultats envoyé avec succès à: {}", request.getStudentInfo().getEmail());
-                } catch (Exception e) {
-                    log.error("❌ Erreur lors de l'envoi de l'email: {}", e.getMessage(), e);
-                    // Ne pas faire échouer le processus si l'email échoue
-                }
-            }
+            // Envoyer l'email de résultats (désactivé temporairement)
+            // if (request.getStudentInfo() != null && request.getStudentInfo().getEmail() != null) {
+            //     try {
+            //         emailService.sendOrientationResultsEmail(
+            //             request.getStudentInfo().getEmail(), 
+            //             request.getStudentInfo().getFullName(),
+            //             test.getId().toString(),
+            //             result.getTopRecommendationMajor(),
+            //             result.getTopRecommendationScore(),
+            //             result.getUserProfile()
+            //         );
+            //         log.info("✅ Email de résultats envoyé avec succès à: {}", request.getStudentInfo().getEmail());
+            //     } catch (Exception e) {
+            //         log.error("❌ Erreur lors de l'envoi de l'email: {}", e.getMessage(), e);
+            //         // Ne pas faire échouer le processus si l'email échoue
+            //     }
+            // }
             
             // Construire la réponse
             OrientationResponseDTO response = OrientationResponseDTO.builder()

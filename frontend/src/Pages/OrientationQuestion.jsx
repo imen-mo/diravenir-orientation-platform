@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import OrientationHeader from '../components/OrientationHeader';
 import QuestionProgress from '../components/QuestionProgress';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext.jsx';
 import './OrientationQuestion.css';
 import './OrientationQuestionCommon.css';
 

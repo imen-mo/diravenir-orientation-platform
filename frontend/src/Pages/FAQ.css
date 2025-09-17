@@ -1,80 +1,72 @@
 /* FAQ.css - Design exact comme l'image */
 
 /* Style global pour éviter tout soulignement */
-.faq-page * {
+.simple-faq * {
   text-decoration: none !important;
 }
 
-.faq-page {
-  min-height: 100vh;
-  background: white;
-  padding: 0;
+.simple-faq {
+  min-height: auto;
+  background: #f8f9fa; /* Fond gris clair comme dans l'image */
+  padding: 120px 20px 40px; /* Espace pour la navbar */
   position: relative;
   overflow: hidden;
 }
 
-/* Section FAQ */
-.faq-section {
-  position: relative;
-  background: white;
-  padding: 2rem;
-  display: flex;
-  justify-content: center;
-  margin-top: 120px;
+/* Éléments décoratifs supprimés */
+
+.simple-faq::after {
+  content: '';
+  position: absolute;
+  bottom: -150px;
+  right: -150px;
+  width: 400px;
+  height: 400px;
+  background: #441048;
+  border-radius: 50%;
+  opacity: 0.1;
+  z-index: 1;
 }
 
-.faq-container {
+/* Container principal avec ombre - plus large */
+.simple-faq > div {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 0 auto;
   background: white;
   border-radius: 20px;
-  overflow: hidden;
-  position: relative;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  max-width: 900px;
-  width: 100%;
+  overflow: hidden;
 }
 
+/* Header jaune avec titre blanc */
 .faq-header {
   background: #FDCB00;
-  color: #441048;
-  padding: 2rem 4rem;
+  padding: 3rem 2rem;
   text-align: center;
   position: relative;
-  border-bottom: 1px solid #e2e8f0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
 }
 
-.faq-header h2 {
+.faq-header h1 {
   font-size: 2.5rem;
   font-weight: 700;
-  margin-bottom: 1rem;
   color: white;
-  margin-left: 0;
+  margin: 0;
   text-align: center;
 }
 
+/* Contenu FAQ */
 .faq-content {
-  padding: 2rem 0;
+  padding: 0;
   background: white;
 }
 
-/* Accordion FAQ */
-.faq-accordion {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
+/* Items FAQ */
 .faq-item {
   background: white;
-  border: none;
-  border-radius: 0;
-  overflow: hidden;
-  transition: all 0.3s ease;
   border-bottom: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
 }
 
 .faq-item:last-child {
@@ -82,19 +74,15 @@
 }
 
 .faq-item:hover {
-  background: white;
+  background: rgba(68, 16, 72, 0.02);
 }
 
-.faq-item.open {
-  border-bottom: 1px solid #e5e7eb;
-}
-
-/* Question - Design minimaliste */
+/* Question avec icône à gauche */
 .faq-question {
   width: 100%;
   background: white;
   border: none;
-  padding: 1rem 2rem;
+  padding: 1.5rem 2rem;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -102,11 +90,11 @@
   transition: all 0.3s ease;
   outline: none;
   text-decoration: none;
-  min-height: 50px;
+  gap: 1rem;
 }
 
 .faq-question:hover {
-  background: white;
+  background: rgba(68, 16, 72, 0.02);
   text-decoration: none;
 }
 
@@ -115,38 +103,25 @@
   outline: none;
 }
 
-.question-content {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  gap: 1rem;
-}
-
-/* Icône à gauche */
-.icon-container {
+/* Icône circulaire jaune avec + ou - */
+.icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   background: #FDCB00;
   border-radius: 50%;
-  color: #000;
-  font-size: 12px;
+  color: white;
+  font-size: 18px;
   font-weight: 600;
   transition: all 0.3s ease;
   flex-shrink: 0;
-  order: -1;
+  font-family: monospace;
 }
 
-.faq-item.open .icon-container {
-  background: #FDCB00;
-  color: #000;
-  transform: none;
-}
-
-/* Question text */
-.faq-question-text {
+/* Texte de la question */
+.question-text {
   font-size: 1.2rem;
   font-weight: 600;
   color: #000;
@@ -157,21 +132,14 @@
   text-decoration: none;
 }
 
-/* Quand ouverte → devient jaune */
-.faq-item.open .faq-question-text {
+/* Quand la question est ouverte, le texte devient jaune */
+.faq-item.open .question-text {
   color: #FDCB00;
-  font-weight: 600;
   text-decoration: none;
 }
 
-/* Quand hover → reste noir */
-.faq-question:hover .faq-question-text {
-  color: #000;
-  text-decoration: none;
-}
-
-/* Quand focus → reste noir */
-.faq-question:focus .faq-question-text {
+/* Quand hover, reste noir */
+.faq-question:hover .question-text {
   color: #000;
   text-decoration: none;
 }
@@ -247,7 +215,7 @@
   }
 
   .faq-question-text {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
   }
 
   .faq-item.open .faq-answer {
@@ -256,6 +224,14 @@
 
   .faq-item.open .faq-answer::before {
     left: 1.5rem;
+  }
+
+  .decorative-dots {
+    display: none;
+  }
+
+  .decorative-circle {
+    display: none;
   }
 }
 
@@ -281,7 +257,7 @@
   }
 
   .faq-question-text {
-    font-size: 0.8rem;
+    font-size: 1rem;
   }
 
   .icon-container {

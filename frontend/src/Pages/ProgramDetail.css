@@ -32,7 +32,7 @@ body {
 
 /* Page principale - remplir toute la largeur */
 .program-detail-overlay {
-  min-height: 100vh;
+  min-height: auto;
   background-color: #f5f5f5;
   padding: 0;
 }
@@ -46,7 +46,7 @@ body {
   box-shadow: none;
   overflow-x: auto; /* Permet le défilement horizontal si nécessaire */
   position: relative;
-  min-height: 100vh;
+  min-height: auto;
   min-width: 1000px; /* Largeur minimale pour éviter la compression */
 }
 

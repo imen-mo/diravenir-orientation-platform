@@ -1,8 +1,8 @@
-/* Contact.css - Page de contact exactement comme l'image */
+/* Contact.css - Page de contact avec nouvelles couleurs et mise en page améliorée */
 
 .contact-page {
   min-height: 100vh;
-  background: white;
+  background: #FFFFFF;
   padding: 0;
   position: relative;
   overflow: hidden;
@@ -10,11 +10,10 @@
 
 /* Section Hero - Fond blanc */
 .contact-hero {
-  background: white;
+  background: #FFFFFF;
   text-align: center;
   padding: 4rem 2rem;
   margin-bottom: 0;
-  animation: fadeInUp 0.8s ease-out;
   position: relative;
   z-index: 2;
 }
@@ -23,36 +22,20 @@
   font-size: 4rem;
   font-weight: 800;
   margin-bottom: 1.5rem;
-  color: #441048;
+  color: #541652;
   text-shadow: none;
   position: relative;
-}
-
-.contact-hero-content h1::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 200px;
-  height: 4px;
-  background: #FFD700;
-  border-radius: 2px;
-  animation: titleUnderline 2s ease-in-out infinite;
-}
-
-@keyframes titleUnderline {
-  0%, 100% { width: 200px; opacity: 1; }
-  50% { width: 300px; opacity: 0.7; }
+  text-align: center;
 }
 
 .hero-subtitle {
   font-size: 1.5rem;
-  color: #441048;
-  max-width: 700px;
+  color: #541652;
+  max-width: 800px;
   margin: 0 auto 2rem;
   line-height: 1.6;
   font-weight: 500;
+  text-align: center;
 }
 
 .contact-hero-icons {
@@ -99,48 +82,31 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  margin: 4rem 2rem;
-  animation: fadeInUp 0.8s ease-out 0.3s both;
+  margin: 4rem auto;
+  max-width: 1200px;
+  padding: 0 2rem;
   position: relative;
   z-index: 2;
 }
 
 .contact-method-card {
-  background: linear-gradient(135deg, #441048 0%, #430F48 50%, #400C49 100%);
-  border: 2px solid rgba(255, 215, 0, 0.3);
+  background: linear-gradient(135deg, #FCBE1C 0%, #FCBE1C 50%, #FCBE1C 100%);
+  border: 2px solid rgba(84, 22, 82, 0.3);
   border-radius: 30px;
-  padding: 2.5rem;
+  padding: 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 2rem;
+  gap: 1.5rem;
   position: relative;
   overflow: hidden;
-  transition: all 0.4s ease;
   cursor: pointer;
-}
-
-.contact-method-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
-  animation: shimmer 3s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-  0%, 100% { transform: translateX(-100%); }
-  50% { transform: translateX(100%); }
+  min-height: 350px;
 }
 
 .contact-method-card:hover {
-  transform: translateY(-10px) scale(1.02);
-  border-color: rgba(255, 215, 0, 0.8);
-  box-shadow: 0 25px 60px rgba(68, 16, 72, 0.3);
+  border-color: rgba(84, 22, 82, 0.8);
 }
 
 .method-icon {
@@ -151,16 +117,13 @@
   align-items: center;
   justify-content: center;
   font-size: 2rem;
-  color: white;
+  color: #541652;
   position: relative;
-  transition: all 0.3s ease;
   flex-shrink: 0;
+  margin-top: -1rem;
 }
 
-.contact-method-card:hover .method-icon {
-  transform: scale(1.1) rotate(5deg);
-  filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.6));
-}
+
 
 .method-content {
   flex: 1;
@@ -172,84 +135,82 @@
 .contact-method-card h3 {
   font-size: 1.8rem;
   font-weight: 700;
-  color: white;
+  color: #541652;
   margin-bottom: 1rem;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  text-shadow: none;
 }
 
 .contact-method-card p {
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: #541652;
   line-height: 1.6;
   margin-bottom: 1.5rem;
+  opacity: 0.8;
 }
 
-.contact-link {
-  color: #FFD700;
+.contact-page .contact-link {
+  color: #541652;
   text-decoration: none;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  transition: all 0.3s ease;
   padding: 0.8rem 1.5rem;
   border-radius: 25px;
-  background: rgba(255, 215, 0, 0.1);
-  border: 2px solid rgba(255, 215, 0, 0.3);
+  background: #541652 !important;
+  border: 2px solid #541652;
 }
 
 .contact-link:hover {
-  color: white;
-  background: rgba(255, 215, 0, 0.2);
-  border-color: rgba(255, 215, 0, 0.8);
-  transform: translateX(10px);
-  box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+  color: #FCBE1C;
+  background: #541652;
+  border-color: #541652;
 }
 
 .link-icon {
   font-size: 1.2rem;
-  transition: all 0.3s ease;
 }
 
-.contact-link:hover .link-icon {
-  transform: translateX(5px) scale(1.2);
-}
-
-/* Section formulaire - Style exact comme l'image */
+/* Section formulaire - Style amélioré avec centrage et largeur étendue */
 .contact-form-section {
   position: relative;
   z-index: 2;
-  animation: fadeInUp 0.8s ease-out 0.6s both;
-  background: white;
+  background: #FFFFFF;
   padding: 2rem;
   display: flex;
   justify-content: center;
+  margin-top: 120px; /* Espace après le header */
 }
 
 .form-container {
-  background: white;
+  background: #FFFFFF;
   border-radius: 20px;
   overflow: hidden;
   position: relative;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  max-width: 900px;
+  max-width: 1200px;
   width: 100%;
 }
 
 .form-header {
-  background: white;
-  color: #441048;
+  background: #FCBE1C;
+  color: #541652;
   padding: 2rem 4rem;
   text-align: center;
   position: relative;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid #DDC9DB;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .form-header h2 {
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: #441048;
+  color: #541652;
+  text-align: center;
+  margin: 0;
 }
 
 .form-header p {
@@ -260,13 +221,14 @@
 
 .contact-form {
   padding: 4rem;
-  background: white;
+  background: #FFFFFF;
 }
 
 .form-row {
   display: flex;
   gap: 3rem;
   margin-bottom: 3rem;
+  justify-content: center;
 }
 
 .form-row:last-of-type {
@@ -276,19 +238,22 @@
 .form-group {
   flex: 1;
   position: relative;
+  max-width: 400px;
 }
 
 .form-group.full-width {
   flex: none;
   width: 100%;
+  max-width: 800px;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 0.75rem;
   font-weight: 600;
-  color: #441048;
+  color: #541652;
   font-size: 1rem;
+  text-align: left;
 }
 
 .form-input,
@@ -296,12 +261,12 @@
 .form-select {
   width: 100%;
   padding: 1rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid #DDC9DB;
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.3s ease;
-  background: white;
-  color: #441048;
+  background: #FFFFFF;
+  color: #541652;
   box-sizing: border-box;
 }
 
@@ -326,8 +291,8 @@
 .form-textarea:focus,
 .form-select:focus {
   outline: none;
-  border-color: #441048;
-  box-shadow: 0 0 0 2px rgba(68, 16, 72, 0.1);
+  border-color: #541652;
+  box-shadow: 0 0 0 2px rgba(84, 22, 82, 0.1);
 }
 
 .form-input::placeholder,
@@ -345,7 +310,7 @@
 }
 
 .submit-btn {
-  background: #441048;
+  background: #541652;
   color: white;
   border: none;
   padding: 1rem 2rem;
@@ -355,16 +320,17 @@
   cursor: pointer;
   transition: all 0.3s ease;
   width: 100%;
+  max-width: 300px;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  margin-top: 1rem;
+  margin: 1rem auto;
 }
 
 .submit-btn:hover {
-  background: #5a1a5f;
+  background: #6a1d6a;
   transform: translateY(-1px);
 }
 
@@ -384,7 +350,7 @@
 .dot {
   width: 8px;
   height: 8px;
-  background: #FFA500;
+  background: #FCBE1C;
   border-radius: 50%;
   margin: 1rem 0;
   opacity: 0.7;
@@ -396,7 +362,7 @@
   right: -100px;
   width: 300px;
   height: 300px;
-  background: #441048;
+  background: #541652;
   border-radius: 50%;
   opacity: 0.1;
   z-index: 1;
@@ -404,15 +370,15 @@
 
 /* Messages de statut */
 .form-status-message {
-  background: rgba(68, 16, 72, 0.1);
-  border: 2px solid rgba(68, 16, 72, 0.3);
+  background: rgba(84, 22, 82, 0.1);
+  border: 2px solid rgba(84, 22, 82, 0.3);
   border-radius: 15px;
   padding: 1.5rem;
   margin-bottom: 2rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: #441048;
+  color: #541652;
 }
 
 .form-status-message.success {
@@ -470,7 +436,7 @@
   width: 20px;
   height: 20px;
   border: 2px solid transparent;
-  border-top: 2px solid #441048;
+  border-top: 2px solid #541652;
   border-radius: 50%;
   animation: button-loading-spinner 1s linear infinite;
 }
@@ -492,9 +458,9 @@
   }
 }
 
-.email-icon { background: #FFD700; }
-.phone-icon { background: #FFD700; }
-.location-icon { background: #FFD700; }
+.email-icon { background: #541652; }
+.phone-icon { background: #541652; }
+.location-icon { background: #541652; }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
@@ -509,11 +475,14 @@
   .contact-methods {
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
-    margin: 3rem 1.5rem;
+    margin: 3rem auto;
+    max-width: 1000px;
+    padding: 0 1.5rem;
   }
   
-.contact-method-card {
-    padding: 2rem;
+  .contact-method-card {
+    padding: 2.5rem;
+    min-height: 320px;
   }
   
   .method-icon {
@@ -526,10 +495,14 @@
     font-size: 1.8rem;
   }
   
+  .form-container {
+    max-width: 1000px;
+  }
+  
   .submit-btn {
     padding: 1.2rem 2.5rem;
     font-size: 1.2rem;
-    min-width: 200px;
+    max-width: 300px;
   }
 }
 
@@ -548,28 +521,35 @@
   
   .contact-hero-icons {
     flex-direction: column;
-  align-items: center;
+    align-items: center;
     gap: 1rem;
   }
   
   .contact-methods {
     grid-template-columns: 1fr;
     gap: 2rem;
-    margin: 3rem 1rem;
+    margin: 3rem auto;
+    max-width: 600px;
+    padding: 0 1rem;
   }
   
   .contact-method-card {
-    padding: 2rem;
+    padding: 2.5rem;
+    min-height: 300px;
   }
   
   .contact-method-card h3 {
     font-size: 1.8rem;
   }
   
+  .form-container {
+    max-width: 600px;
+  }
+  
   .submit-btn {
     padding: 1.2rem 2.5rem;
-  font-size: 1.2rem;
-    min-width: 200px;
+    font-size: 1.2rem;
+    max-width: 250px;
   }
   
   .decorative-dots {
@@ -583,11 +563,13 @@
   /* Formulaire en colonne sur mobile */
   .form-row {
     flex-direction: column;
-  gap: 1.5rem;
+    gap: 1.5rem;
+    align-items: center;
   }
   
   .form-group {
     width: 100%;
+    max-width: 400px;
   }
   
   .contact-form {
@@ -612,8 +594,14 @@
     font-size: 1.1rem;
   }
   
+  .contact-methods {
+    max-width: 400px;
+    padding: 0 0.5rem;
+  }
+  
   .contact-method-card {
-    padding: 1.5rem;
+    padding: 2rem;
+    min-height: 280px;
   }
   
   .contact-method-card h3 {
@@ -626,10 +614,14 @@
     font-size: 1.5rem;
   }
   
+  .form-container {
+    max-width: 400px;
+  }
+  
   .submit-btn {
     padding: 1rem 2rem;
     font-size: 1.1rem;
-    min-width: 180px;
+    max-width: 200px;
   }
 
   .contact-form {
@@ -642,5 +634,9 @@
   
   .form-header h2 {
     font-size: 2rem;
+  }
+  
+  .form-group {
+    max-width: 300px;
   }
 }

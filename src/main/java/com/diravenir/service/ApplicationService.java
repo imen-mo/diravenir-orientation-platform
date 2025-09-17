@@ -88,16 +88,18 @@ public class ApplicationService {
 
             if (status != null && !status.isEmpty() && searchTerm != null && !searchTerm.isEmpty()) {
                 // Filtrer par statut et terme de recherche
-                applications = applicationRepository.findByStatusAndSearchTerm(status, searchTerm, pageable);
-                totalElements = applications.size(); // Simplification
+                Page<Application> applicationsPage = applicationRepository.findByStatusAndSearchTerm(status, searchTerm, pageable);
+                applications = applicationsPage.getContent();
+                totalElements = applicationsPage.getTotalElements();
             } else if (status != null && !status.isEmpty()) {
                 // Filtrer par statut seulement
                 applications = applicationRepository.findByStatus(status);
                 totalElements = applications.size();
             } else if (searchTerm != null && !searchTerm.isEmpty()) {
                 // Rechercher par terme seulement
-                applications = applicationRepository.findBySearchTerm(searchTerm, pageable);
-                totalElements = applications.size(); // Simplification
+                Page<Application> applicationsPage = applicationRepository.findBySearchTerm(searchTerm, pageable);
+                applications = applicationsPage.getContent();
+                totalElements = applicationsPage.getTotalElements();
             } else {
                 // Toutes les applications
                 Page<Application> applicationsPage = applicationRepository.findAll(pageable);
@@ -237,6 +239,59 @@ public class ApplicationService {
         } catch (Exception e) {
             log.error("Erreur lors de la récupération des statistiques", e);
             throw new RuntimeException("Erreur lors de la récupération des statistiques", e);
+        }
+    }
+
+    /**
+     * Obtenir les données timeline des applications (par mois)
+     */
+    public Map<String, Object> getApplicationTimeline(int months) {
+        try {
+            Map<String, Object> timelineData = new HashMap<>();
+            List<Map<String, Object>> monthlyData = new java.util.ArrayList<>();
+            
+            // Générer les données pour les X derniers mois
+            for (int i = months - 1; i >= 0; i--) {
+                LocalDateTime startOfMonth = LocalDateTime.now()
+                    .minusMonths(i)
+                    .withDayOfMonth(1)
+                    .withHour(0)
+                    .withMinute(0)
+                    .withSecond(0);
+                
+                LocalDateTime endOfMonth = startOfMonth.plusMonths(1).minusSeconds(1);
+                
+                // Compter les applications créées dans ce mois
+                long count = applicationRepository.findAll().stream()
+                    .filter(app -> {
+                        LocalDateTime createdAt = app.getCreatedAt();
+                        return createdAt != null && 
+                               createdAt.isAfter(startOfMonth) && 
+                               createdAt.isBefore(endOfMonth);
+                    })
+                    .count();
+                
+                Map<String, Object> monthData = new HashMap<>();
+                monthData.put("month", startOfMonth.format(java.time.format.DateTimeFormatter.ofPattern("MMM")));
+                monthData.put("year", startOfMonth.getYear());
+                monthData.put("count", count);
+                monthData.put("startDate", startOfMonth.toString());
+                monthData.put("endDate", endOfMonth.toString());
+                
+                monthlyData.add(monthData);
+            }
+            
+            timelineData.put("timeline", monthlyData);
+            timelineData.put("totalMonths", months);
+            timelineData.put("totalApplications", monthlyData.stream()
+                .mapToLong(month -> (Long) month.get("count"))
+                .sum());
+            
+            return timelineData;
+
+        } catch (Exception e) {
+            log.error("Erreur lors de la récupération des données timeline", e);
+            throw new RuntimeException("Erreur lors de la récupération des données timeline", e);
         }
     }
 

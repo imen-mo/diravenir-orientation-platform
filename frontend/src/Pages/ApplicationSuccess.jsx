@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext.jsx';
 import { applicationService } from '../services/applicationService';
 import { toast } from 'react-toastify';
 import GlobalLayout from '../components/GlobalLayout';

@@ -41,6 +41,11 @@ public class ProgramMapper {
         dto.setStatus(program.getStatus());
         dto.setProgramImage(program.getProgramImage());
         
+        // Champs supplémentaires
+        dto.setLevel(program.getLevel());
+        dto.setIsActive(program.getIsActive());
+        dto.setApplicationCount(program.getApplicationCount());
+        
         // Relations
         if (program.getDestination() != null) {
             dto.setDestinationId(program.getDestination().getId());
@@ -86,6 +91,11 @@ public class ProgramMapper {
         
         program.setStatus(dto.getStatus());
         program.setProgramImage(dto.getProgramImage());
+        
+        // Champs supplémentaires
+        program.setLevel(dto.getLevel());
+        program.setIsActive(dto.getIsActive());
+        program.setApplicationCount(dto.getApplicationCount());
         
         return program;
     }

@@ -3,8 +3,6 @@ package com.diravenir.dto;
 import com.diravenir.Entities.Program;
 import lombok.Data;
 
-import java.math.BigDecimal;
-
 @Data
 public class ProgramDTO {
     private Long id;
@@ -29,6 +27,11 @@ public class ProgramDTO {
     
     private Program.ProgramStatus status;
     private String programImage;
+    
+    // Champs supplémentaires
+    private String level;                   // Niveau du programme
+    private Boolean isActive;               // Programme actif ou non
+    private Long applicationCount;           // Nombre d'applications
     
     // IDs des relations
     private Long destinationId;

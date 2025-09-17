@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import OrientationHeader from '../components/OrientationHeader';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext.jsx';
 import './OrientationWelcome.css';
 
 const OrientationWelcome = () => {

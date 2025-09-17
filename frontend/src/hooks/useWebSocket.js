@@ -12,7 +12,7 @@ const useWebSocket = (userId, userName) => {
   const reconnectTimeoutRef = useRef(null);
 
   // Configuration WebSocket
-  const SOCKET_URL = process.env.REACT_APP_WS_URL || 'http://localhost:8084/ws';
+  const SOCKET_URL = process.env.REACT_APP_WS_URL || 'http://localhost:8084/api/ws';
   const MAX_RECONNECT_ATTEMPTS = 5;
   const RECONNECT_DELAY = 3000;
 

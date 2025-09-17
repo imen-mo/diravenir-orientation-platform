@@ -59,7 +59,8 @@ public class DocumentServiceImpl implements DocumentService {
         dto.setId(document.getId());
         dto.setNom(document.getNom());
         dto.setType(document.getType());
-        dto.setUrl(document.getChemin()); // Utiliser setUrl au lieu de setChemin
+        dto.setChemin(document.getChemin());
+        dto.setUrl(document.getChemin()); // Pour compatibilité
         if (document.getEtudiant() != null) {
             dto.setEtudiantId(document.getEtudiant().getId());
         }
@@ -74,7 +75,7 @@ public class DocumentServiceImpl implements DocumentService {
         document.setId(dto.getId());
         document.setNom(dto.getNom());
         document.setType(dto.getType());
-        document.setChemin(dto.getUrl()); // Utiliser getUrl au lieu de getChemin
+        document.setChemin(dto.getChemin() != null ? dto.getChemin() : dto.getUrl());
         // Note: Les relations avec Etudiant et Candidature devraient être gérées séparément
         return document;
     }
