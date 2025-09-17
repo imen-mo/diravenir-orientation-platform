@@ -64,20 +64,6 @@ diravenir1/
 └── 📄 README.md                          # Ce fichier
 ```
 
-### 📸 Captures d'Écran et Schémas
-
-#### Interface Utilisateur
-- **Page d'Accueil** : Interface moderne avec navigation intuitive
-- **Test d'Orientation** : Questions adaptatives avec interface interactive
-- **Résultats** : Affichage des recommandations avec scores de correspondance
-- **Dashboard Étudiant** : Tableau de bord personnalisé avec statistiques
-- **Page Programmes** : Catalogue des programmes avec filtres avancés
-
-#### Architecture Technique
-- **Schéma Backend** : API REST avec Spring Boot, JPA, et MySQL
-- **Schéma Frontend** : Application React avec Vite et Tailwind CSS
-- **Flux de Données** : Communication frontend-backend via API REST
-- **Base de Données** : Relations entre utilisateurs, programmes, et résultats d'orientation
 
 ## 🚀 Prérequis Système
 
