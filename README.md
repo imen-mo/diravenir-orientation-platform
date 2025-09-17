@@ -12,7 +12,7 @@ DIRAVENIR est une plateforme web complète d'orientation post-bac qui aide les �
 
 Ce projet a été développé dans le cadre de la **2ème édition de la compétition EMSI** pour un stage chez DIRAVENIR (10 juillet - 10 septembre 2024). L'objectif était de créer une solution innovante d'orientation scolaire et professionnelle permettant aux étudiants de découvrir leur profil idéal et de recevoir des recommandations personnalisées de programmes universitaires.
 
-**Mission** : Concevoir et implémenter un système d'orientation intelligent avec test psychométrique, calculs de profil avancés, et base de données de programmes internationaux.
+**Mission** : Concevoir et implémenter un système d'orientation intelligent avec test psychométrique, calculs de profil avancés, base de données de programmes internationaux, et accompagnement complet pour les candidatures universitaires en Chine, Chypre et Roumanie avec ou sans bourses d'études.
 
 ## ✅ Tâches Accomplies par le Binôme
 
@@ -22,7 +22,7 @@ Ce projet a été développé dans le cadre de la **2ème édition de la compét
 - **Base de Données** : Modélisation MySQL avec gestion automatique Hibernate
 - **Chat Temps Réel** : Communication instantanée via WebSocket
 - **Génération PDF** : Rapports d'orientation personnalisés automatiques
-- **Gestion Programmes** : Interface d'administration pour universités (Chine, Chypre, Roumanie) avec gestion des bourses
+- **Gestion Programmes** : Interface d'administration pour universités (Chine, Chypre, Roumanie) avec gestion des bourses et traitement des candidatures
 - **Sécurité** : Protection des routes, validation des données, rate limiting
 
 ## 🛠️ Technologies Utilisées
@@ -184,8 +184,8 @@ Le CORS est configuré pour permettre les connexions depuis :
 
 - **Test d'Orientation** : 14 questions psychométriques avec algorithmes de matching avancés
 - **Programmes Universitaires** : Base de données internationale (Chine, Chypre, Roumanie) avec recherche et filtres
-- **Aide aux Candidatures** : Accompagnement complet pour postuler dans les universités internationales
-- **Gestion des Bourses** : Information et suivi des opportunités de bourses d'études
+- **Aide aux Candidatures** : Accompagnement complet pour postuler dans les universités en Chine, Chypre et Roumanie
+- **Gestion des Bourses** : Information et traitement des candidatures avec ou sans bourses d'études
 - **Authentification** : JWT + OAuth2 Google pour une connexion sécurisée
 - **Chat Temps Réel** : Communication instantanée avec les conseillers via WebSocket
 - **Rapports PDF** : Génération automatique de rapports d'orientation personnalisés
@@ -193,13 +193,14 @@ Le CORS est configuré pour permettre les connexions depuis :
 ## 🏆 Défis Techniques Relevés
 
 - **Algorithmes d'Orientation** : Distance euclidienne pondérée avec 17 piliers psychométriques
+- **Gestion Internationale** : Système de candidatures pour universités en Chine, Chypre, Roumanie avec gestion des bourses
 - **Architecture Temps Réel** : WebSocket pour chat instantané et notifications push
 - **Sécurité Avancée** : JWT + OAuth2 avec rate limiting et protection des routes
 
 ## 🗄️ Base de Données
 
 - **MySQL 8.0** : Base `diravenir` avec gestion automatique Hibernate
-- **Tables Principales** : users, students, programs, orientation_questions/answers/results, chat_sessions/messages
+- **Tables Principales** : users, students, programs, applications, scholarships, orientation_questions/answers/results, chat_sessions/messages
 - **Création Automatique** : Tables créées au démarrage avec `ddl-auto=update`
 
 ### Installation
@@ -207,10 +208,11 @@ Le CORS est configuré pour permettre les connexions depuis :
 2. **Configurer** : Modifier `application.properties` avec vos paramètres
 3. **Démarrage** : Hibernate crée automatiquement les tables au premier lancement
 
-### Ajout de Programmes
-- **Interface Admin** : `http://localhost:8084/admin` pour gérer les programmes
-- **Ajout Manuel** : Formulaire de création avec tous les détails
-- **Import Excel** : Import en masse optionnel
+### Ajout de Programmes et Candidatures
+- **Interface Admin** : `http://localhost:8084/admin` pour gérer les programmes et candidatures
+- **Ajout Manuel** : Formulaire de création avec détails complets (frais, bourses, critères)
+- **Gestion Candidatures** : Traitement des applications pour Chine, Chypre, Roumanie
+- **Import Excel** : Import en masse des programmes avec informations de bourses
 
 ## 🔐 Sécurité
 
@@ -246,6 +248,8 @@ Le CORS est configuré pour permettre les connexions depuis :
 - **Authentification** : `/api/auth/login`, `/api/auth/register`, `/api/auth/refresh`
 - **Orientation** : `/api/orientation/questions`, `/api/orientation/submit`, `/api/orientation/results`
 - **Programmes** : `/api/programs`, `/api/programs/search`, `/api/programs/{id}`
+- **Applications** : `/api/applications/submit`, `/api/applications/status`, `/api/applications/documents`
+- **Bourses** : `/api/scholarships`, `/api/scholarships/eligibility`, `/api/scholarships/apply`
 - **Chat** : `/api/chat/sessions`, `/api/chat/messages`, `WebSocket /ws/chat`
 
 ## 🤝 Contribution
@@ -278,9 +282,10 @@ Ce projet a été développé dans le cadre d'une compétition de l'EMSI  chez D
 
 ## 📈 Résultats et Impacts
 
-- ✅ **Système complet** : Test d'orientation, base de programmes, chat temps réel
-- ✅ **Technologies maîtrisées** : Spring Boot, React, MySQL, JWT, WebSocket
-- ✅ **Compétences développées** : Architecture full-stack, algorithmes, travail en équipe
+- ✅ **Système complet** : Test d'orientation, base de programmes, candidatures universitaires, chat temps réel
+- ✅ **Partenariats internationaux** : Applications pour universités en Chine, Chypre, Roumanie avec gestion des bourses
+- ✅ **Technologies maîtrisées** : Spring Boot, React, MySQL, JWT, WebSocket, génération PDF
+- ✅ **Compétences développées** : Architecture full-stack, algorithmes, gestion internationale, travail en équipe
 
 ## 🎉 Remerciements
 
